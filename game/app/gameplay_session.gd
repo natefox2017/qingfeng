@@ -120,7 +120,8 @@ func projection() -> Dictionary:
 		"inventory":inventory.projection(),
 		"items":_item_projection(),
 		"wallet":wallet.projection(),
-		"farm":farm.projection()
+		"farm":farm.projection(),
+		"command_journal":journal.snapshot()
 	}
 
 func _item_projection() -> Dictionary:
@@ -148,10 +149,11 @@ func snapshot() -> Dictionary:
 func restore(snapshot_value: Variant) -> bool:
 	if not is_configured() or not (snapshot_value is Dictionary):
 		return false
-	var required := ["content_version","clock","inventory","wallet","farm"]
-	if snapshot_value.size() != required.size():
+	var base_required := ["content_version","clock","inventory","wallet","farm"]
+	var has_journal := snapshot_value.has("command_journal")
+	if snapshot_value.size() != base_required.size() + (1 if has_journal else 0):
 		return false
-	for key: String in required:
+	for key: String in base_required:
 		if not snapshot_value.has(key):
 			return false
 	if snapshot_value.content_version != content.content_version:
@@ -160,6 +162,7 @@ func restore(snapshot_value: Variant) -> bool:
 	var next_inventory: RefCounted = INVENTORY.new(content)
 	var next_wallet: RefCounted = WALLET.new(content)
 	var next_farm: RefCounted = FARM.new(_plot_definitions,content)
+	var next_journal: RefCounted = JOURNAL.new()
 	if not next_clock.is_configured() or not next_inventory.is_configured() or not next_wallet.is_configured() or not next_farm.is_configured():
 		return false
 	if not next_clock.restore(snapshot_value.clock):
@@ -170,6 +173,8 @@ func restore(snapshot_value: Variant) -> bool:
 		return false
 	if not next_farm.restore(snapshot_value.farm):
 		return false
+	if has_journal and not next_journal.restore(snapshot_value.command_journal):
+		return false
 	var next_farming: RefCounted = FARMING.new(next_inventory,next_farm,content)
 	if not next_farming.is_configured():
 		return false
@@ -178,7 +183,7 @@ func restore(snapshot_value: Variant) -> bool:
 	wallet = next_wallet
 	farm = next_farm
 	farming = next_farming
-	journal = JOURNAL.new()
+	journal = next_journal
 	return true
 
 func clear_receipts() -> void:
