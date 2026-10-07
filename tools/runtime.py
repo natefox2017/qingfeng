@@ -86,7 +86,10 @@ def run_tests(engine: str, reports: Path, timeout: float) -> int:
             code, output = execute([engine, '--headless', '--audio-driver', 'Dummy', '--path', str(game), '--script', 'res://tests/core_contract_test.gd'], reports/'core_contract.log', timeout, env)
             markers = re.findall(r'^CORE_PASS checks=(\d+) failures=0\s*$', output, re.M)
             summary['core_passed'] = clean_run(output, code) and len(markers) == 1 and int(markers[0]) > 0
-            summary['passed'] = summary['test_passed'] and summary['pages_passed'] and summary['core_passed']
+            code, output = execute([engine, '--headless', '--audio-driver', 'Dummy', '--path', str(game), '--script', 'res://tests/gameplay_domain_test.gd'], reports/'gameplay_domain.log', timeout, env)
+            markers = re.findall(r'^GAMEPLAY_PASS checks=(\d+) failures=0\s*$', output, re.M)
+            summary['gameplay_passed'] = clean_run(output, code) and len(markers) == 1 and int(markers[0]) > 0
+            summary['passed'] = summary['test_passed'] and summary['pages_passed'] and summary['core_passed'] and summary['gameplay_passed']
             return 0 if summary['passed'] else 1
         finally:
             (reports/'summary.json').write_text(json.dumps(summary, indent=2))
