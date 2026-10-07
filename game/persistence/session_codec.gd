@@ -5,6 +5,7 @@ extends RefCounted
 ## GameplaySession snapshot. Runtime world/layout still performs final restore validation.
 
 const CONTENT = preload("res://content/content_catalog.gd")
+const JOURNAL = preload("res://app/command_journal.gd")
 
 const ENTRY_CONTENT_VERSION := "entry_fixture_v1"
 const GAMEPLAY_CONTENT_VERSION := "first_playable_v1"
@@ -158,9 +159,22 @@ static func _valid_farm(value: Variant, content: Dictionary, current_day: int) -
 		ids[plot.plot_id] = true
 	return true
 
-static func _valid_gameplay(value: Variant) -> bool:
-	if not keys(value,["content_version","clock","inventory","wallet","farm"]):
+static func _valid_command_journal(value: Variant) -> bool:
+	var journal := JOURNAL.new()
+	return journal.restore(value)
+
+static func _valid_gameplay_common(value: Variant) -> bool:
+	if not (value is Dictionary):
 		return false
+	var required := ["content_version","clock","inventory","wallet","farm"]
+	if value.size() != required.size() and value.size() != required.size() + 1:
+		return false
+	for key: String in required:
+		if not value.has(key):
+			return false
+	if value.size() == required.size() + 1:
+		if not value.has("command_journal") or not _valid_command_journal(value.command_journal):
+			return false
 	if value.content_version != GAMEPLAY_CONTENT_VERSION:
 		return false
 	var content := _current_content()
@@ -171,6 +185,12 @@ static func _valid_gameplay(value: Variant) -> bool:
 	var current_day := floori(float(value.clock.game_minute) / float(content.clock.minutes_per_day)) + 1
 	return _valid_inventory(value.inventory,content) and _valid_wallet(value.wallet) and _valid_farm(value.farm,content,current_day)
 
+static func _valid_gameplay_v2(value: Variant) -> bool:
+	return value is Dictionary and value.size() == 5 and not value.has("command_journal") and _valid_gameplay_common(value)
+
+static func _valid_gameplay_v3(value: Variant) -> bool:
+	return value is Dictionary and value.size() == 6 and value.has("command_journal") and _valid_gameplay_common(value)
+
 static func validate_gameplay_snapshot(value: Variant) -> bool:
 	if not (value is Dictionary):
 		return false
@@ -180,7 +200,7 @@ static func validate_gameplay_snapshot(value: Variant) -> bool:
 		return false
 	if value.size() != 7 or not value.has("gameplay"):
 		return false
-	return _valid_gameplay(value.gameplay)
+	return _valid_gameplay_common(value.gameplay)
 
 static func validate_snapshot(value: Variant) -> bool:
 	if not (value is Dictionary):
@@ -200,7 +220,7 @@ static func new_snapshot(player_name: String, dog_name: String) -> Dictionary:
 	}
 
 static func compose_gameplay_snapshot(identity_snapshot: Dictionary, gameplay_snapshot: Dictionary) -> Dictionary:
-	if not _valid_world_identity(identity_snapshot,false) or not _valid_gameplay(gameplay_snapshot):
+	if not _valid_world_identity(identity_snapshot,false) or not _valid_gameplay_common(gameplay_snapshot):
 		return {}
 	var result := identity_snapshot.duplicate(true)
 	result["gameplay"] = gameplay_snapshot.duplicate(true)
@@ -229,7 +249,9 @@ static func normalized_numbers(value: Variant) -> Variant:
 	return value
 
 static func _schema_for_snapshot(snapshot: Dictionary) -> int:
-	return 2 if snapshot.has("gameplay") else 1
+	if not snapshot.has("gameplay"):
+		return 1
+	return 3 if snapshot.gameplay.has("command_journal") else 2
 
 static func _content_for_snapshot(snapshot: Dictionary) -> String:
 	return GAMEPLAY_CONTENT_VERSION if snapshot.has("gameplay") else ENTRY_CONTENT_VERSION
@@ -267,7 +289,7 @@ static func decode(text: String) -> Dictionary:
 	var envelope: Variant = normalized_numbers(parser.data)
 	if not keys(envelope,["save_format","schema_version","content_version","save_id","saved_at_utc","snapshot","checksum"]):
 		return failure("SAVE_FIELDS")
-	if envelope.save_format != "qingfeng" or not integer(envelope.schema_version,1,2):
+	if envelope.save_format != "qingfeng" or not integer(envelope.schema_version,1,3):
 		return failure("SAVE_VERSION_UNSUPPORTED")
 	var schema_version := int(envelope.schema_version)
 	if schema_version == 1:
@@ -276,7 +298,12 @@ static func decode(text: String) -> Dictionary:
 	elif schema_version == 2:
 		if envelope.content_version != GAMEPLAY_CONTENT_VERSION:
 			return failure("SAVE_CONTENT_UNSUPPORTED")
-		if not validate_gameplay_snapshot(envelope.snapshot) or envelope.snapshot.gameplay.content_version != envelope.content_version:
+		if not validate_gameplay_snapshot(envelope.snapshot) or not _valid_gameplay_v2(envelope.snapshot.gameplay) or envelope.snapshot.gameplay.content_version != envelope.content_version:
+			return failure("SAVE_SNAPSHOT_INVALID")
+	elif schema_version == 3:
+		if envelope.content_version != GAMEPLAY_CONTENT_VERSION:
+			return failure("SAVE_CONTENT_UNSUPPORTED")
+		if not validate_gameplay_snapshot(envelope.snapshot) or not _valid_gameplay_v3(envelope.snapshot.gameplay) or envelope.snapshot.gameplay.content_version != envelope.content_version:
 			return failure("SAVE_SNAPSHOT_INVALID")
 	else:
 		return failure("SAVE_VERSION_UNSUPPORTED")

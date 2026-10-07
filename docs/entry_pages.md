@@ -21,7 +21,7 @@
 
 ## 新存档协议的具体边界
 
-`session_codec.gd`现在同时认识两代明确格式：schema 1 / `entry_fixture_v1` 继续兼容当前碰撞测试入口；schema 2 / `first_playable_v1` 在相同身份与世界位置字段上增加 `gameplay`，其中严格保存 Clock、Inventory、Wallet、Farm 的权威快照。schema 2 的机器合同见 `schemas/save_v2.schema.json`，同一 `session_store.gd` 走相同临时写→读回校验→rename 路径。
+`session_codec.gd`现在认识三代明确格式：schema 1 / `entry_fixture_v1` 兼容旧碰撞入口；schema 2 / `first_playable_v1` 保存 Clock、Inventory、Wallet、Farm；当前新写入的 schema 3 还保存当前会话的命令幂等回执，机器合同见 `schemas/save_v3.schema.json`。schema 2 仍可读取，下一次正常保存会生成带回执边界的 schema 3；同一 `session_store.gd` 继续走临时写→读回校验→rename 路径。
 
 `main.gd` 现在按 schema 明确分流：新档与 schema 2 读档进入 `space.farm`；场景实例化和物理同步后，从 WORLD 的 Marker 导出 plot definitions，创建临时 `GameplaySession`，完整 restore 成功后才发布会话。schema 1 旧入口档继续进入碰撞夹具且没有 GameplaySession。schema 2 与当前 WORLD 的 Space/plot 几何不一致时整笔拒绝，不会只恢复名字/坐标或把存档中的 plot 坐标当地图来源。
 
@@ -29,7 +29,7 @@
 
 SHA256用于损坏检测，**不是防作弊签名/信任认证**。通过校验的坐标仍在世界实际物理空间中检查；落在墙内时拒绝读取，不悄悄传送到别处。不支持旧项目存档或未知content_version。schema 1 仍只允许碰撞夹具 Space；schema 2 允许正式 Space 字符串，但文件层只做结构/数值检查，加载后仍必须由真实 WORLD 布局验证 Space、落点和 plot 几何，不能凭存档移动地图。
 
-`session_store.gd`写入user://qingfeng/saves：临时文件→flush/关闭→读回验证→新随机ID文件rename。采取最多128份的追加式保存，不覆盖已有文件；每次导入是新本地save_id和新session_id。没有自动删除或按大小淘汰，达到上限会明确失败。列表按写入时间排序；导入重新写本机时间，原文件保留。
+`session_store.gd`写入user://qingfeng/saves：临时文件→flush/关闭→读回验证→新随机ID文件rename。采取最多128份的追加式保存，不覆盖已有文件；每次导入是新本地save_id和新session_id。schema 3 导入时会清空源会话 command receipts，因为回执指纹绑定原 session_id，不能复制成新会话的幂等历史。没有自动删除或按大小淘汰，达到上限会明确失败。列表按写入时间排序；导入重新写本机时间，原文件保留。
 
 新游戏在农庄场景、WORLD layout、GameplaySession 和出生点全部验证后才写第一份 schema 2 档；写盘失败不进入会话。加载原档不自动重写。schema 2 暂停保存会同时更新位置/朝向以及 Clock、Inventory、Wallet、Farm 快照；schema 1 兼容档仍只保存原身份/测试场位置。导入预览保存已验证的内容副本，确认时再次验证，不重读可能已被外部修改的源路径。
 

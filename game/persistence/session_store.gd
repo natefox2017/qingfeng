@@ -57,6 +57,10 @@ func confirm_import(envelope: Dictionary) -> Dictionary:
 	if not decoded.ok: return decoded
 	var snapshot: Dictionary = decoded.envelope.snapshot.duplicate(true)
 	snapshot.session_id = Crypto.new().generate_random_bytes(16).hex_encode()
+	# Command fingerprints include the source session_id. An imported copy is a
+	# new session identity, so old idempotency receipts must not be carried across.
+	if snapshot.has("gameplay") and snapshot.gameplay.has("command_journal"):
+		snapshot.gameplay.command_journal = {"receipts":[]}
 	return write_new(snapshot)
 
 func read_save(id: String) -> Dictionary:

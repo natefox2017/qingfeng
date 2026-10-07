@@ -39,7 +39,6 @@ var _settings_origin := "title"
 var _focus_action := ""
 var _names := {"player_name":"", "dog_name":""}
 var _import_envelope: Dictionary = {}
-var _ui_command_serial: int = 0
 
 @onready var view: Control = $Interface/Screen
 
@@ -280,16 +279,18 @@ func set_inventory_menu(enabled: bool) -> void:
 	_page = "inventory" if enabled else "title"
 	_update_interface()
 
+func _new_command_id(prefix: String) -> String:
+	return prefix+"."+Crypto.new().generate_random_bytes(16).hex_encode()
+
 func _select_inventory_slot(slot_index: int) -> void:
 	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured():
 		return
 	var projection: Dictionary = gameplay_session.projection()
 	if not projection.ok or slot_index < 0 or slot_index >= int(projection.inventory.capacity):
 		return
-	_ui_command_serial += 1
 	var command := {
 		"protocol_version":1,
-		"command_id":"ui.select.%d" % _ui_command_serial,
+		"command_id":_new_command_id("ui.select"),
 		"session_id":str(active_snapshot.get("session_id","")),
 		"actor_id":"actor.player",
 		"action":"inventory.select",
@@ -421,7 +422,7 @@ func _on_action(action: String, payload: Dictionary) -> void:
 			if result.ok:
 				_entry_snapshot = result.envelope.snapshot.duplicate(true)
 				_entry_creates_save = false
-				_entry_requires_gameplay = int(result.envelope.schema_version) == 2
+				_entry_requires_gameplay = result.envelope.snapshot.has("gameplay")
 				active_save_id = str(payload.get("save_id",""))
 				start_world(FARM_ROOM if _entry_requires_gameplay else LEGACY_ROOM)
 			else:
