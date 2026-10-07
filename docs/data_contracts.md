@@ -43,7 +43,7 @@
 | FactEvent | event_id:string，source_command_id:string或null（系统事件须另标source_system），kind/space_id:string，game_minute:int，participant_ids:string[]，严格payload；提交后创建 |
 | MemorySummary | resident_id:string，source_event_ids:string[]，summary_text:string，updated_at_game_minute:int；主观摘要，不替代事实 |
 
-嵌套对象须在实施前补机器schema；上表未规定的业务上限由content_version表定义，不散落代码。新档发物只一次，所有发布所需领域一起验证/恢复；不得加载旧项目格式或访问旧用户目录。
+嵌套对象须在实施前补机器schema；上表未规定的业务上限由content_version表定义，不散落代码。首个运行表是 `first_playable_v1`（机器结构见 `schemas/content_version.schema.json`，运行校验见 `game/content/content_catalog.gd`），当前固定12格背包、200初始货币、4袋首作物种子、06:00日初和08:00–20:00商店窗口；后续领域/UI只读取，不复制。新档发物只一次，所有发布所需领域一起验证/恢复；不得加载旧项目格式或访问旧用户目录。
 地形格16px不等于导出屏幕像素。cell_position是整数地图格，source_anchor_px是源图片左上角坐标，world_position_px是未缩放世界像素，viewport_position_px是渲染视口坐标；转换由布局统一。
 
 ## 布局对象与UI

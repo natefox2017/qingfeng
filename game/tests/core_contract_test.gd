@@ -2,6 +2,7 @@ extends SceneTree
 
 const JOURNAL = preload("res://app/command_journal.gd")
 const CLOCK = preload("res://app/game_clock.gd")
+const CONTENT = preload("res://content/content_catalog.gd")
 
 var checks := 0
 var failures := 0
@@ -59,16 +60,28 @@ func _initialize() -> void:
 	journal.clear()
 	check(journal.receipt_count() == 0, "receipt journal clears with session")
 
+	var content_result: Dictionary = CONTENT.load_current()
+	check(content_result.ok and CONTENT.validate(content_result.data), "first playable content version loads strictly")
+	var content: Dictionary = content_result.data
+	check(content.content_version == "first_playable_v1", "content version id is stable")
+	check(content.inventory.capacity == 12 and content.economy.initial_money == 200, "capacity and initial money have one source")
+	check(content.crops["crop.radish"].growth_days == 2 and content.new_game.initial_items[2].quantity == 4, "three-day crop route is encoded centrally")
+	check(content.items["item.radish_seed"].buy_price == 20 and content.items["item.radish"].sell_price == 35, "seed and harvest prices are centralized")
+	check(content.shop.open_minute == 480 and content.shop.close_minute == 1200, "shop window is centralized")
+	var invalid_content := content.duplicate(true)
+	invalid_content.inventory.capacity = 0
+	check(not CONTENT.validate(invalid_content), "invalid balance table is rejected")
+
 	var clock = CLOCK.new()
-	check(clock.current_day() == 1 and clock.minute_of_day() == CLOCK.DAY_START_MINUTE, "clock starts day one at configured start")
+	check(clock.is_configured() and clock.current_day() == 1 and clock.minute_of_day() == content.clock.day_start_minute, "clock starts from content-configured day start")
 	check(clock.acquire_pause(&"inventory") and clock.acquire_pause(&"settings") and clock.pause_owner_count() == 2, "independent pause owners")
-	check(clock.advance(10).error_code == "CLOCK_PAUSED" and clock.game_minute == CLOCK.DAY_START_MINUTE, "paused clock does not advance")
+	check(clock.advance(10).error_code == "CLOCK_PAUSED" and clock.game_minute == content.clock.day_start_minute, "paused clock does not advance")
 	check(clock.release_pause(&"inventory") and clock.is_paused(), "owner only releases own pause")
 	check(clock.release_pause(&"settings") and not clock.is_paused(), "last owner resumes clock")
-	var advance := clock.advance(1200)
+	var advance := clock.advance(content.clock.minutes_per_day - content.clock.day_start_minute)
 	check(advance.ok and advance.crossed_days == [2] and clock.current_day() == 2, "advance reports crossed day")
 	var rest := clock.rest_to_next_day_start()
-	check(rest.ok and rest.crossed_days == [3] and clock.current_day() == 3 and clock.minute_of_day() == CLOCK.DAY_START_MINUTE, "rest reaches next day start once")
+	check(rest.ok and rest.crossed_days == [3] and clock.current_day() == 3 and clock.minute_of_day() == content.clock.day_start_minute, "rest reaches next day start once")
 	check(not clock.release_pause(&"missing"), "unknown pause owner cannot release")
 	check(not clock.reset(-1) and clock.current_day() == 3, "invalid reset rejected without mutation")
 
