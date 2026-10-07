@@ -196,11 +196,14 @@ func show_page(page: String, context: Dictionary) -> void:
 				if action_state.get("is_busy",false):
 					hint.text=String(action_state.get("label","操作"))+(" · 准备中，Esc取消" if action_state.get("phase","")=="prepare" else " · 已提交，收势中")
 				else:
-					var selected: Variant=gameplay.inventory.slots[gameplay.inventory.selected_slot_index]
-					var selected_name:="空手"
-					if selected!=null:
-						selected_name=str(gameplay.items.get(String(selected.item_id),{}).get("display_name",selected.item_id))
-					hint.text="E 使用 "+selected_name+" · B 背包"
+					if context.get("space_id","")=="space.house":
+						hint.text="E 与门 / 床交互 · B 背包"
+					else:
+						var selected: Variant=gameplay.inventory.slots[gameplay.inventory.selected_slot_index]
+						var selected_name:="空手"
+						if selected!=null:
+							selected_name=str(gameplay.items.get(String(selected.item_id),{}).get("display_name",selected.item_id))
+						hint.text="E 使用 "+selected_name+" · B 背包"
 				hint.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT);hud.add_child(hint)
 				_build_quickbar(gameplay)
 	if not context.get("error","").is_empty():notice.text=context.error
