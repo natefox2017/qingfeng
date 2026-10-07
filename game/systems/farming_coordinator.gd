@@ -53,7 +53,7 @@ func _till(command_id: String, payload: Dictionary) -> Dictionary:
 		return _result(command_id,false,"FARM_PAYLOAD_INVALID",false,false)
 	if inventory.quantity_of("item.hoe") < 1:
 		return _result(command_id,false,"FARM_TOOL_MISSING",false,false)
-	var farm_candidate := farm.candidate_till(payload.plot_id)
+	var farm_candidate: Dictionary = farm.candidate_till(payload.plot_id)
 	if not farm_candidate.ok:
 		return _result(command_id,false,farm_candidate.error_code,false,false)
 	var expected_farm: int = farm.revision
@@ -66,13 +66,13 @@ func _plant(command_id: String, payload: Dictionary) -> Dictionary:
 		return _result(command_id,false,"FARM_PAYLOAD_INVALID",false,false)
 	if not (payload.inventory_revision is int) or payload.inventory_revision != inventory.revision:
 		return _result(command_id,false,"INVENTORY_STALE_REVISION",true,false)
-	var farm_candidate := farm.candidate_plant(payload.plot_id,payload.crop_id)
+	var farm_candidate: Dictionary = farm.candidate_plant(payload.plot_id,payload.crop_id)
 	if not farm_candidate.ok:
 		return _result(command_id,false,farm_candidate.error_code,false,false)
 	var crop: Dictionary = _content.crops.get(payload.crop_id,{})
 	if crop.is_empty():
 		return _result(command_id,false,"FARM_CROP_UNKNOWN",false,false)
-	var inventory_candidate := inventory.candidate_after_remove(String(crop.seed_item_id),1)
+	var inventory_candidate: Dictionary = inventory.candidate_after_remove(String(crop.seed_item_id),1)
 	if not inventory_candidate.ok:
 		return _result(command_id,false,inventory_candidate.error_code,false,false)
 	var expected_inventory: int = inventory.revision
@@ -88,7 +88,7 @@ func _water(command_id: String, payload: Dictionary) -> Dictionary:
 		return _result(command_id,false,"FARM_PAYLOAD_INVALID",false,false)
 	if inventory.quantity_of("item.watering_can") < 1:
 		return _result(command_id,false,"FARM_TOOL_MISSING",false,false)
-	var farm_candidate := farm.candidate_water(payload.plot_id)
+	var farm_candidate: Dictionary = farm.candidate_water(payload.plot_id)
 	if not farm_candidate.ok:
 		return _result(command_id,false,farm_candidate.error_code,false,false)
 	if not farm_candidate.get("has_changes",true):
@@ -103,10 +103,10 @@ func _harvest(command_id: String, payload: Dictionary) -> Dictionary:
 		return _result(command_id,false,"FARM_PAYLOAD_INVALID",false,false)
 	if not (payload.inventory_revision is int) or payload.inventory_revision != inventory.revision:
 		return _result(command_id,false,"INVENTORY_STALE_REVISION",true,false)
-	var farm_candidate := farm.candidate_harvest(payload.plot_id)
+	var farm_candidate: Dictionary = farm.candidate_harvest(payload.plot_id)
 	if not farm_candidate.ok:
 		return _result(command_id,false,farm_candidate.error_code,false,false)
-	var inventory_candidate := inventory.candidate_after_add(farm_candidate.harvest_item_id,farm_candidate.yield_quantity)
+	var inventory_candidate: Dictionary = inventory.candidate_after_add(farm_candidate.harvest_item_id,farm_candidate.yield_quantity)
 	if not inventory_candidate.ok:
 		return _result(command_id,false,inventory_candidate.error_code,false,false)
 	var expected_inventory: int = inventory.revision
