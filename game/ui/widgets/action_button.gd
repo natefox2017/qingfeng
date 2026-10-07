@@ -1,10 +1,11 @@
 extends Button
 ## Temporary native line icons: accessible and replaceable by accepted PixelLab art.
+const UI_THEME = preload("res://ui/theme/ui_theme.gd")
 var glyph := "play"
 
 func _draw() -> void:
 	var center := size * 0.5
-	var color := Color("365547") if not disabled else Color("979e92")
+	var color := UI_THEME.COLOR_ICON if not disabled else UI_THEME.COLOR_ICON_DISABLED
 	var points: Array[Vector2] = []
 	match glyph:
 		"new":

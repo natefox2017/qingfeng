@@ -2,7 +2,7 @@ extends Control
 ## Pages project intents, never open arbitrary saves or own game state.
 signal action_requested(action: String, payload: Dictionary)
 const ACTION_BUTTON = preload("res://ui/widgets/action_button.gd")
-const INK := Color("2c4035")
+const UI_THEME = preload("res://ui/theme/ui_theme.gd")
 var title: Label
 var subtitle: Label
 var body: VBoxContainer
@@ -23,38 +23,20 @@ var _first_button: Button
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var theme := Theme.new()
-	var font := SystemFont.new()
-	font.font_names = PackedStringArray(["Noto Sans CJK SC","Microsoft YaHei","PingFang SC","sans-serif"])
-	theme.default_font = font
-	theme.default_font_size = 12
-	for kind: String in ["Label","Button","CheckBox","LineEdit"]:
-		theme.set_color("font_color",kind,INK)
-		theme.set_color("font_focus_color",kind,INK)
-		theme.set_color("font_hover_color",kind,INK)
-		theme.set_color("font_pressed_color",kind,INK)
-	for state: String in ["normal","hover","pressed","focus","disabled"]:
-		var style := StyleBoxFlat.new()
-		style.bg_color = Color("e5e8d5") if state == "normal" else Color("d4debe")
-		style.border_color = Color("6d896c") if state == "focus" else Color("cad0bb")
-		style.set_border_width_all(2 if state == "focus" else 1)
-		style.set_corner_radius_all(3)
-		theme.set_stylebox(state,"Button",style)
-		if state in ["normal","focus"]: theme.set_stylebox(state,"LineEdit",style)
-	self.theme = theme
+	self.theme = UI_THEME.build()
 	var backdrop := ColorRect.new()
-	backdrop.name = "Backdrop";backdrop.color = Color("ebecdd");backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);backdrop.mouse_filter=Control.MOUSE_FILTER_IGNORE;add_child(backdrop)
+	backdrop.name = "Backdrop";backdrop.color = UI_THEME.COLOR_BACKDROP;backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);backdrop.mouse_filter=Control.MOUSE_FILTER_IGNORE;add_child(backdrop)
 	center = CenterContainer.new();center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);center.mouse_filter=Control.MOUSE_FILTER_IGNORE;add_child(center)
-	panel = PanelContainer.new();panel.custom_minimum_size=Vector2(490,280);center.add_child(panel)
-	var background := StyleBoxFlat.new();background.bg_color=Color("f8f6e9");background.set_corner_radius_all(8);background.border_color=Color("c9ceba");background.set_border_width_all(1);background.set_content_margin_all(20);panel.add_theme_stylebox_override("panel",background)
+	panel = PanelContainer.new();panel.custom_minimum_size=UI_THEME.PAGE_MINIMUM_SIZE;center.add_child(panel)
+	panel.add_theme_stylebox_override("panel",UI_THEME.panel_style())
 	var column := VBoxContainer.new();column.add_theme_constant_override("separation",9);panel.add_child(column)
-	title=Label.new();title.add_theme_font_size_override("font_size",24);column.add_child(title)
-	subtitle=Label.new();subtitle.add_theme_color_override("font_color",Color("697664"));subtitle.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;column.add_child(subtitle)
+	title=Label.new();UI_THEME.apply_text_role(title,UI_THEME.ROLE_HEADING);column.add_child(title)
+	subtitle=Label.new();UI_THEME.apply_text_role(subtitle,UI_THEME.ROLE_CAPTION);subtitle.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;column.add_child(subtitle)
 	body=VBoxContainer.new();body.add_theme_constant_override("separation",8);body.size_flags_vertical=Control.SIZE_EXPAND_FILL;column.add_child(body)
-	notice=Label.new();notice.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;notice.add_theme_color_override("font_color",Color("846242"));column.add_child(notice)
+	notice=Label.new();notice.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;UI_THEME.apply_text_role(notice,UI_THEME.ROLE_ERROR);column.add_child(notice)
 	hud=HBoxContainer.new();hud.position=Vector2(10,8);add_child(hud)
 	file_dialog=FileDialog.new();file_dialog.file_mode=FileDialog.FILE_MODE_OPEN_FILE;file_dialog.access=FileDialog.ACCESS_FILESYSTEM;file_dialog.filters=PackedStringArray(["*.qfsave ; 晴风谷存档"]);file_dialog.title="选择要导入的存档";file_dialog.size=Vector2i(560,300)
-	var dialog_theme:=Theme.new();dialog_theme.default_font=font;file_dialog.theme=dialog_theme;add_child(file_dialog)
+	file_dialog.theme=self.theme;add_child(file_dialog)
 	file_dialog.file_selected.connect(func(path:String):emit_action("preview_import",{"path":path}))
 
 func emit_action(name: String, payload: Dictionary = {}) -> void:
@@ -68,6 +50,7 @@ func clear_page() -> void:
 
 func label(text: String, parent: Node = null) -> Label:
 	var node:=Label.new();node.text=text;node.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	UI_THEME.apply_text_role(node,UI_THEME.ROLE_BODY)
 	(parent if parent != null else body).add_child(node)
 	return node
 
@@ -95,7 +78,7 @@ func show_page(page: String, context: Dictionary) -> void:
 			for entry: Array in [["continue","play","继续","继续最近的有效存档"],["new_game","new","新建","新建游戏"],["load","load","存档","读取 / 导入存档"],["settings","settings","设置","设置"],["quit","quit","退出","退出游戏"]]:
 				var cell:=VBoxContainer.new();cell.custom_minimum_size.x=44;actions.add_child(cell)
 				button(cell,entry[0],entry[1],entry[3],{},entry[0]!="continue" or context.has("recent_id"))
-				var caption:=label(entry[2],cell);caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;caption.add_theme_font_size_override("font_size",10)
+				var caption:=label(entry[2],cell);caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;UI_THEME.apply_text_role(caption,UI_THEME.ROLE_CAPTION)
 
 		"new_game":
 			title.text="开始新的生活";subtitle.text="名字会写入新存档；不会覆盖已有进度。"
@@ -142,7 +125,7 @@ func show_page(page: String, context: Dictionary) -> void:
 		"world":
 			panel.hide();get_node("Backdrop").hide()
 			button(hud,"pause","pause","暂停 / Esc")
-			var text:=Label.new();text.text=context.get("player_name","")+"  ·  入口测试场（非正式地图）";text.add_theme_color_override("font_color",Color("f5f3de"));hud.add_child(text)
+			var text:=Label.new();text.text=context.get("player_name","")+"  ·  入口测试场（非正式地图）";text.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT);hud.add_child(text)
 	if not context.get("error","").is_empty():notice.text=context.error
 	elif _first_button != null and page != "new_game":_first_button.grab_focus()
 
