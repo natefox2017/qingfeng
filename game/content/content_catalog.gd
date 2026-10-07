@@ -63,9 +63,11 @@ static func validate(data: Variant) -> bool:
 		if not (item_id is String) or not String(item_id).begins_with("item."):
 			return false
 		var item: Variant = data.items[item_id]
-		if not _exact_keys(item, ["stack_limit","buy_price","sell_price"]):
+		if not _exact_keys(item, ["stack_limit","buy_price","sell_price","display_name"]):
 			return false
 		if not _positive_int(item.stack_limit) or not _nonnegative_int(item.buy_price) or not _nonnegative_int(item.sell_price):
+			return false
+		if not (item.display_name is String) or item.display_name.is_empty() or item.display_name.length() > 24:
 			return false
 	if not (data.crops is Dictionary) or data.crops.is_empty():
 		return false
