@@ -63,5 +63,8 @@
         "quantity": 4
       }
     ]
+  },
+  "storage": {
+    "chest_capacity": 24
   }
 }
