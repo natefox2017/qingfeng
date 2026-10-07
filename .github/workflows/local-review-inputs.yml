@@ -1,0 +1,27 @@
+name: Local review inputs
+on:
+  push:
+    branches: [feat/n07-pages-save-import]
+    paths: [.github/workflows/local-review-inputs.yml]
+permissions:
+  contents: read
+jobs:
+  inputs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Package tracked source and official engine
+        run: |
+          mkdir -p /tmp/qingfeng-inputs
+          git archive --format=zip HEAD -o /tmp/qingfeng-inputs/source.zip
+          git rev-parse HEAD > /tmp/qingfeng-inputs/commit.txt
+          git ls-tree -r HEAD > /tmp/qingfeng-inputs/tree.txt
+          python3 tools/install_engine.py --directory /tmp/qingfeng-inputs/engine
+      - uses: actions/upload-artifact@v4
+        with:
+          name: page-review-inputs
+          path: /tmp/qingfeng-inputs
+          retention-days: 1
