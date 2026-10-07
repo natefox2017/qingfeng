@@ -168,7 +168,7 @@ static func _valid_gameplay(value: Variant) -> bool:
 		return false
 	if not keys(value.clock,["game_minute"]) or not (value.clock.game_minute is int) or value.clock.game_minute < 0:
 		return false
-	var current_day := int(value.clock.game_minute) / int(content.clock.minutes_per_day) + 1
+	var current_day := floori(float(value.clock.game_minute) / float(content.clock.minutes_per_day)) + 1
 	return _valid_inventory(value.inventory,content) and _valid_wallet(value.wallet) and _valid_farm(value.farm,content,current_day)
 
 static func validate_gameplay_snapshot(value: Variant) -> bool:
@@ -200,7 +200,7 @@ static func new_snapshot(player_name: String, dog_name: String) -> Dictionary:
 	}
 
 static func compose_gameplay_snapshot(identity_snapshot: Dictionary, gameplay_snapshot: Dictionary) -> Dictionary:
-	if not validate_entry_snapshot(identity_snapshot) or not _valid_gameplay(gameplay_snapshot):
+	if not _valid_world_identity(identity_snapshot,false) or not _valid_gameplay(gameplay_snapshot):
 		return {}
 	var result := identity_snapshot.duplicate(true)
 	result["gameplay"] = gameplay_snapshot.duplicate(true)
