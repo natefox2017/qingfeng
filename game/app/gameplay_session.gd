@@ -18,6 +18,7 @@ var inventory: RefCounted
 var wallet: RefCounted
 var farm: RefCounted
 var farming: RefCounted
+var _plot_definitions: Array = []
 
 func _init(plot_definitions: Array = [], content_override: Dictionary = {}) -> void:
 	var source := content_override
@@ -31,6 +32,7 @@ func _init(plot_definitions: Array = [], content_override: Dictionary = {}) -> v
 		configuration_error = "CONTENT_INVALID"
 		return
 	content = source.duplicate(true)
+	_plot_definitions = plot_definitions.duplicate(true)
 	journal = JOURNAL.new()
 	clock = CLOCK.new(content)
 	inventory = INVENTORY.new(content)
@@ -119,6 +121,53 @@ func projection() -> Dictionary:
 		"wallet":wallet.projection(),
 		"farm":farm.projection()
 	}
+
+func snapshot() -> Dictionary:
+	if not is_configured():
+		return {}
+	return {
+		"content_version":String(content.content_version),
+		"clock":clock.snapshot(),
+		"inventory":inventory.projection(),
+		"wallet":wallet.projection(),
+		"farm":farm.projection()
+	}
+
+func restore(snapshot_value: Variant) -> bool:
+	if not is_configured() or not (snapshot_value is Dictionary):
+		return false
+	var required := ["content_version","clock","inventory","wallet","farm"]
+	if snapshot_value.size() != required.size():
+		return false
+	for key: String in required:
+		if not snapshot_value.has(key):
+			return false
+	if snapshot_value.content_version != content.content_version:
+		return false
+	var next_clock: RefCounted = CLOCK.new(content)
+	var next_inventory: RefCounted = INVENTORY.new(content)
+	var next_wallet: RefCounted = WALLET.new(content)
+	var next_farm: RefCounted = FARM.new(_plot_definitions,content)
+	if not next_clock.is_configured() or not next_inventory.is_configured() or not next_wallet.is_configured() or not next_farm.is_configured():
+		return false
+	if not next_clock.restore(snapshot_value.clock):
+		return false
+	if not next_inventory.restore(snapshot_value.inventory):
+		return false
+	if not next_wallet.restore(snapshot_value.wallet):
+		return false
+	if not next_farm.restore(snapshot_value.farm):
+		return false
+	var next_farming: RefCounted = FARMING.new(next_inventory,next_farm,content)
+	if not next_farming.is_configured():
+		return false
+	clock = next_clock
+	inventory = next_inventory
+	wallet = next_wallet
+	farm = next_farm
+	farming = next_farming
+	journal = JOURNAL.new()
+	return true
 
 func clear_receipts() -> void:
 	if journal != null:
