@@ -68,6 +68,31 @@ func projection() -> Dictionary:
 		ordered.append(plots[plot_id].duplicate(true))
 	return {"revision":revision,"plots":ordered}
 
+func restore(snapshot_value: Variant) -> bool:
+	if not is_configured() or not (snapshot_value is Dictionary):
+		return false
+	if snapshot_value.size() != 2 or not snapshot_value.has("revision") or not snapshot_value.has("plots"):
+		return false
+	if not (snapshot_value.revision is int) or snapshot_value.revision < 0:
+		return false
+	if not (snapshot_value.plots is Array) or snapshot_value.plots.size() != _plot_order.size():
+		return false
+	var restored: Dictionary = {}
+	for index in range(_plot_order.size()):
+		var expected_id: String = _plot_order[index]
+		var candidate: Variant = snapshot_value.plots[index]
+		if not (candidate is Dictionary) or not _valid_plot_state(candidate):
+			return false
+		if candidate.plot_id != expected_id:
+			return false
+		var current: Dictionary = plots[expected_id]
+		if candidate.space_id != current.space_id or candidate.cell_position != current.cell_position:
+			return false
+		restored[expected_id] = candidate.duplicate(true)
+	plots = restored
+	revision = snapshot_value.revision
+	return true
+
 func get_plot(plot_id: String) -> Dictionary:
 	if not plots.has(plot_id):
 		return {}

@@ -181,6 +181,22 @@ func _initialize() -> void:
 	var replay_till: Dictionary = session.execute(farm_command("session-till","farm.till",0,{"plot_id":"plot.farm.session"}))
 	check(replay_till == session_till and session.farm.get_plot("plot.farm.session").state == "mature", "session command journal replays original result without reapplying old action")
 
+	var saved_session: Dictionary = session.snapshot()
+	var restored = SESSION.new([
+		{"plot_id":"plot.farm.session","space_id":"space.farm","cell_position":{"x":2,"y":3}}
+	],content)
+	check(restored.restore(saved_session) and restored.snapshot() == saved_session, "complete gameplay snapshot restores all domains exactly")
+	var before_bad_restore: Dictionary = restored.snapshot()
+	var bad_inventory_snapshot: Dictionary = saved_session.duplicate(true)
+	bad_inventory_snapshot.inventory.capacity = 99
+	check(not restored.restore(bad_inventory_snapshot) and restored.snapshot() == before_bad_restore, "invalid inventory snapshot cannot partially mutate live session")
+	var bad_layout_snapshot: Dictionary = saved_session.duplicate(true)
+	bad_layout_snapshot.farm.plots[0].cell_position.x = 999
+	check(not restored.restore(bad_layout_snapshot) and restored.snapshot() == before_bad_restore, "farm restore cannot move layout-owned plot coordinates")
+	var bad_clock_snapshot: Dictionary = saved_session.duplicate(true)
+	bad_clock_snapshot.clock.game_minute = -1
+	check(not restored.restore(bad_clock_snapshot) and restored.snapshot() == before_bad_restore, "invalid clock snapshot leaves all domains unchanged")
+
 	finish()
 
 func finish() -> void:

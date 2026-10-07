@@ -27,6 +27,25 @@ func is_configured() -> bool:
 func projection() -> Dictionary:
 	return {"revision":revision,"owner_id":owner_id,"money":money}
 
+func restore(snapshot_value: Variant) -> bool:
+	if not is_configured() or not (snapshot_value is Dictionary):
+		return false
+	var required := ["revision","owner_id","money"]
+	if snapshot_value.size() != required.size():
+		return false
+	for key: String in required:
+		if not snapshot_value.has(key):
+			return false
+	if snapshot_value.owner_id != owner_id:
+		return false
+	if not (snapshot_value.revision is int) or snapshot_value.revision < 0:
+		return false
+	if not (snapshot_value.money is int) or snapshot_value.money < 0:
+		return false
+	revision = snapshot_value.revision
+	money = snapshot_value.money
+	return true
+
 func candidate_after_delta(delta: int) -> Dictionary:
 	if not is_configured():
 		return {"ok":false,"error_code":"WALLET_NOT_CONFIGURED"}
