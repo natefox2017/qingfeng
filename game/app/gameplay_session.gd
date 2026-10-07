@@ -150,7 +150,7 @@ func restore(snapshot_value: Variant) -> bool:
 	if not is_configured() or not (snapshot_value is Dictionary):
 		return false
 	var base_required := ["content_version","clock","inventory","wallet","farm"]
-	var has_journal := snapshot_value.has("command_journal")
+	var has_journal: bool = snapshot_value.has("command_journal")
 	if snapshot_value.size() != base_required.size() + (1 if has_journal else 0):
 		return false
 	for key: String in base_required:
