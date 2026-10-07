@@ -86,7 +86,7 @@ func show_page(page: String, context: Dictionary) -> void:
 			player_name=LineEdit.new();player_name.max_length=16;player_name.placeholder_text="请输入名字";player_name.text=context.get("player_name","");body.add_child(player_name)
 			label("狗的名字（可留空，伙伴系统尚未接入）")
 			dog_name=LineEdit.new();dog_name.max_length=16;dog_name.placeholder_text="可稍后确定";dog_name.text=context.get("dog_name","");body.add_child(dog_name)
-			var actions:=row();button(actions,"create","accept","创建独立存档并进入测试场");button(actions,"back","back","返回标题，不创建存档")
+			var actions:=row();button(actions,"create","accept","创建独立存档并进入农庄第一屏");button(actions,"back","back","返回标题，不创建存档")
 			player_name.grab_focus()
 		"load":
 			title.text="存档";subtitle.text="读取本机进度，或导入经过校验的 .qfsave 文件。"
@@ -119,13 +119,16 @@ func show_page(page: String, context: Dictionary) -> void:
 			label("请稍候…")
 			button(row(),"cancel_load","back","取消加载，返回标题")
 		"pause":
-			title.text="暂歇一下";subtitle.text="暂停中 · 游戏输入已锁定"
-			label("保存记录当前测试场位置与名字。\n正式农庄、作物和背包状态尚未接入。")
+			title.text="暂歇一下";subtitle.text="暂停中 · 游戏输入与游戏时钟已锁定"
+			if context.get("has_gameplay",false):
+				label("保存会记录位置、时间、背包、钱物和田地状态。\n当前画面仍是工程美术；狗、村庄和最终素材尚未接入。")
+			else:
+				label("这是旧入口碰撞测试存档；只保存身份和测试场位置。")
 			var actions:=row();button(actions,"resume","resume","继续游戏");button(actions,"save","save","保存到新的独立文件",{},context.get("can_save",false));button(actions,"settings","settings","设置");button(actions,"save_return","back","保存并返回标题",{},context.get("can_save",false))
 		"world":
 			panel.hide();get_node("Backdrop").hide()
 			button(hud,"pause","pause","暂停 / Esc")
-			var text:=Label.new();text.text=context.get("player_name","")+"  ·  入口测试场（非正式地图）";text.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT);hud.add_child(text)
+			var text:=Label.new();text.text=context.get("player_name","")+"  ·  "+str(context.get("world_label","世界"));text.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT);hud.add_child(text)
 	if not context.get("error","").is_empty():notice.text=context.error
 	var preferred_action := str(context.get("focus_action",""))
 	if not preferred_action.is_empty() and buttons.has(preferred_action):
