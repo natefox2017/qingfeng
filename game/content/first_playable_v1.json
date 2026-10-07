@@ -18,22 +18,26 @@
     "item.hoe": {
       "stack_limit": 1,
       "buy_price": 0,
-      "sell_price": 0
+      "sell_price": 0,
+      "display_name": "锄头"
     },
     "item.watering_can": {
       "stack_limit": 1,
       "buy_price": 0,
-      "sell_price": 0
+      "sell_price": 0,
+      "display_name": "浇水壶"
     },
     "item.radish_seed": {
       "stack_limit": 99,
       "buy_price": 20,
-      "sell_price": 0
+      "sell_price": 0,
+      "display_name": "萝卜种子"
     },
     "item.radish": {
       "stack_limit": 99,
       "buy_price": 0,
-      "sell_price": 35
+      "sell_price": 35,
+      "display_name": "萝卜"
     }
   },
   "crops": {
@@ -46,9 +50,18 @@
   },
   "new_game": {
     "initial_items": [
-      {"item_id": "item.hoe", "quantity": 1},
-      {"item_id": "item.watering_can", "quantity": 1},
-      {"item_id": "item.radish_seed", "quantity": 4}
+      {
+        "item_id": "item.hoe",
+        "quantity": 1
+      },
+      {
+        "item_id": "item.watering_can",
+        "quantity": 1
+      },
+      {
+        "item_id": "item.radish_seed",
+        "quantity": 4
+      }
     ]
   }
 }
