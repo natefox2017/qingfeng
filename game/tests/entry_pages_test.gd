@@ -112,26 +112,49 @@ func run() -> void:
 	app._on_action("new_game",{})
 	app.view.player_name.text="小禾";app.view.dog_name.text="阿豆"
 	app._on_action("create",{})
-	check(await wait_world(),"title new form loads world")
+	check(await wait_world(),"title new form loads farm world")
 	if app.state!=app.State.WORLD:printerr(app.last_error);finish();return
-	check(app.active_snapshot.player_name=="小禾" and app.store.list_saves().size()==1,"new identity is committed once on successful entry")
-	app.room.get_player().position=Vector2(120,90)
+	check(app.gameplay_session != null and app.room.has_method("get_plot_definitions") and app.active_snapshot.space_id=="space.farm","new game publishes one gameplay session on farm world")
+	check(app.active_snapshot.has("gameplay") and app.store.list_saves().size()==1,"new game commits schema-v2 snapshot once after world validation")
+	var initial_save:Dictionary=app.store.read_save(app.active_save_id)
+	check(initial_save.ok and int(initial_save.envelope.schema_version)==2 and initial_save.envelope.snapshot.gameplay.inventory.slots.size()==12,"new game persists full gameplay schema")
+	check(app.gameplay_session.inventory.quantity_of("item.radish_seed")==4 and app.gameplay_session.wallet.money==200,"new game uses authoritative content-version inventory and wallet")
+	var till_command:Dictionary={
+		"protocol_version":1,"command_id":"entry-till","session_id":app.active_snapshot.session_id,
+		"actor_id":"actor.player","action":"farm.till","expected_revision":app.gameplay_session.farm.revision,
+		"payload":{"plot_id":"plot.farm.001"}
+	}
+	var till_result:Dictionary=app.gameplay_session.execute(till_command)
+	check(till_result.ok and app.gameplay_session.farm.get_plot("plot.farm.001").state=="tilled","farm command mutates authoritative session before save")
+	app.room.get_player().position=Vector2(240,176)
 	app.set_pause_menu(true)
+	check(app.gameplay_session.clock.is_paused(),"pause menu pauses authoritative gameplay clock")
 	var saved:Dictionary=app.save_progress()
-	check(saved.ok and app.store.list_saves().size()==2,"pause saves fresh non-overwriting revision")
+	check(saved.ok and app.store.list_saves().size()==2,"pause saves fresh schema-v2 file without overwriting previous save")
 	app.return_to_title()
 	app._on_action("read_save",{"save_id":saved.save_id})
-	check(await wait_world(),"saved entry can reload")
-	check(app.room.get_player().position.is_equal_approx(Vector2(120,90)),"position restored after validation")
+	check(await wait_world(),"schema-v2 save reloads through farm world")
+	check(app.room.get_player().position.is_equal_approx(Vector2(240,176)),"farm position restored after physical validation")
+	check(app.gameplay_session != null and app.gameplay_session.farm.get_plot("plot.farm.001").state=="tilled","gameplay farm state restores with world-owned plot definitions")
+	check(not app.gameplay_session.clock.is_paused(),"load does not persist stale UI pause tokens")
 	app.set_pause_menu(true);app._on_action("settings",{})
 	app.view.volume.value=0.35;app._on_action("preview_settings",{})
 	app.set_application_focused(false)
 	check(not app.settings.is_previewing,"lost focus reverts display preview")
 	app._on_action("back",{})
 	check(app.locks.has_owner(&"pause_menu") and app.locks.has_owner(&"focus"),"settings never clears pause/focus owners")
+	check(app.gameplay_session.clock.is_paused(),"settings/focus locks keep gameplay clock paused")
 	app.set_application_focused(true);app._on_action("resume",{})
-	check(app.room.get_player().is_input_enabled,"resume after settings is usable")
-	app.return_to_title();app._on_action("load",{})
+	check(app.room.get_player().is_input_enabled and not app.gameplay_session.clock.is_paused(),"resume restores world input and gameplay clock")
+	app.return_to_title()
+	var legacy_saved:Dictionary=app.store.write_new(snapshot)
+	check(legacy_saved.ok,"legacy schema-one fixture save remains writable for compatibility")
+	if legacy_saved.ok:
+		app._on_action("read_save",{"save_id":legacy_saved.save_id})
+		check(await wait_world(),"legacy schema-one save still loads explicit collision fixture")
+		check(app.gameplay_session==null and not app.active_snapshot.has("gameplay"),"legacy fixture never fabricates gameplay state")
+		app.return_to_title()
+	app._on_action("load",{})
 	app._on_action("preview_import",{"path":first.path})
 	check(app._page=="import_review","import shows metadata confirmation")
 	var count:int=app.store.list_saves().size()
@@ -139,20 +162,23 @@ func run() -> void:
 	check(app.store.list_saves().size()==count,"cancel import writes nothing")
 	check(app.view.buttons["choose_import"].has_focus(),"cancel import returns focus to import trigger")
 	app._on_action("back",{})
-	var gameplay_session = SESSION.new([
+	var mismatched_session = SESSION.new([
 		{"plot_id":"plot.entry.v2","space_id":"space.farm","cell_position":{"x":1,"y":1}}
 	])
-	var v2_snapshot: Dictionary = CODEC.compose_gameplay_snapshot(CODEC.new_snapshot("完整档","阿豆"),gameplay_session.snapshot())
+	var mismatched_identity:Dictionary=CODEC.new_snapshot("不匹配档","阿豆")
+	mismatched_identity.space_id="space.farm"
+	mismatched_identity.world_position_px={"x":144.0,"y":176.0}
+	var v2_snapshot: Dictionary = CODEC.compose_gameplay_snapshot(mismatched_identity,mismatched_session.snapshot())
 	var v2_saved: Dictionary = app.store.write_new(v2_snapshot)
 	check(v2_saved.ok,"schema-v2 save can share the same bounded store")
 	if v2_saved.ok:
 		app._on_action("read_save",{"save_id":v2_saved.save_id})
-		check(app.state==app.State.TITLE and app.room==null and app.last_error.contains("schema 2"),"entry fixture refuses partial schema-v2 restore")
+		check(not await wait_world() and app.room==null and app.gameplay_session==null and app.last_error.contains("不兼容"),"layout-mismatched schema-v2 restore fails atomically")
 	var blocked_snapshot:=snapshot.duplicate(true);blocked_snapshot.world_position_px={"x":176,"y":140}
 	var blocked_file:Dictionary=store.write_new(blocked_snapshot)
 	app._entry_snapshot=store.read_save(blocked_file.save_id).envelope.snapshot
 	app.start_world()
-	check(not await wait_world() and app.room==null,"wall-embedded save rejected without teleport fallback")
+	check(not await wait_world() and app.room==null,"wall-embedded legacy save rejected without teleport fallback")
 	finish()
 
 func finish() -> void:
