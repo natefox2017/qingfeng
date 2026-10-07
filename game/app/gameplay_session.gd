@@ -9,6 +9,8 @@ const INVENTORY = preload("res://systems/inventory_domain.gd")
 const WALLET = preload("res://systems/wallet_domain.gd")
 const FARM = preload("res://systems/farm_domain.gd")
 const FARMING = preload("res://systems/farming_coordinator.gd")
+const STORAGE = preload("res://systems/storage_domain.gd")
+const STORAGE_TRANSFER = preload("res://systems/storage_transfer.gd")
 
 var configuration_error := ""
 var content: Dictionary = {}
@@ -18,6 +20,8 @@ var inventory: RefCounted
 var wallet: RefCounted
 var farm: RefCounted
 var farming: RefCounted
+var storage: RefCounted
+var storage_transfer: RefCounted
 var _plot_definitions: Array = []
 
 func _init(plot_definitions: Array = [], content_override: Dictionary = {}) -> void:
@@ -39,7 +43,9 @@ func _init(plot_definitions: Array = [], content_override: Dictionary = {}) -> v
 	wallet = WALLET.new(content)
 	farm = FARM.new(plot_definitions,content)
 	farming = FARMING.new(inventory,farm,content)
-	if not clock.is_configured() or not inventory.is_configured() or not wallet.is_configured() or not farm.is_configured() or not farming.is_configured():
+	storage = STORAGE.new(content)
+	storage_transfer = STORAGE_TRANSFER.new(inventory,storage)
+	if not clock.is_configured() or not inventory.is_configured() or not wallet.is_configured() or not farm.is_configured() or not farming.is_configured() or not storage.is_configured() or not storage_transfer.is_configured():
 		configuration_error = "GAMEPLAY_SESSION_DOMAIN_INVALID"
 
 func is_configured() -> bool:
@@ -51,6 +57,8 @@ func execute(command: Dictionary) -> Dictionary:
 	var action := String(command.get("action",""))
 	if action == "inventory.select":
 		return journal.execute(command,inventory.handle_select)
+	if action == "storage.transfer":
+		return journal.execute(command,storage_transfer.handle)
 	if action.begins_with("farm."):
 		return journal.execute(command,farming.handle)
 	return journal.execute(command,Callable(self,"_unsupported_command"))
@@ -172,6 +180,7 @@ func projection() -> Dictionary:
 		"inventory":inventory.projection(),
 		"items":_item_projection(),
 		"wallet":wallet.projection(),
+		"storage":storage.projection(),
 		"farm":farm.projection()
 	}
 
@@ -194,6 +203,7 @@ func snapshot() -> Dictionary:
 		"clock":clock.snapshot(),
 		"inventory":inventory.projection(),
 		"wallet":wallet.projection(),
+		"storage":storage.projection(),
 		"farm":farm.projection(),
 		"command_journal":journal.snapshot()
 	}
@@ -203,7 +213,9 @@ func restore(snapshot_value: Variant) -> bool:
 		return false
 	var base_required := ["content_version","clock","inventory","wallet","farm"]
 	var has_journal: bool = snapshot_value.has("command_journal")
-	if snapshot_value.size() != base_required.size() + (1 if has_journal else 0):
+	var has_storage: bool = snapshot_value.has("storage")
+	var expected_size := base_required.size() + (1 if has_journal else 0) + (1 if has_storage else 0)
+	if snapshot_value.size() != expected_size:
 		return false
 	for key: String in base_required:
 		if not snapshot_value.has(key):
@@ -214,8 +226,9 @@ func restore(snapshot_value: Variant) -> bool:
 	var next_inventory: RefCounted = INVENTORY.new(content)
 	var next_wallet: RefCounted = WALLET.new(content)
 	var next_farm: RefCounted = FARM.new(_plot_definitions,content)
+	var next_storage: RefCounted = STORAGE.new(content)
 	var next_journal: RefCounted = JOURNAL.new()
-	if not next_clock.is_configured() or not next_inventory.is_configured() or not next_wallet.is_configured() or not next_farm.is_configured():
+	if not next_clock.is_configured() or not next_inventory.is_configured() or not next_wallet.is_configured() or not next_farm.is_configured() or not next_storage.is_configured():
 		return false
 	if not next_clock.restore(snapshot_value.clock):
 		return false
@@ -225,16 +238,21 @@ func restore(snapshot_value: Variant) -> bool:
 		return false
 	if not next_farm.restore(snapshot_value.farm):
 		return false
+	if has_storage and not next_storage.restore(snapshot_value.storage):
+		return false
 	if has_journal and not next_journal.restore(snapshot_value.command_journal):
 		return false
 	var next_farming: RefCounted = FARMING.new(next_inventory,next_farm,content)
-	if not next_farming.is_configured():
+	var next_storage_transfer: RefCounted = STORAGE_TRANSFER.new(next_inventory,next_storage)
+	if not next_farming.is_configured() or not next_storage_transfer.is_configured():
 		return false
 	clock = next_clock
 	inventory = next_inventory
 	wallet = next_wallet
 	farm = next_farm
 	farming = next_farming
+	storage = next_storage
+	storage_transfer = next_storage_transfer
 	journal = next_journal
 	return true
 
