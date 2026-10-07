@@ -13,6 +13,7 @@ const FARM_ACTION = preload("res://app/farm_action_runner.gd")
 
 const LEGACY_ROOM := "res://tests/fixtures/collision_room.tscn"
 const FARM_ROOM := "res://world/farm_first_screen.tscn"
+const HOUSE_ROOM := "res://world/house_interior.tscn"
 const DEFAULT_ROOM := LEGACY_ROOM
 const MOVEMENT_ACTIONS := [&"move_left", &"move_right", &"move_up", &"move_down"]
 const GAMEPLAY_PAUSE_OWNERS := [&"pause_menu", &"inventory", &"focus"]
@@ -41,6 +42,9 @@ var _settings_origin := "title"
 var _focus_action := ""
 var _names := {"player_name":"", "dog_name":""}
 var _import_envelope: Dictionary = {}
+var _transition_pending: bool = false
+var _transition_generation: int = 0
+var _transition_candidate: Node2D
 
 @onready var view: Control = $Interface/Screen
 
@@ -111,18 +115,23 @@ func _activate_room(scene: PackedScene, requested_generation: int) -> void:
 
 	var next_gameplay: RefCounted = null
 	if _entry_requires_gameplay:
-		if not _gameplay_world_contract_valid():
-			last_error = "农庄布局合同无效，未创建或恢复会话。"
+		if not _world_contract_valid(room):
+			last_error = "世界布局合同无效，未创建或恢复会话。"
 			return_to_title()
 			return
-		next_gameplay = GAMEPLAY.new(room.get_plot_definitions())
+		var plot_definitions: Array = _plot_definitions_for_gameplay(room)
+		if plot_definitions.is_empty():
+			last_error = "无法读取权威农庄田格布局，未创建或恢复会话。"
+			return_to_title()
+			return
+		next_gameplay = GAMEPLAY.new(plot_definitions)
 		if not next_gameplay.is_configured():
-			last_error = "玩法会话无法从当前农庄布局初始化。"
+			last_error = "玩法会话无法从权威农庄布局初始化。"
 			return_to_title()
 			return
 		if _entry_snapshot.has("gameplay"):
 			if _entry_snapshot.space_id != room.get_space_id() or not next_gameplay.restore(_entry_snapshot.gameplay):
-				last_error = "完整玩法存档与当前农庄布局不兼容，未恢复任何状态。"
+				last_error = "完整玩法存档与当前世界布局不兼容，未恢复任何状态。"
 				return_to_title()
 				return
 		else:
@@ -185,22 +194,62 @@ func _activate_room(scene: PackedScene, requested_generation: int) -> void:
 	_apply_input()
 	_update_interface()
 
-func _gameplay_world_contract_valid() -> bool:
-	if not is_instance_valid(room):
+func _world_contract_valid(candidate: Node2D) -> bool:
+	if not is_instance_valid(candidate):
 		return false
-	for method_name: String in ["get_plot_definitions","get_space_id","get_spawn_position","layout_contract_valid"]:
-		if not room.has_method(method_name):
+	for method_name: String in ["set_input_enabled","get_player","get_space_id","get_spawn_position","get_anchor_position","layout_contract_valid"]:
+		if not candidate.has_method(method_name):
 			return false
-	return room.layout_contract_valid() and room.get_space_id() == "space.farm" and not room.get_plot_definitions().is_empty()
+	return candidate.layout_contract_valid() and not String(candidate.get_space_id()).is_empty()
+
+func _plot_definitions_for_gameplay(candidate: Node2D) -> Array:
+	if candidate.has_method("get_plot_definitions"):
+		var direct: Array = candidate.get_plot_definitions()
+		if not direct.is_empty():
+			return direct.duplicate(true)
+	var farm_scene := load(FARM_ROOM) as PackedScene
+	if farm_scene == null:
+		return []
+	var farm_instance := farm_scene.instantiate() as Node2D
+	if farm_instance == null or not farm_instance.has_method("get_plot_definitions") or not farm_instance.has_method("layout_contract_valid"):
+		if farm_instance != null:
+			farm_instance.free()
+		return []
+	if not farm_instance.layout_contract_valid():
+		farm_instance.free()
+		return []
+	var definitions: Array = farm_instance.get_plot_definitions().duplicate(true)
+	farm_instance.free()
+	return definitions
+
+func _scene_path_for_space(space_id: String) -> String:
+	match space_id:
+		"space.farm":
+			return FARM_ROOM
+		"space.house":
+			return HOUSE_ROOM
+	return ""
 
 func _position_is_blocked(position: Vector2) -> bool:
+	return _position_is_blocked_in(room,position)
+
+func _position_is_blocked_in(candidate: Node2D, position: Vector2) -> bool:
+	if not is_instance_valid(candidate):
+		return true
 	var circle := CircleShape2D.new()
 	circle.radius = 4.0
 	var query := PhysicsShapeQueryParameters2D.new()
 	query.shape = circle
 	query.collision_mask = 1
 	query.transform = Transform2D(0.0,position)
-	return not room.get_world_2d().direct_space_state.intersect_shape(query,1).is_empty()
+	return not candidate.get_world_2d().direct_space_state.intersect_shape(query,1).is_empty()
+
+func _set_room_camera_enabled(candidate: Node2D, enabled: bool) -> void:
+	if not is_instance_valid(candidate) or not candidate.has_method("get_player"):
+		return
+	var camera := candidate.get_player().get_node_or_null("Camera2D") as Camera2D
+	if camera != null:
+		camera.enabled = enabled
 
 func return_to_title() -> void:
 	settings.revert()
@@ -220,8 +269,14 @@ func return_to_title() -> void:
 		remove_child(room)
 		room.queue_free()
 	room = null
+	_transition_generation += 1
+	_transition_pending = false
+	if is_instance_valid(_transition_candidate):
+		_transition_candidate.queue_free()
+	_transition_candidate = null
 	farm_action = FARM_ACTION.new()
 	locks.set_locked(&"farm_action", false)
+	locks.set_locked(&"transition", false)
 	locks.set_locked(&"pause_menu", false)
 	locks.set_locked(&"inventory", false)
 	_clear_movement()
@@ -230,13 +285,15 @@ func return_to_title() -> void:
 func set_pause_menu(enabled: bool) -> void:
 	if state != State.WORLD:
 		return
-	if enabled and farm_action.is_busy():
+	if enabled and (farm_action.is_busy() or _transition_pending):
 		return
 	locks.set_locked(&"pause_menu", enabled)
 	_update_interface()
 
 func set_application_focused(focused: bool) -> void:
 	if not focused:
+		if _transition_pending:
+			_cancel_transition("窗口失焦，门转场已取消；玩家仍留在原位置。")
 		if farm_action.is_before_contact():
 			_cancel_farm_action("窗口失焦，未到接触点，农事动作已取消。")
 		elif farm_action.is_busy():
@@ -258,16 +315,16 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if event.is_echo():
 		return
 	if event.is_action_pressed("interact"):
-		if state == State.WORLD and gameplay_session != null and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"inventory") and not locks.has_owner(&"focus") and not farm_action.is_busy():
-			_begin_farm_action()
+		if state == State.WORLD and gameplay_session != null and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"inventory") and not locks.has_owner(&"focus") and not farm_action.is_busy() and not _transition_pending:
+			_interact_world()
 		get_viewport().set_input_as_handled()
 		return
 	if event.is_action_pressed("inventory_menu"):
-		if state == State.WORLD and gameplay_session != null and not farm_action.is_busy() and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"focus"):
+		if state == State.WORLD and gameplay_session != null and not farm_action.is_busy() and not _transition_pending and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"focus"):
 			set_inventory_menu(not locks.has_owner(&"inventory"))
 			get_viewport().set_input_as_handled()
 		return
-	if state == State.WORLD and gameplay_session != null and not farm_action.is_busy() and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"focus"):
+	if state == State.WORLD and gameplay_session != null and not farm_action.is_busy() and not _transition_pending and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"focus"):
 		for index in range(QUICK_SLOT_ACTIONS.size()):
 			if event.is_action_pressed(QUICK_SLOT_ACTIONS[index]):
 				_select_inventory_slot(index)
@@ -275,7 +332,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				return
 	if not event.is_action_pressed("pause_menu"):
 		return
-	if farm_action.is_before_contact():
+	if _transition_pending:
+		_cancel_transition("门转场已取消；玩家仍留在原位置。")
+	elif farm_action.is_before_contact():
 		_cancel_farm_action("动作已取消，田地和背包没有变化。")
 	elif farm_action.is_busy():
 		_finish_farm_recovery()
@@ -296,7 +355,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 
 func set_inventory_menu(enabled: bool) -> void:
-	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured() or (enabled and farm_action.is_busy()):
+	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured() or (enabled and (farm_action.is_busy() or _transition_pending)):
 		return
 	locks.set_locked(&"inventory",enabled)
 	_page = "inventory" if enabled else "title"
@@ -304,6 +363,116 @@ func set_inventory_menu(enabled: bool) -> void:
 
 func _new_command_id(prefix: String) -> String:
 	return prefix+"."+Crypto.new().generate_random_bytes(16).hex_encode()
+
+func _interact_world() -> void:
+	if not is_instance_valid(room):
+		return
+	if room.has_method("resolve_interaction_target"):
+		var target: Variant = room.resolve_interaction_target()
+		if target is Dictionary and not target.is_empty():
+			if target.get("kind","") == "door":
+				_begin_door_transition(target)
+				return
+	_begin_farm_action()
+
+func _begin_door_transition(target: Dictionary) -> void:
+	if _transition_pending or farm_action.is_busy() or state != State.WORLD or not _valid_door_target(target):
+		return
+	var path := _scene_path_for_space(String(target.target_space_id))
+	if path.is_empty():
+		last_error = "目标区域不存在，仍留在当前位置。"
+		_update_interface()
+		return
+	var packed := load(path) as PackedScene
+	if packed == null:
+		last_error = "目标区域无法加载，仍留在当前位置。"
+		_update_interface()
+		return
+	var candidate := packed.instantiate() as Node2D
+	if candidate == null:
+		last_error = "目标区域实例化失败，仍留在当前位置。"
+		_update_interface()
+		return
+	_transition_pending = true
+	_transition_generation += 1
+	var token := _transition_generation
+	_transition_candidate = candidate
+	candidate.visible = false
+	add_child(candidate)
+	move_child(candidate,0)
+	candidate.set_input_enabled(false)
+	_set_room_camera_enabled(candidate,false)
+	locks.set_locked(&"transition",true)
+	last_error = "正在通过门进入目标区域……Esc 可在提交前取消。"
+	_update_interface()
+	await get_tree().physics_frame
+	if token != _transition_generation or not _transition_pending or state != State.WORLD:
+		if is_instance_valid(candidate):
+			candidate.queue_free()
+		return
+	if not _world_contract_valid(candidate) or String(candidate.get_space_id()) != String(target.target_space_id):
+		_fail_transition(candidate,"目标区域合同无效，仍留在原位置。")
+		return
+	var arrival: Vector2 = candidate.get_anchor_position(String(target.arrival_anchor_id))
+	if arrival == Vector2.INF or _position_is_blocked_in(candidate,arrival):
+		_fail_transition(candidate,"目标门落点无效或被阻挡，仍留在原位置。")
+		return
+
+	var old_room := room
+	room = candidate
+	_transition_candidate = null
+	_transition_pending = false
+	room.get_player().position = arrival
+	room.get_player().facing = StringName(String(target.arrival_facing))
+	room.visible = true
+	_set_room_camera_enabled(room,true)
+	active_snapshot.space_id = String(room.get_space_id())
+	active_snapshot.world_position_px = {"x":arrival.x,"y":arrival.y}
+	active_snapshot.facing = String(target.arrival_facing)
+	_refresh_farm_world()
+	if is_instance_valid(old_room):
+		old_room.set_input_enabled(false)
+		remove_child(old_room)
+		old_room.queue_free()
+	locks.set_locked(&"transition",false)
+	last_error = ""
+	_clear_movement()
+	_apply_input()
+	_update_interface()
+
+func _valid_door_target(target: Dictionary) -> bool:
+	var required := ["kind","interaction_id","target_space_id","arrival_anchor_id","arrival_facing"]
+	if target.size() != required.size():
+		return false
+	for key: String in required:
+		if not target.has(key) or not (target[key] is String) or String(target[key]).is_empty():
+			return false
+	return target.kind == "door" and target.arrival_facing in ["north","south","east","west"]
+
+func _fail_transition(candidate: Node2D, message: String) -> void:
+	if is_instance_valid(candidate):
+		candidate.queue_free()
+	_transition_candidate = null
+	_transition_pending = false
+	_transition_generation += 1
+	locks.set_locked(&"transition",false)
+	last_error = message
+	_apply_input()
+	_update_interface()
+
+func _cancel_transition(message: String) -> bool:
+	if not _transition_pending:
+		return false
+	_transition_generation += 1
+	_transition_pending = false
+	if is_instance_valid(_transition_candidate):
+		_transition_candidate.queue_free()
+	_transition_candidate = null
+	locks.set_locked(&"transition",false)
+	last_error = message
+	_apply_input()
+	_update_interface()
+	return true
 
 func _begin_farm_action() -> void:
 	if gameplay_session == null or not gameplay_session.is_configured() or not is_instance_valid(room) or not room.has_method("resolve_plot_target"):
@@ -403,7 +572,7 @@ func _farm_error_text(code: String) -> String:
 	return "农事操作未完成："+code
 
 func _select_inventory_slot(slot_index: int) -> void:
-	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured() or farm_action.is_busy():
+	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured() or farm_action.is_busy() or _transition_pending:
 		return
 	var projection: Dictionary = gameplay_session.projection()
 	if not projection.ok or slot_index < 0 or slot_index >= int(projection.inventory.capacity):
@@ -465,7 +634,7 @@ func _update_interface() -> void:
 		"envelope":_import_envelope,
 		"focus_action":_focus_action,
 		"has_gameplay":has_gameplay,
-		"world_label":"农庄第一屏 · 工程美术" if has_gameplay else "旧入口碰撞测试场",
+		"world_label":_world_label(has_gameplay),
 		"farm_action":farm_action.projection()
 	}
 	if has_gameplay:
@@ -481,13 +650,21 @@ func _update_interface() -> void:
 	view.show_page(page,context)
 	_focus_action = ""
 
+func _world_label(has_gameplay: bool) -> String:
+	if not has_gameplay or not is_instance_valid(room) or not room.has_method("get_space_id"):
+		return "旧入口碰撞测试场"
+	return "家内部 · 工程美术" if room.get_space_id() == "space.house" else "农庄第一屏 · 工程美术"
+
 func save_progress() -> Dictionary:
 	if state != State.WORLD or active_snapshot.is_empty():
 		return CODEC.failure("SAVE_NO_SESSION")
 	if farm_action.is_busy():
 		return CODEC.failure("SAVE_ACTION_BUSY")
+	if _transition_pending:
+		return CODEC.failure("SAVE_TRANSITION_BUSY")
 	var candidate: Dictionary = active_snapshot.duplicate(true)
 	var player: CharacterBody2D = room.get_player()
+	candidate.space_id = String(room.get_space_id()) if room.has_method("get_space_id") else candidate.space_id
 	candidate.world_position_px = {"x":player.position.x,"y":player.position.y}
 	candidate.facing = str(player.facing)
 	if gameplay_session != null:
@@ -547,7 +724,15 @@ func _on_action(action: String, payload: Dictionary) -> void:
 				_entry_creates_save = false
 				_entry_requires_gameplay = result.envelope.snapshot.has("gameplay")
 				active_save_id = str(payload.get("save_id",""))
-				start_world(FARM_ROOM if _entry_requires_gameplay else LEGACY_ROOM)
+				var target_path := LEGACY_ROOM
+				if _entry_requires_gameplay:
+					target_path = _scene_path_for_space(String(_entry_snapshot.space_id))
+					if target_path.is_empty():
+						_entry_snapshot.clear()
+						_entry_requires_gameplay = false
+						last_error = "存档区域暂不受支持，未进入世界。"
+						return
+				start_world(target_path)
 			else:
 				last_error = "无法读取存档："+result.error_code
 		"choose_import":
@@ -645,6 +830,8 @@ func _on_action(action: String, payload: Dictionary) -> void:
 func _close_requested() -> void:
 	if state == State.WORLD:
 		settings.revert()
+		if _transition_pending:
+			_cancel_transition("关闭请求取消了尚未提交的门转场。")
 		if farm_action.is_before_contact():
 			_cancel_farm_action("关闭请求取消了尚未提交的农事动作。")
 		elif farm_action.is_busy():
