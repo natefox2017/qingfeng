@@ -30,7 +30,7 @@
 ## 快照与内容
 | 结构 | 字段/类型/单位与拥有者 |
 | --- | --- |
-| SaveEnvelope | save_format:string固定qingfeng；schema_version:int=1；content_version:string；save_id:string；saved_at_utc:string UTC ISO8601；snapshot:严格对象；checksum:sha256；由persistence写 |
+| SaveEnvelope | save_format:string固定qingfeng；schema_version:int，入口夹具=1、首个完整玩法快照=2；content_version:string；save_id:string；saved_at_utc:string UTC ISO8601；snapshot:严格对象；checksum:sha256；由persistence写 |
 | SessionState | session_id:string；generation:int>=0；领域快照；由app/session管理 |
 | ClockState | game_minute:int>=0，自第1天00:00累加的游戏分钟；非UTC；由Clock写 |
 | ActorState | actor_id/display_name/appearance_id/space_id:string；world_position_px:{x:number,y:number}；facing:north/south/east/west；由运动/会话交接 |
@@ -42,6 +42,8 @@
 | ResidentState | ActorState加occupation_id/activity_id/home_anchor_id:string，known_event_ids:string[]，relationship_points:int；由居民写 |
 | FactEvent | event_id:string，source_command_id:string或null（系统事件须另标source_system），kind/space_id:string，game_minute:int，participant_ids:string[]，严格payload；提交后创建 |
 | MemorySummary | resident_id:string，source_event_ids:string[]，summary_text:string，updated_at_game_minute:int；主观摘要，不替代事实 |
+
+首个完整玩法存档机器合同见 `schemas/save_v2.schema.json`：schema 2 在原身份/位置字段上增加唯一 `GameplaySession` 快照，包含 Clock / Inventory / Wallet / Farm；运行时 `session_codec.gd` 还会按 `first_playable_v1` 校验容量、堆叠、作物成长与日序。地图 plot 坐标的最终合法性仍由加载后的 WORLD 布局 + `GameplaySession.restore()` 再验，存档不能成为第二份地图来源。schema 1 只保留当前碰撞入口夹具兼容。
 
 嵌套对象须在实施前补机器schema；上表未规定的业务上限由content_version表定义，不散落代码。首个运行表是 `first_playable_v1`（机器结构见 `schemas/content_version.schema.json`，运行校验见 `game/content/content_catalog.gd`），当前固定12格背包、200初始货币、4袋首作物种子、06:00日初和08:00–20:00商店窗口；后续领域/UI只读取，不复制。新档发物只一次，所有发布所需领域一起验证/恢复；不得加载旧项目格式或访问旧用户目录。
 地形格16px不等于导出屏幕像素。cell_position是整数地图格，source_anchor_px是源图片左上角坐标，world_position_px是未缩放世界像素，viewport_position_px是渲染视口坐标；转换由布局统一。

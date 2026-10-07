@@ -21,11 +21,13 @@
 
 ## 新存档协议的具体边界
 
-`session_codec.gd`只实现content_version=`entry_fixture_v1`，schema_version=1：save_format、save_id、saved_at_utc（UTC微秒）、snapshot和checksum。snapshot包含session_id、player_name、dog_name、space_id、world_position_px、facing。没有库存/钱物字段，不伪造尚未实现系统的默认状态。
+`session_codec.gd`现在同时认识两代明确格式：schema 1 / `entry_fixture_v1` 继续兼容当前碰撞测试入口；schema 2 / `first_playable_v1` 在相同身份与世界位置字段上增加 `gameplay`，其中严格保存 Clock、Inventory、Wallet、Farm 的权威快照。schema 2 的机器合同见 `schemas/save_v2.schema.json`，同一 `session_store.gd` 走相同临时写→读回校验→rename 路径。
+
+当前 `main.gd` **仍只运行碰撞测试场**，因此会明确拒绝把 schema 2 读进测试场，避免出现“名字/坐标恢复了但库存、钱、田地被静默丢掉”的半恢复。正式运行入口注入 `GameplaySession` 和 WORLD 地块布局后，才会切换新档/继续到 schema 2；这一步尚未冒充完成。
 
 .qfsave为纯UTF-8 JSON，不调用ResourceLoader、str_to_var、load/save Resource或对象反序列化。最大256 KiB，嵌套最多12层，容器成员有界；拒绝重复key（包括Unicode转义同名）、未知字段/版本、错误类型、bool坐标、非有限坐标、非UTF-8和无效标记。校验JSON数字时规范化整数值，解决Godot解码为float后1/1.0校验码不一致的问题。
 
-SHA256用于损坏检测，**不是防作弊签名/信任认证**。通过校验的坐标仍在世界实际物理空间中检查；落在墙内时拒绝读取，不悄悄传送到别处。不支持旧游戏存档、其他content_version或任意Space；后续正式地图迁移须显式变更合同并补测试。
+SHA256用于损坏检测，**不是防作弊签名/信任认证**。通过校验的坐标仍在世界实际物理空间中检查；落在墙内时拒绝读取，不悄悄传送到别处。不支持旧项目存档或未知content_version。schema 1 仍只允许碰撞夹具 Space；schema 2 允许正式 Space 字符串，但文件层只做结构/数值检查，加载后仍必须由真实 WORLD 布局验证 Space、落点和 plot 几何，不能凭存档移动地图。
 
 `session_store.gd`写入user://qingfeng/saves：临时文件→flush/关闭→读回验证→新随机ID文件rename。采取最多128份的追加式保存，不覆盖已有文件；每次导入是新本地save_id和新session_id。没有自动删除或按大小淘汰，达到上限会明确失败。列表按写入时间排序；导入重新写本机时间，原文件保留。
 

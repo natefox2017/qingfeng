@@ -4,6 +4,7 @@ const CODEC = preload("res://persistence/session_codec.gd")
 const STORE = preload("res://persistence/session_store.gd")
 const SETTINGS = preload("res://persistence/settings_store.gd")
 const UI_THEME = preload("res://ui/theme/ui_theme.gd")
+const SESSION = preload("res://app/gameplay_session.gd")
 var checks := 0
 var failures: Array[String] = []
 var app: Control
@@ -137,6 +138,16 @@ func run() -> void:
 	app._on_action("cancel_import",{})
 	check(app.store.list_saves().size()==count,"cancel import writes nothing")
 	check(app.view.buttons["choose_import"].has_focus(),"cancel import returns focus to import trigger")
+	app._on_action("back",{})
+	var gameplay_session = SESSION.new([
+		{"plot_id":"plot.entry.v2","space_id":"space.farm","cell_position":{"x":1,"y":1}}
+	])
+	var v2_snapshot: Dictionary = CODEC.compose_gameplay_snapshot(CODEC.new_snapshot("完整档","阿豆"),gameplay_session.snapshot())
+	var v2_saved: Dictionary = app.store.write_new(v2_snapshot)
+	check(v2_saved.ok,"schema-v2 save can share the same bounded store")
+	if v2_saved.ok:
+		app._on_action("read_save",{"save_id":v2_saved.save_id})
+		check(app.state==app.State.TITLE and app.room==null and app.last_error.contains("schema 2"),"entry fixture refuses partial schema-v2 restore")
 	var blocked_snapshot:=snapshot.duplicate(true);blocked_snapshot.world_position_px={"x":176,"y":140}
 	var blocked_file:Dictionary=store.write_new(blocked_snapshot)
 	app._entry_snapshot=store.read_save(blocked_file.save_id).envelope.snapshot
