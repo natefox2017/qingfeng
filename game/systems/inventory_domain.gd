@@ -106,8 +106,8 @@ func candidate_after_remove(item_id: Variant, quantity: Variant) -> Dictionary:
 			break
 	return {"ok":true,"error_code":"","slots":candidate}
 
-func commit_slots(candidate: Array, expected_revision: int) -> bool:
-	if expected_revision != revision or candidate.size() != capacity:
+func _valid_slots(candidate: Array) -> bool:
+	if candidate.size() != capacity:
 		return false
 	for slot: Variant in candidate:
 		if slot == null:
@@ -118,8 +118,35 @@ func commit_slots(candidate: Array, expected_revision: int) -> bool:
 			return false
 		if slot.quantity > _stack_limit(slot.item_id):
 			return false
+	return true
+
+func commit_slots(candidate: Array, expected_revision: int) -> bool:
+	if expected_revision != revision or not _valid_slots(candidate):
+		return false
 	slots = candidate.duplicate(true)
 	revision += 1
+	return true
+
+func restore(snapshot_value: Variant) -> bool:
+	if not is_configured() or not (snapshot_value is Dictionary):
+		return false
+	var required := ["revision","container_id","capacity","slots","selected_slot_index"]
+	if snapshot_value.size() != required.size():
+		return false
+	for key: String in required:
+		if not snapshot_value.has(key):
+			return false
+	if snapshot_value.container_id != container_id or snapshot_value.capacity != capacity:
+		return false
+	if not (snapshot_value.revision is int) or snapshot_value.revision < 0:
+		return false
+	if not (snapshot_value.selected_slot_index is int) or snapshot_value.selected_slot_index < 0 or snapshot_value.selected_slot_index >= capacity:
+		return false
+	if not (snapshot_value.slots is Array) or not _valid_slots(snapshot_value.slots):
+		return false
+	slots = snapshot_value.slots.duplicate(true)
+	selected_slot_index = snapshot_value.selected_slot_index
+	revision = snapshot_value.revision
 	return true
 
 func add(item_id: String, quantity: int) -> Dictionary:
