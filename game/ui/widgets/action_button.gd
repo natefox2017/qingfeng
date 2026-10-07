@@ -22,6 +22,10 @@ func _draw() -> void:
 			draw_rect(Rect2(center-Vector2(10,10),Vector2(20,20)),color,false,2)
 			draw_rect(Rect2(center-Vector2(5,9),Vector2(10,6)),color,false,2)
 			draw_rect(Rect2(center+Vector2(-5,3),Vector2(10,6)),color,false,2)
+		"inventory":
+			for x in [-7,1]:
+				for y in [-7,1]:
+					draw_rect(Rect2(center+Vector2(x,y),Vector2(6,6)),color,false,2)
 		"settings":
 			draw_arc(center,7,0,TAU,24,color,2)
 			for i in 8:
