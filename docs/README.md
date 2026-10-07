@@ -1,0 +1,20 @@
+# 开发文档导航
+
+所有正文只维护一份；Notion 与 README 只导航，不复制规则或待办状态。目录框架齐备不表示游戏、素材或账号已经完成。
+
+| 阅读顺序 | 正文 | 回答的问题 |
+| --- | --- | --- |
+| 1 | [产品](product.md) | 第一版玩家做什么，什么不做 |
+| 2 | [视觉、地图、UI](visual_and_ui.md) | 星露谷式相机、像素密度、碰撞遮挡、按钮与字体 |
+| 3 | [PixelLab 流水线](pixellab_pipeline.md) | 连接、出图、任务去重、动画、下载、QA、Godot 接入 |
+| 4 | [技术架构](architecture.md) | 目录、模块边界、状态唯一拥有者、存档与 AI |
+| 5 | [数据合同](data_contracts.md) | 每类字段命名、类型、单位、缺省、版本及样例 |
+| 6 | [开发协作](development.md) | Issues、依赖、并行所有权、小 PR 与完成标准 |
+| 7 | [验收](acceptance.md) | 自动测试、三天路线、多尺寸 UI、导出与证据 |
+| 8 | [参考与取舍](references.md) | 实际参考项目和官方能力；为什么采用或不采用 |
+| 9 | [仓库身份](repository.md) | 唯一 remote、Notion、历史边界、凭据隔离 |
+
+[任务链接登记](tasks.json)记录任务身份与依赖，不记录另一套完成状态。
+[素材请求模板](../templates/asset_request.md)、[交接模板](../templates/handoff.md)、[验收记录模板](../templates/validation_report.md)用于每个具体交付，不要求小改动重复写大文档。
+
+当前所有玩法/展示接口都是开发合同，不是假称已存在的 API。角色身份、精确平衡与最终美术须在对应任务的数据和样板中落定。
