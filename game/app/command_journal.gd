@@ -4,7 +4,7 @@ extends RefCounted
 
 const PROTOCOL_VERSION := 1
 const MAX_ID_LENGTH := 128
-const MAX_RECEIPTS := 4096
+const MAX_RECEIPTS := 512
 
 var _receipts: Dictionary = {}
 
