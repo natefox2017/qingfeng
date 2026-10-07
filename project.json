@@ -28,5 +28,24 @@
     "classes_and_nodes": "PascalCase"
   },
   "save_format": "qingfeng",
-  "user_data_path": "user://qingfeng/"
+  "user_data_path": "user://qingfeng/",
+  "entry_slice": {
+    "content_version": "entry_fixture_v1",
+    "capabilities": [
+      "title",
+      "new_identity",
+      "save_list",
+      "untrusted_json_import_preview",
+      "settings_preview_rollback",
+      "fixture_position_save"
+    ],
+    "unimplemented": [
+      "farm_gameplay",
+      "dog_actor",
+      "inventory_ui",
+      "final_pixel_art",
+      "bundled_chinese_font",
+      "export_validation"
+    ]
+  }
 }

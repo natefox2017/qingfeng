@@ -18,3 +18,10 @@
 [素材请求模板](../templates/asset_request.md)、[交接模板](../templates/handoff.md)、[验收记录模板](../templates/validation_report.md)用于每个具体交付，不要求小改动重复写大文档。
 
 [N05运行基础](runtime_foundation.md)记录已实现的启动、移动及取消/输入生命周期；其余玩法/展示接口仍是开发合同，不是假称已存在的 API。角色身份、精确平衡与最终美术须在对应任务的数据和样板中落定。
+
+## 本轮可执行切片与制作细则
+
+- [入口页面/新建/读取导入/设置/暂停保存](entry_pages.md)：代码已建立，目标场景仍是碰撞夹具。
+- [具体玩法与三天路线](gameplay_details.md)：后续实施规格，不假称农耕已实现。
+- [详细切图/锚点/帧事件/图集工具](asset_slicing.md)：PixelLab交付到Godot的明确边界。
+- [qingfenggu历史问题与新防线](legacy_lessons.md)：只总结用户提供的历史材料，标清来源与未验范围。

@@ -1,0 +1,153 @@
+extends Control
+## Pages project intents, never open arbitrary saves or own game state.
+signal action_requested(action: String, payload: Dictionary)
+const ACTION_BUTTON = preload("res://ui/widgets/action_button.gd")
+const INK := Color("2c4035")
+var title: Label
+var subtitle: Label
+var body: VBoxContainer
+var notice: Label
+var countdown: Label
+var panel: PanelContainer
+var center: CenterContainer
+var hud: HBoxContainer
+var player_name: LineEdit
+var dog_name: LineEdit
+var volume: HSlider
+var fullscreen: CheckBox
+var vsync: CheckBox
+var buttons: Dictionary = {}
+var file_dialog: FileDialog
+var _first_button: Button
+
+func _ready() -> void:
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var theme := Theme.new()
+	var font := SystemFont.new()
+	font.font_names = PackedStringArray(["Noto Sans CJK SC","Microsoft YaHei","PingFang SC","sans-serif"])
+	theme.default_font = font
+	theme.default_font_size = 12
+	for kind: String in ["Label","Button","CheckBox","LineEdit"]:
+		theme.set_color("font_color",kind,INK)
+		theme.set_color("font_focus_color",kind,INK)
+		theme.set_color("font_hover_color",kind,INK)
+		theme.set_color("font_pressed_color",kind,INK)
+	for state: String in ["normal","hover","pressed","focus","disabled"]:
+		var style := StyleBoxFlat.new()
+		style.bg_color = Color("e5e8d5") if state == "normal" else Color("d4debe")
+		style.border_color = Color("6d896c") if state == "focus" else Color("cad0bb")
+		style.set_border_width_all(2 if state == "focus" else 1)
+		style.set_corner_radius_all(3)
+		theme.set_stylebox(state,"Button",style)
+		if state in ["normal","focus"]: theme.set_stylebox(state,"LineEdit",style)
+	self.theme = theme
+	var backdrop := ColorRect.new()
+	backdrop.name = "Backdrop";backdrop.color = Color("ebecdd");backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);backdrop.mouse_filter=Control.MOUSE_FILTER_IGNORE;add_child(backdrop)
+	center = CenterContainer.new();center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);center.mouse_filter=Control.MOUSE_FILTER_IGNORE;add_child(center)
+	panel = PanelContainer.new();panel.custom_minimum_size=Vector2(490,280);center.add_child(panel)
+	var background := StyleBoxFlat.new();background.bg_color=Color("f8f6e9");background.set_corner_radius_all(8);background.border_color=Color("c9ceba");background.set_border_width_all(1);background.set_content_margin_all(20);panel.add_theme_stylebox_override("panel",background)
+	var column := VBoxContainer.new();column.add_theme_constant_override("separation",9);panel.add_child(column)
+	title=Label.new();title.add_theme_font_size_override("font_size",24);column.add_child(title)
+	subtitle=Label.new();subtitle.add_theme_color_override("font_color",Color("697664"));subtitle.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;column.add_child(subtitle)
+	body=VBoxContainer.new();body.add_theme_constant_override("separation",8);body.size_flags_vertical=Control.SIZE_EXPAND_FILL;column.add_child(body)
+	notice=Label.new();notice.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;notice.add_theme_color_override("font_color",Color("846242"));column.add_child(notice)
+	hud=HBoxContainer.new();hud.position=Vector2(10,8);add_child(hud)
+	file_dialog=FileDialog.new();file_dialog.file_mode=FileDialog.FILE_MODE_OPEN_FILE;file_dialog.access=FileDialog.ACCESS_FILESYSTEM;file_dialog.filters=PackedStringArray(["*.qfsave ; 晴风谷存档"]);file_dialog.title="选择要导入的存档";file_dialog.size=Vector2i(560,300)
+	var dialog_theme:=Theme.new();dialog_theme.default_font=font;file_dialog.theme=dialog_theme;add_child(file_dialog)
+	file_dialog.file_selected.connect(func(path:String):emit_action("preview_import",{"path":path}))
+
+func emit_action(name: String, payload: Dictionary = {}) -> void:
+	action_requested.emit(name,payload)
+
+func clear_page() -> void:
+	for child in body.get_children(): body.remove_child(child);child.queue_free()
+	for child in hud.get_children(): hud.remove_child(child);child.queue_free()
+	buttons.clear();_first_button=null;player_name=null;dog_name=null;countdown=null
+	notice.text="";panel.visible=true;get_node("Backdrop").visible=true
+
+func label(text: String, parent: Node = null) -> Label:
+	var node:=Label.new();node.text=text;node.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	(parent if parent != null else body).add_child(node)
+	return node
+
+func row(parent: Node = null) -> HBoxContainer:
+	var node:=HBoxContainer.new();node.add_theme_constant_override("separation",8)
+	(parent if parent != null else body).add_child(node);return node
+
+func button(parent: Node, action: String, glyph: String, description: String, payload: Dictionary = {}, enabled := true) -> Button:
+	var node: Button=ACTION_BUTTON.new();node.glyph=glyph;node.custom_minimum_size=Vector2(44,36)
+	node.tooltip_text=description;node.accessibility_name=description;node.disabled=not enabled
+	node.pressed.connect(func():emit_action(action,payload))
+	node.mouse_entered.connect(func():notice.text=description)
+	node.focus_entered.connect(func():notice.text=description)
+	parent.add_child(node);buttons[action]=node
+	if _first_button == null and enabled:_first_button=node
+	return node
+
+func show_page(page: String, context: Dictionary) -> void:
+	clear_page()
+	match page:
+		"title":
+			title.text="晴风谷";subtitle.text="QINGFENG  /  一段新的乡居生活"
+			label("入口与存档开发版\n地图、美术与完整玩法仍在制作中。")
+			var actions:=row()
+			for entry: Array in [["continue","play","继续","继续最近的有效存档"],["new_game","new","新建","新建游戏"],["load","load","存档","读取 / 导入存档"],["settings","settings","设置","设置"],["quit","quit","退出","退出游戏"]]:
+				var cell:=VBoxContainer.new();cell.custom_minimum_size.x=44;actions.add_child(cell)
+				button(cell,entry[0],entry[1],entry[3],{},entry[0]!="continue" or context.has("recent_id"))
+				var caption:=label(entry[2],cell);caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;caption.add_theme_font_size_override("font_size",10)
+
+		"new_game":
+			title.text="开始新的生活";subtitle.text="名字会写入新存档；不会覆盖已有进度。"
+			label("你的名字（1–16字）")
+			player_name=LineEdit.new();player_name.max_length=16;player_name.placeholder_text="请输入名字";player_name.text=context.get("player_name","");body.add_child(player_name)
+			label("狗的名字（可留空，伙伴系统尚未接入）")
+			dog_name=LineEdit.new();dog_name.max_length=16;dog_name.placeholder_text="可稍后确定";dog_name.text=context.get("dog_name","");body.add_child(dog_name)
+			var actions:=row();button(actions,"create","accept","创建独立存档并进入测试场");button(actions,"back","back","返回标题，不创建存档")
+			player_name.grab_focus()
+		"load":
+			title.text="存档";subtitle.text="读取本机进度，或导入经过校验的 .qfsave 文件。"
+			var scroll:=ScrollContainer.new();scroll.custom_minimum_size=Vector2(440,118);body.add_child(scroll)
+			var entries:=VBoxContainer.new();entries.size_flags_horizontal=Control.SIZE_EXPAND_FILL;scroll.add_child(entries)
+			if context.saves.is_empty():label("还没有存档。先新建游戏，或使用下方导入。",entries)
+			for item:Dictionary in context.saves:
+				var line:=row(entries)
+				var text:String=(item.envelope.snapshot.player_name+"  ·  "+item.envelope.saved_at_utc) if item.ok else ("无法读取 · "+item.error_code)
+				var name_label:=label(text,line);name_label.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+				button(line,"read_save","play","读取这个存档",{"save_id":item.save_id},item.ok)
+			var actions:=row();button(actions,"choose_import","import","选择存档文件");button(actions,"back","back","返回标题")
+		"import_review":
+			title.text="确认导入";subtitle.text="将创建一份本机副本，原文件与已有存档不变。"
+			label("玩家："+context.envelope.snapshot.player_name+"\n狗名："+context.envelope.snapshot.dog_name+"\n保存时间："+context.envelope.saved_at_utc+"\n内容版本："+context.envelope.content_version)
+			var actions:=row();button(actions,"confirm_import","accept","确认创建本机副本");button(actions,"cancel_import","back","取消导入，不写入任何存档")
+		"settings":
+			title.text="设置";subtitle.text="更改后先预览，10秒内确认；否则自动恢复。"
+			label("主音量（当前没有正式音乐与音效素材）")
+			volume=HSlider.new();volume.min_value=0;volume.max_value=1;volume.step=0.05;volume.value=context.settings.master_volume;body.add_child(volume)
+			fullscreen=CheckBox.new();fullscreen.text="全屏显示";fullscreen.button_pressed=context.settings.is_fullscreen;body.add_child(fullscreen)
+			vsync=CheckBox.new();vsync.text="垂直同步";vsync.button_pressed=context.settings.is_vsync_enabled;body.add_child(vsync)
+			var actions:=row();button(actions,"preview_settings","accept","预览设置");button(actions,"back","back","放弃未应用更改")
+		"display_confirm":
+			title.text="保留显示设置？";subtitle.text="Esc、失焦或超时会恢复之前的设置。"
+			countdown=label("10 秒后自动恢复")
+			var actions:=row();button(actions,"confirm_settings","accept","保留并保存设置");button(actions,"revert_settings","back","立即恢复")
+		"loading":
+			title.text="准备进入";subtitle.text="正在加载场景和校验落点；操作取消前不会创建新档。"
+			label("请稍候…")
+			button(row(),"cancel_load","back","取消加载，返回标题")
+		"pause":
+			title.text="暂歇一下";subtitle.text="暂停中 · 游戏输入已锁定"
+			label("保存记录当前测试场位置与名字。\n正式农庄、作物和背包状态尚未接入。")
+			var actions:=row();button(actions,"resume","resume","继续游戏");button(actions,"save","save","保存到新的独立文件",{},context.get("can_save",false));button(actions,"settings","settings","设置");button(actions,"save_return","back","保存并返回标题",{},context.get("can_save",false))
+		"world":
+			panel.hide();get_node("Backdrop").hide()
+			button(hud,"pause","pause","暂停 / Esc")
+			var text:=Label.new();text.text=context.get("player_name","")+"  ·  入口测试场（非正式地图）";text.add_theme_color_override("font_color",Color("f5f3de"));hud.add_child(text)
+	if not context.get("error","").is_empty():notice.text=context.error
+	elif _first_button != null and page != "new_game":_first_button.grab_focus()
+
+func form_names() -> Dictionary:
+	return {"player_name":player_name.text,"dog_name":dog_name.text}
+
+func settings_draft() -> Dictionary:
+	return {"master_volume":volume.value,"is_fullscreen":fullscreen.button_pressed,"is_vsync_enabled":vsync.button_pressed}

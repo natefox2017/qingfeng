@@ -58,3 +58,7 @@ Wang tileset 图片不是现成 Godot TileSet。根据导出角点/连接标签�
 ## 9. 授权与“完成”
 [PixelLab条款](https://www.pixellab.ai/termsofservice)说明其服务对生成作品的使用授权，并限制程序化服务入口；仍须核对输入参考和第三方权利，不能把生成结果标为CC0或保证任何司法辖区都产生独占版权。
 素材的 validated 表示技术校验，accepted 表示有指定审查与证据；二者不同。manifest 中记录 reviewer、证据、哈希和修订。真实出图/完整动画/平台字体未验时按项保留未验，不以流程文档或样板冒称完成。
+
+## 可执行交付边界补充
+
+实际Atlas导入规则与离线工具见[切图规范](asset_slicing.md)；初次制作请求见[entry_batch](../art/requests/entry_batch.json)。它们尚未提交PixelLab，不含远端任务ID或费用消耗。入口页当前使用原生工程图标，不能称作PixelLab素材。

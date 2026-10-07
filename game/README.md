@@ -1,6 +1,7 @@
-# 新运行基础
-当前唯一入口 `res://app/main.tscn`，Godot4.7.2；主界面明确说明只有工程测试场，不是最终画面。启动方法见[根README](../README.md)，结果与边界见[运行基础](../docs/runtime_foundation.md)。
+# 当前运行入口
 
-app：取消安全的场景加载/命名输入锁；actors：无美术依赖的身体运动；tests/fixtures：可编辑障碍和原生诊断画面；tests：生命周期/实际按键/物理回归与渲染捕获。正式world、systems、persistence、dialogue、ui、content、assets仍按各自Issue开发；不把此夹具复制成一条长期候选继承链。
+唯一入口res://app/main.tscn，固定Godot4.7.2。中文标题、新建、存档列表/导入、设置预览、暂停保存返回已经接通；保存仅包含身份与明确的碰撞测试场位置，非完整游戏存档。
 
-本切片不写业务存档、不访问旧项目数据、不包含图片或字体文件。工程英文按钮不代表正式图标UI/中文字体已经交付。
+运行方法见[根README](../README.md)，实际行为见[入口合同](../docs/entry_pages.md)。界面使用native工程图标和无衬线系统字体；正式PixelLab图、随包字体、农庄/狗/种植/背包仍待对应任务。
+
+测试只访问隔离user://，正式写入限于user://qingfeng/，不接入旧项目存档。主场景不新增深继承；UI发意图，session_store唯一写盘，settings_store拥有显示/声音预览。

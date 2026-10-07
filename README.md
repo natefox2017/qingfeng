@@ -5,7 +5,7 @@
 一个以星露谷式固定俯视像素表现为目标、结合农庄生活与有记忆居民的单机游戏。首版先完成三天可玩的生活循环；PixelLab 用于开发期制作素材，运行中的游戏不依赖 PixelLab。可选 AI 对白与本地玩法权限分离。
 
 ## 当前状态
-`foundation`：现在有可启动的 Godot 4.7.2 工程：标题 → 可取消加载 → 移动/碰撞测试场 → 暂停/继续 → 返回标题。**这是工程夹具，不是正式农庄或可玩首版；没有最终美术、狗、农耕、背包和存档实现。PixelLab 连接与实际付费出图仍未验证。** 进度看 Issue #6，结果与边界见[运行基础](docs/runtime_foundation.md)。
+`foundation`：Godot 4.7.2已接通中文标题、新建身份、读取/导入存档、设置预览回退、可取消加载、碰撞测试场及暂停保存返回。**当前只保存身份与测试场位置；没有正式地图、狗、农耕或背包。PixelLab连接/出图和随包中文字体尚未完成。** 边界见[入口合同](docs/entry_pages.md)，旧基础验证见[历史记录](docs/runtime_foundation.md)。
 
 ## 入口
 - [Notion 唯一人类入口](https://app.notion.com/p/3eee1df1f5a78150879fe4bc1c3151db)
@@ -34,4 +34,10 @@ python3 tools/runtime.py test    # 隔离用户数据，冷导入并运行回归
 ## 已建立目录
 `docs/` 规则与任务导航；`game/` 新运行模块及明确标记的测试场；`art/` 素材登记与生成任务；`schemas/` 机器合同；`templates/` 交接与验证模板；`tools/` 本仓库检查；`.github/` Issue、PR 和 CI。
 
-app、actors 和 tests 已有首个工程切片，其余领域目录仍占位。职责见 [架构](docs/architecture.md)。[仓库身份及迁入边界](docs/repository.md)。
+app、actors、ui、persistence与tests已有入口切片，其他领域仍按Issue开发。职责见 [架构](docs/architecture.md)。[仓库身份及迁入边界](docs/repository.md)。
+
+## 入口页面与存档切片
+
+在新运行基础上补充标题、新建名字、存档列表、外部.qfsave导入预览确认、设置预览回退和暂停保存返回。当前只保存身份与碰撞测试场坐标，不是已完成农庄。启动 `python3 tools/runtime.py run`；测试 `python3 tools/runtime.py test`（固定引擎参数见[入口合同](docs/entry_pages.md)）。新页面使用普通中文无衬线后备字体，字体尚未随包交付；PixelLab未连接/未出图。
+
+[切图细则](docs/asset_slicing.md) · [具体玩法](docs/gameplay_details.md) · [旧项目问题复盘](docs/legacy_lessons.md)。
