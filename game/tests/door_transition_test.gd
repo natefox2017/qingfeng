@@ -55,7 +55,7 @@ func run() -> void:
 		finish()
 		return
 	check(app.room.get_space_id() == "space.farm", "new gameplay begins on farm")
-	var session_identity := app.gameplay_session
+	var session_identity: RefCounted = app.gameplay_session
 	var selected_before: int = app.gameplay_session.inventory.selected_slot_index
 
 	# Begin a valid transition then cancel it before the staged target can commit.
