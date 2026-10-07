@@ -120,8 +120,7 @@ func projection() -> Dictionary:
 		"inventory":inventory.projection(),
 		"items":_item_projection(),
 		"wallet":wallet.projection(),
-		"farm":farm.projection(),
-		"command_journal":journal.snapshot()
+		"farm":farm.projection()
 	}
 
 func _item_projection() -> Dictionary:
@@ -143,7 +142,8 @@ func snapshot() -> Dictionary:
 		"clock":clock.snapshot(),
 		"inventory":inventory.projection(),
 		"wallet":wallet.projection(),
-		"farm":farm.projection()
+		"farm":farm.projection(),
+		"command_journal":journal.snapshot()
 	}
 
 func restore(snapshot_value: Variant) -> bool:
