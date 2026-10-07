@@ -4,6 +4,8 @@ const CONTENT = preload("res://content/content_catalog.gd")
 const JOURNAL = preload("res://app/command_journal.gd")
 const INVENTORY = preload("res://systems/inventory_domain.gd")
 const WALLET = preload("res://systems/wallet_domain.gd")
+const FARM = preload("res://systems/farm_domain.gd")
+const FARMING = preload("res://systems/farming_coordinator.gd")
 
 var checks := 0
 var failures := 0
@@ -23,6 +25,17 @@ func command(id: String, expected_revision: int, slot_index: int) -> Dictionary:
 		"action":"inventory.select",
 		"expected_revision":expected_revision,
 		"payload":{"slot_index":slot_index}
+	}
+
+func farm_command(id: String, action: String, expected_revision: int, payload: Dictionary) -> Dictionary:
+	return {
+		"protocol_version":1,
+		"command_id":id,
+		"session_id":"session.gameplay",
+		"actor_id":"actor.player",
+		"action":action,
+		"expected_revision":expected_revision,
+		"payload":payload
 	}
 
 func _initialize() -> void:
@@ -78,6 +91,64 @@ func _initialize() -> void:
 	var wallet_projection := wallet.projection()
 	wallet_projection.money = 9999
 	check(wallet.money == 195, "wallet projection cannot mutate authoritative money")
+
+	var farm_inventory = INVENTORY.new(content)
+	var farm = FARM.new([
+		{"plot_id":"plot.farm.001","space_id":"space.farm","cell_position":{"x":6,"y":8}}
+	],content)
+	var farming = FARMING.new(farm_inventory,farm,content)
+	var farm_journal = JOURNAL.new()
+	check(farm.is_configured() and farming.is_configured(), "farm domain configures from layout plus content")
+	var farm_projection := farm.projection()
+	farm_projection.plots[0].state = "mature"
+	check(farm.get_plot("plot.farm.001").state == "untilled", "farm projection cannot mutate authoritative plot")
+
+	var till := farm_journal.execute(farm_command("farm-till","farm.till",farm.revision,{"plot_id":"plot.farm.001"}),farming.handle)
+	check(till.ok and farm.get_plot("plot.farm.001").state == "tilled", "hoe tills an untilled plot")
+	var plant := farm_journal.execute(farm_command("farm-plant","farm.plant",farm.revision,{
+		"plot_id":"plot.farm.001","crop_id":"crop.radish","inventory_revision":farm_inventory.revision
+	}),farming.handle)
+	check(plant.ok and farm.get_plot("plot.farm.001").state == "growing" and farm_inventory.quantity_of("item.radish_seed") == 3, "plant atomically consumes one seed and creates crop")
+	var water := farm_journal.execute(farm_command("farm-water-1","farm.water",farm.revision,{"plot_id":"plot.farm.001"}),farming.handle)
+	check(water.ok and water.has_changes and farm.get_plot("plot.farm.001").is_watered, "watering marks growing plot")
+	var repeat_water_revision: int = farm.revision
+	var repeat_water := farm_journal.execute(farm_command("farm-water-repeat","farm.water",repeat_water_revision,{"plot_id":"plot.farm.001"}),farming.handle)
+	check(repeat_water.ok and not repeat_water.has_changes and farm.revision == repeat_water_revision, "watering already wet plot is a no-op")
+
+	var day2 := farm.settle_day(2)
+	check(day2.ok and farm.get_plot("plot.farm.001").growth_days == 1 and not farm.get_plot("plot.farm.001").is_watered, "day settlement advances only watered crop and clears water")
+	var after_day2_revision: int = farm.revision
+	var duplicate_day2 := farm.settle_day(2)
+	check(duplicate_day2.ok and not duplicate_day2.has_changes and farm.revision == after_day2_revision, "same day settlement cannot advance twice")
+	var water2 := farm_journal.execute(farm_command("farm-water-2","farm.water",farm.revision,{"plot_id":"plot.farm.001"}),farming.handle)
+	check(water2.ok, "second-day watering succeeds")
+	var day3 := farm.settle_day(3)
+	check(day3.ok and farm.get_plot("plot.farm.001").state == "mature" and farm.get_plot("plot.farm.001").growth_days == 2, "two watered settlements mature first crop on day three")
+
+	check(farm_inventory.add("item.radish_seed",96).ok and farm_inventory.add("item.radish_seed",99*9).ok, "test inventory can be filled without debug mutation")
+	var mature_before_full := farm.get_plot("plot.farm.001")
+	var inventory_before_full_harvest := farm_inventory.projection()
+	var harvest_full := farm_journal.execute(farm_command("farm-harvest-full","farm.harvest",farm.revision,{
+		"plot_id":"plot.farm.001","inventory_revision":farm_inventory.revision
+	}),farming.handle)
+	check(not harvest_full.ok and harvest_full.error_code == "INVENTORY_FULL" and farm.get_plot("plot.farm.001") == mature_before_full and farm_inventory.projection() == inventory_before_full_harvest, "full inventory rejects harvest without deleting crop")
+	check(farm_inventory.remove("item.radish_seed",99).ok, "freeing one stack creates harvest capacity")
+	var harvest := farm_journal.execute(farm_command("farm-harvest","farm.harvest",farm.revision,{
+		"plot_id":"plot.farm.001","inventory_revision":farm_inventory.revision
+	}),farming.handle)
+	check(harvest.ok and farm_inventory.quantity_of("item.radish") == 1 and farm.get_plot("plot.farm.001").state == "tilled", "harvest adds produce and preserves tilled soil")
+
+	var stale_inventory_before := farm_inventory.projection()
+	var stale_plant := farm_journal.execute(farm_command("farm-plant-stale","farm.plant",farm.revision,{
+		"plot_id":"plot.farm.001","crop_id":"crop.radish","inventory_revision":farm_inventory.revision-1
+	}),farming.handle)
+	check(not stale_plant.ok and stale_plant.error_code == "INVENTORY_STALE_REVISION" and farm_inventory.projection() == stale_inventory_before and farm.get_plot("plot.farm.001").state == "tilled", "cross-domain stale revision changes nothing")
+	var plant2 := farm_journal.execute(farm_command("farm-plant-2","farm.plant",farm.revision,{
+		"plot_id":"plot.farm.001","crop_id":"crop.radish","inventory_revision":farm_inventory.revision
+	}),farming.handle)
+	check(plant2.ok, "replant succeeds after harvest")
+	var day4 := farm.settle_day(4)
+	check(day4.ok and farm.get_plot("plot.farm.001").state == "growing" and farm.get_plot("plot.farm.001").growth_days == 0, "missing water pauses growth without killing crop")
 
 	finish()
 
