@@ -100,6 +100,8 @@ func execute(command: Variant, handler: Callable) -> Dictionary:
 		if stored.fingerprint != fingerprint:
 			return _failure(command.command_id, "COMMAND_ID_CONFLICT")
 		return stored.result.duplicate(true)
+	if _receipts.size() >= MAX_RECEIPTS:
+		return _failure(command.command_id, "COMMAND_RECEIPT_CAPACITY")
 	if not handler.is_valid():
 		return _failure(command.command_id, "COMMAND_HANDLER_INVALID")
 	var result: Variant = handler.call(command.duplicate(true))
