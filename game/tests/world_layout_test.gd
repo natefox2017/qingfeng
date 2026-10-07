@@ -1,6 +1,7 @@
 extends SceneTree
 
 const FARM_SCENE = preload("res://world/farm_first_screen.tscn")
+const HOUSE_SCENE = preload("res://world/house_interior.tscn")
 
 var checks := 0
 var failures := 0
@@ -58,6 +59,21 @@ func run() -> void:
 	check(not scene.get_player().is_input_enabled, "world input can be disabled by app lifecycle")
 	scene.set_input_enabled(true)
 	check(scene.get_player().is_input_enabled, "world input can be re-enabled without replacing player")
+	check(scene.get_anchor_position("HouseDoorArrival") == Vector2(144,160) and not _blocked(Vector2(144,160)), "farm house-door arrival is explicit and collision safe")
+	check(scene.get_anchor_position("HouseDoorInteract") == Vector2(144,144) and not _blocked(Vector2(144,144)), "farm house-door interaction marker remains outside house collision")
+
+	scene.queue_free()
+	await process_frame
+	scene = HOUSE_SCENE.instantiate()
+	root.add_child(scene)
+	current_scene = scene
+	await physics_frame
+	check(scene.get_space_id() == "space.house" and scene.layout_contract_valid(), "house interior exposes valid stable world contract")
+	check(scene.get_spawn_position() == Vector2(320,320) and not _blocked(Vector2(320,320)), "house arrival anchor is collision safe")
+	check(not _blocked(scene.get_anchor_position("DoorInteract")), "house door interaction marker is walkable")
+	check(not _blocked(scene.get_anchor_position("BedInteract")), "future bed interaction marker is reachable outside bed collision")
+	check(_blocked(Vector2(236,112)) and _blocked(Vector2(424,160)), "house bed and table footprints block movement")
+	check(not _blocked(Vector2(320,352)), "house south door gap is physically passable")
 
 	finish()
 

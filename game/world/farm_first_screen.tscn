@@ -144,6 +144,12 @@ position = Vector2(144, 176)
 [node name="FieldApproach" type="Marker2D" parent="Anchors"]
 position = Vector2(256, 160)
 
+[node name="HouseDoorInteract" type="Marker2D" parent="Anchors"]
+position = Vector2(144, 144)
+
+[node name="HouseDoorArrival" type="Marker2D" parent="Anchors"]
+position = Vector2(144, 160)
+
 [node name="BridgeWest" type="Marker2D" parent="Anchors"]
 position = Vector2(480, 208)
 
