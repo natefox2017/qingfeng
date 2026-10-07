@@ -238,12 +238,14 @@ func _on_action(action: String, payload: Dictionary) -> void:
 				start_world()
 		"continue":
 			for entry:Dictionary in store.list_saves():
-				if entry.ok:
+				if entry.ok and int(entry.envelope.schema_version) == 1:
 					_on_action("read_save",{"save_id":entry.save_id});return
-			last_error="没有有效存档，可以新建或导入。"
+			last_error="当前测试场没有可继续的入口存档；完整玩法存档需等待正式会话接入。"
 		"read_save":
 			var result: Dictionary=store.read_save(str(payload.get("save_id","")))
-			if result.ok:
+			if result.ok and int(result.envelope.schema_version) != 1:
+				last_error="这是完整玩法存档（schema 2）；当前测试场不会半恢复它。"
+			elif result.ok:
 				_entry_snapshot=result.envelope.snapshot.duplicate(true)
 				_entry_creates_save=false;active_save_id=payload.save_id
 				start_world()
