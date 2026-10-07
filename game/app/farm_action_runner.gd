@@ -34,6 +34,12 @@ func cancel_before_contact() -> bool:
 	_clear()
 	return true
 
+func finish_recovery() -> bool:
+	if _phase != "recover":
+		return false
+	_clear()
+	return true
+
 func advance(delta: float) -> Dictionary:
 	if delta < 0.0:
 		return {"event":"invalid"}
