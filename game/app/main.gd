@@ -196,7 +196,9 @@ func _update_interface() -> void:
 	if page in ["title","load"]:
 		context["saves"] = store.list_saves()
 		for entry: Dictionary in context.saves:
-			if entry.ok:context["recent_id"]=entry.save_id;break
+			if entry.ok and int(entry.envelope.schema_version) == 1:
+				context["recent_id"]=entry.save_id
+				break
 	view.show_page(page,context)
 	_focus_action = ""
 
