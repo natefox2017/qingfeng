@@ -37,20 +37,20 @@ func success(id: String, revision := 1) -> Dictionary:
 
 func _initialize() -> void:
 	var journal = JOURNAL.new()
-	var calls := 0
+	var counter := {"calls":0}
 	var handler := func(c: Dictionary) -> Dictionary:
-		calls += 1
+		counter.calls += 1
 		return success(c.command_id)
 	var probe := command("cmd-probe")
 	check(JOURNAL._valid_command(probe), "valid command shape accepted")
 	check(JOURNAL._valid_result(success("cmd-probe"), "cmd-probe"), "valid result shape accepted")
 	check(handler.is_valid(), "lambda handler is callable")
 	var first := journal.execute(command("cmd-1"), handler)
-	check(first.ok and calls == 1 and journal.receipt_count() == 1, "first command commits receipt: "+str(first)+" calls="+str(calls)+" receipts="+str(journal.receipt_count()))
+	check(first.ok and counter.calls == 1 and journal.receipt_count() == 1, "first command commits receipt: "+str(first)+" calls="+str(counter.calls)+" receipts="+str(journal.receipt_count()))
 	var replay := journal.execute(command("cmd-1"), handler)
-	check(replay == first and calls == 1, "same id same request replays without handler: "+str(replay)+" calls="+str(calls))
+	check(replay == first and counter.calls == 1, "same id same request replays without handler: "+str(replay)+" calls="+str(counter.calls))
 	var conflict := journal.execute(command("cmd-1",{"slot":1}), handler)
-	check(not conflict.ok and conflict.error_code == "COMMAND_ID_CONFLICT" and calls == 1, "same id different request conflicts: "+str(conflict)+" calls="+str(calls))
+	check(not conflict.ok and conflict.error_code == "COMMAND_ID_CONFLICT" and counter.calls == 1, "same id different request conflicts: "+str(conflict)+" calls="+str(counter.calls))
 	var bad := command("cmd-bad")
 	bad["unexpected"] = true
 	check(journal.execute(bad, handler).error_code == "COMMAND_INVALID", "unknown base field rejected")
