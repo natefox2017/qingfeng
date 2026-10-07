@@ -120,8 +120,11 @@ func _valid_slots(candidate: Array) -> bool:
 			return false
 	return true
 
+func can_commit(candidate: Array, expected_revision: int) -> bool:
+	return expected_revision == revision and _valid_slots(candidate)
+
 func commit_slots(candidate: Array, expected_revision: int) -> bool:
-	if expected_revision != revision or not _valid_slots(candidate):
+	if not can_commit(candidate,expected_revision):
 		return false
 	slots = candidate.duplicate(true)
 	revision += 1
