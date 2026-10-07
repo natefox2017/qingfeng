@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "status": "planned_not_submitted",
+  "style_id": "style.farm.v1",
+  "is_paid_generation_authorized": false,
+  "connection_status": "not_verified",
+  "requests": [
+    {"asset_id": "asset.ui.entry_icons", "purpose": "new/load/import/save/settings/back/accept/pause/close icons, no text", "target_px": [24, 24], "requires": []},
+    {"asset_id": "asset.ui.panel_frame", "purpose": "nine-patch border with clean stretchable center, no text", "target_px": [48, 48], "requires": ["asset.ui.entry_icons"]},
+    {"asset_id": "asset.player.base", "purpose": "same identity in four cardinal views, source foot anchor and visible height measured", "target_px": null, "requires": []},
+    {"asset_id": "asset.player.till_south", "purpose": "one real prepare/contact/recover example; do not queue all directions before acceptance", "target_px": null, "requires": ["asset.player.base"]},
+    {"asset_id": "asset.terrain.first_screen", "purpose": "connected grass/soil/water bank plus reusable tree, house and bridge components, never a flattened whole map", "target_px": [16, 16], "requires": []}
+  ]
+}

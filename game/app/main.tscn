@@ -1,7 +1,6 @@
-[gd_scene load_steps=2 format=3]
-
-[ext_resource type="Script" path="res://app/main.gd" id="1"]
-
+[gd_scene load_steps=3 format=3]
+[ext_resource type="Script" path="res://app/main.gd" id="main"]
+[ext_resource type="Script" path="res://ui/pages/menu_view.gd" id="view"]
 [node name="Main" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -10,67 +9,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-script = ExtResource("1")
-
+script = ExtResource("main")
 [node name="Interface" type="CanvasLayer" parent="."]
 layer = 10
-
-[node name="Center" type="CenterContainer" parent="Interface"]
+[node name="Screen" type="Control" parent="Interface"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 mouse_filter = 2
-
-[node name="Panel" type="PanelContainer" parent="Interface/Center"]
-custom_minimum_size = Vector2(440, 200)
-layout_mode = 2
-
-[node name="Margin" type="MarginContainer" parent="Interface/Center/Panel"]
-layout_mode = 2
-theme_override_constants/margin_left = 24
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 24
-theme_override_constants/margin_bottom = 20
-
-[node name="Column" type="VBoxContainer" parent="Interface/Center/Panel/Margin"]
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="Title" type="Label" parent="Interface/Center/Panel/Margin/Column"]
-layout_mode = 2
-text = "QINGFENG / ENGINE FOUNDATION"
-horizontal_alignment = 1
-
-[node name="Description" type="Label" parent="Interface/Center/Panel/Margin/Column"]
-layout_mode = 2
-text = "Engineering fixture, not final art."
-horizontal_alignment = 1
-
-[node name="Start" type="Button" parent="Interface/Center/Panel/Margin/Column"]
-layout_mode = 2
-text = "Open movement test room"
-
-[node name="Resume" type="Button" parent="Interface/Center/Panel/Margin/Column"]
-layout_mode = 2
-text = "Resume"
-
-[node name="Back" type="Button" parent="Interface/Center/Panel/Margin/Column"]
-layout_mode = 2
-text = "Return to title"
-
-[node name="Hint" type="Label" parent="Interface"]
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 16.0
-offset_top = -48.0
-offset_right = -16.0
-offset_bottom = -8.0
-grow_horizontal = 2
-grow_vertical = 0
-mouse_filter = 2
-theme_override_font_sizes/font_size = 12
-text = "COLLISION FIXTURE"
+script = ExtResource("view")

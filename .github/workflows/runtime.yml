@@ -3,7 +3,7 @@ on:
   pull_request:
     branches: [main]
   push:
-    branches: [main, feat/n05-runtime-foundation]
+    branches: [main, feat/n05-runtime-foundation, feat/n07-pages-save-import]
 permissions:
   contents: read
 jobs:

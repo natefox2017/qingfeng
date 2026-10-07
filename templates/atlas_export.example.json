@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "source_path": "game/assets/characters/player_till_south.png",
+  "source_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "size_px": [96, 48],
+  "regions": [
+    {"region_id": "till_south_prepare", "rect_px": [0, 0, 48, 48], "anchor_px": [24, 40]},
+    {"region_id": "till_south_contact", "rect_px": [48, 0, 48, 48], "anchor_px": [24, 40]}
+  ],
+  "animations": [
+    {"action": "till", "region_ids": ["till_south_prepare", "till_south_contact"], "durations_msec": [150, 150], "contact": {"frame": 1, "offset_msec": 30}, "is_looping": false}
+  ]
+}
