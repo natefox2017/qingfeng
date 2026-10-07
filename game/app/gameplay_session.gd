@@ -67,6 +67,58 @@ func _unsupported_command(command: Dictionary) -> Dictionary:
 		"event_ids":[]
 	}
 
+func prepare_farm_action(plot_id: String) -> Dictionary:
+	if not is_configured():
+		return {"ok":false,"error_code":"GAMEPLAY_SESSION_NOT_CONFIGURED","plot_id":plot_id}
+	var plot: Dictionary = farm.get_plot(plot_id)
+	if plot.is_empty():
+		return {"ok":false,"error_code":"FARM_PLOT_UNKNOWN","plot_id":plot_id}
+	var inventory_state: Dictionary = inventory.projection()
+	var selected_index: int = int(inventory_state.selected_slot_index)
+	var selected_slot: Variant = inventory_state.slots[selected_index]
+
+	# Mature crops are harvested regardless of the currently held tool. Capacity
+	# and inventory revision are still revalidated atomically at contact.
+	if plot.state == "mature":
+		return {
+			"ok":true,
+			"error_code":"",
+			"plot_id":plot_id,
+			"action":"farm.harvest",
+			"expected_revision":farm.revision,
+			"payload":{"plot_id":plot_id,"inventory_revision":inventory.revision}
+		}
+	if selected_slot == null:
+		return {"ok":false,"error_code":"FARM_SELECTED_ITEM_REQUIRED","plot_id":plot_id}
+	var item_id := String(selected_slot.item_id)
+	if plot.state == "untilled" and item_id == "item.hoe":
+		return {
+			"ok":true,"error_code":"","plot_id":plot_id,
+			"action":"farm.till","expected_revision":farm.revision,
+			"payload":{"plot_id":plot_id}
+		}
+	if plot.state in ["tilled","growing"] and item_id == "item.watering_can":
+		return {
+			"ok":true,"error_code":"","plot_id":plot_id,
+			"action":"farm.water","expected_revision":farm.revision,
+			"payload":{"plot_id":plot_id}
+		}
+	if plot.state == "tilled":
+		var crop_id := _crop_for_seed(item_id)
+		if not crop_id.is_empty():
+			return {
+				"ok":true,"error_code":"","plot_id":plot_id,
+				"action":"farm.plant","expected_revision":farm.revision,
+				"payload":{"plot_id":plot_id,"crop_id":crop_id,"inventory_revision":inventory.revision}
+			}
+	return {"ok":false,"error_code":"FARM_SELECTED_ITEM_INVALID","plot_id":plot_id}
+
+func _crop_for_seed(item_id: String) -> String:
+	for crop_id: Variant in content.crops:
+		if String(content.crops[crop_id].seed_item_id) == item_id:
+			return String(crop_id)
+	return ""
+
 func acquire_pause(owner: StringName) -> bool:
 	return is_configured() and clock.acquire_pause(owner)
 
