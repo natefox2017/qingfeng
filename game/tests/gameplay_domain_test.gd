@@ -57,10 +57,10 @@ func _initialize() -> void:
 	check(not missing.ok and missing.error_code == "INVENTORY_INSUFFICIENT_ITEM" and inventory.projection() == before_missing, "missing item removal is atomic")
 
 	var journal = JOURNAL.new()
-	var select_revision := inventory.revision
+	var select_revision: int = inventory.revision
 	var first := journal.execute(command("select-1",select_revision,2), inventory.handle_select)
 	check(first.ok and first.has_changes and inventory.selected_slot_index == 2, "selection changes through command handler")
-	var revision_after_select := inventory.revision
+	var revision_after_select: int = inventory.revision
 	var replay := journal.execute(command("select-1",select_revision,2), inventory.handle_select)
 	check(replay == first and inventory.revision == revision_after_select, "selection command replay is idempotent")
 	var conflict := journal.execute(command("select-1",select_revision,3), inventory.handle_select)
