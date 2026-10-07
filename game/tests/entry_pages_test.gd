@@ -94,6 +94,12 @@ func run() -> void:
 	check(app.view.notice.get_theme_color("font_color") == UI_THEME.COLOR_ERROR,"error token drives notice color")
 	check(app.view.buttons["new_game"].tooltip_text == app.view.buttons["new_game"].accessibility_name and not app.view.buttons["new_game"].tooltip_text.is_empty(),"icon action has tooltip and accessible name")
 	check(app.view.buttons["continue"].disabled,"title disables continue without saves")
+	app._on_action("new_game",{});app._on_action("back",{})
+	check(app.view.buttons["new_game"].has_focus(),"closing new-game form restores its title trigger")
+	app._on_action("load",{});app._on_action("back",{})
+	check(app.view.buttons["load"].has_focus(),"closing load page restores its title trigger")
+	app._on_action("settings",{});app._on_action("back",{})
+	check(app.view.buttons["settings"].has_focus(),"closing settings restores its title trigger")
 	app._on_action("new_game",{})
 	app.view.player_name.text="小禾";app.view.dog_name.text="阿豆"
 	app._on_action("create",{})
@@ -130,6 +136,7 @@ func run() -> void:
 	var count:int=app.store.list_saves().size()
 	app._on_action("cancel_import",{})
 	check(app.store.list_saves().size()==count,"cancel import writes nothing")
+	check(app.view.buttons["choose_import"].has_focus(),"cancel import returns focus to import trigger")
 	var blocked_snapshot:=snapshot.duplicate(true);blocked_snapshot.world_position_px={"x":176,"y":140}
 	var blocked_file:Dictionary=store.write_new(blocked_snapshot)
 	app._entry_snapshot=store.read_save(blocked_file.save_id).envelope.snapshot
