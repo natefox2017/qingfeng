@@ -422,7 +422,7 @@ func _on_action(action: String, payload: Dictionary) -> void:
 			if result.ok:
 				_entry_snapshot = result.envelope.snapshot.duplicate(true)
 				_entry_creates_save = false
-				_entry_requires_gameplay = int(result.envelope.schema_version) == 2
+				_entry_requires_gameplay = result.envelope.snapshot.has("gameplay")
 				active_save_id = str(payload.get("save_id",""))
 				start_world(FARM_ROOM if _entry_requires_gameplay else LEGACY_ROOM)
 			else:
