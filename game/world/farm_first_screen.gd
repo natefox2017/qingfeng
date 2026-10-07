@@ -28,6 +28,29 @@ func get_anchor_position(anchor_name: String) -> Vector2:
 	var node := $Anchors.get_node_or_null(NodePath(anchor_name))
 	return node.position if node is Marker2D else Vector2.INF
 
+func resolve_interaction_target() -> Dictionary:
+	if _marker_reachable($Anchors/HouseDoorInteract):
+		return {
+			"kind":"door",
+			"interaction_id":"door.farm.house",
+			"target_space_id":"space.house",
+			"arrival_anchor_id":"DoorArrival",
+			"arrival_facing":"north"
+		}
+	return {}
+
+func _marker_reachable(marker: Marker2D) -> bool:
+	var direction := _facing_vector(player.facing)
+	if direction.is_zero_approx():
+		return false
+	var offset: Vector2 = marker.global_position - player.global_position
+	var forward := offset.dot(direction)
+	var lateral := absf(offset.dot(Vector2(-direction.y,direction.x)))
+	if forward <= 2.0 or forward > FARM_ACTION_RANGE_PX or lateral > FARM_ACTION_LATERAL_PX:
+		return false
+	var ray := PhysicsRayQueryParameters2D.create(player.global_position,marker.global_position,1)
+	return get_world_2d().direct_space_state.intersect_ray(ray).is_empty()
+
 func resolve_plot_target() -> String:
 	var direction := _facing_vector(player.facing)
 	if direction.is_zero_approx():
@@ -98,6 +121,9 @@ func get_plot_definitions() -> Array:
 
 func layout_contract_valid() -> bool:
 	var definitions := get_plot_definitions()
+	for anchor_name: String in ["PlayerSpawn","FieldApproach","BridgeWest","BridgeEast","HouseDoorInteract","HouseDoorArrival"]:
+		if get_anchor_position(anchor_name) == Vector2.INF:
+			return false
 	if definitions.size() != $FarmPlots.get_child_count() or definitions.is_empty():
 		return false
 	var ids: Dictionary = {}
