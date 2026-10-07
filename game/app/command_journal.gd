@@ -23,7 +23,7 @@ static func _valid_text_id(value: Variant) -> bool:
 	return value is String and not value.is_empty() and value.length() <= MAX_ID_LENGTH
 
 static func _valid_command(command: Variant) -> bool:
-	if not command is Dictionary:
+	if not (command is Dictionary):
 		return false
 	var required := ["protocol_version","command_id","session_id","actor_id","action","expected_revision","payload"]
 	if command.size() != required.size():
@@ -36,7 +36,7 @@ static func _valid_command(command: Variant) -> bool:
 	for key: String in ["command_id","session_id","actor_id","action"]:
 		if not _valid_text_id(command[key]):
 			return false
-	if not command.expected_revision is int or command.expected_revision < 0:
+	if not (command.expected_revision is int) or command.expected_revision < 0:
 		return false
 	return command.payload is Dictionary
 
@@ -54,7 +54,7 @@ static func _fingerprint(command: Dictionary) -> String:
 	}).sha256_text()
 
 static func _valid_result(result: Variant, command_id: String) -> bool:
-	if not result is Dictionary:
+	if not (result is Dictionary):
 		return false
 	var required := ["protocol_version","command_id","ok","error_code","is_retryable","has_changes","revision","event_ids"]
 	if result.size() != required.size():
@@ -64,13 +64,13 @@ static func _valid_result(result: Variant, command_id: String) -> bool:
 			return false
 	if result.protocol_version != PROTOCOL_VERSION or result.command_id != command_id:
 		return false
-	if not result.ok is bool or not result.error_code is String:
+	if not (result.ok is bool) or not (result.error_code is String):
 		return false
-	if not result.is_retryable is bool or not result.has_changes is bool:
+	if not (result.is_retryable is bool) or not (result.has_changes is bool):
 		return false
-	if not result.revision is int or result.revision < 0:
+	if not (result.revision is int) or result.revision < 0:
 		return false
-	if not result.event_ids is Array:
+	if not (result.event_ids is Array):
 		return false
 	for event_id: Variant in result.event_ids:
 		if not _valid_text_id(event_id):
