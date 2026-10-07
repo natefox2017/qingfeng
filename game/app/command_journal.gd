@@ -4,6 +4,7 @@ extends RefCounted
 
 const PROTOCOL_VERSION := 1
 const MAX_ID_LENGTH := 128
+const MAX_RECEIPTS := 4096
 
 var _receipts: Dictionary = {}
 
@@ -21,6 +22,14 @@ static func _failure(command_id: String, code: String, retryable := false) -> Di
 
 static func _valid_text_id(value: Variant) -> bool:
 	return value is String and not value.is_empty() and value.length() <= MAX_ID_LENGTH
+
+static func _valid_sha256(value: Variant) -> bool:
+	if not (value is String) or value.length() != 64:
+		return false
+	for character in value:
+		if not character in "0123456789abcdef":
+			return false
+	return true
 
 static func _valid_command(command: Variant) -> bool:
 	if not (command is Dictionary):
@@ -101,6 +110,42 @@ func execute(command: Variant, handler: Callable) -> Dictionary:
 		"result": result.duplicate(true)
 	}
 	return result.duplicate(true)
+
+func snapshot() -> Dictionary:
+	var rows: Array = []
+	var ids: Array = _receipts.keys()
+	ids.sort()
+	for command_id: Variant in ids:
+		var stored: Dictionary = _receipts[command_id]
+		rows.append({
+			"command_id":String(command_id),
+			"fingerprint":String(stored.fingerprint),
+			"result":stored.result.duplicate(true)
+		})
+	return {"receipts":rows}
+
+func restore(snapshot_value: Variant) -> bool:
+	if not (snapshot_value is Dictionary) or snapshot_value.size() != 1 or not snapshot_value.has("receipts"):
+		return false
+	if not (snapshot_value.receipts is Array) or snapshot_value.receipts.size() > MAX_RECEIPTS:
+		return false
+	var next: Dictionary = {}
+	for entry: Variant in snapshot_value.receipts:
+		if not (entry is Dictionary) or entry.size() != 3:
+			return false
+		for key: String in ["command_id","fingerprint","result"]:
+			if not entry.has(key):
+				return false
+		if not _valid_text_id(entry.command_id) or not _valid_sha256(entry.fingerprint):
+			return false
+		if next.has(entry.command_id) or not _valid_result(entry.result,String(entry.command_id)):
+			return false
+		next[String(entry.command_id)] = {
+			"fingerprint":String(entry.fingerprint),
+			"result":entry.result.duplicate(true)
+		}
+	_receipts = next
+	return true
 
 func receipt_count() -> int:
 	return _receipts.size()
