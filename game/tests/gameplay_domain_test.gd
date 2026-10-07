@@ -6,6 +6,7 @@ const INVENTORY = preload("res://systems/inventory_domain.gd")
 const WALLET = preload("res://systems/wallet_domain.gd")
 const FARM = preload("res://systems/farm_domain.gd")
 const FARMING = preload("res://systems/farming_coordinator.gd")
+const SESSION = preload("res://app/gameplay_session.gd")
 
 var checks := 0
 var failures := 0
@@ -149,6 +150,36 @@ func _initialize() -> void:
 	check(plant2.ok, "replant succeeds after harvest")
 	var day4 := farm.settle_day(4)
 	check(day4.ok and farm.get_plot("plot.farm.001").state == "growing" and farm.get_plot("plot.farm.001").growth_days == 0, "missing water pauses growth without killing crop")
+
+	var session = SESSION.new([
+		{"plot_id":"plot.farm.session","space_id":"space.farm","cell_position":{"x":2,"y":3}}
+	],content)
+	check(session.is_configured(), "gameplay session composes all authoritative domains")
+	var session_projection: Dictionary = session.projection()
+	session_projection.inventory.slots[0] = null
+	check(session.inventory.slots[0] != null, "session projection is read-only by copy")
+	var session_select: Dictionary = session.execute(command("session-select",session.inventory.revision,2))
+	check(session_select.ok and session.inventory.selected_slot_index == 2, "session routes inventory commands through one journal")
+	var session_till: Dictionary = session.execute(farm_command("session-till","farm.till",session.farm.revision,{"plot_id":"plot.farm.session"}))
+	check(session_till.ok, "session routes farm till command")
+	var session_plant: Dictionary = session.execute(farm_command("session-plant","farm.plant",session.farm.revision,{
+		"plot_id":"plot.farm.session","crop_id":"crop.radish","inventory_revision":session.inventory.revision
+	}))
+	check(session_plant.ok and session.inventory.quantity_of("item.radish_seed") == 3, "session plant atomically uses inventory")
+	var session_water1: Dictionary = session.execute(farm_command("session-water-1","farm.water",session.farm.revision,{"plot_id":"plot.farm.session"}))
+	check(session_water1.ok, "session water command succeeds")
+	var rest2: Dictionary = session.rest_to_next_day()
+	check(rest2.ok and session.clock.current_day() == 2 and session.farm.get_plot("plot.farm.session").growth_days == 1, "session rest advances clock and settles farm together")
+	check(session.acquire_pause(&"inventory"), "session exposes clock pause ownership")
+	var paused_rest: Dictionary = session.rest_to_next_day()
+	check(not paused_rest.ok and paused_rest.error_code == "CLOCK_PAUSED" and session.clock.current_day() == 2, "paused session cannot rest")
+	check(session.release_pause(&"inventory"), "session releases only requested pause owner")
+	var session_water2: Dictionary = session.execute(farm_command("session-water-2","farm.water",session.farm.revision,{"plot_id":"plot.farm.session"}))
+	check(session_water2.ok, "session second-day water succeeds")
+	var rest3: Dictionary = session.rest_to_next_day()
+	check(rest3.ok and session.clock.current_day() == 3 and session.farm.get_plot("plot.farm.session").state == "mature", "session reaches third-day maturity without separate clocks")
+	var replay_till: Dictionary = session.execute(farm_command("session-till","farm.till",0,{"plot_id":"plot.farm.session"}))
+	check(replay_till == session_till and session.farm.get_plot("plot.farm.session").state == "mature", "session command journal replays original result without reapplying old action")
 
 	finish()
 
