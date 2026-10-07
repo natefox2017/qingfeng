@@ -47,7 +47,7 @@ func run() -> void:
 		var point: Vector2 = scene.get_anchor_position(anchor_name)
 		check(point != Vector2.INF and not _blocked(point), anchor_name+" remains walkable")
 	for plot: Dictionary in plots:
-		var point := Vector2(plot.cell_position.x,plot.cell_position.y) * scene.TILE_SIZE
+		var point: Vector2 = Vector2(plot.cell_position.x,plot.cell_position.y) * float(scene.TILE_SIZE)
 		check(not _blocked(point), plot.plot_id+" is not covered by world collision")
 	check(_blocked(Vector2(136,88)), "house footprint blocks movement")
 	check(_blocked(Vector2(400,192)), "tree root blocks movement")
