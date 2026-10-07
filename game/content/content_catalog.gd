@@ -15,6 +15,21 @@ static func _exact_keys(value: Variant, required: Array[String]) -> bool:
 			return false
 	return true
 
+static func _normalize_numbers(value: Variant) -> Variant:
+	if value is float and is_finite(value) and value == floor(value):
+		return int(value)
+	if value is Dictionary:
+		var result: Dictionary = {}
+		for key: Variant in value:
+			result[key] = _normalize_numbers(value[key])
+		return result
+	if value is Array:
+		var result: Array = []
+		for item: Variant in value:
+			result.append(_normalize_numbers(item))
+		return result
+	return value
+
 static func _positive_int(value: Variant) -> bool:
 	return value is int and value > 0
 
@@ -88,7 +103,7 @@ static func load_path(path: String) -> Dictionary:
 	var parser := JSON.new()
 	if parser.parse(text) != OK:
 		return failure("CONTENT_JSON_INVALID")
-	var data: Variant = parser.data
+	var data: Variant = _normalize_numbers(parser.data)
 	if not validate(data):
 		return failure("CONTENT_INVALID")
 	return {"ok": true, "error_code": "", "data": data}
