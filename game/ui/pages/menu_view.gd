@@ -11,6 +11,8 @@ var countdown: Label
 var panel: PanelContainer
 var center: CenterContainer
 var hud: HBoxContainer
+var quickbar: HBoxContainer
+var wallet_label: Label
 var player_name: LineEdit
 var dog_name: LineEdit
 var volume: HSlider
@@ -45,6 +47,8 @@ func emit_action(name: String, payload: Dictionary = {}) -> void:
 func clear_page() -> void:
 	for child in body.get_children(): body.remove_child(child);child.queue_free()
 	for child in hud.get_children(): hud.remove_child(child);child.queue_free()
+	if is_instance_valid(quickbar): remove_child(quickbar);quickbar.queue_free()
+	quickbar=null;wallet_label=null
 	buttons.clear();_first_button=null;player_name=null;dog_name=null;countdown=null
 	notice.text="";panel.visible=true;get_node("Backdrop").visible=true
 
@@ -67,6 +71,47 @@ func button(parent: Node, action: String, glyph: String, description: String, pa
 	parent.add_child(node);buttons[action]=node
 	if _first_button == null and enabled:_first_button=node
 	return node
+
+func _slot_button(parent: Node, slot_index: int, slot: Variant, items: Dictionary, selected: bool, compact: bool) -> Button:
+	var node := Button.new()
+	var number_text := "[%d]" % (slot_index+1) if selected else "%d" % (slot_index+1)
+	var display_name := "空"
+	var quantity := 0
+	if slot != null:
+		var metadata: Dictionary = items.get(String(slot.item_id),{})
+		display_name = str(metadata.get("display_name",slot.item_id))
+		quantity = int(slot.quantity)
+	if compact:
+		var short_name := "空" if slot == null else display_name.left(1)
+		node.text = number_text+"\n"+short_name+("" if quantity <= 1 else str(quantity))
+		node.custom_minimum_size = Vector2(36,38)
+	else:
+		node.text = number_text+"  "+display_name+("" if quantity <= 0 else "  ×"+str(quantity))
+		node.custom_minimum_size = Vector2(104,46)
+	node.toggle_mode = true
+	node.button_pressed = selected
+	var description := "槽位 %d：%s" % [slot_index+1, display_name if slot == null else display_name+" ×"+str(quantity)]
+	node.tooltip_text = description
+	node.accessibility_name = description+("，已选中" if selected else "")
+	node.pressed.connect(func():emit_action("select_slot",{"slot_index":slot_index}))
+	node.mouse_entered.connect(func():notice.text=description)
+	node.focus_entered.connect(func():notice.text=description)
+	parent.add_child(node)
+	return node
+
+func _clock_text(clock: Dictionary) -> String:
+	var minute_of_day := int(clock.get("minute_of_day",0))
+	return "第%d天  %02d:%02d" % [int(clock.get("day",1)),minute_of_day/60,minute_of_day%60]
+
+func _build_quickbar(gameplay: Dictionary) -> void:
+	var inventory: Dictionary = gameplay.inventory
+	var items: Dictionary = gameplay.items
+	quickbar = HBoxContainer.new()
+	quickbar.position = Vector2(93,310)
+	quickbar.add_theme_constant_override("separation",2)
+	add_child(quickbar)
+	for index in range(inventory.slots.size()):
+		_slot_button(quickbar,index,inventory.slots[index],items,index==inventory.selected_slot_index,true)
 
 func show_page(page: String, context: Dictionary) -> void:
 	clear_page()
@@ -125,10 +170,28 @@ func show_page(page: String, context: Dictionary) -> void:
 			else:
 				label("这是旧入口碰撞测试存档；只保存身份和测试场位置。")
 			var actions:=row();button(actions,"resume","resume","继续游戏");button(actions,"save","save","保存到新的独立文件",{},context.get("can_save",false));button(actions,"settings","settings","设置");button(actions,"save_return","back","保存并返回标题",{},context.get("can_save",false))
+		"inventory":
+			title.text="背包";subtitle.text="B / Esc 关闭；数字键 1–0 或点击选择快捷槽。"
+			var gameplay: Dictionary = context.get("gameplay",{})
+			if gameplay.get("ok",false):
+				label(_clock_text(gameplay.clock)+"  ·  金币 "+str(gameplay.wallet.money))
+				var grid:=GridContainer.new();grid.columns=4;grid.add_theme_constant_override("h_separation",6);grid.add_theme_constant_override("v_separation",6);body.add_child(grid)
+				for index in range(gameplay.inventory.slots.size()):
+					_slot_button(grid,index,gameplay.inventory.slots[index],gameplay.items,index==gameplay.inventory.selected_slot_index,false)
+				label("槽位选择只发送 inventory.select 命令；界面不持有可写背包副本。")
+			else:
+				label("当前存档没有玩法背包状态。")
+			button(row(),"close_inventory","back","关闭背包 / B / Esc")
 		"world":
 			panel.hide();get_node("Backdrop").hide()
 			button(hud,"pause","pause","暂停 / Esc")
+			if context.get("has_gameplay",false):
+				button(hud,"inventory","inventory","背包 / B")
 			var text:=Label.new();text.text=context.get("player_name","")+"  ·  "+str(context.get("world_label","世界"));text.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT);hud.add_child(text)
+			var gameplay: Dictionary = context.get("gameplay",{})
+			if gameplay.get("ok",false):
+				wallet_label=Label.new();wallet_label.text=_clock_text(gameplay.clock)+" · "+str(gameplay.wallet.money)+"币";wallet_label.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT);hud.add_child(wallet_label)
+				_build_quickbar(gameplay)
 	if not context.get("error","").is_empty():notice.text=context.error
 	var preferred_action := str(context.get("focus_action",""))
 	if not preferred_action.is_empty() and buttons.has(preferred_action):
