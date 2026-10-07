@@ -23,6 +23,7 @@ var _entry_snapshot: Dictionary = {}
 var _entry_creates_save := false
 var _page := "title"
 var _settings_origin := "title"
+var _focus_action := ""
 var _names := {"player_name":"", "dog_name":""}
 var _import_envelope: Dictionary = {}
 @onready var view: Control = $Interface/Screen
@@ -56,6 +57,7 @@ func start_world(path: String = DEFAULT_ROOM, request_override: RefCounted = nul
 func _process(_delta: float) -> void:
 	if settings.tick(_delta):
 		_page = "settings"
+		_focus_action = "preview_settings"
 		last_error = "设置确认超时，已恢复原设置。"
 		_update_interface()
 	elif settings.is_previewing and is_instance_valid(view.countdown):
@@ -188,13 +190,15 @@ func _update_interface() -> void:
 	elif state == State.WORLD and _page not in ["settings","display_confirm"]:
 		page="pause" if locks.has_owner(&"pause_menu") else "world"
 	var context := {"error":last_error,"settings":settings.committed,"player_name":_names.player_name,
-		"dog_name":_names.dog_name,"can_save":not active_snapshot.is_empty(),"envelope":_import_envelope}
+		"dog_name":_names.dog_name,"can_save":not active_snapshot.is_empty(),"envelope":_import_envelope,
+		"focus_action":_focus_action}
 	if state == State.WORLD:context.player_name=active_snapshot.get("player_name","")
 	if page in ["title","load"]:
 		context["saves"] = store.list_saves()
 		for entry: Dictionary in context.saves:
 			if entry.ok:context["recent_id"]=entry.save_id;break
 	view.show_page(page,context)
+	_focus_action = ""
 
 func save_progress() -> Dictionary:
 	if state != State.WORLD or active_snapshot.is_empty(): return CODEC.failure("SAVE_NO_SESSION")
@@ -255,7 +259,7 @@ func _on_action(action: String, payload: Dictionary) -> void:
 			var result: Dictionary=store.confirm_import(_import_envelope)
 			if result.ok:_import_envelope.clear();_page="load";last_error="已创建独立副本，请选择读取。"
 			else:last_error="导入未保存："+result.error_code
-		"cancel_import":_import_envelope.clear();_page="load"
+		"cancel_import":_import_envelope.clear();_page="load";_focus_action="choose_import"
 		"settings":
 			_settings_origin="pause" if state==State.WORLD else _page
 			if state==State.WORLD:set_pause_menu(true)
@@ -266,12 +270,22 @@ func _on_action(action: String, payload: Dictionary) -> void:
 			else:last_error=result.error_code
 		"confirm_settings":
 			var result:Dictionary=settings.confirm()
-			if result.ok:_page="title" if state==State.WORLD else _settings_origin
-			else:settings.revert();_page="settings";last_error="设置保存失败，已恢复："+result.error_code
-		"revert_settings":settings.revert();_page="settings"
+			if result.ok:
+				_page="title" if state==State.WORLD else _settings_origin
+				_focus_action="settings"
+			else:
+				settings.revert();_page="settings";_focus_action="preview_settings";last_error="设置保存失败，已恢复："+result.error_code
+		"revert_settings":settings.revert();_page="settings";_focus_action="preview_settings"
 		"back":
-			if _page=="settings":settings.revert();_page="title" if state==State.WORLD else _settings_origin
-			else:_import_envelope.clear();_page="title"
+			var closing_page := _page
+			if closing_page=="settings":
+				settings.revert();_page="title" if state==State.WORLD else _settings_origin;_focus_action="settings"
+			elif closing_page=="import_review":
+				_import_envelope.clear();_page="load";_focus_action="choose_import"
+			else:
+				_import_envelope.clear();_page="title"
+				if closing_page=="new_game":_focus_action="new_game"
+				elif closing_page=="load":_focus_action="load"
 		"cancel_load":return_to_title()
 		"pause":set_pause_menu(true)
 		"resume":_page="title";set_pause_menu(false)
