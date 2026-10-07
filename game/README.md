@@ -1,4 +1,6 @@
-# 运行目录职责占位
-当前没有project.godot或可玩代码。WORLD任务创建新引擎入口并将project.json更新为foundation。
-app=启动组合；world=地图对象碰撞；actors=人犬居民运动；systems=领域；persistence=原子存档；dialogue=条件对白/可选模型；ui=只读投影与命令；content=版本化内容表；assets=登记的运行素材；tests=新测试。
-各目录目前只占位，不是空Manager或旧框架副本。完整约定见[架构](../docs/architecture.md)。
+# 新运行基础
+当前唯一入口 `res://app/main.tscn`，Godot4.7.2；主界面明确说明只有工程测试场，不是最终画面。启动方法见[根README](../README.md)，结果与边界见[运行基础](../docs/runtime_foundation.md)。
+
+app：取消安全的场景加载/命名输入锁；actors：无美术依赖的身体运动；tests/fixtures：可编辑障碍和原生诊断画面；tests：生命周期/实际按键/物理回归与渲染捕获。正式world、systems、persistence、dialogue、ui、content、assets仍按各自Issue开发；不把此夹具复制成一条长期候选继承链。
+
+本切片不写业务存档、不访问旧项目数据、不包含图片或字体文件。工程英文按钮不代表正式图标UI/中文字体已经交付。

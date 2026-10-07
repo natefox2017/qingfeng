@@ -37,7 +37,7 @@ CI不是天然门禁：只有仓库实际配置规则才可宣称强制阻止合
 python3 tools/check_scaffold.py
 python3 -m unittest discover -s tools/tests -v
 ```
-当前只检查文档/目录/任务图/素材登记。scaffold没有可启动工程；preproduction有新素材但未接正式运行；foundation开始须有固定引擎版本、project.godot、正式main_scene和真实游戏CI；playable必须N11验收。
+上面的命令只检查文档/工具；当前foundation引擎回归另执行 `python3 tools/runtime.py test`，详见[运行基础](runtime_foundation.md)。scaffold没有可启动工程；preproduction有新素材但未接正式运行；foundation开始须有固定引擎版本、project.godot、正式main_scene和真实游戏CI；playable必须N11验收。
 阶段由project.json唯一声明，README/Notion同步。不能把本次工具测试数字当新游戏回归。变更交接用[handoff](../templates/handoff.md)，不另造多套总册。
 
 ## 实际任务链接

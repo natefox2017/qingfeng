@@ -1,0 +1,134 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="Script" path="res://tests/fixtures/collision_room.gd" id="room"]
+[ext_resource type="Script" path="res://tests/fixtures/visible_wall.gd" id="wall"]
+[ext_resource type="Script" path="res://actors/player_body.gd" id="player"]
+
+[sub_resource type="RectangleShape2D" id="Shape_North"]
+size = Vector2(960, 16)
+
+[sub_resource type="RectangleShape2D" id="Shape_South"]
+size = Vector2(960, 16)
+
+[sub_resource type="RectangleShape2D" id="Shape_West"]
+size = Vector2(16, 640)
+
+[sub_resource type="RectangleShape2D" id="Shape_East"]
+size = Vector2(16, 640)
+
+[sub_resource type="RectangleShape2D" id="Shape_Wall"]
+size = Vector2(32, 140)
+
+[sub_resource type="RectangleShape2D" id="Shape_DoorNorth"]
+size = Vector2(16, 132)
+
+[sub_resource type="RectangleShape2D" id="Shape_DoorSouth"]
+size = Vector2(16, 300)
+
+[sub_resource type="RectangleShape2D" id="Shape_Corner"]
+size = Vector2(48, 48)
+
+[sub_resource type="CircleShape2D" id="PlayerShape"]
+radius = 4.0
+
+[node name="CollisionRoom" type="Node2D"]
+script = ExtResource("room")
+
+[node name="Walls" type="Node2D" parent="."]
+
+[node name="North" type="StaticBody2D" parent="Walls"]
+position = Vector2(480, 8)
+collision_layer = 1
+collision_mask = 2
+script = ExtResource("wall")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/North"]
+shape = SubResource("Shape_North")
+
+[node name="South" type="StaticBody2D" parent="Walls"]
+position = Vector2(480, 632)
+collision_layer = 1
+collision_mask = 2
+script = ExtResource("wall")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/South"]
+shape = SubResource("Shape_South")
+
+[node name="West" type="StaticBody2D" parent="Walls"]
+position = Vector2(8, 320)
+collision_layer = 1
+collision_mask = 2
+script = ExtResource("wall")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/West"]
+shape = SubResource("Shape_West")
+
+[node name="East" type="StaticBody2D" parent="Walls"]
+position = Vector2(952, 320)
+collision_layer = 1
+collision_mask = 2
+script = ExtResource("wall")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/East"]
+shape = SubResource("Shape_East")
+
+[node name="Wall" type="StaticBody2D" parent="Walls"]
+position = Vector2(176, 170)
+collision_layer = 1
+collision_mask = 2
+script = ExtResource("wall")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Wall"]
+shape = SubResource("Shape_Wall")
+
+[node name="DoorNorth" type="StaticBody2D" parent="Walls"]
+position = Vector2(328, 82)
+collision_layer = 1
+collision_mask = 2
+script = ExtResource("wall")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/DoorNorth"]
+shape = SubResource("Shape_DoorNorth")
+
+[node name="DoorSouth" type="StaticBody2D" parent="Walls"]
+position = Vector2(328, 330)
+collision_layer = 1
+collision_mask = 2
+script = ExtResource("wall")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/DoorSouth"]
+shape = SubResource("Shape_DoorSouth")
+
+[node name="Corner" type="StaticBody2D" parent="Walls"]
+position = Vector2(224, 280)
+collision_layer = 1
+collision_mask = 2
+script = ExtResource("wall")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Corner"]
+shape = SubResource("Shape_Corner")
+
+[node name="FootSorted" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Player" type="CharacterBody2D" parent="FootSorted"]
+position = Vector2(96, 96)
+collision_layer = 2
+collision_mask = 1
+motion_mode = 1
+wall_min_slide_angle = 0.0
+script = ExtResource("player")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FootSorted/Player"]
+shape = SubResource("PlayerShape")
+
+[node name="DiagnosticGlyph" type="Polygon2D" parent="FootSorted/Player"]
+color = Color(0.95, 0.76, 0.32, 1)
+polygon = PackedVector2Array(-4, -4, 4, -4, 4, 4, -4, 4)
+
+[node name="Camera2D" type="Camera2D" parent="FootSorted/Player"]
+limit_left = 0
+limit_top = 0
+limit_right = 960
+limit_bottom = 640
+position_smoothing_enabled = false
