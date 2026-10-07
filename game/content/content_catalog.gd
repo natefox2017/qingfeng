@@ -37,7 +37,7 @@ static func _nonnegative_int(value: Variant) -> bool:
 	return value is int and value >= 0
 
 static func validate(data: Variant) -> bool:
-	if not _exact_keys(data, ["content_version","clock","inventory","economy","shop","items","crops","new_game"]):
+	if not _exact_keys(data, ["content_version","clock","inventory","storage","economy","shop","items","crops","new_game"]):
 		return false
 	if data.content_version != "first_playable_v1":
 		return false
@@ -48,6 +48,8 @@ static func validate(data: Variant) -> bool:
 	if data.clock.day_start_minute >= data.clock.minutes_per_day:
 		return false
 	if not _exact_keys(data.inventory, ["capacity"]) or not _positive_int(data.inventory.capacity):
+		return false
+	if not _exact_keys(data.storage, ["chest_capacity"]) or not _positive_int(data.storage.chest_capacity):
 		return false
 	if not _exact_keys(data.economy, ["initial_money"]) or not _nonnegative_int(data.economy.initial_money):
 		return false
