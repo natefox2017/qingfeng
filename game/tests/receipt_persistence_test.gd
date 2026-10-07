@@ -86,6 +86,12 @@ func _initialize() -> void:
 	if written.ok:
 		var read: Dictionary = store.read_save(written.save_id)
 		check(read.ok and CODEC.canonical(read.envelope.snapshot) == CODEC.canonical(full), "atomic store reads receipt journal unchanged")
+		var imported: Dictionary = store.confirm_import(read.envelope)
+		check(imported.ok, "schema three import creates independent local save")
+		if imported.ok:
+			var imported_read: Dictionary = store.read_save(imported.save_id)
+			check(imported_read.ok and imported_read.envelope.snapshot.session_id != full.session_id, "import creates new session identity")
+			check(imported_read.ok and imported_read.envelope.snapshot.gameplay.command_journal.receipts.is_empty(), "import clears source-session idempotency receipts")
 
 	finish()
 
