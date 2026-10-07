@@ -24,10 +24,15 @@ python3 -m unittest discover -s tools/tests -v
 以上只验证文档/工具。设置 `GODOT_BIN` 指向官方 Godot 4.7.2 后：
 
 ```sh
-python3 tools/runtime.py run     # 唯一主入口
+./run_game.sh                    # 根目录一键启动，进入正式标题
 python3 tools/runtime.py editor  # 编辑该入口与原生场景
 python3 tools/runtime.py test    # 隔离用户数据，冷导入并运行回归
 ```
+
+`run_game.sh` 已带可执行权限，macOS/Linux 可直接运行，也可执行 `sh run_game.sh`。
+它仅调用现有 `tools/runtime.py run`，支持从其他工作目录启动和带空格的仓库路径；
+引擎仍通过 `GODOT_BIN`、PATH 中的 `godot`/`godot4`，或 `./run_game.sh --godot "/实际路径/Godot"` 选择。
+需先安装 Python 3 和锁定版本的 Godot；脚本不自动下载安装、不拉取代码、不删除文件或修改存档。
 
 启动工具不会自动安装或联网出图。Linux 可显式执行 `python3 tools/install_engine.py --directory .local/godot` 下载并校验锁定引擎；其他系统从官方发行获取相同版本。模板仅锁定元数据，导出包尚未测试。不要把旧仓库设置为 origin 或复制旧的运行目录。
 
@@ -38,6 +43,6 @@ app、actors、ui、persistence与tests已有入口切片，其他领域仍按Is
 
 ## 入口页面与存档切片
 
-在新运行基础上补充标题、新建名字、存档列表、外部.qfsave导入预览确认、设置预览回退和暂停保存返回。当前只保存身份与碰撞测试场坐标，不是已完成农庄。启动 `python3 tools/runtime.py run`；测试 `python3 tools/runtime.py test`（固定引擎参数见[入口合同](docs/entry_pages.md)）。新页面使用普通中文无衬线后备字体，字体尚未随包交付；PixelLab未连接/未出图。
+在新运行基础上补充标题、新建名字、存档列表、外部.qfsave导入预览确认、设置预览回退和暂停保存返回。当前只保存身份与碰撞测试场坐标，不是已完成农庄。启动 `./run_game.sh`；测试 `python3 tools/runtime.py test`（固定引擎参数见[入口合同](docs/entry_pages.md)）。新页面使用普通中文无衬线后备字体，字体尚未随包交付；PixelLab未连接/未出图。
 
 [切图细则](docs/asset_slicing.md) · [具体玩法](docs/gameplay_details.md) · [旧项目问题复盘](docs/legacy_lessons.md)。
