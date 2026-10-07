@@ -46,10 +46,7 @@ func handle(command: Dictionary) -> Dictionary:
 	var removed: Dictionary = source.candidate_after_remove(payload.item_id,payload.quantity)
 	if not removed.ok:
 		return _result(command_id,false,removed.error_code,false,false)
-	var target_original_slots: Array = target.slots
-	target.slots = target_before.slots.duplicate(true)
 	var added: Dictionary = target.candidate_after_add(payload.item_id,payload.quantity)
-	target.slots = target_original_slots
 	if not added.ok:
 		return _result(command_id,false,added.error_code,false,false)
 
