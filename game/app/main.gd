@@ -370,10 +370,32 @@ func _interact_world() -> void:
 	if room.has_method("resolve_interaction_target"):
 		var target: Variant = room.resolve_interaction_target()
 		if target is Dictionary and not target.is_empty():
-			if target.get("kind","") == "door":
-				_begin_door_transition(target)
-				return
+			match String(target.get("kind","")):
+				"door":
+					_begin_door_transition(target)
+					return
+				"bed":
+					_rest_at_bed(target)
+					return
 	_begin_farm_action()
+
+func _rest_at_bed(target: Dictionary) -> void:
+	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured():
+		return
+	if not is_instance_valid(room) or not room.has_method("get_space_id") or room.get_space_id() != "space.house":
+		return
+	if target.size() != 2 or target.get("kind","") != "bed" or target.get("interaction_id","") != "bed.house.main":
+		last_error = "床交互目标无效，没有推进时间。"
+		_update_interface()
+		return
+	var result: Dictionary = gameplay_session.rest_to_next_day()
+	if not result.ok:
+		last_error = "休息未完成："+String(result.error_code)
+		_update_interface()
+		return
+	last_error = "休息完成，已到第%d天 06:00。" % gameplay_session.clock.current_day()
+	_refresh_farm_world()
+	_update_interface()
 
 func _begin_door_transition(target: Dictionary) -> void:
 	if _transition_pending or farm_action.is_busy() or state != State.WORLD or not _valid_door_target(target):
@@ -635,6 +657,7 @@ func _update_interface() -> void:
 		"focus_action":_focus_action,
 		"has_gameplay":has_gameplay,
 		"world_label":_world_label(has_gameplay),
+		"space_id":String(room.get_space_id()) if is_instance_valid(room) and room.has_method("get_space_id") else "",
 		"farm_action":farm_action.projection()
 	}
 	if has_gameplay:
