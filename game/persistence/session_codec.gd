@@ -174,7 +174,7 @@ static func _valid_gameplay(value: Variant) -> bool:
 static func validate_gameplay_snapshot(value: Variant) -> bool:
 	if not (value is Dictionary):
 		return false
-	var identity := value.duplicate(true)
+	var identity: Dictionary = value.duplicate(true)
 	identity.erase("gameplay")
 	if not _valid_world_identity(identity,false):
 		return false
