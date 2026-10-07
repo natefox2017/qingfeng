@@ -136,8 +136,20 @@ func _activate_room(scene: PackedScene, requested_generation: int) -> void:
 		return
 
 	if _entry_snapshot.is_empty():
-		last_error = "缺少待进入的身份快照。"
-		return_to_title()
+		# Explicit engineering fixture starts are kept for the native movement/
+		# lifecycle regression. A real farm entry always carries identity state.
+		if room.has_method("get_plot_definitions"):
+			last_error = "正式农庄入口缺少身份快照。"
+			return_to_title()
+			return
+		gameplay_session = null
+		active_snapshot.clear()
+		state = State.WORLD
+		_request = null
+		_activation_pending = false
+		_clear_movement()
+		_apply_input()
+		_update_interface()
 		return
 	var point: Dictionary = _entry_snapshot.world_position_px
 	var position := Vector2(float(point.x),float(point.y))
