@@ -19,11 +19,11 @@ class ScaffoldTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
         for name in ["docs", "game", "art", "templates", "schemas", ".github"]:
-            shutil.copytree(ROOT / name, self.root / name, ignore=shutil.ignore_patterns("__pycache__"))
+            shutil.copytree(ROOT / name, self.root / name, ignore=shutil.ignore_patterns("__pycache__", ".godot"))
         for name in ["README.md", "AGENTS.md", "project.json", "CONTRIBUTING.md", "SECURITY.md"]:
             shutil.copy2(ROOT / name, self.root / name)
         # Documentation links refer to the checkers, but no nested .git or cache is copied.
-        shutil.copytree(ROOT / "tools", self.root / "tools", ignore=shutil.ignore_patterns("__pycache__"))
+        shutil.copytree(ROOT / "tools", self.root / "tools", ignore=shutil.ignore_patterns("__pycache__", ".godot"))
 
     def tearDown(self):
         self.temp.cleanup()
@@ -74,6 +74,11 @@ class ScaffoldTests(unittest.TestCase):
         self.assertTrue(any("duplicate key" in e for e in self.errors()))
 
     def test_stage_cannot_claim_runtime(self):
+        c = scaffold.load_json(self.root / "project.json")
+        c["stage"] = "scaffold"
+        c["is_runnable"] = False
+        c["main_scene"] = None
+        self.write_json("project.json", c)
         (self.root / "game/project.godot").write_text("config_version=5")
         self.assertIn("stage contradicts runtime presence", self.errors())
 

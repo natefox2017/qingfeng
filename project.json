@@ -7,13 +7,13 @@
   "clone_url": "https://github.com/natefox2017/qingfeng.git",
   "notion_url": "https://app.notion.com/p/3eee1df1f5a78150879fe4bc1c3151db",
   "master_issue": 1,
-  "stage": "scaffold",
-  "is_runnable": false,
-  "main_scene": null,
+  "stage": "foundation",
+  "is_runnable": true,
+  "main_scene": "res://app/main.tscn",
   "engine": {
     "name": "Godot",
     "major": 4,
-    "version": null
+    "version": "4.7.2"
   },
   "pixellab": {
     "interface": "official_mcp",
