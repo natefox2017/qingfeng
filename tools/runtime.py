@@ -104,7 +104,41 @@ def run_tests(engine: str, reports: Path, timeout: float) -> int:
             code, output = execute([engine, '--headless', '--audio-driver', 'Dummy', '--path', str(game), '--script', 'res://tests/three_day_farm_loop_test.gd'], reports/'three_day_farm_loop.log', timeout, env)
             markers = re.findall(r'^THREE_DAY_PASS checks=(\d+) failures=0\s*$', output, re.M)
             summary['three_day_passed'] = clean_run(output, code) and len(markers) == 1 and int(markers[0]) > 0
-            summary['passed'] = summary['test_passed'] and summary['pages_passed'] and summary['core_passed'] and summary['gameplay_passed'] and summary['world_passed'] and summary['receipt_passed'] and summary['farm_interaction_passed'] and summary['door_passed'] and summary['three_day_passed']
+            code, output = execute([engine, '--headless', '--audio-driver', 'Dummy', '--path', str(game), '--script', 'res://tests/storage_domain_test.gd'], reports/'storage_domain.log', timeout, env)
+            markers = re.findall(r'^STORAGE_PASS checks=(\d+) failures=0\s*
+            return 0 if summary['passed'] else 1
+        finally:
+            (reports/'summary.json').write_text(json.dumps(summary, indent=2))
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('mode', choices=['run', 'editor', 'test'])
+    parser.add_argument('--godot')
+    parser.add_argument('--report-dir', type=Path, default=ROOT/'reports/runtime')
+    parser.add_argument('--timeout', type=float, default=60)
+    args = parser.parse_args()
+    if args.timeout <= 0:
+        parser.error('--timeout must be positive')
+    try:
+        engine = resolve_engine(args.godot)
+        if args.mode == 'test':
+            return run_tests(engine, args.report_dir, args.timeout)
+        # There are no imported image/font dependencies in the current foundation.
+        # The editor owns future incremental imports; do not cold-import every launch.
+        command = [engine, '--path', str(ROOT/'game')]
+        if args.mode == 'editor':
+            command += ['--editor', 'res://app/main.tscn']
+        return subprocess.call(command)
+    except (ValueError, OSError, subprocess.SubprocessError) as exc:
+        print(f'RUNTIME_TOOL_ERROR: {exc}')
+        return 2
+
+if __name__ == '__main__':
+    raise SystemExit(main())
+, output, re.M)
+            summary['storage_passed'] = clean_run(output, code) and len(markers) == 1 and int(markers[0]) > 0
+            summary['passed'] = summary['test_passed'] and summary['pages_passed'] and summary['core_passed'] and summary['gameplay_passed'] and summary['world_passed'] and summary['receipt_passed'] and summary['farm_interaction_passed'] and summary['door_passed'] and summary['three_day_passed'] and summary['storage_passed']
             return 0 if summary['passed'] else 1
         finally:
             (reports/'summary.json').write_text(json.dumps(summary, indent=2))
