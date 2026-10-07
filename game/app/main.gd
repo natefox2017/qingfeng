@@ -271,7 +271,7 @@ func _update_interface() -> void:
 		page = "loading"
 	elif state == State.WORLD and _page not in ["settings","display_confirm"]:
 		page = "pause" if locks.has_owner(&"pause_menu") else "world"
-	var has_gameplay := gameplay_session != null and gameplay_session.is_configured()
+	var has_gameplay: bool = gameplay_session != null and gameplay_session.is_configured()
 	var context := {
 		"error":last_error,
 		"settings":settings.committed,
