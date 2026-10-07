@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "project_id": "qingfeng",
+  "repository_full_name": "natefox2017/qingfeng",
+  "repository_id": 1408662571,
+  "default_branch": "main",
+  "clone_url": "https://github.com/natefox2017/qingfeng.git",
+  "notion_url": "https://app.notion.com/p/3eee1df1f5a78150879fe4bc1c3151db",
+  "master_issue": 1,
+  "stage": "scaffold",
+  "is_runnable": false,
+  "main_scene": null,
+  "engine": {
+    "name": "Godot",
+    "major": 4,
+    "version": null
+  },
+  "pixellab": {
+    "interface": "official_mcp",
+    "endpoint": "https://api.pixellab.ai/mcp",
+    "connection_status": "not_verified",
+    "is_runtime_required": false,
+    "is_paid_generation_authorized": false
+  },
+  "naming": {
+    "own_fields": "snake_case",
+    "runtime_paths": "snake_case",
+    "classes_and_nodes": "PascalCase"
+  },
+  "save_format": "qingfeng",
+  "user_data_path": "user://qingfeng/"
+}

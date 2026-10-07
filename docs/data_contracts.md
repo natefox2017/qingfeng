@@ -1,0 +1,65 @@
+# 数据与命名合同 · QINGFENG-1
+
+以下是新实现的边界合同，不是假称运行API已经存在。所有自有字段 snake_case；第三方 PixelLab 原始字段在适配器边界保留，不污染领域命名。完整动作 payload 随首个实施 PR 增加严格 schema 与样例，不用任意字典隐藏未定义参数。
+
+## 命名
+文件/目录/函数/变量/信号 snake_case，类/节点 PascalCase，常量/枚举 CONSTANT_CASE。布尔 is_/has_/can_ 或 _enabled；结果 ok 为固定例外。ID 字段 _id，集合复数或 _ids，数字索引从0开始。
+稳定值如 space.farm、space.shop、plot.farm.001、item.radish_seed；显示名改变不换ID。正式路径不含 candidate/trial/current/latest/final 或日期等开发状态；new_game 是语义动作允许。
+所有字段新增时写准确拼写、类型、必填/缺省、空值、范围、单位、坐标系、写入者、是否存档与迁移。不混用缺字段/null/0/空串，不以bool冒充int。
+
+## 离散命令/结果
+| 字段 | 类型与约束 |
+| --- | --- |
+| protocol_version | int，1；未知版本拒绝 |
+| command_id | string，1–128字符；同会话内唯一 |
+| session_id | string，当前世界身份，不由UI改写 |
+| actor_id | string，已注册实体 |
+| action | string，已登记如inventory.transfer |
+| expected_revision | int>=0，操作所依赖的领域修订；跨领域在payload声明所需版本 |
+| payload | action的严格结构；未知键/错类型拒绝 |
+| ok | bool |
+| error_code | string；成功为空，失败稳定大写码 |
+| is_retryable | bool；指可在重新验证后再尝试 |
+| has_changes | bool；指业务状态，不指回执存储是否变化 |
+| revision | int>=0；提交后领域修订，失败不假增 |
+| event_ids | string[]；成功事实，失败空列表 |
+
+结果携带原 command_id；对请求的action/actor/payload/version做规范摘要。同ID同请求返回已记录结果；同ID不同请求报 COMMAND_ID_CONFLICT。已记录的可重试失败，条件变化后用新ID重试；提交结果未知时用原ID查询/重放，避免双扣。
+物理移动不走持久回执。回执生命周期由CORE明确：当前会话保存；未来压缩需防重语义设计，不可悄悄按数量截断。
+
+## 快照与内容
+| 结构 | 字段/类型/单位与拥有者 |
+| --- | --- |
+| SaveEnvelope | save_format:string固定qingfeng；schema_version:int=1；content_version:string；save_id:string；saved_at_utc:string UTC ISO8601；snapshot:严格对象；checksum:sha256；由persistence写 |
+| SessionState | session_id:string；generation:int>=0；领域快照；由app/session管理 |
+| ClockState | game_minute:int>=0，自第1天00:00累加的游戏分钟；非UTC；由Clock写 |
+| ActorState | actor_id/display_name/appearance_id/space_id:string；world_position_px:{x:number,y:number}；facing:north/south/east/west；由运动/会话交接 |
+| DogState | ActorState加mode:follow/wait，last_safe_anchor_id:string；recall是命令，不是第三份坐标 |
+| ContainerState | container_id:string，capacity:int>0，slots:固定容量数组；空槽null，否则item_id:string、quantity:int>0；由库存写 |
+| WalletState | owner_id:string，money:int>=0，基础货币单位；禁浮点钱；由经济写 |
+| PlotState | plot_id/space_id:string，cell_position:{x:int,y:int}，state:untilled/tilled/growing/mature，crop_id:string或null，growth_days:int>=0，is_watered:bool，last_settled_day:int>=0；由农耕写 |
+| QuestState | quest_id:string，status:active/completed，objective_progress:按objective_id的非负int，is_reward_claimed:bool；由任务写 |
+| ResidentState | ActorState加occupation_id/activity_id/home_anchor_id:string，known_event_ids:string[]，relationship_points:int；由居民写 |
+| FactEvent | event_id:string，source_command_id:string或null（系统事件须另标source_system），kind/space_id:string，game_minute:int，participant_ids:string[]，严格payload；提交后创建 |
+| MemorySummary | resident_id:string，source_event_ids:string[]，summary_text:string，updated_at_game_minute:int；主观摘要，不替代事实 |
+
+嵌套对象须在实施前补机器schema；上表未规定的业务上限由content_version表定义，不散落代码。新档发物只一次，所有发布所需领域一起验证/恢复；不得加载旧项目格式或访问旧用户目录。
+地形格16px不等于导出屏幕像素。cell_position是整数地图格，source_anchor_px是源图片左上角坐标，world_position_px是未缩放世界像素，viewport_position_px是渲染视口坐标；转换由布局统一。
+
+## 布局对象与UI
+Door字段：object_id、space_id、target_space_id、arrival_anchor_id、companion_anchor_id；字符串ID，目标必须实际存在。碰撞足迹/Marker保存在布局组件，不能同时在逻辑JSON重写第二份坐标。
+UI只消费 revision、items、selected_slot_index、is_enabled、disabled_reason、pending_command_id 等明确投影。pending只指在途本地操作；关闭页面取消预备动作并释放对应暂停/输入token。
+
+## AI请求
+request_id、session_id、generation、resident_id、conversation_id、context_version、source_event_ids是请求身份；timeout_msec为现实毫秒。回包身份不符/上下文失效则丢弃。provider token不在快照/日志中，关键钱物数字由本地UI文本生成。
+
+## 素材与生成
+[素材 schema](../schemas/asset_manifest.schema.json) 是运行素材登记的机器合同，[空清单](../art/manifest.json)不是“没有素材也通过视觉验收”。
+asset_id/string稳定，runtime_path/仓库相对路径，sha256/64位小写hex，source_url/公开来源页，source_version/string，license_id/string，license_path/本地许可，size_px/{width:int,height:int}，source_anchor_px/{x:number,y:number}，review_status/proposed|validated|accepted|rejected，reviewer/string或null，evidence_paths/string[]。
+animations每项：animation_id、direction、frame_count:int>0、frame_durations_msec:正数数组、contact_frame:int或null、contact_offset_msec:number或null、is_looping:bool；实际帧数/事件区间须匹配导出文件。
+jobs记录request_hash、asset_id、tool_name、status、attempt:int>=1、submitted_at_utc、各阶段*_msec和failure_reason；token和具下载权限的job URL留私密本地日志。generation_id属于素材供应方，不要与会话generation混用。
+
+## 版本
+自有JSON全snake_case；修改结构/语义要升schema或protocol版本和迁移测试。内容平衡改content_version，纯显示文案不重建对象ID。manifest来源哈希验证与游戏存档checksum分开，两者都不证明视觉正确。
+
+字体kind=font，size_px/source_anchor_px为null且animations为空；不得为通过图像校验伪造字体画布/脚锚。其他kind为terrain/object/character/animation/icon，使用真实图像尺寸。

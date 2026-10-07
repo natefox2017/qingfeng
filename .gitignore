@@ -1,0 +1,14 @@
+.godot/
+.import/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+.local/
+.mcp.json
+mcp.local.json
+build/
+dist/
+reports/
+.DS_Store

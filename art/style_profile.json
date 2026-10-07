@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "style_id": "style.farm.v1",
+  "review_status": "proposed",
+  "tile_size_px": {
+    "width": 16,
+    "height": 16
+  },
+  "view_hint": "low top-down",
+  "reference_asset_ids": [],
+  "palette_asset_id": null,
+  "character_content_height_px": null,
+  "notes": "制作候选；先做同屏对照，未生成、未接受最终美术。"
+}

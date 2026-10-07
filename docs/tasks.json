@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "repository_full_name": "natefox2017/qingfeng",
+  "master_issue": 1,
+  "dependency_meaning": "delivery_dependencies_not_preparation_lock",
+  "tasks": [
+    {"task_id":"N01","issue_number":2,"issue_url":"https://github.com/natefox2017/qingfeng/issues/2","title":"PixelLab连接与风格样板","delivery_depends_on":[],"can_prepare_before_dependencies":true,"owned_paths":["art/style_profile.json","docs/pixellab_pipeline.md"]},
+    {"task_id":"N02","issue_number":3,"issue_url":"https://github.com/natefox2017/qingfeng/issues/3","title":"地形与对象图集","delivery_depends_on":["N01"],"can_prepare_before_dependencies":true,"owned_paths":["game/assets/terrain/","game/assets/objects/"]},
+    {"task_id":"N03","issue_number":4,"issue_url":"https://github.com/natefox2017/qingfeng/issues/4","title":"人犬与农事动画","delivery_depends_on":["N01"],"can_prepare_before_dependencies":true,"owned_paths":["game/assets/characters/"]},
+    {"task_id":"N04","issue_number":5,"issue_url":"https://github.com/natefox2017/qingfeng/issues/5","title":"公共状态时间存档","delivery_depends_on":[],"can_prepare_before_dependencies":true,"owned_paths":["schemas/","game/persistence/"]},
+    {"task_id":"N05","issue_number":6,"issue_url":"https://github.com/natefox2017/qingfeng/issues/6","title":"引擎地图人犬","delivery_depends_on":["N02","N03","N04"],"can_prepare_before_dependencies":true,"owned_paths":["game/app/","game/world/","game/actors/"]},
+    {"task_id":"N06","issue_number":7,"issue_url":"https://github.com/natefox2017/qingfeng/issues/7","title":"农耕库存经济","delivery_depends_on":["N04","N05"],"can_prepare_before_dependencies":true,"owned_paths":["game/systems/"]},
+    {"task_id":"N07","issue_number":8,"issue_url":"https://github.com/natefox2017/qingfeng/issues/8","title":"图标UI字体","delivery_depends_on":["N01","N04","N06"],"can_prepare_before_dependencies":true,"owned_paths":["game/ui/","game/assets/fonts/","game/assets/icons/"]},
+    {"task_id":"N08","issue_number":9,"issue_url":"https://github.com/natefox2017/qingfeng/issues/9","title":"居民生活记忆","delivery_depends_on":["N04","N05"],"can_prepare_before_dependencies":true,"owned_paths":["game/systems/residents/"]},
+    {"task_id":"N09","issue_number":10,"issue_url":"https://github.com/natefox2017/qingfeng/issues/10","title":"指引委托故事","delivery_depends_on":["N06","N08"],"can_prepare_before_dependencies":true,"owned_paths":["game/systems/quests/","game/content/"]},
+    {"task_id":"N10","issue_number":11,"issue_url":"https://github.com/natefox2017/qingfeng/issues/11","title":"可选AI表达","delivery_depends_on":["N04","N08"],"can_prepare_before_dependencies":true,"owned_paths":["game/dialogue/"]},
+    {"task_id":"N11","issue_number":12,"issue_url":"https://github.com/natefox2017/qingfeng/issues/12","title":"原生试玩与导出","delivery_depends_on":["N05","N06","N07","N08","N09"],"can_prepare_before_dependencies":true,"owned_paths":["game/tests/",".github/workflows/"]}
+  ]
+}

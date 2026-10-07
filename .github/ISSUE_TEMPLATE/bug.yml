@@ -1,0 +1,22 @@
+name: 缺陷
+description: 能复现并验证的功能或画面问题
+title: "[BUG] "
+body:
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 当前commit、平台、入口、复现步骤
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期与实际
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 脱敏日志、原生画面、影响和回归条件
+    validations:
+      required: true

@@ -1,0 +1,28 @@
+name: 开发任务
+description: 一个有依赖、文件边界和验收条件的交付
+title: "[TASK] "
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: 玩家目标与最小交付
+    validations:
+      required: true
+  - type: textarea
+    id: ownership
+    attributes:
+      label: 基线SHA、依赖、认领人与文件集合
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 实施checkbox、来源与数据/素材合同
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 正常/失败/保存验收、原生证据与未验项
+    validations:
+      required: true
