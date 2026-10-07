@@ -30,7 +30,7 @@ N04拥有公共schema/时钟/保存；N05拥有app入口/同地图；N11协调�
 ## PR规则
 分支 feat/fix/refactor/docs/art/test/chore 加语义任务名。PR默认非Draft，一项可验证能力；大Issue通过多个短PR完成。禁止force push、覆盖用户未提交工作或未经检查合并无关PR。
 PR用 [模板](../.github/PULL_REQUEST_TEMPLATE.md)，注明实际来源、运行入口、测试证据、保存语义、未验项。预算授权、视觉接受、功能完成三个结论分别写，不互相替代。
-CI不是天然门禁：只有仓库实际配置规则才可宣称强制阻止合并。本次交付可运行检查workflow，未配置管理员分支保护时仍需review执行。
+main实际规则要求`repository-policy`检查通过；它执行真实框架、工具、引擎冷导入和物理/生命周期回归，不是恒绿占位。其他游戏验收仍由review逐项核对，不能凭这一检查替代未覆盖功能；不修改或绕过仓库保护。
 
 ## 当前检查与阶段
 ```sh
