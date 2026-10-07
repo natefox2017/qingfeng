@@ -1,0 +1,46 @@
+name: Native validation inputs
+on:
+  push:
+    branches: [chore/native-foundation-inputs]
+permissions:
+  contents: read
+jobs:
+  inputs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Package source and official release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/native-inputs
+          git archive 3364eff31553daa5c00674f3ae1875971534b6eb --format=zip -o /tmp/native-inputs/source.zip
+          git ls-tree -r 3364eff31553daa5c00674f3ae1875971534b6eb > /tmp/native-inputs/source-tree.txt
+          python3 - <<'PY'
+          import os,json,urllib.request,hashlib,pathlib
+          root=pathlib.Path('/tmp/native-inputs')
+          req=urllib.request.Request('https://api.github.com/repos/godotengine/godot-builds/releases/tags/4.7.2-stable',headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'User-Agent':'qingfeng-validation'})
+          with urllib.request.urlopen(req,timeout=30) as f:release=json.load(f)
+          assert not release['draft'] and not release['prerelease']
+          names=['Godot_v4.7.2-stable_linux.x86_64.zip','Godot_v4.7.2-stable_export_templates.tpz']
+          records=[]
+          for name in names:
+              a=next(a for a in release['assets'] if a['name']==name)
+              url=a['browser_download_url']
+              assert url=='https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/'+name
+              record={k:a[k] for k in ['name','size','digest','browser_download_url']}
+              records.append(record)
+              if name.endswith('.zip'):
+                  with urllib.request.urlopen(url,timeout=120) as f:raw=f.read()
+                  assert 'sha256:'+hashlib.sha256(raw).hexdigest()==a['digest']
+                  (root/'engine.zip').write_bytes(raw)
+          (root/'engine.json').write_text(json.dumps(records,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-inputs
+          path: /tmp/native-inputs
+          retention-days: 2
