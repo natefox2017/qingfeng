@@ -9,6 +9,7 @@ const CODEC = preload("res://persistence/session_codec.gd")
 const STORE = preload("res://persistence/session_store.gd")
 const SETTINGS = preload("res://persistence/settings_store.gd")
 const GAMEPLAY = preload("res://app/gameplay_session.gd")
+const FARM_ACTION = preload("res://app/farm_action_runner.gd")
 
 const LEGACY_ROOM := "res://tests/fixtures/collision_room.tscn"
 const FARM_ROOM := "res://world/farm_first_screen.tscn"
@@ -23,6 +24,7 @@ var state: State = State.TITLE
 var generation: int = 0
 var room: Node2D
 var gameplay_session: RefCounted
+var farm_action: RefCounted = FARM_ACTION.new()
 var locks: RefCounted = LOCKS.new()
 var last_error: String = ""
 var _request: RefCounted
@@ -76,6 +78,8 @@ func _process(_delta: float) -> void:
 		_update_interface()
 	elif settings.is_previewing and is_instance_valid(view.countdown):
 		view.countdown.text = "%d 秒后自动恢复" % ceili(settings.remaining_seconds)
+	if farm_action.is_busy():
+		_tick_farm_action(_delta)
 	if state != State.LOADING or _activation_pending or _request == null:
 		return
 	var status: int = _request.status()
@@ -168,6 +172,7 @@ func _activate_room(scene: PackedScene, requested_generation: int) -> void:
 
 	gameplay_session = next_gameplay
 	active_snapshot = _entry_snapshot.duplicate(true)
+	_refresh_farm_world()
 	room.get_player().position = position
 	room.get_player().facing = StringName(active_snapshot.facing)
 	_entry_snapshot.clear()
@@ -215,6 +220,8 @@ func return_to_title() -> void:
 		remove_child(room)
 		room.queue_free()
 	room = null
+	farm_action = FARM_ACTION.new()
+	locks.set_locked(&"farm_action", false)
 	locks.set_locked(&"pause_menu", false)
 	locks.set_locked(&"inventory", false)
 	_clear_movement()
@@ -223,15 +230,22 @@ func return_to_title() -> void:
 func set_pause_menu(enabled: bool) -> void:
 	if state != State.WORLD:
 		return
+	if enabled and farm_action.is_busy():
+		return
 	locks.set_locked(&"pause_menu", enabled)
 	_update_interface()
 
 func set_application_focused(focused: bool) -> void:
-	if not focused and settings.is_previewing:
-		settings.revert()
-		_page = "settings"
-		last_error = "窗口失焦，已恢复原显示设置。"
-		_update_interface()
+	if not focused:
+		if farm_action.is_before_contact():
+			_cancel_farm_action("窗口失焦，未到接触点，农事动作已取消。")
+		elif farm_action.is_busy():
+			_finish_farm_recovery()
+		if settings.is_previewing:
+			settings.revert()
+			_page = "settings"
+			last_error = "窗口失焦，已恢复原显示设置。"
+			_update_interface()
 	locks.set_locked(&"focus", not focused)
 
 func _notification(what: int) -> void:
@@ -243,12 +257,17 @@ func _notification(what: int) -> void:
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event.is_echo():
 		return
+	if event.is_action_pressed("interact"):
+		if state == State.WORLD and gameplay_session != null and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"inventory") and not locks.has_owner(&"focus") and not farm_action.is_busy():
+			_begin_farm_action()
+		get_viewport().set_input_as_handled()
+		return
 	if event.is_action_pressed("inventory_menu"):
-		if state == State.WORLD and gameplay_session != null and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"focus"):
+		if state == State.WORLD and gameplay_session != null and not farm_action.is_busy() and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"focus"):
 			set_inventory_menu(not locks.has_owner(&"inventory"))
 			get_viewport().set_input_as_handled()
 		return
-	if state == State.WORLD and gameplay_session != null and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"focus"):
+	if state == State.WORLD and gameplay_session != null and not farm_action.is_busy() and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"focus"):
 		for index in range(QUICK_SLOT_ACTIONS.size()):
 			if event.is_action_pressed(QUICK_SLOT_ACTIONS[index]):
 				_select_inventory_slot(index)
@@ -256,7 +275,11 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				return
 	if not event.is_action_pressed("pause_menu"):
 		return
-	if view.file_dialog.visible:
+	if farm_action.is_before_contact():
+		_cancel_farm_action("动作已取消，田地和背包没有变化。")
+	elif farm_action.is_busy():
+		_finish_farm_recovery()
+	elif view.file_dialog.visible:
 		view.file_dialog.hide()
 	elif locks.has_owner(&"inventory"):
 		set_inventory_menu(false)
@@ -273,7 +296,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 
 func set_inventory_menu(enabled: bool) -> void:
-	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured():
+	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured() or (enabled and farm_action.is_busy()):
 		return
 	locks.set_locked(&"inventory",enabled)
 	_page = "inventory" if enabled else "title"
@@ -282,8 +305,105 @@ func set_inventory_menu(enabled: bool) -> void:
 func _new_command_id(prefix: String) -> String:
 	return prefix+"."+Crypto.new().generate_random_bytes(16).hex_encode()
 
+func _begin_farm_action() -> void:
+	if gameplay_session == null or not gameplay_session.is_configured() or not is_instance_valid(room) or not room.has_method("resolve_plot_target"):
+		return
+	var plot_id := String(room.resolve_plot_target())
+	if plot_id.is_empty():
+		last_error = "前方没有可达的菜地。请面向相邻田格再按 E。"
+		_update_interface()
+		return
+	var prepared: Dictionary = gameplay_session.prepare_farm_action(plot_id)
+	if not prepared.ok:
+		last_error = _farm_error_text(String(prepared.error_code))
+		_update_interface()
+		return
+	var command := {
+		"protocol_version":1,
+		"command_id":_new_command_id(String(prepared.action)),
+		"session_id":str(active_snapshot.get("session_id","")),
+		"actor_id":"actor.player",
+		"action":String(prepared.action),
+		"expected_revision":int(prepared.expected_revision),
+		"payload":prepared.payload.duplicate(true)
+	}
+	var label := _farm_action_label(String(prepared.action))
+	if not farm_action.begin(command,plot_id,label):
+		last_error = "已有农事动作正在进行。"
+		_update_interface()
+		return
+	locks.set_locked(&"farm_action",true)
+	last_error = "准备"+label+"……Esc 可在接触前取消。"
+	_update_interface()
+
+func _tick_farm_action(delta: float) -> void:
+	var event: Dictionary = farm_action.advance(delta)
+	if event.event == "contact":
+		var result: Dictionary = gameplay_session.execute(event.command)
+		if result.ok:
+			last_error = String(event.label)+("完成。" if result.has_changes else "没有产生新的变化。")
+		else:
+			last_error = _farm_error_text(String(result.error_code))
+		_refresh_farm_world()
+		_update_interface()
+	elif event.event == "finished":
+		locks.set_locked(&"farm_action",false)
+		_update_interface()
+
+func _cancel_farm_action(message: String) -> bool:
+	if not farm_action.cancel_before_contact():
+		return false
+	locks.set_locked(&"farm_action",false)
+	last_error = message
+	_update_interface()
+	return true
+
+func _finish_farm_recovery() -> bool:
+	if not farm_action.finish_recovery():
+		return false
+	locks.set_locked(&"farm_action",false)
+	_update_interface()
+	return true
+
+func _refresh_farm_world() -> void:
+	if gameplay_session == null or not gameplay_session.is_configured() or not is_instance_valid(room) or not room.has_method("apply_farm_projection"):
+		return
+	room.apply_farm_projection(gameplay_session.projection().farm)
+
+func _farm_action_label(action: String) -> String:
+	match action:
+		"farm.till":
+			return "整地"
+		"farm.plant":
+			return "播种"
+		"farm.water":
+			return "浇水"
+		"farm.harvest":
+			return "采收"
+	return "操作"
+
+func _farm_error_text(code: String) -> String:
+	match code:
+		"FARM_SELECTED_ITEM_REQUIRED":
+			return "请先在快捷栏选择锄头、种子或浇水壶。"
+		"FARM_SELECTED_ITEM_INVALID":
+			return "当前选中物品不能用于这块田。"
+		"INVENTORY_INSUFFICIENT_ITEM":
+			return "种子数量不足。"
+		"INVENTORY_FULL":
+			return "背包已满，作物仍留在田里。"
+		"STALE_REVISION", "INVENTORY_STALE_REVISION", "FARM_REVISION_CONFLICT", "INVENTORY_REVISION_CONFLICT":
+			return "田地或背包状态刚刚变化，请重新操作。"
+		"FARM_NOT_UNTILLED", "FARM_NOT_TILLED", "FARM_NOT_WATERABLE", "FARM_NOT_MATURE":
+			return "这块田当前不能执行该动作。"
+		"FARM_TOOL_MISSING":
+			return "缺少所需工具。"
+		"COMMAND_RECEIPT_CAPACITY":
+			return "本次试玩的操作回执已达到安全上限，请保存后结束本次会话。"
+	return "农事操作未完成："+code
+
 func _select_inventory_slot(slot_index: int) -> void:
-	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured():
+	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured() or farm_action.is_busy():
 		return
 	var projection: Dictionary = gameplay_session.projection()
 	if not projection.ok or slot_index < 0 or slot_index >= int(projection.inventory.capacity):
@@ -345,7 +465,8 @@ func _update_interface() -> void:
 		"envelope":_import_envelope,
 		"focus_action":_focus_action,
 		"has_gameplay":has_gameplay,
-		"world_label":"农庄第一屏 · 工程美术" if has_gameplay else "旧入口碰撞测试场"
+		"world_label":"农庄第一屏 · 工程美术" if has_gameplay else "旧入口碰撞测试场",
+		"farm_action":farm_action.projection()
 	}
 	if has_gameplay:
 		context["gameplay"] = gameplay_session.projection()
@@ -363,6 +484,8 @@ func _update_interface() -> void:
 func save_progress() -> Dictionary:
 	if state != State.WORLD or active_snapshot.is_empty():
 		return CODEC.failure("SAVE_NO_SESSION")
+	if farm_action.is_busy():
+		return CODEC.failure("SAVE_ACTION_BUSY")
 	var candidate: Dictionary = active_snapshot.duplicate(true)
 	var player: CharacterBody2D = room.get_player()
 	candidate.world_position_px = {"x":player.position.x,"y":player.position.y}
@@ -522,6 +645,10 @@ func _on_action(action: String, payload: Dictionary) -> void:
 func _close_requested() -> void:
 	if state == State.WORLD:
 		settings.revert()
+		if farm_action.is_before_contact():
+			_cancel_farm_action("关闭请求取消了尚未提交的农事动作。")
+		elif farm_action.is_busy():
+			_finish_farm_recovery()
 		if locks.has_owner(&"inventory"):
 			locks.set_locked(&"inventory",false)
 		_page = "title"

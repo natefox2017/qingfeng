@@ -191,6 +191,17 @@ func show_page(page: String, context: Dictionary) -> void:
 			var gameplay: Dictionary = context.get("gameplay",{})
 			if gameplay.get("ok",false):
 				wallet_label=Label.new();wallet_label.text=_clock_text(gameplay.clock)+" · "+str(gameplay.wallet.money)+"币";wallet_label.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT);hud.add_child(wallet_label)
+				var action_state: Dictionary = context.get("farm_action",{})
+				var hint:=Label.new()
+				if action_state.get("is_busy",false):
+					hint.text=String(action_state.get("label","操作"))+(" · 准备中，Esc取消" if action_state.get("phase","")=="prepare" else " · 已提交，收势中")
+				else:
+					var selected: Variant=gameplay.inventory.slots[gameplay.inventory.selected_slot_index]
+					var selected_name:="空手"
+					if selected!=null:
+						selected_name=str(gameplay.items.get(String(selected.item_id),{}).get("display_name",selected.item_id))
+					hint.text="E 使用 "+selected_name+" · B 背包"
+				hint.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT);hud.add_child(hint)
 				_build_quickbar(gameplay)
 	if not context.get("error","").is_empty():notice.text=context.error
 	var preferred_action := str(context.get("focus_action",""))

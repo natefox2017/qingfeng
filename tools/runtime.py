@@ -95,7 +95,10 @@ def run_tests(engine: str, reports: Path, timeout: float) -> int:
             code, output = execute([engine, '--headless', '--audio-driver', 'Dummy', '--path', str(game), '--script', 'res://tests/receipt_persistence_test.gd'], reports/'receipt_persistence.log', timeout, env)
             markers = re.findall(r'^RECEIPT_PASS checks=(\d+) failures=0\s*$', output, re.M)
             summary['receipt_passed'] = clean_run(output, code) and len(markers) == 1 and int(markers[0]) > 0
-            summary['passed'] = summary['test_passed'] and summary['pages_passed'] and summary['core_passed'] and summary['gameplay_passed'] and summary['world_passed'] and summary['receipt_passed']
+            code, output = execute([engine, '--headless', '--audio-driver', 'Dummy', '--path', str(game), '--script', 'res://tests/farm_interaction_test.gd'], reports/'farm_interaction.log', timeout, env)
+            markers = re.findall(r'^FARM_INTERACTION_PASS checks=(\d+) failures=0\s*$', output, re.M)
+            summary['farm_interaction_passed'] = clean_run(output, code) and len(markers) == 1 and int(markers[0]) > 0
+            summary['passed'] = summary['test_passed'] and summary['pages_passed'] and summary['core_passed'] and summary['gameplay_passed'] and summary['world_passed'] and summary['receipt_passed'] and summary['farm_interaction_passed']
             return 0 if summary['passed'] else 1
         finally:
             (reports/'summary.json').write_text(json.dumps(summary, indent=2))
