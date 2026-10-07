@@ -127,7 +127,13 @@ func show_page(page: String, context: Dictionary) -> void:
 			button(hud,"pause","pause","暂停 / Esc")
 			var text:=Label.new();text.text=context.get("player_name","")+"  ·  入口测试场（非正式地图）";text.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT);hud.add_child(text)
 	if not context.get("error","").is_empty():notice.text=context.error
-	elif _first_button != null and page != "new_game":_first_button.grab_focus()
+	var preferred_action := str(context.get("focus_action",""))
+	if not preferred_action.is_empty() and buttons.has(preferred_action):
+		var preferred_button: Button = buttons[preferred_action] as Button
+		if preferred_button != null and not preferred_button.disabled:
+			preferred_button.grab_focus()
+			return
+	if _first_button != null and page != "new_game":_first_button.grab_focus()
 
 func form_names() -> Dictionary:
 	return {"player_name":player_name.text,"dog_name":dog_name.text}
