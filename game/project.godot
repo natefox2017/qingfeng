@@ -38,3 +38,4 @@ select_slot_7={"deadzone":0.2,"events":[Object(InputEventKey,"physical_keycode":
 select_slot_8={"deadzone":0.2,"events":[Object(InputEventKey,"physical_keycode":56)]}
 select_slot_9={"deadzone":0.2,"events":[Object(InputEventKey,"physical_keycode":57)]}
 select_slot_0={"deadzone":0.2,"events":[Object(InputEventKey,"physical_keycode":48)]}
+interact={"deadzone":0.2,"events":[Object(InputEventKey,"physical_keycode":69)]}
