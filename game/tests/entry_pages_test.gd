@@ -119,6 +119,22 @@ func run() -> void:
 	var initial_save:Dictionary=app.store.read_save(app.active_save_id)
 	check(initial_save.ok and int(initial_save.envelope.schema_version)==2 and initial_save.envelope.snapshot.gameplay.inventory.slots.size()==12,"new game persists full gameplay schema")
 	check(app.gameplay_session.inventory.quantity_of("item.radish_seed")==4 and app.gameplay_session.wallet.money==200,"new game uses authoritative content-version inventory and wallet")
+	check(app.view.quickbar != null and app.view.quickbar.get_child_count()==12 and app.view.buttons.has("inventory"),"world HUD renders twelve live quick slots and backpack action")
+	check(app.view.wallet_label != null and app.view.wallet_label.text.contains("200"),"world HUD projects authoritative wallet value")
+	check(app.gameplay_session.projection().items["item.hoe"].display_name=="锄头","item display name comes from content-version projection")
+	app._on_action("select_slot",{"slot_index":2})
+	check(app.gameplay_session.inventory.selected_slot_index==2 and app.view.quickbar.get_child(2).text.begins_with("[3]"),"click intent selects slot through inventory command and rerenders selection")
+	var b_key:=InputEventKey.new();b_key.physical_keycode=KEY_B;b_key.pressed=true
+	check(InputMap.event_is_action(b_key,"inventory_menu"),"B is mapped to backpack input")
+	app._unhandled_key_input(b_key)
+	check(app.locks.has_owner(&"inventory") and app.gameplay_session.clock.is_paused() and app.view.title.text=="背包","B opens backpack and owns input/clock pause")
+	var two_key:=InputEventKey.new();two_key.physical_keycode=KEY_2;two_key.pressed=true
+	check(InputMap.event_is_action(two_key,"select_slot_2"),"number key is mapped to quick-slot selection")
+	app._unhandled_key_input(two_key)
+	check(app.gameplay_session.inventory.selected_slot_index==1 and app.locks.has_owner(&"inventory"),"number selection uses command while backpack remains topmost")
+	var escape_inventory:=InputEventKey.new();escape_inventory.physical_keycode=KEY_ESCAPE;escape_inventory.pressed=true
+	app._unhandled_key_input(escape_inventory)
+	check(not app.locks.has_owner(&"inventory") and not app.gameplay_session.clock.is_paused() and app.room.get_player().is_input_enabled,"Esc closes only backpack and releases its pause token")
 	var till_command:Dictionary={
 		"protocol_version":1,"command_id":"entry-till","session_id":app.active_snapshot.session_id,
 		"actor_id":"actor.player","action":"farm.till","expected_revision":app.gameplay_session.farm.revision,

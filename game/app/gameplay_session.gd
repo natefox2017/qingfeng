@@ -118,9 +118,21 @@ func projection() -> Dictionary:
 			"is_paused":clock.is_paused()
 		},
 		"inventory":inventory.projection(),
+		"items":_item_projection(),
 		"wallet":wallet.projection(),
 		"farm":farm.projection()
 	}
+
+func _item_projection() -> Dictionary:
+	var result: Dictionary = {}
+	for item_id: Variant in content.items:
+		var item: Dictionary = content.items[item_id]
+		result[String(item_id)] = {
+			"display_name":String(item.display_name),
+			"buy_price":int(item.buy_price),
+			"sell_price":int(item.sell_price)
+		}
+	return result
 
 func snapshot() -> Dictionary:
 	if not is_configured():

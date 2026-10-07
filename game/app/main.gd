@@ -14,7 +14,8 @@ const LEGACY_ROOM := "res://tests/fixtures/collision_room.tscn"
 const FARM_ROOM := "res://world/farm_first_screen.tscn"
 const DEFAULT_ROOM := LEGACY_ROOM
 const MOVEMENT_ACTIONS := [&"move_left", &"move_right", &"move_up", &"move_down"]
-const GAMEPLAY_PAUSE_OWNERS := [&"pause_menu", &"focus"]
+const GAMEPLAY_PAUSE_OWNERS := [&"pause_menu", &"inventory", &"focus"]
+const QUICK_SLOT_ACTIONS := [&"select_slot_1",&"select_slot_2",&"select_slot_3",&"select_slot_4",&"select_slot_5",&"select_slot_6",&"select_slot_7",&"select_slot_8",&"select_slot_9",&"select_slot_0"]
 
 enum State { TITLE, LOADING, WORLD }
 
@@ -38,6 +39,7 @@ var _settings_origin := "title"
 var _focus_action := ""
 var _names := {"player_name":"", "dog_name":""}
 var _import_envelope: Dictionary = {}
+var _ui_command_serial: int = 0
 
 @onready var view: Control = $Interface/Screen
 
@@ -215,6 +217,7 @@ func return_to_title() -> void:
 		room.queue_free()
 	room = null
 	locks.set_locked(&"pause_menu", false)
+	locks.set_locked(&"inventory", false)
 	_clear_movement()
 	_update_interface()
 
@@ -239,10 +242,25 @@ func _notification(what: int) -> void:
 		set_application_focused(true)
 
 func _unhandled_key_input(event: InputEvent) -> void:
-	if event.is_echo() or not event.is_action_pressed("pause_menu"):
+	if event.is_echo():
+		return
+	if event.is_action_pressed("inventory_menu"):
+		if state == State.WORLD and gameplay_session != null and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"focus"):
+			set_inventory_menu(not locks.has_owner(&"inventory"))
+			get_viewport().set_input_as_handled()
+		return
+	if state == State.WORLD and gameplay_session != null and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"focus"):
+		for index in range(QUICK_SLOT_ACTIONS.size()):
+			if event.is_action_pressed(QUICK_SLOT_ACTIONS[index]):
+				_select_inventory_slot(index)
+				get_viewport().set_input_as_handled()
+				return
+	if not event.is_action_pressed("pause_menu"):
 		return
 	if view.file_dialog.visible:
 		view.file_dialog.hide()
+	elif locks.has_owner(&"inventory"):
+		set_inventory_menu(false)
 	elif _page == "display_confirm":
 		_on_action("revert_settings",{})
 	elif _page == "settings":
@@ -254,6 +272,34 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	elif _page != "title":
 		_on_action("back",{})
 	get_viewport().set_input_as_handled()
+
+func set_inventory_menu(enabled: bool) -> void:
+	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured():
+		return
+	locks.set_locked(&"inventory",enabled)
+	_page = "inventory" if enabled else "title"
+	_update_interface()
+
+func _select_inventory_slot(slot_index: int) -> void:
+	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured():
+		return
+	var projection: Dictionary = gameplay_session.projection()
+	if not projection.ok or slot_index < 0 or slot_index >= int(projection.inventory.capacity):
+		return
+	_ui_command_serial += 1
+	var command := {
+		"protocol_version":1,
+		"command_id":"ui.select.%d" % _ui_command_serial,
+		"session_id":str(active_snapshot.get("session_id","")),
+		"actor_id":"actor.player",
+		"action":"inventory.select",
+		"expected_revision":int(projection.inventory.revision),
+		"payload":{"slot_index":slot_index}
+	}
+	var result: Dictionary = gameplay_session.execute(command)
+	if not result.ok:
+		last_error = "无法选择物品栏："+result.error_code
+	_update_interface()
 
 func _apply_input() -> void:
 	var enabled: bool = state == State.WORLD and not locks.is_locked()
@@ -281,8 +327,13 @@ func _update_interface() -> void:
 	var page := _page
 	if state == State.LOADING:
 		page = "loading"
-	elif state == State.WORLD and _page not in ["settings","display_confirm"]:
-		page = "pause" if locks.has_owner(&"pause_menu") else "world"
+	elif state == State.WORLD:
+		if _page in ["settings","display_confirm"]:
+			page = _page
+		elif locks.has_owner(&"inventory"):
+			page = "inventory"
+		else:
+			page = "pause" if locks.has_owner(&"pause_menu") else "world"
 	var has_gameplay: bool = gameplay_session != null and gameplay_session.is_configured()
 	var context := {
 		"error":last_error,
@@ -338,7 +389,7 @@ func _on_action(action: String, payload: Dictionary) -> void:
 		return
 	if action in ["confirm_settings","revert_settings"] and _page != "display_confirm":
 		return
-	if action in ["pause","resume","save","save_return"] and state != State.WORLD:
+	if action in ["pause","resume","save","save_return","inventory","close_inventory","select_slot"] and state != State.WORLD:
 		return
 	if state == State.LOADING and action not in ["cancel_load","quit"]:
 		return
@@ -442,6 +493,12 @@ func _on_action(action: String, payload: Dictionary) -> void:
 					_focus_action = "load"
 		"cancel_load":
 			return_to_title()
+		"inventory":
+			set_inventory_menu(true)
+		"close_inventory":
+			set_inventory_menu(false)
+		"select_slot":
+			_select_inventory_slot(int(payload.get("slot_index",-1)))
 		"pause":
 			set_pause_menu(true)
 		"resume":
@@ -464,6 +521,8 @@ func _on_action(action: String, payload: Dictionary) -> void:
 func _close_requested() -> void:
 	if state == State.WORLD:
 		settings.revert()
+		if locks.has_owner(&"inventory"):
+			locks.set_locked(&"inventory",false)
 		_page = "title"
 		set_pause_menu(true)
 		last_error = "请保存并返回标题后退出，以免丢失未保存的进度。"
