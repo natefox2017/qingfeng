@@ -3,6 +3,7 @@ const MAIN = preload("res://app/main.tscn")
 const CODEC = preload("res://persistence/session_codec.gd")
 const STORE = preload("res://persistence/session_store.gd")
 const SETTINGS = preload("res://persistence/settings_store.gd")
+const UI_THEME = preload("res://ui/theme/ui_theme.gd")
 var checks := 0
 var failures: Array[String] = []
 var app: Control
@@ -87,6 +88,11 @@ func run() -> void:
 	check(is_equal_approx(reloaded.committed.master_volume,0.25),"settings survive restart")
 	app=MAIN.instantiate();app.store.directory=directory.path_join("app_saves");app.settings.path=directory.path_join("app_settings.json")
 	root.add_child(app);current_scene=app;app.set_application_focused(true)
+	check(app.view.theme != null and app.view.theme.default_font_size == UI_THEME.FONT_BODY,"shared UI theme is installed")
+	check(app.view.title.get_theme_font_size("font_size") == UI_THEME.FONT_HEADING,"heading token drives title size")
+	check(app.view.subtitle.get_theme_color("font_color") == UI_THEME.COLOR_MUTED,"caption token drives subtitle color")
+	check(app.view.notice.get_theme_color("font_color") == UI_THEME.COLOR_ERROR,"error token drives notice color")
+	check(app.view.buttons["new_game"].tooltip_text == app.view.buttons["new_game"].accessibility_name and not app.view.buttons["new_game"].tooltip_text.is_empty(),"icon action has tooltip and accessible name")
 	check(app.view.buttons["continue"].disabled,"title disables continue without saves")
 	app._on_action("new_game",{})
 	app.view.player_name.text="小禾";app.view.dog_name.text="阿豆"
