@@ -388,7 +388,7 @@
       "properties": {
         "receipts": {
           "type": "array",
-          "maxItems": 4096,
+          "maxItems": 512,
           "items": {
             "$ref": "#/$defs/receipt"
           }
