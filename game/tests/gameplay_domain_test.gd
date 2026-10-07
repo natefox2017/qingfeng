@@ -201,29 +201,29 @@ func _initialize() -> void:
 
 	var identity: Dictionary = CODEC.new_snapshot("小禾","阿豆")
 	var gameplay_save: Dictionary = CODEC.compose_gameplay_snapshot(identity,saved_session)
-	check(CODEC.validate_gameplay_snapshot(gameplay_save), "schema-v2 gameplay snapshot validates before encoding")
+	check(CODEC.validate_gameplay_snapshot(gameplay_save), "current gameplay snapshot validates before encoding")
 	var save_id := Crypto.new().generate_random_bytes(16).hex_encode()
 	var encoded_v2 := CODEC.encode(gameplay_save,save_id)
 	var decoded_v2: Dictionary = CODEC.decode(encoded_v2)
-	check(decoded_v2.ok and decoded_v2.envelope.schema_version == 2 and decoded_v2.envelope.content_version == "first_playable_v1", "schema-v2 envelope round trips with gameplay content version")
-	check(CODEC.canonical(decoded_v2.envelope.snapshot) == CODEC.canonical(gameplay_save), "schema-v2 decode preserves normalized gameplay snapshot exactly")
+	check(decoded_v2.ok and decoded_v2.envelope.schema_version == 3 and decoded_v2.envelope.content_version == "first_playable_v1", "schema-v3 envelope round trips with gameplay content version")
+	check(CODEC.canonical(decoded_v2.envelope.snapshot) == CODEC.canonical(gameplay_save), "schema-v3 decode preserves normalized gameplay snapshot exactly")
 	var tampered: Dictionary = decoded_v2.envelope.duplicate(true)
 	tampered.snapshot.gameplay.inventory.capacity = 99
 	tampered.erase("checksum")
 	tampered["checksum"] = CODEC.canonical(tampered).sha256_text()
-	check(CODEC.decode(CODEC.canonical(tampered)).error_code == "SAVE_SNAPSHOT_INVALID", "schema-v2 rejects structurally valid checksum with invalid inventory")
+	check(CODEC.decode(CODEC.canonical(tampered)).error_code == "SAVE_SNAPSHOT_INVALID", "schema-v3 rejects structurally valid checksum with invalid inventory")
 	var store := STORE.new()
 	store.directory = "user://gameplay_save_test_"+Crypto.new().generate_random_bytes(8).hex_encode()
 	var write_result: Dictionary = store.write_new(gameplay_save)
-	check(write_result.ok, "session store writes schema-v2 through the same atomic path")
+	check(write_result.ok, "session store writes schema-v3 through the same atomic path")
 	if write_result.ok:
 		var read_result: Dictionary = store.read_save(write_result.save_id)
-		check(read_result.ok and CODEC.canonical(read_result.envelope.snapshot) == CODEC.canonical(gameplay_save), "session store restores schema-v2 bytes without dropping gameplay")
+		check(read_result.ok and CODEC.canonical(read_result.envelope.snapshot) == CODEC.canonical(gameplay_save), "session store restores schema-v3 bytes without dropping gameplay")
 		var imported: Dictionary = store.confirm_import(read_result.envelope)
-		check(imported.ok, "schema-v2 import creates a new local save")
+		check(imported.ok, "schema-v3 import creates a new local save")
 		if imported.ok:
 			var imported_result: Dictionary = store.read_save(imported.save_id)
-			check(imported_result.ok and imported_result.envelope.snapshot.session_id != gameplay_save.session_id and imported_result.envelope.snapshot.gameplay == gameplay_save.gameplay, "schema-v2 import isolates session id and preserves gameplay")
+			check(imported_result.ok and imported_result.envelope.snapshot.session_id != gameplay_save.session_id and imported_result.envelope.snapshot.gameplay.inventory == gameplay_save.gameplay.inventory and imported_result.envelope.snapshot.gameplay.farm == gameplay_save.gameplay.farm and imported_result.envelope.snapshot.gameplay.command_journal.receipts.is_empty(), "schema-v3 import isolates session id, preserves domains and clears source receipts")
 
 	finish()
 
