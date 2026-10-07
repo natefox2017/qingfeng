@@ -38,6 +38,18 @@ func reset(value: Variant = null) -> bool:
 	_pause_owners.clear()
 	return true
 
+func snapshot() -> Dictionary:
+	return {"game_minute":game_minute}
+
+func restore(snapshot_value: Variant) -> bool:
+	if not is_configured() or not (snapshot_value is Dictionary):
+		return false
+	if snapshot_value.size() != 1 or not snapshot_value.has("game_minute"):
+		return false
+	if not (snapshot_value.game_minute is int) or snapshot_value.game_minute < 0:
+		return false
+	return reset(snapshot_value.game_minute)
+
 func acquire_pause(owner: StringName) -> bool:
 	if not is_configured() or owner == &"":
 		return false
