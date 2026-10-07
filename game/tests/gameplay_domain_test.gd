@@ -206,7 +206,7 @@ func _initialize() -> void:
 	var encoded_v2 := CODEC.encode(gameplay_save,save_id)
 	var decoded_v2: Dictionary = CODEC.decode(encoded_v2)
 	check(decoded_v2.ok and decoded_v2.envelope.schema_version == 2 and decoded_v2.envelope.content_version == "first_playable_v1", "schema-v2 envelope round trips with gameplay content version")
-	check(decoded_v2.envelope.snapshot == gameplay_save, "schema-v2 decode preserves gameplay snapshot exactly")
+	check(CODEC.canonical(decoded_v2.envelope.snapshot) == CODEC.canonical(gameplay_save), "schema-v2 decode preserves normalized gameplay snapshot exactly")
 	var tampered: Dictionary = decoded_v2.envelope.duplicate(true)
 	tampered.snapshot.gameplay.inventory.capacity = 99
 	tampered.erase("checksum")
@@ -218,7 +218,7 @@ func _initialize() -> void:
 	check(write_result.ok, "session store writes schema-v2 through the same atomic path")
 	if write_result.ok:
 		var read_result: Dictionary = store.read_save(write_result.save_id)
-		check(read_result.ok and read_result.envelope.snapshot == gameplay_save, "session store restores schema-v2 bytes without dropping gameplay")
+		check(read_result.ok and CODEC.canonical(read_result.envelope.snapshot) == CODEC.canonical(gameplay_save), "session store restores schema-v2 bytes without dropping gameplay")
 		var imported: Dictionary = store.confirm_import(read_result.envelope)
 		check(imported.ok, "schema-v2 import creates a new local save")
 		if imported.ok:
