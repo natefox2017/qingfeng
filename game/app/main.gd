@@ -321,6 +321,8 @@ func _set_room_camera_enabled(candidate: Node2D, enabled: bool) -> void:
 
 func return_to_title() -> void:
 	settings.revert()
+	if gameplay_session != null and gameplay_session.is_configured():
+		gameplay_session.clear_resident_conversations()
 	gameplay_session = null
 	active_snapshot.clear()
 	active_save_id = ""
@@ -675,6 +677,7 @@ func _begin_door_transition(target: Dictionary) -> void:
 		_fail_transition(candidate,"目标区域无法恢复居民运行状态，仍留在原位置。")
 		return
 
+	gameplay_session.release_resident_conversations_for_space(String(room.get_space_id()))
 	var old_room := room
 	room = candidate
 	_transition_candidate = null
