@@ -24,7 +24,7 @@ git pull --ff-only                       # 已安装过旧版时先同步 main
 python3 tools/check_scaffold.py
 python3 -m unittest discover -s tools/tests -v
 ```
-以上只验证文档/工具。设置 `GODOT_BIN` 指向官方 Godot 4.7.2 后：
+以上只验证文档/工具。**AC 默认已安装 Godot：不需要配置路径或 `GODOT_BIN`，直接运行：**
 
 ```sh
 ./run_game.sh                       # 自动检查首次 PNG 导入，显示标题后可新建游戏试玩
@@ -35,11 +35,11 @@ python3 -m unittest discover -s tools/tests -v
 ```
 
 `run_game.sh` 已带可执行权限，macOS/Linux 可直接运行，也可执行 `sh run_game.sh`。
-它调用同一个 `tools/runtime.py` 入口，支持带空格的目录；通过 `GODOT_BIN`、PATH、仓库内已安装的 `.local/godot/Godot_v4.7.2-stable_linux.x86_64` 或 `./run_game.sh --godot "/实际路径/Godot"` 选择**精确版本**的 Godot 4.7.2。第一次从 GitHub 拉取 PNG 后，没有有效的 `.godot/imported` 缓存时会先执行 Godot `--headless --import`。导入失败则**停止启动**并记录 `reports/runtime/asset_import.log`，不会在贴图缺失时悄悄展示工程方块。更新代码不会删除存档或自动下载付费素材。
+它调用同一个 `tools/runtime.py` 入口，支持带空格的目录；会从 AC 的 `PATH`、常见系统安装目录、用户 `~/.local/bin`、macOS 应用目录，以及仓库本地 `.local/godot` **自动寻找已安装**的 Godot，挑选与仓库锁定版本完全一致的 Godot 4.7.2。旧版本会跳过继续找；确实没有匹配版本才打印找到的版本与原因。平时不必设置 `GODOT_BIN` 或传 `--godot`，后两者仅用于特殊环境显式覆盖。第一次从 GitHub 拉取 PNG 后，没有有效的 `.godot/imported` 缓存时会先执行 Godot `--headless --import`。导入失败则**停止启动**并记录 `reports/runtime/asset_import.log`，不会在贴图缺失时悄悄展示工程方块。更新代码不会删除存档或自动下载付费素材。
 
 `--test` 和 `--test-all` 使用隔离的临时游戏副本、用户数据目录，输出可核对的 `reports/runtime/` 日志；不会读取或覆盖你真实游戏存档。`--capture` 使用原生图形渲染、独立测试存档，输出 `phase0_farm_1280.png` 和 `phase0_farm_1920.png`，**不是 headless 伪截图**，也不代替设计稿审查。完整的两尺寸 CI 验证可在 [Phase 0 native evidence](https://github.com/natefox2017/qingfeng/actions/workflows/phase0-native.yml) 查看。
 
-启动工具不会自动安装或联网出图。Linux 可显式执行 `python3 tools/install_engine.py --directory .local/godot` 下载并校验锁定引擎；其他系统从官方发行获取相同版本。模板仅锁定元数据，导出包尚未测试。不要把旧仓库设置为 origin 或复制旧的运行目录。
+启动工具**只复用现有引擎**，不会为了运行游戏自动下载 Godot、购买素材、重装系统、删除存档或联网出图。若 AC 中只有不兼容版本，错误会列出检测到的路径和版本，不会悄悄改用错误版本。只有需要手动安装时，才使用可选的 `python3 tools/install_engine.py --directory .local/godot`；模板仅锁定元数据，导出包尚未测试。不要把旧仓库设置为 origin 或复制旧的运行目录。
 
 ## 已建立目录
 `docs/` 规则与任务导航；`game/` 新运行模块及明确标记的测试场；`art/` 素材登记与生成任务；`schemas/` 机器合同；`templates/` 交接与验证模板；`tools/` 本仓库检查；`.github/` Issue、PR 和 CI。
