@@ -2,7 +2,7 @@
   "schema_version": 1,
   "approved_date": "2026-10-08",
   "visual_status": "user_approved_design_reference",
-  "binary_storage_status": "awaiting_repo_binary_transfer",
+  "binary_storage_status": "verified_in_pull_request_pending_merge",
   "source": "Images created in this Qingfeng project conversation and explicitly approved by project owner; no third-party game assets.",
   "map_authoring_policy": "References guide authored TileMapLayer scenes and collision; do not bake illustration into game collision or duplicate geometry.",
   "ui_policy": "All text, input, save cards and actions are native interactive controls; screenshot mockups are backdrop/reference only.",
@@ -15,7 +15,8 @@
       "width": 1672,
       "height": 941,
       "original_path": "art/approved/world_chapter1_map.png",
-      "repo_reference_path": "art/approved/refs/world_chapter1_map.png"
+      "repo_reference_path": "art/approved/refs/world_chapter1_map.png",
+      "storage_disposition": "stored"
     },
     {
       "id": "farm_first_screen",
@@ -25,7 +26,8 @@
       "width": 1672,
       "height": 941,
       "original_path": "art/approved/farm_first_screen.png",
-      "repo_reference_path": "art/approved/refs/farm_first_screen.png"
+      "repo_reference_path": "art/approved/refs/farm_first_screen.png",
+      "storage_disposition": "stored"
     },
     {
       "id": "farm_exploration_reference",
@@ -35,7 +37,9 @@
       "width": 1672,
       "height": 941,
       "original_path": "art/approved/farm_exploration_reference.png",
-      "repo_reference_path": "art/approved/refs/farm_exploration_reference.png"
+      "repo_reference_path": null,
+      "storage_disposition": "excluded_semantic_duplicate",
+      "duplicate_of": "farm_first_screen"
     },
     {
       "id": "riverside_reference",
@@ -45,7 +49,9 @@
       "width": 1672,
       "height": 941,
       "original_path": "art/approved/riverside_reference.png",
-      "repo_reference_path": "art/approved/refs/riverside_reference.png"
+      "repo_reference_path": null,
+      "storage_disposition": "excluded_semantic_duplicate",
+      "duplicate_of": "farm_first_screen"
     },
     {
       "id": "gameplay_hud_reference",
@@ -55,7 +61,9 @@
       "width": 1672,
       "height": 941,
       "original_path": "art/approved/gameplay_hud_reference.png",
-      "repo_reference_path": "art/approved/refs/gameplay_hud_reference.png"
+      "repo_reference_path": null,
+      "storage_disposition": "excluded_exact_duplicate",
+      "duplicate_of": "farm_first_screen"
     },
     {
       "id": "ui_title",
@@ -65,7 +73,8 @@
       "width": 1672,
       "height": 941,
       "original_path": "art/approved/ui_title.png",
-      "repo_reference_path": "art/approved/refs/ui_title.png"
+      "repo_reference_path": "art/approved/refs/ui_title.png",
+      "storage_disposition": "stored"
     },
     {
       "id": "ui_new_game",
@@ -75,7 +84,8 @@
       "width": 1672,
       "height": 941,
       "original_path": "art/approved/ui_new_game.png",
-      "repo_reference_path": "art/approved/refs/ui_new_game.png"
+      "repo_reference_path": "art/approved/refs/ui_new_game.png",
+      "storage_disposition": "stored"
     },
     {
       "id": "ui_load",
@@ -85,7 +95,8 @@
       "width": 1672,
       "height": 941,
       "original_path": "art/approved/ui_load.png",
-      "repo_reference_path": "art/approved/refs/ui_load.png"
+      "repo_reference_path": "art/approved/refs/ui_load.png",
+      "storage_disposition": "stored"
     }
   ]
 }

@@ -2,7 +2,7 @@
 
 2026-10-08 用户已在当前项目正式确认前述设计图：一张较大农庄→桥→小镇的世界地图效果图、一张首屏农庄效果图、河畔/布局参考，以及标题、创建角色、选择存档页面的效果图。**这些图批准的是视觉风格与构图，不意味着背景是一张可直接碰撞、可互动的游戏地图。**
 
-本仓库唯一的设计清单在 [reference_manifest.json](../art/approved/reference_manifest.json)；它保存 8 张源图的原始路径、1672×941 尺寸和 SHA256，避免后续重新生图或错传旧版。**二进制源图在提交到 GitHub 前不可标记为“仓库已包含”**。用户在当前对话可以取得原始设计图归档，待实际二进制入库时更新清单的 storage_status 并校验每项 SHA；不能以清单代替 PNG 文件。
+本仓库唯一的设计清单在 [reference_manifest.json](../art/approved/reference_manifest.json)；它保存 8 张源图的原始路径、1672×941 尺寸和 SHA256，避免后续重新生图或错传旧版。所有 8 张源图仍逐张校验；仓库只保留 `world_chapter1_map`、唯一农庄代表图 `farm_first_screen` 和三张 UI 原图。`gameplay_hud_reference` 与农庄代表图哈希完全一致，`farm_exploration_reference` 和 `riverside_reference` 是同一农庄区域的替代构图，不作为额外地图重复入库。**二进制源图在提交到 GitHub 前不可标记为“仓库已包含”**；PR 中实际包含二进制后记录为 pending merge，不以清单代替 PNG 文件。
 
 ## 为什么保留 Godot TileMapLayer
 对照 [Godot 官方 TileMap](https://docs.godotengine.org/en/stable/tutorials/2d/using_tilemaps.html)、[YATI / Godot4](https://github.com/Kiamo2/YATI) 和 [vnen Tiled importer](https://github.com/vnen/godot-tiled-importer)：当前项目已经原生建好了共享 TileSet、TileMapLayer、物理 Shape、Camera2D、锚点和存档字段，继续使用内置 Godot TileMap 编辑器更简单。Tiled + YATI 适合团队主要在 Tiled 创作时再迁移，但目前不引入转换链；老版 importer 不直接作为 Godot4.7 的技术依据。
@@ -19,7 +19,7 @@ python3 tools/check_scaffold.py
 ./run_game.sh --test
 ./run_game.sh --capture ./captures
 ```
-导入脚本只在提交期使用，不需要为普通玩家配置 Godot 路径，也不会联网下载图像。它验证 8 个 PNG 的原始 SHA256，复制到 `art/approved/refs/`，把 3 张真实 UI 背景复制到 `game/assets/approved/` 并登记 `art/manifest.json`。**务必在 GitHub 核对真实二进制文件出现后才勾“已入仓”。** 地图世界素材仍需可重复使用的透明图集/小组件，不能直接裁一个不规则大图替代碰撞和路径。
+导入脚本只在提交期使用，不需要为普通玩家配置 Godot 路径，也不会联网下载图像。它验证 8 个 PNG 的原始 SHA256，仅把 5 张规范参考复制到 `art/approved/refs/`，把 3 张真实 UI 原图复制到 `game/assets/approved/` 并登记 `art/manifest.json`。**务必在 GitHub 核对真实二进制文件出现后才勾“已入仓”。** 地图世界素材仍需可重复使用的透明图集/小组件，不能直接裁一个不规则大图替代碰撞和路径。
 
 ## 阶段状态
 - 2026-10-08：视觉图正式确认，原图已打包并校验，Github 文本清单与真实代码分开提交。
