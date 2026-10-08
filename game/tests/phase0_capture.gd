@@ -91,6 +91,25 @@ func run() -> void:
 			_fail("cannot write screenshot " + filename)
 			return
 		print("PHASE0_CAPTURE_IMAGE " + filename + " " + str(size))
+	# A second image must prove the camera sees a different physical portion
+	# of the authored farm. The real input traversal is separately tested by
+	# res://tests/farm_exploration_test.gd, not simulated by this screenshot.
+	root.size = Vector2i(1280,720)
+	player.position = Vector2(828,668)
+	for frame in range(3):
+		await physics_frame
+	await process_frame
+	await RenderingServer.frame_post_draw
+	var camera := player.get_node("Camera2D") as Camera2D
+	if camera.get_screen_center_position().x <= 640.0 or camera.get_screen_center_position().y <= 360.0:
+		_fail("camera stayed on the original one-screen farm")
+		return
+	var expanded_image := root.get_texture().get_image()
+	if expanded_image == null or expanded_image.get_size() != Vector2i(1280,720) or expanded_image.save_png(output_dir.path_join("phase0_farm_explore_1280.png")) != OK:
+		_fail("expanded farm second-screen screenshot failed")
+		return
+	print("PHASE0_CAPTURE_IMAGE phase0_farm_explore_1280.png 1280x720")
+
 	app.queue_free()
 	await process_frame
 	print("PHASE0_CAPTURE_PASS")
