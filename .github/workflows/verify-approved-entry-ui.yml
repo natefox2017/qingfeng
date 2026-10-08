@@ -1,0 +1,42 @@
+name: Approved P0 entry UI native verification
+on:
+  push:
+    branches: [feat/p0-approved-title-load-ui]
+permissions:
+  contents: read
+concurrency:
+  group: approved-entry-ui-proof
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate build tools and art source contract
+        run: |
+          python3 tools/check_scaffold.py
+          python3 -m unittest discover -s tools/tests -q
+      - name: Install locked Godot 4.7.2 for QA
+        run: |
+          python3 tools/install_engine.py --directory .local/godot
+          echo "GODOT_BIN=$GITHUB_WORKSPACE/.local/godot/Godot_v4.7.2-stable_linux.x86_64" >> "$GITHUB_ENV"
+      - name: Full native UI and domain regression
+        run: ./run_game.sh --test-all --report-dir reports/runtime --timeout 105
+      - name: Import sources for graphical capture
+        run: |
+          "$GODOT_BIN" --headless --path game --editor --import --quit
+      - name: Render title, name entry, and save selection with real Godot
+        run: |
+          mkdir -p reports/entry
+          xvfb-run -a -s "-screen 0 1920x1080x24" timeout 90s "$GODOT_BIN" --audio-driver Dummy --path game --script res://tests/entry_native_capture.gd -- "$GITHUB_WORKSPACE/reports/entry" | tee reports/entry_capture.log
+          test -s reports/entry/entry_title_1280.png
+          test -s reports/entry/entry_new_game_1280.png
+          test -s reports/entry/entry_load_1280.png
+      - name: Keep evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: approved-entry-ui-evidence
+          path: reports/
+          retention-days: 7
