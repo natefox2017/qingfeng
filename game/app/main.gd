@@ -90,8 +90,7 @@ func _process(_delta: float) -> void:
 	if state == State.WORLD and gameplay_session != null and gameplay_session.is_configured():
 		var time_result: Dictionary = gameplay_session.advance_real_seconds(_delta)
 		if time_result.ok and int(time_result.advanced_minutes) > 0:
-			if not time_result.crossed_days.is_empty():
-				_refresh_farm_world()
+			_refresh_farm_world()
 			_update_interface()
 	if state != State.LOADING or _activation_pending or _request == null:
 		return
@@ -130,6 +129,7 @@ func _activate_room(scene: PackedScene, requested_generation: int) -> void:
 			return
 		var plot_definitions: Array = _plot_definitions_for_gameplay(room)
 		var forage_definitions: Array = _forage_definitions_for_gameplay(room)
+		var resident_anchor_definitions: Array = _resident_anchor_definitions_for_gameplay()
 		if plot_definitions.is_empty():
 			last_error = "无法读取权威农庄田格布局，未创建或恢复会话。"
 			return_to_title()
@@ -138,7 +138,11 @@ func _activate_room(scene: PackedScene, requested_generation: int) -> void:
 			last_error = "无法读取权威村庄采集点布局，未创建或恢复会话。"
 			return_to_title()
 			return
-		next_gameplay = GAMEPLAY.new(plot_definitions,{},forage_definitions)
+		if resident_anchor_definitions.is_empty():
+			last_error = "无法读取权威居民日程锚点，未创建或恢复会话。"
+			return_to_title()
+			return
+		next_gameplay = GAMEPLAY.new(plot_definitions,{},forage_definitions,resident_anchor_definitions)
 		if not next_gameplay.is_configured():
 			last_error = "玩法会话无法从权威农庄布局初始化。"
 			return_to_title()
@@ -254,6 +258,24 @@ func _forage_definitions_for_gameplay(candidate: Node2D) -> Array:
 		return []
 	var definitions: Array = village_instance.get_forage_definitions().duplicate(true)
 	village_instance.free()
+	return definitions
+
+func _resident_anchor_definitions_for_gameplay() -> Array:
+	var definitions: Array = []
+	for path: String in [VILLAGE_ROOM,SHOP_ROOM,WORKSHOP_ROOM]:
+		var packed := load(path) as PackedScene
+		if packed == null:
+			return []
+		var instance := packed.instantiate() as Node2D
+		if instance == null or not instance.has_method("get_resident_anchor_definitions") or not instance.has_method("layout_contract_valid"):
+			if instance != null:
+				instance.free()
+			return []
+		if not instance.layout_contract_valid():
+			instance.free()
+			return []
+		definitions.append_array(instance.get_resident_anchor_definitions())
+		instance.free()
 	return definitions
 
 func _scene_path_for_space(space_id: String) -> String:
@@ -763,6 +785,8 @@ func _refresh_farm_world() -> void:
 		room.apply_farm_projection(projection.farm)
 	if room.has_method("apply_forage_projection"):
 		room.apply_forage_projection(projection.forage)
+	if room.has_method("apply_resident_projection"):
+		room.apply_resident_projection(projection.residents)
 
 func _farm_action_label(action: String) -> String:
 	match action:
