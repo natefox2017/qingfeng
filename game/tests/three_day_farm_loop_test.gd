@@ -113,7 +113,7 @@ func run() -> void:
 	var day3_plot: Dictionary = app.gameplay_session.farm.get_plot("plot.farm.004")
 	check(app.gameplay_session.clock.current_day() == 3 and day3_plot.state == "mature" and day3_plot.growth_days == 2 and day3_plot.last_settled_day == 3, "second bed rest reaches third-day maturity exactly once")
 
-	# Day 3 harvest, save, kill world route and reload full schema-six state.
+	# Day 3 harvest, save, kill world route and reload full schema-seven state.
 	check(await return_farm(), "day three returns to farm")
 	check(app.room.farm_visual_state("plot.farm.004").state == "mature", "mature state projects into farm world")
 	app.room.get_player().position = Vector2(272,144)
@@ -126,7 +126,7 @@ func run() -> void:
 	check(saved.ok, "third-day gameplay saves after completed actions")
 	if saved.ok:
 		var envelope: Dictionary = app.store.read_save(saved.save_id).envelope
-		check(int(envelope.schema_version) == 6 and envelope.snapshot.gameplay.clock.game_minute == app.gameplay_session.clock.game_minute, "save records schema-six day-three clock")
+		check(int(envelope.schema_version) == 7 and envelope.snapshot.gameplay.clock.game_minute == app.gameplay_session.clock.game_minute, "save records schema-seven day-three clock")
 		app.return_to_title()
 		app._on_action("read_save",{"save_id":saved.save_id})
 		check(await wait_world() and app.room.get_space_id() == "space.farm", "saved day-three run restarts into farm")
