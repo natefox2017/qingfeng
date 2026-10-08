@@ -86,6 +86,31 @@ func apply_resident_projection(value: Variant) -> bool:
 func resident_visual_state() -> Dictionary:
 	return neighbor_resident.projection() if is_instance_valid(neighbor_resident) else {}
 
+func capture_resident_runtime() -> Array:
+	if not is_instance_valid(neighbor_resident):
+		return []
+	return [neighbor_resident.runtime_snapshot(SPACE_ID)]
+
+func apply_resident_runtime(value: Variant) -> bool:
+	if not (value is Dictionary) or value.size()!=1 or not value.has("residents") or not (value.residents is Array):
+		return false
+	for resident: Variant in value.residents:
+		if not (resident is Dictionary) or String(resident.get("resident_id",""))!="resident.neighbor":
+			continue
+		if String(resident.get("space_id",""))!=SPACE_ID:
+			neighbor_resident.clear_schedule_target()
+			neighbor_resident.visible=false
+			return true
+		var point: Variant = resident.get("world_position_px",{})
+		if not (point is Dictionary) or not point.has("x") or not point.has("y"):
+			return false
+		neighbor_resident.visible=true
+		return neighbor_resident.restore_runtime_position(
+			Vector2(float(point.x),float(point.y)),
+			StringName(String(resident.get("facing","")))
+		)
+	return false
+
 func _marker_for_resident_anchor(anchor_id:String) -> Marker2D:
 	for child: Node in $ResidentAnchors.get_children():
 		if child is Marker2D and String(child.get_meta("anchor_id",""))==anchor_id:
