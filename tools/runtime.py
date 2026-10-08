@@ -229,9 +229,8 @@ def run_tests(engine: str, reports: Path, timeout: float) -> int:
             (reports/'summary.json').write_text(json.dumps(summary, indent=2))
 
 
-
 def run_phase0_tests(engine: str, reports: Path, timeout: float) -> int:
-    """Cold-import an isolated checkout and verify the real Phase0 entry slice."""
+    """Run cold-imported, isolated, real-scene Phase0 tests with explicit receipts."""
     reports.mkdir(parents=True, exist_ok=True)
     cases = [
         ("foundation", "FOUNDATION_PASS"),
@@ -242,40 +241,90 @@ def run_phase0_tests(engine: str, reports: Path, timeout: float) -> int:
         ("door_transition", "DOOR_PASS"),
         ("new_game_ui", "NEW_GAME_UI_PASS"),
     ]
-    summary: dict[str, object] = {"import_passed": False, "passed": False, "tests": {}}
+    summary = {"import_passed": False, "passed": False, "tests": {}}
     with tempfile.TemporaryDirectory(prefix="qingfeng-phase0-") as temporary:
         temp = Path(temporary)
-        game = temp / 'game'
-        shutil.copytree(ROOT / 'game', game, ignore=shutil.ignore_patterns('.godot', '__pycache__'))
-        source_hashes = {
-            p.relative_to(game).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in sorted(game.rglob('*')) if p.is_file()
-        }
-        (reports / "source_hashes.json").write_text(json.dumps(source_hashes, indent=2))
+        game = temp / "game"
+        shutil.copytree(ROOT / "game", game, ignore=shutil.ignore_patterns(".godot", "__pycache__"))
+        hashes = {p.relative_to(game).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+                  for p in sorted(game.rglob("*")) if p.is_file()}
+        (reports / "source_hashes.json").write_text(json.dumps(hashes, indent=2))
         env = os.environ.copy()
-        for key in ('HOME', 'USERPROFILE', 'APPDATA', 'LOCALAPPDATA',
-                    'XDG_DATA_HOME', 'XDG_CONFIG_HOME', 'XDG_CACHE_HOME'):
-            directory = temp / key.lower()
-            directory.mkdir()
-            env[key] = str(directory)
-        env['GODOT_SILENCE_ROOT_WARNING'] = '1'
+        for key in ("HOME", "USERPROFILE", "APPDATA", "LOCALAPPDATA",
+                    "XDG_DATA_HOME", "XDG_CONFIG_HOME", "XDG_CACHE_HOME"):
+            home = temp / key.lower()
+            home.mkdir()
+            env[key] = str(home)
+        env["GODOT_SILENCE_ROOT_WARNING"] = "1"
         try:
             code, output = execute(
-                [engine, '--headless', '--path', str(game), '--editor', '--import', '--quit'],
-                reports / 'import.log', timeout, env,
+                [engine, "--headless", "--path", str(game), "--editor", "--import", "--quit"],
+                reports / "import.log", timeout, env,
             )
-            summary['import_passed'] = clean_run(output, code)
-            if not summary['import_passed']:
+            summary["import_passed"] = clean_run(output, code)
+            if not summary["import_passed"]:
                 return 1
-            all_passed = True
+            passed_all = True
             for name, marker in cases:
                 code, output = execute(
-                    [engine, '--headless', '--audio-driver', 'Dummy', '--path', str(game),
-                     '--script', f'res://tests/{name}_test.gd'],
-                    reports / f'{name}.log', timeout, env,
+                    [engine, "--headless", "--audio-driver", "Dummy", "--path", str(game),
+                     "--script", f"res://tests/{name}_test.gd"],
+                    reports / f"{name}.log", timeout, env,
                 )
-                matches = re.findall(
-                    rf'^{re.escape(marker)} checks=(\d+) failures=0\s*
+                lines = re.findall(rf"^{re.escape(marker)} checks=(\d+) failures=0\s*$", output, re.M)
+                passed = clean_run(output, code) and len(lines) == 1 and int(lines[0]) > 0
+                summary["tests"][name] = {"passed": passed, "exit_code": code}
+                passed_all = passed_all and passed
+                print(f"PHASE0_CASE name={name} passed={passed} exit={code}")
+            summary["passed"] = passed_all
+            return 0 if passed_all else 1
+        finally:
+            (reports / "summary.json").write_text(json.dumps(summary, indent=2))
+            print(f'PHASE0_SUITE_PASS passed={summary["passed"]}')
+
+
+def capture_native_phase0(engine: str, reports: Path, destination: Path, timeout: float) -> int:
+    """Capture Godot frames with a graphical display; check PNG sizes and marker."""
+    import struct
+    game = ROOT / "game"
+    reports.mkdir(parents=True, exist_ok=True)
+    destination = destination.resolve()
+    destination.mkdir(parents=True, exist_ok=True)
+    if not ensure_assets_imported(engine, game, reports, timeout):
+        return 1
+    with tempfile.TemporaryDirectory(prefix="qingfeng-native-capture-") as temporary:
+        env = os.environ.copy()
+        for key in ("HOME", "USERPROFILE", "APPDATA", "LOCALAPPDATA",
+                    "XDG_DATA_HOME", "XDG_CONFIG_HOME", "XDG_CACHE_HOME"):
+            home = Path(temporary) / key.lower()
+            home.mkdir()
+            env[key] = str(home)
+        env["GODOT_SILENCE_ROOT_WARNING"] = "1"
+        code, output = execute(
+            [engine, "--path", str(game), "--script", "res://tests/page_capture.gd",
+             "--", str(destination)],
+            reports / "native_capture.log", timeout, env,
+        )
+        marker_ok = len(re.findall(r"^PAGE_NATIVE_CAPTURE_PASS\s*$", output, re.M)) == 1
+        if not clean_run(output, code) or not marker_ok:
+            return 1
+        for width, height in ((1280, 720), (1920, 1080)):
+            path = destination / f"phase0_farm_{width}.png"
+            try:
+                image = path.read_bytes()
+                correct = (image[:8] == b"\x89PNG\r\n\x1a\n" and
+                           image[12:16] == b"IHDR" and
+                           struct.unpack(">II", image[16:24]) == (width, height))
+                if not correct:
+                    raise ValueError(f"invalid Godot screenshot: {path}")
+            except (OSError, ValueError, struct.error) as exc:
+                print(f"PHASE0_CAPTURE_FAILED: {exc}")
+                return 1
+        print(f"PHASE0_CAPTURE_PASS destination={destination}")
+        return 0
+
+
+def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('mode', choices=['run', 'editor', 'test', 'phase0', 'capture'])
     parser.add_argument('--capture-dir', type=Path)
@@ -295,113 +344,6 @@ def run_phase0_tests(engine: str, reports: Path, timeout: float) -> int:
             if args.capture_dir is None:
                 parser.error('capture needs --capture-dir')
             return capture_native_phase0(engine, args.report_dir, args.capture_dir, args.timeout)
-        game = ROOT / 'game'
-        if args.mode == 'run' and not ensure_assets_imported(engine, game, args.report_dir, args.timeout):
-            print('PHASE0_IMPORT_FAILED: see asset_import.log; game not launched with missing textures')
-            return 1
-        command = [engine, '--path', str(game)]
-        if args.mode == 'editor':
-            command += ['--editor', 'res://app/main.tscn']
-        return subprocess.call(command)
-    except (ValueError, OSError, subprocess.SubprocessError) as exc:
-        print(f'RUNTIME_TOOL_ERROR: {exc}')
-        return 2
-
-if __name__ == '__main__':
-    raise SystemExit(main())
-,
-                    output, re.M,
-                )
-                passed = clean_run(output, code) and len(matches) == 1 and int(matches[0]) > 0
-                summary['tests'][name] = {'passed': passed, 'exit_code': code}
-                all_passed = all_passed and passed
-                print(f'PHASE0_CASE name={name} passed={passed} exit={code}')
-            summary['passed'] = all_passed
-            return 0 if all_passed else 1
-        finally:
-            (reports / 'summary.json').write_text(json.dumps(summary, indent=2))
-            print(f'PHASE0_SUITE_PASS passed={summary["passed"]}')
-
-
-def capture_native_phase0(engine: str, reports: Path, destination: Path, timeout: float) -> int:
-    """Capture actual graphical Godot frames, rejecting headless/empty substitutes."""
-    import struct
-    game = ROOT / 'game'
-    reports.mkdir(parents=True, exist_ok=True)
-    destination = destination.resolve()
-    destination.mkdir(parents=True, exist_ok=True)
-    if not ensure_assets_imported(engine, game, reports, timeout):
-        return 1
-    with tempfile.TemporaryDirectory(prefix="qingfeng-native-capture-") as temporary:
-        env = os.environ.copy()
-        for key in ('HOME', 'USERPROFILE', 'APPDATA', 'LOCALAPPDATA',
-                    'XDG_DATA_HOME', 'XDG_CONFIG_HOME', 'XDG_CACHE_HOME'):
-            directory = Path(temporary) / key.lower()
-            directory.mkdir()
-            env[key] = str(directory)
-        env['GODOT_SILENCE_ROOT_WARNING'] = '1'
-        code, output = execute(
-            [engine, '--path', str(game), '--script', 'res://tests/page_capture.gd',
-             '--', str(destination)],
-            reports / 'native_capture.log', timeout, env,
-        )
-        if not clean_run(output, code) or len(re.findall(r'^PAGE_NATIVE_CAPTURE_PASS\s*
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('mode', choices=['run', 'editor', 'test'])
-    parser.add_argument('--godot')
-    parser.add_argument('--report-dir', type=Path, default=ROOT/'reports/runtime')
-    parser.add_argument('--timeout', type=float, default=60)
-    args = parser.parse_args()
-    if args.timeout <= 0:
-        parser.error('--timeout must be positive')
-    try:
-        engine = resolve_engine(args.godot)
-        if args.mode == 'test':
-            return run_tests(engine, args.report_dir, args.timeout)
-        game = ROOT / 'game'
-        if args.mode == 'run' and not ensure_assets_imported(engine, game, args.report_dir, args.timeout):
-            print('PHASE0_IMPORT_FAILED: see asset_import.log; game not launched with missing textures')
-            return 1
-        command = [engine, '--path', str(game)]
-        if args.mode == 'editor':
-            command += ['--editor', 'res://app/main.tscn']
-        return subprocess.call(command)
-    except (ValueError, OSError, subprocess.SubprocessError) as exc:
-        print(f'RUNTIME_TOOL_ERROR: {exc}')
-        return 2
-
-if __name__ == '__main__':
-    raise SystemExit(main())
-, output, re.M)) != 1:
-            return 1
-        for width, height in ((1280, 720), (1920, 1080)):
-            path = destination / f'phase0_farm_{width}.png'
-            try:
-                image = path.read_bytes()
-                if (image[:8] != b'\x89PNG\r\n\x1a\n' or
-                        image[12:16] != b'IHDR' or
-                        struct.unpack('>II', image[16:24]) != (width, height)):
-                    raise ValueError(f'invalid Godot screenshot {path}')
-            except (OSError, ValueError, struct.error) as exc:
-                print(f'PHASE0_CAPTURE_FAILED: {exc}')
-                return 1
-        print(f'PHASE0_CAPTURE_PASS destination={destination}')
-        return 0
-
-
-def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('mode', choices=['run', 'editor', 'test'])
-    parser.add_argument('--godot')
-    parser.add_argument('--report-dir', type=Path, default=ROOT/'reports/runtime')
-    parser.add_argument('--timeout', type=float, default=60)
-    args = parser.parse_args()
-    if args.timeout <= 0:
-        parser.error('--timeout must be positive')
-    try:
-        engine = resolve_engine(args.godot)
-        if args.mode == 'test':
-            return run_tests(engine, args.report_dir, args.timeout)
         game = ROOT / 'game'
         if args.mode == 'run' and not ensure_assets_imported(engine, game, args.report_dir, args.timeout):
             print('PHASE0_IMPORT_FAILED: see asset_import.log; game not launched with missing textures')
