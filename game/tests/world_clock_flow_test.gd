@@ -112,7 +112,10 @@ func run() -> void:
 
 	app._process(84.001)
 	check(app.gameplay_session.clock.minute_of_day()>=480 and app.gameplay_session.projection().shop.is_open,"active world runtime naturally reaches the 08:00 shop window")
-	check(app.view.wallet_label != null and app.view.wallet_label.text.contains("08:"),"HUD refreshes from naturally advanced authoritative clock")
+	var hud_time_text := ""
+	for label_node: Node in app.view.hud.find_children("*","Label",true,false):
+		hud_time_text += (label_node as Label).text+"\n"
+	check(hud_time_text.contains("08:") and app.view.wallet_label != null and app.view.wallet_label.text.contains("金币"),"HUD clock and money refresh from authoritative projections")
 
 	finish()
 
