@@ -8,8 +8,10 @@ var _actors: Dictionary = {}
 var _anchors: Dictionary = {}
 var _portals: Dictionary = {}
 var _travel_targets: Dictionary = {}
+var _position_validator: Callable
 
-func _init(space_id: String, actors: Dictionary, resident_anchor_root: Node, portals: Dictionary = {}) -> void:
+func _init(space_id: String, actors: Dictionary, resident_anchor_root: Node, portals: Dictionary = {}, position_validator: Callable = Callable()) -> void:
+	_position_validator = position_validator
 	_space_id = space_id
 	if _space_id.is_empty() or actors.is_empty() or resident_anchor_root == null:
 		configuration_error = "RESIDENT_ROOM_CONFIG_INVALID"
@@ -126,9 +128,12 @@ func apply_runtime_only(runtime_value: Variant) -> bool:
 		var point: Variant = runtime.get("world_position_px",{})
 		if not (point is Dictionary) or not point.has("x") or not point.has("y"):
 			return false
+		var restored_position := Vector2(float(point.x),float(point.y))
+		if _position_validator.is_valid() and not bool(_position_validator.call(restored_position)):
+			return false
 		actor.set_world_active(true)
 		if not actor.restore_runtime_position(
-			Vector2(float(point.x),float(point.y)),
+			restored_position,
 			StringName(String(runtime.get("facing","")))
 		):
 			return false
