@@ -56,6 +56,26 @@ def execute(command: list[str], report: Path, timeout: float, env: dict[str, str
     return code, output
 
 
+
+def needs_asset_import(game: Path) -> bool:
+    """Cold checkout or updated PNGs need Godot's imported texture cache."""
+    cache = game / '.godot' / 'imported'
+    for source in (game / 'assets').rglob('*.png'):
+        imported = list(cache.glob(f'{source.name}-*.ctex'))
+        if not imported or max(path.stat().st_mtime for path in imported) < source.stat().st_mtime:
+            return True
+    return False
+
+
+def ensure_assets_imported(engine: str, game: Path, reports: Path, timeout: float) -> bool:
+    if not needs_asset_import(game):
+        return True
+    print('PHASE0_IMPORT: importing missing or updated PNG textures before game launch')
+    command = [engine, '--headless', '--path', str(game), '--editor', '--import', '--quit']
+    code, output = execute(command, reports / 'asset_import.log', timeout, os.environ.copy())
+    return clean_run(output, code)
+
+
 def run_tests(engine: str, reports: Path, timeout: float) -> int:
     reports.mkdir(parents=True, exist_ok=True)
     summary = {'import_passed': False, 'test_passed': False, 'passed': False}
@@ -222,9 +242,11 @@ def main() -> int:
         engine = resolve_engine(args.godot)
         if args.mode == 'test':
             return run_tests(engine, args.report_dir, args.timeout)
-        # There are no imported image/font dependencies in the current foundation.
-        # The editor owns future incremental imports; do not cold-import every launch.
-        command = [engine, '--path', str(ROOT/'game')]
+        game = ROOT / 'game'
+        if args.mode == 'run' and not ensure_assets_imported(engine, game, args.report_dir, args.timeout):
+            print('PHASE0_IMPORT_FAILED: see asset_import.log; game not launched with missing textures')
+            return 1
+        command = [engine, '--path', str(game)]
         if args.mode == 'editor':
             command += ['--editor', 'res://app/main.tscn']
         return subprocess.call(command)
