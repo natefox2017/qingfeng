@@ -1,0 +1,12 @@
+chapter1_map_save_migration 0
+chapter1_map_editability 0
+chapter1_map_playability 0
+world_layout 0
+full_economy_loop 0
+door_transition 0
+chapter1_historical_save 0
+chapter1_object_anchor 0
+chapter1_camera_bounds 0
+chapter1_gate_passage 0
+chapter1_yard_layout 0
+settings_ui 0

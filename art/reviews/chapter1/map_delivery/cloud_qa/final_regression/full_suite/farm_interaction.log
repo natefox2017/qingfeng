@@ -1,0 +1,6 @@
+COMMAND=['/workspace/scratch/2bd695cff14d/godot472/Godot_v4.7.2-stable_linux.x86_64', '--headless', '--audio-driver', 'Dummy', '--path', '/tmp/qingfeng-test-8oba7sn6/game', '--script', 'res://tests/farm_interaction_test.gd']
+EXIT_CODE=0
+ELAPSED_SECONDS=1.583
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+FARM_INTERACTION_PASS checks=26 failures=0

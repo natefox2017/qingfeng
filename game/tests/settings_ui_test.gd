@@ -48,6 +48,12 @@ func run() -> void:
 	check(is_equal_approx(float(draft.master_volume),0.35) and draft.is_fullscreen and not draft.is_vsync_enabled,"settings_draft still owns only current control values")
 	check(view.buttons.has("preview_settings") and view.buttons.has("back"),"settings retains preview and cancel actions")
 
+	for window_size: Vector2i in [Vector2i(1280,720),Vector2i(1920,1080),Vector2i(1366,768)]:
+		root.size = window_size
+		await process_frame
+		check(value_label.autowrap_mode == TextServer.AUTOWRAP_OFF, "volume quantity never wraps " + str(window_size))
+		check(value_label.get_line_count() == 1 and value_label.size.x >= value_label.get_minimum_size().x, "volume quantity retains one-line width " + str(window_size))
+
 	view.show_page("display_confirm",{"error":""})
 	await process_frame
 	check(view.panel.custom_minimum_size==Vector2(440,230),"display confirmation uses compact focused panel")
