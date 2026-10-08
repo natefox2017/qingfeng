@@ -117,7 +117,7 @@ func run() -> void:
 	check(app.gameplay_session != null and app.room.has_method("get_plot_definitions") and app.active_snapshot.space_id=="space.farm","new game publishes one gameplay session on farm world")
 	check(app.active_snapshot.has("gameplay") and app.store.list_saves().size()==1,"new game commits gameplay snapshot once after world validation")
 	var initial_save:Dictionary=app.store.read_save(app.active_save_id)
-	check(initial_save.ok and int(initial_save.envelope.schema_version)==5 and initial_save.envelope.snapshot.gameplay.inventory.slots.size()==12,"new game persists current full gameplay schema with forage")
+	check(initial_save.ok and int(initial_save.envelope.schema_version)==6 and initial_save.envelope.snapshot.gameplay.inventory.slots.size()==12 and initial_save.envelope.snapshot.gameplay.residents.residents.size()==3,"new game persists current full gameplay schema with resident runtime")
 	check(app.gameplay_session.inventory.quantity_of("item.radish_seed")==4 and app.gameplay_session.wallet.money==200,"new game uses authoritative content-version inventory and wallet")
 	check(app.view.quickbar != null and app.view.quickbar.get_child_count()==12 and app.view.buttons.has("inventory"),"world HUD renders twelve live quick slots and backpack action")
 	check(app.view.wallet_label != null and app.view.wallet_label.text.contains("200"),"world HUD projects authoritative wallet value")
