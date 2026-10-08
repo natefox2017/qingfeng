@@ -99,9 +99,12 @@ func run() -> void:
 		return
 	var envelope: Dictionary = app.store.read_save(save.save_id).envelope
 	check(int(envelope.schema_version)==5 and envelope.snapshot.gameplay.forage.spots[0].last_collected_day==1,"schema-five app save records forage collection day")
+	# Loading is polled by main._process(), so re-enable it only for the transition.
+	app.set_process(true)
 	app.return_to_title()
 	app._on_action("read_save",{"save_id":save.save_id})
-	check(await wait_world() and app.room.get_space_id()=="space.village","forage save restarts directly in village")
+	var reloaded := await wait_world()
+	check(reloaded and app.room.get_space_id()=="space.village","forage save restarts directly in village; error="+app.last_error)
 	if app.state!=app.State.WORLD:
 		finish()
 		return
