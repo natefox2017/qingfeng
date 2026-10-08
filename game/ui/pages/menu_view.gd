@@ -49,6 +49,8 @@ func emit_action(name: String, payload: Dictionary = {}) -> void:
 
 func clear_page() -> void:
 	panel.custom_minimum_size=UI_THEME.PAGE_MINIMUM_SIZE
+	title.horizontal_alignment=HORIZONTAL_ALIGNMENT_LEFT
+	subtitle.horizontal_alignment=HORIZONTAL_ALIGNMENT_LEFT
 	for child in body.get_children(): body.remove_child(child);child.queue_free()
 	for child in hud.get_children(): hud.remove_child(child);child.queue_free()
 	hud_panel.visible=false
@@ -217,13 +219,22 @@ func show_page(page: String, context: Dictionary) -> void:
 	clear_page()
 	match page:
 		"title":
-			title.text="晴风谷";subtitle.text="QINGFENG  /  一段新的乡居生活"
-			label("入口与存档开发版\n地图、美术与完整玩法仍在制作中。")
-			var actions:=row()
-			for entry: Array in [["continue","play","继续","继续最近的有效存档"],["new_game","new","新建","新建游戏"],["load","load","存档","读取 / 导入存档"],["settings","settings","设置","设置"],["quit","quit","退出","退出游戏"]]:
-				var cell:=VBoxContainer.new();cell.custom_minimum_size.x=44;actions.add_child(cell)
-				button(cell,entry[0],entry[1],entry[3],{},entry[0]!="continue" or context.has("recent_id"))
-				var caption:=label(entry[2],cell);caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;UI_THEME.apply_text_role(caption,UI_THEME.ROLE_CAPTION)
+			title.text="晴风谷";title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+			subtitle.text="QINGFENG VALLEY  ·  一段新的乡居生活";subtitle.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+			panel.custom_minimum_size=Vector2(500,250)
+			var spacer:=Control.new();spacer.custom_minimum_size.y=18;body.add_child(spacer)
+			var menu_panel:=PanelContainer.new();menu_panel.name="TitleMenu";menu_panel.add_theme_stylebox_override("panel",UI_THEME.section_style());body.add_child(menu_panel)
+			var actions:=HBoxContainer.new();actions.name="TitleActions";actions.alignment=BoxContainer.ALIGNMENT_CENTER;actions.add_theme_constant_override("separation",14);menu_panel.add_child(actions)
+			for entry: Array in [
+				["continue","play","继续","继续最近的有效存档"],
+				["new_game","new","新建","开始新的生活"],
+				["load","load","存档","读取或导入存档"],
+				["settings","settings","设置","调整声音与显示"],
+				["quit","quit","退出","退出游戏"]
+			]:
+				var cell:=VBoxContainer.new();cell.custom_minimum_size=Vector2(68,58);actions.add_child(cell)
+				button(cell,String(entry[0]),String(entry[1]),String(entry[3]),{},entry[0]!="continue" or context.has("recent_id"))
+				var caption:=label(String(entry[2]),cell);caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;UI_THEME.apply_text_role(caption,UI_THEME.ROLE_CAPTION)
 
 		"new_game":
 			title.text="开始新的生活";subtitle.text="名字会写入新存档；不会覆盖已有进度。"
