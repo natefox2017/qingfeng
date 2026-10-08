@@ -24,4 +24,5 @@
 - [入口页面/新建/读取导入/设置/暂停保存](entry_pages.md)：代码已建立，目标场景仍是碰撞夹具。
 - [具体玩法与三天路线](gameplay_details.md)：后续实施规格，不假称农耕已实现。
 - [详细切图/锚点/帧事件/图集工具](asset_slicing.md)：PixelLab交付到Godot的明确边界。
+- [第一章美术资源实际验收与交接](chapter1_asset_qa_handoff.md)：四张定版母版、Batch 01 静态测试、未完成的 Godot Native/视觉签收和接手顺序。
 - [qingfenggu历史问题与新防线](legacy_lessons.md)：只总结用户提供的历史材料，标清来源与未验范围。
