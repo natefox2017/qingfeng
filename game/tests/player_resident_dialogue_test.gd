@@ -169,8 +169,8 @@ func run() -> void:
 			open_neighbor_dialogue()
 			await process_frame
 			check(app.view.buttons.has("gift_resident") and not (app.view.buttons["gift_resident"] as Button).disabled,"selected wild herb enables dialogue gift action")
-			var before_gift_quantity := app.gameplay_session.inventory.quantity_of("item.wild_herb")
-			var before_gift_relationship := app.gameplay_session.resident_runtime.relationship_points_for("resident.neighbor")
+			var before_gift_quantity: int = int(app.gameplay_session.inventory.quantity_of("item.wild_herb"))
+			var before_gift_relationship: int = int(app.gameplay_session.resident_runtime.relationship_points_for("resident.neighbor"))
 			app._on_action("gift_resident",{})
 			await process_frame
 			check(app.locks.has_owner(&"dialogue") and app.gameplay_session.clock.is_paused(),"gift keeps the resident conversation and world pause active")
