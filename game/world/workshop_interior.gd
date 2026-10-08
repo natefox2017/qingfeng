@@ -5,8 +5,27 @@ extends Node2D
 const SPACE_ID := "space.workshop"
 const INTERACT_RANGE_PX := 28.0
 const INTERACT_LATERAL_PX := 10.0
+const RESIDENT_ROOM = preload("res://world/components/resident_room_driver.gd")
 
 @onready var player: CharacterBody2D = $FootSorted/Player
+@onready var maker_resident: CharacterBody2D = $FootSorted/MakerResident
+
+var _resident_room: RefCounted
+
+func _ready() -> void:
+	_resident_room = RESIDENT_ROOM.new(
+		SPACE_ID,
+		{"resident.maker":maker_resident},
+		$ResidentAnchors,
+		{
+			"space.village":{
+				"marker":$Anchors/DoorInteract,
+				"arrival_anchor_id":"WorkshopDoorArrival",
+				"arrival_facing":"north"
+			}
+		},
+		Callable(self,"_resident_position_is_safe")
+	)
 
 func set_input_enabled(enabled: bool) -> void:
 	player.set_input_enabled(enabled)
@@ -36,7 +55,34 @@ func layout_contract_valid() -> bool:
 	for anchor_name: String in ["DoorArrival","DoorInteract","WorkbenchInteract","ServiceAnchor"]:
 		if get_anchor_position(anchor_name) == Vector2.INF:
 			return false
+	var resident := get_node_or_null("FootSorted/MakerResident")
+	if resident==null or not resident.has_method("set_schedule_target") or String(resident.resident_id)!="resident.maker":
+		return false
 	return get_resident_anchor_definitions().size() == $ResidentAnchors.get_child_count() and not $ResidentAnchors.get_children().is_empty()
+
+func apply_resident_projection(schedule_value: Variant, runtime_value: Variant = {}) -> bool:
+	return _resident_room != null and _resident_room.apply(schedule_value,runtime_value)
+
+func capture_resident_runtime() -> Array:
+	return _resident_room.capture() if _resident_room != null else []
+
+func apply_resident_runtime(value: Variant) -> bool:
+	return _resident_room != null and _resident_room.apply_runtime_only(value)
+
+func resident_handoff_requests() -> Array:
+	return _resident_room.handoff_requests() if _resident_room != null else []
+
+func resident_visual_state(resident_id: String = "resident.maker") -> Dictionary:
+	return _resident_room.visual_state(resident_id) if _resident_room != null else {}
+
+func _resident_position_is_safe(local_position: Vector2) -> bool:
+	var circle := CircleShape2D.new()
+	circle.radius = 4.0
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape = circle
+	query.collision_mask = 1
+	query.transform = Transform2D(0.0,to_global(local_position))
+	return get_world_2d().direct_space_state.intersect_shape(query,1).is_empty()
 
 func resolve_interaction_target() -> Dictionary:
 	if _marker_reachable($Anchors/DoorInteract):
