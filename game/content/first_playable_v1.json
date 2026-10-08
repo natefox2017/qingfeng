@@ -82,5 +82,152 @@
         "respawn_days": 1
       }
     }
+  },
+  "residents": {
+    "daily_greeting_limit": 1,
+    "daily_gift_limit": 1,
+    "definitions": {
+      "resident.grocer": {
+        "display_name": "店主",
+        "occupation_id": "occupation.grocer",
+        "home_anchor_id": "anchor.resident.grocer.home",
+        "work_anchor_id": "anchor.resident.grocer.work",
+        "social_anchor_id": "anchor.resident.grocer.social",
+        "rain_anchor_id": "anchor.resident.grocer.rain",
+        "schedule": [
+          {
+            "start_minute": 360,
+            "activity_id": "home",
+            "anchor_id": "anchor.resident.grocer.home"
+          },
+          {
+            "start_minute": 480,
+            "activity_id": "work",
+            "anchor_id": "anchor.resident.grocer.work"
+          },
+          {
+            "start_minute": 1020,
+            "activity_id": "social",
+            "anchor_id": "anchor.resident.grocer.social"
+          },
+          {
+            "start_minute": 1200,
+            "activity_id": "home",
+            "anchor_id": "anchor.resident.grocer.home"
+          }
+        ],
+        "rain_schedule": [
+          {
+            "start_minute": 360,
+            "activity_id": "home",
+            "anchor_id": "anchor.resident.grocer.home"
+          },
+          {
+            "start_minute": 480,
+            "activity_id": "rain",
+            "anchor_id": "anchor.resident.grocer.rain"
+          },
+          {
+            "start_minute": 1200,
+            "activity_id": "home",
+            "anchor_id": "anchor.resident.grocer.home"
+          }
+        ]
+      },
+      "resident.maker": {
+        "display_name": "工匠",
+        "occupation_id": "occupation.maker",
+        "home_anchor_id": "anchor.resident.maker.home",
+        "work_anchor_id": "anchor.resident.maker.work",
+        "social_anchor_id": "anchor.resident.maker.social",
+        "rain_anchor_id": "anchor.resident.maker.rain",
+        "schedule": [
+          {
+            "start_minute": 360,
+            "activity_id": "home",
+            "anchor_id": "anchor.resident.maker.home"
+          },
+          {
+            "start_minute": 540,
+            "activity_id": "work",
+            "anchor_id": "anchor.resident.maker.work"
+          },
+          {
+            "start_minute": 1020,
+            "activity_id": "social",
+            "anchor_id": "anchor.resident.maker.social"
+          },
+          {
+            "start_minute": 1200,
+            "activity_id": "home",
+            "anchor_id": "anchor.resident.maker.home"
+          }
+        ],
+        "rain_schedule": [
+          {
+            "start_minute": 360,
+            "activity_id": "home",
+            "anchor_id": "anchor.resident.maker.home"
+          },
+          {
+            "start_minute": 540,
+            "activity_id": "rain",
+            "anchor_id": "anchor.resident.maker.rain"
+          },
+          {
+            "start_minute": 1200,
+            "activity_id": "home",
+            "anchor_id": "anchor.resident.maker.home"
+          }
+        ]
+      },
+      "resident.neighbor": {
+        "display_name": "邻居",
+        "occupation_id": "occupation.neighbor",
+        "home_anchor_id": "anchor.resident.neighbor.home",
+        "work_anchor_id": "anchor.resident.neighbor.work",
+        "social_anchor_id": "anchor.resident.neighbor.social",
+        "rain_anchor_id": "anchor.resident.neighbor.rain",
+        "schedule": [
+          {
+            "start_minute": 360,
+            "activity_id": "home",
+            "anchor_id": "anchor.resident.neighbor.home"
+          },
+          {
+            "start_minute": 480,
+            "activity_id": "work",
+            "anchor_id": "anchor.resident.neighbor.work"
+          },
+          {
+            "start_minute": 960,
+            "activity_id": "social",
+            "anchor_id": "anchor.resident.neighbor.social"
+          },
+          {
+            "start_minute": 1200,
+            "activity_id": "home",
+            "anchor_id": "anchor.resident.neighbor.home"
+          }
+        ],
+        "rain_schedule": [
+          {
+            "start_minute": 360,
+            "activity_id": "home",
+            "anchor_id": "anchor.resident.neighbor.home"
+          },
+          {
+            "start_minute": 480,
+            "activity_id": "rain",
+            "anchor_id": "anchor.resident.neighbor.rain"
+          },
+          {
+            "start_minute": 1200,
+            "activity_id": "home",
+            "anchor_id": "anchor.resident.neighbor.home"
+          }
+        ]
+      }
+    }
   }
 }

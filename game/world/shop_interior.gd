@@ -24,11 +24,19 @@ func get_anchor_position(anchor_name: String) -> Vector2:
 	var node := $Anchors.get_node_or_null(NodePath(anchor_name))
 	return node.position if node is Marker2D else Vector2.INF
 
+func get_resident_anchor_definitions() -> Array:
+	var definitions: Array = []
+	for child: Node in $ResidentAnchors.get_children():
+		if child is Marker2D and child.has_meta("anchor_id"):
+			definitions.append({"anchor_id":String(child.get_meta("anchor_id")),"space_id":SPACE_ID})
+	definitions.sort_custom(func(a:Dictionary,b:Dictionary): return a.anchor_id < b.anchor_id)
+	return definitions
+
 func layout_contract_valid() -> bool:
 	for anchor_name: String in ["DoorArrival","DoorInteract","CounterInteract"]:
 		if get_anchor_position(anchor_name) == Vector2.INF:
 			return false
-	return true
+	return get_resident_anchor_definitions().size() == $ResidentAnchors.get_child_count() and not $ResidentAnchors.get_children().is_empty()
 
 func resolve_interaction_target() -> Dictionary:
 	if _marker_reachable($Anchors/CounterInteract):

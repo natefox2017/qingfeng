@@ -28,6 +28,7 @@
 
 首个商店命令：`economy.buy` / `economy.sell` 的 `expected_revision` 是玩家 Inventory revision；payload 严格为 `{item_id:string, quantity:int 1..9999, wallet_revision:int>=0}`。价格和08:00–20:00营业窗口只读 `first_playable_v1`；handler 在同一同步临界段校验营业时间、商品可买/可卖、双方revision、余额/源量/目标容量，再提交 Inventory + Wallet。失败双方不变，交易页即使持有时钟暂停token也以被冻结的 game minute 判断营业状态。
 首个采集命令：`forage.collect` 的 `expected_revision` 是 Forage revision；payload 严格为 `{spot_id:string, inventory_revision:int>=0}`。当前日来自唯一 GameClock，奖励 item/quantity/respawn_days 来自 content_version，spot_id/space/几何来自 `space.village` Marker。Forage + Inventory 在同一同步临界段提交；满包、已采、stale 都不改变两边。
+居民日程内容合同：`residents.daily_greeting_limit:int>0`、`daily_gift_limit:int>0`、`definitions` 当前恰好三名稳定 `resident_id`。每名居民拥有 `display_name`、`occupation_id`、`home_anchor_id`、`work_anchor_id`、`social_anchor_id`、`rain_anchor_id` 及 `schedule` / `rain_schedule`；schedule entry 严格为 `{start_minute:int, activity_id:string, anchor_id:string}`。普通表只允许 home/work/social，雨天表只允许 home/rain；每个 activity 必须引用该居民声明的对应 anchor，首项从 day_start_minute 开始，末项回 home。WORLD 只提供 `{anchor_id, space_id}` Marker 定义；`ResidentSchedule` 只读 Clock/天气并解析目标，不写 Actor 位置、不发模型请求。
 物理移动不走持久回执。回执生命周期由CORE明确：当前会话保存；未来压缩需防重语义设计，不可悄悄按数量截断。
 
 ## 快照与内容
@@ -49,7 +50,7 @@
 
 首个完整玩法存档机器合同见 `schemas/save_v2.schema.json`；当前写入版本为 `schemas/save_v5.schema.json`。schema 5 在 schema 4 基础上加入 `forage` 每日采集状态；旧 schema 4 读取时由当前 WORLD forage definitions 初始化当日可采点，下次保存升级为 schema 5。schema 4 在 schema 3 的幂等回执基础上加入 `storage` 家庭箱子快照；旧 schema 3 读取时显式迁移为空箱子，下一次正常保存升级为 schema 4。schema 3 在 Clock / Inventory / Wallet / Farm 之外保存当前会话 `CommandJournal` 回执（最多512条，仍受256 KiB文件上限约束），使同 command_id 同请求在保存重启后继续回放原结果，同ID异请求继续冲突。schema 2 继续只读兼容，读取时不会伪造历史回执；用户主动导入副本会生成新 session_id，并清空源会话回执，因为指纹绑定原 session_id。地图 plot 坐标的最终合法性仍由加载后的 WORLD 布局 + `GameplaySession.restore()` 再验，存档不能成为第二份地图来源。schema 1 只保留当前碰撞入口夹具兼容。
 
-嵌套对象须在实施前补机器schema；上表未规定的业务上限由content_version表定义，不散落代码。首个运行表是 `first_playable_v1`（机器结构见 `schemas/content_version.schema.json`，运行校验见 `game/content/content_catalog.gd`），当前固定12格背包、24格家庭箱子、200初始货币、4袋首作物种子、2个每日野菜采集点（各1份、卖价10）、06:00日初、0.7现实秒/游戏分钟和08:00–20:00商店窗口；后续领域/UI只读取，不复制。新档发物只一次，所有发布所需领域一起验证/恢复；不得加载旧项目格式或访问旧用户目录。
+嵌套对象须在实施前补机器schema；上表未规定的业务上限由content_version表定义，不散落代码。首个运行表是 `first_playable_v1`（机器结构见 `schemas/content_version.schema.json`，运行校验见 `game/content/content_catalog.gd`），当前固定12格背包、24格家庭箱子、200初始货币、4袋首作物种子、2个每日野菜采集点（各1份、卖价10）、三名居民及其普通/雨天日程、06:00日初、0.7现实秒/游戏分钟和08:00–20:00商店窗口；后续领域/UI只读取，不复制。新档发物只一次，所有发布所需领域一起验证/恢复；不得加载旧项目格式或访问旧用户目录。
 地形格16px不等于导出屏幕像素。cell_position是整数地图格，source_anchor_px是源图片左上角坐标，world_position_px是未缩放世界像素，viewport_position_px是渲染视口坐标；转换由布局统一。
 
 ## 布局对象与UI

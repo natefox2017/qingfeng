@@ -95,6 +95,16 @@ position = Vector2(320, 336)
 [node name="CounterInteract" type="Marker2D" parent="Anchors"]
 position = Vector2(320, 144)
 
+[node name="ResidentAnchors" type="Node2D" parent="."]
+
+[node name="GrocerWork" type="Marker2D" parent="ResidentAnchors"]
+position = Vector2(320, 80)
+metadata/anchor_id = "anchor.resident.grocer.work"
+
+[node name="GrocerRain" type="Marker2D" parent="ResidentAnchors"]
+position = Vector2(280, 80)
+metadata/anchor_id = "anchor.resident.grocer.rain"
+
 [node name="FootSorted" type="Node2D" parent="."]
 y_sort_enabled = true
 
