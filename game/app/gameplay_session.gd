@@ -390,7 +390,7 @@ func complete_player_resident_dialogue(resident_id: String, dialogue_id: String)
 	if String(context.dialogue_id)!=dialogue_id:
 		return {"ok":false,"error_code":"DIALOGUE_CONTEXT_STALE","has_changes":false,"event_ids":[]}
 	if not bool(context.is_first_meeting):
-		return {"ok":true,"error_code":"","has_changes":false,"event_ids":[]}
+		return _settle_daily_greeting(resident_id,context)
 	var before_facts: Dictionary = fact_events.snapshot()
 	var before_runtime: Dictionary = resident_runtime.snapshot()
 	var fact := {
@@ -417,6 +417,66 @@ func complete_player_resident_dialogue(resident_id: String, dialogue_id: String)
 		"has_changes":bool(appended.has_changes) or bool(learned.has_changes),
 		"event_ids":[String(context.event_id)]
 	}
+
+func _settle_daily_greeting(resident_id: String, context: Dictionary) -> Dictionary:
+	var day: int = int(clock.current_day())
+	var limit: int = int(content.residents.daily_greeting_limit)
+	var settled_count: int = _daily_resident_fact_count("resident.greeting",resident_id,day)
+	if settled_count >= limit:
+		return {"ok":true,"error_code":"","has_changes":false,"event_ids":[]}
+	var relationship_delta: int = int(content.residents.greeting_relationship_points)
+	var event_id := "event.%s.greeting.day.%d.%d" % [resident_id,day,settled_count+1]
+	var before_facts: Dictionary = fact_events.snapshot()
+	var before_runtime: Dictionary = resident_runtime.snapshot()
+	var fact := {
+		"event_id":event_id,
+		"source_command_id":null,
+		"source_system":"dialogue.authored",
+		"kind":"resident.greeting",
+		"space_id":String(context.space_id),
+		"game_minute":int(clock.game_minute),
+		"participant_ids":["actor.player",resident_id],
+		"payload":{
+			"dialogue_id":String(context.dialogue_id),
+			"relationship_delta":relationship_delta
+		}
+	}
+	var appended: Dictionary = fact_events.append(fact)
+	if not appended.ok:
+		return {"ok":false,"error_code":String(appended.error_code),"has_changes":false,"event_ids":[]}
+	var relationship: Dictionary = resident_runtime.adjust_relationship(resident_id,relationship_delta)
+	if not relationship.ok:
+		fact_events.restore(before_facts)
+		resident_runtime.restore(before_runtime)
+		return {"ok":false,"error_code":String(relationship.error_code),"has_changes":false,"event_ids":[]}
+	var learned: Dictionary = resident_knowledge.learn_event(resident_id,event_id,"experienced")
+	if not learned.ok:
+		fact_events.restore(before_facts)
+		resident_runtime.restore(before_runtime)
+		return {"ok":false,"error_code":String(learned.error_code),"has_changes":false,"event_ids":[]}
+	return {
+		"ok":true,
+		"error_code":"",
+		"has_changes":true,
+		"event_ids":[event_id]
+	}
+
+func _daily_resident_fact_count(kind: String, resident_id: String, day: int) -> int:
+	if day<=0:
+		return 0
+	var start_minute: int = (day-1)*int(clock.minutes_per_day)
+	var end_minute: int = day*int(clock.minutes_per_day)
+	var count := 0
+	var facts: Dictionary = fact_events.projection()
+	for fact: Variant in facts.events:
+		if not (fact is Dictionary):
+			continue
+		var minute := int(fact.get("game_minute",-1))
+		if minute < start_minute or minute >= end_minute:
+			continue
+		if String(fact.get("kind",""))==kind and resident_id in fact.get("participant_ids",[]):
+			count += 1
+	return count
 
 func invite_resident_conversation(conversation_id: String, inviter_id: String, invitee_id: String, space_id: String) -> Dictionary:
 	return resident_conversations.invite(conversation_id,inviter_id,invitee_id,space_id)
