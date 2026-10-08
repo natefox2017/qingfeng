@@ -15,5 +15,36 @@ if [ ! -f "$runtime" ]; then
     exit 2
 fi
 
-# Preserve arguments and exit status; never download, reinstall or cold-import here.
-exec python3 "$runtime" run "$@"
+# All entrypoints use the same pinned engine/runtime selection. No implicit install,
+# no destructive save reset, and no heavy testing just to open the game.
+case "${1:-}" in
+    --test)
+        shift
+        set -- phase0 "$@"
+        ;;
+    --test-all)
+        shift
+        set -- test "$@"
+        ;;
+    --editor)
+        shift
+        set -- editor "$@"
+        ;;
+    --capture)
+        shift
+        if [ "$#" -ne 1 ]; then
+            printf '%s\n' '用法: ./run_game.sh --capture /输出目录' >&2
+            exit 2
+        fi
+        set -- capture --capture-dir "$1"
+        ;;
+    --help|-h)
+        set -- --help
+        ;;
+    *)
+        set -- run "$@"
+        ;;
+esac
+
+# Preserve argument boundaries and the original runner exit status.
+exec python3 "$runtime" "$@"
