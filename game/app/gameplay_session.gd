@@ -14,6 +14,7 @@ const STORAGE_TRANSFER = preload("res://systems/storage_transfer.gd")
 const ECONOMY = preload("res://systems/economy_coordinator.gd")
 const FORAGE = preload("res://systems/forage_domain.gd")
 const FORAGING = preload("res://systems/forage_coordinator.gd")
+const RESIDENT_SCHEDULE = preload("res://systems/resident_schedule.gd")
 
 var configuration_error := ""
 var content: Dictionary = {}
@@ -28,10 +29,12 @@ var storage_transfer: RefCounted
 var economy: RefCounted
 var forage: RefCounted
 var foraging: RefCounted
+var resident_schedule: RefCounted
 var _plot_definitions: Array = []
 var _forage_definitions: Array = []
+var _resident_anchor_definitions: Array = []
 
-func _init(plot_definitions: Array = [], content_override: Dictionary = {}, forage_definitions: Array = []) -> void:
+func _init(plot_definitions: Array = [], content_override: Dictionary = {}, forage_definitions: Array = [], resident_anchor_definitions: Array = []) -> void:
 	var source := content_override
 	if source.is_empty():
 		var result: Dictionary = CONTENT.load_current()
@@ -45,6 +48,7 @@ func _init(plot_definitions: Array = [], content_override: Dictionary = {}, fora
 	content = source.duplicate(true)
 	_plot_definitions = plot_definitions.duplicate(true)
 	_forage_definitions = forage_definitions.duplicate(true)
+	_resident_anchor_definitions = resident_anchor_definitions.duplicate(true)
 	journal = JOURNAL.new()
 	clock = CLOCK.new(content)
 	inventory = INVENTORY.new(content)
@@ -56,7 +60,8 @@ func _init(plot_definitions: Array = [], content_override: Dictionary = {}, fora
 	economy = ECONOMY.new(inventory,wallet,clock,content)
 	forage = FORAGE.new(forage_definitions,content)
 	foraging = FORAGING.new(inventory,forage,clock)
-	if not clock.is_configured() or not inventory.is_configured() or not wallet.is_configured() or not farm.is_configured() or not farming.is_configured() or not storage.is_configured() or not storage_transfer.is_configured() or not economy.is_configured() or not forage.is_configured() or not foraging.is_configured():
+	resident_schedule = RESIDENT_SCHEDULE.new(resident_anchor_definitions,content)
+	if not clock.is_configured() or not inventory.is_configured() or not wallet.is_configured() or not farm.is_configured() or not farming.is_configured() or not storage.is_configured() or not storage_transfer.is_configured() or not economy.is_configured() or not forage.is_configured() or not foraging.is_configured() or not resident_schedule.is_configured():
 		configuration_error = "GAMEPLAY_SESSION_DOMAIN_INVALID"
 
 func is_configured() -> bool:
@@ -214,6 +219,7 @@ func projection() -> Dictionary:
 		"shop":economy.projection(),
 		"storage":storage.projection(),
 		"forage":forage.projection(clock.current_day()),
+		"residents":resident_schedule.projection(clock.game_minute,false),
 		"farm":farm.projection()
 	}
 
@@ -269,7 +275,8 @@ func restore(snapshot_value: Variant) -> bool:
 	var next_storage: RefCounted = STORAGE.new(content)
 	var next_forage: RefCounted = FORAGE.new(_forage_definitions,content)
 	var next_journal: RefCounted = JOURNAL.new()
-	if not next_clock.is_configured() or not next_inventory.is_configured() or not next_wallet.is_configured() or not next_farm.is_configured() or not next_storage.is_configured() or not next_forage.is_configured():
+	var next_resident_schedule: RefCounted = RESIDENT_SCHEDULE.new(_resident_anchor_definitions,content)
+	if not next_clock.is_configured() or not next_inventory.is_configured() or not next_wallet.is_configured() or not next_farm.is_configured() or not next_storage.is_configured() or not next_forage.is_configured() or not next_resident_schedule.is_configured():
 		return false
 	if not next_clock.restore(snapshot_value.clock):
 		return false
@@ -301,6 +308,7 @@ func restore(snapshot_value: Variant) -> bool:
 	economy = next_economy
 	forage = next_forage
 	foraging = next_foraging
+	resident_schedule = next_resident_schedule
 	journal = next_journal
 	return true
 
