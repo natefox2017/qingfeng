@@ -31,7 +31,15 @@ func write_new(snapshot: Dictionary) -> Dictionary:
 	if not _ensure_directory(): return CODEC.failure("SAVE_WRITE_FAILED")
 	if list_saves().size() >= MAX_SAVES: return CODEC.failure("SAVE_CAPACITY_REACHED")
 	var id := Crypto.new().generate_random_bytes(16).hex_encode()
-	var text: String = CODEC.encode(snapshot,id)
+	var encoded: String = CODEC.encode(snapshot,id)
+	var envelope: Variant = JSON.parse_string(encoded)
+	if not (envelope is Dictionary): return CODEC.failure("SAVE_VERIFY_FAILED")
+	# Hash the serialized representation; fractional floats can stringify a few
+	# ULP differently after JSON parsing than they did before encoding.
+	envelope = CODEC.normalized_numbers(envelope)
+	envelope.erase("checksum")
+	envelope["checksum"] = CODEC.canonical(envelope).sha256_text()
+	var text: String = CODEC.canonical(envelope)
 	var final_path := directory.path_join(id+".qfsave")
 	var temporary := final_path+".tmp"
 	if FileAccess.file_exists(final_path): return CODEC.failure("SAVE_ID_CONFLICT")
