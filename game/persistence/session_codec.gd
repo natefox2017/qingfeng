@@ -286,6 +286,8 @@ static func _valid_gameplay_common(value: Variant) -> bool:
 		return false
 	if value.has("residents") and not _valid_residents(value.residents,content):
 		return false
+	if value.has("residents") and not value.has("fact_events") and not _resident_known_events_empty(value.residents):
+		return false
 	if value.has("fact_events") and (not _valid_fact_events(value.fact_events) or not _known_event_refs_resolve(value.residents,value.fact_events)):
 		return false
 	return _valid_inventory(value.inventory,content) and _valid_wallet(value.wallet) and _valid_farm(value.farm,content,current_day)
