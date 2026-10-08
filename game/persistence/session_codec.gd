@@ -6,6 +6,7 @@ extends RefCounted
 
 const CONTENT = preload("res://content/content_catalog.gd")
 const JOURNAL = preload("res://app/command_journal.gd")
+const FACT_EVENTS = preload("res://app/fact_event_log.gd")
 
 const ENTRY_CONTENT_VERSION := "entry_fixture_v1"
 const GAMEPLAY_CONTENT_VERSION := "first_playable_v1"
@@ -174,6 +175,29 @@ static func _valid_residents(value: Variant, content: Dictionary) -> bool:
 		ids[String(resident.resident_id)]=true
 	return ids.size()==content.residents.definitions.size()
 
+static func _valid_fact_events(value: Variant) -> bool:
+	var log := FACT_EVENTS.new()
+	return log.restore(value)
+
+static func _known_event_refs_resolve(residents: Variant, fact_events: Variant) -> bool:
+	if not (residents is Dictionary) or not residents.has("residents") or not (residents.residents is Array):
+		return false
+	var log := FACT_EVENTS.new()
+	if not log.restore(fact_events):
+		return false
+	for resident: Variant in residents.residents:
+		if not (resident is Dictionary) or not resident.has("known_event_ids") or not log.known_ids_exist(resident.known_event_ids):
+			return false
+	return true
+
+static func _resident_known_events_empty(residents: Variant) -> bool:
+	if not (residents is Dictionary) or not residents.has("residents") or not (residents.residents is Array):
+		return false
+	for resident: Variant in residents.residents:
+		if not (resident is Dictionary) or not resident.has("known_event_ids") or not (resident.known_event_ids is Array) or not resident.known_event_ids.is_empty():
+			return false
+	return true
+
 static func _valid_wallet(value: Variant) -> bool:
 	if not keys(value,["revision","owner_id","money"]):
 		return false
@@ -236,13 +260,15 @@ static func _valid_gameplay_common(value: Variant) -> bool:
 		if not value.has(key):
 			return false
 	for key: Variant in value.keys():
-		if key not in ["content_version","clock","inventory","wallet","farm","command_journal","storage","forage","residents"]:
+		if key not in ["content_version","clock","inventory","wallet","farm","command_journal","storage","forage","residents","fact_events"]:
 			return false
 	if value.has("storage") and not value.has("command_journal"):
 		return false
 	if value.has("forage") and (not value.has("storage") or not value.has("command_journal")):
 		return false
 	if value.has("residents") and (not value.has("forage") or not value.has("storage") or not value.has("command_journal")):
+		return false
+	if value.has("fact_events") and (not value.has("residents") or not value.has("forage") or not value.has("storage") or not value.has("command_journal")):
 		return false
 	if value.has("command_journal") and not _valid_command_journal(value.command_journal):
 		return false
@@ -260,6 +286,8 @@ static func _valid_gameplay_common(value: Variant) -> bool:
 		return false
 	if value.has("residents") and not _valid_residents(value.residents,content):
 		return false
+	if value.has("fact_events") and (not _valid_fact_events(value.fact_events) or not _known_event_refs_resolve(value.residents,value.fact_events)):
+		return false
 	return _valid_inventory(value.inventory,content) and _valid_wallet(value.wallet) and _valid_farm(value.farm,content,current_day)
 
 static func _valid_gameplay_v2(value: Variant) -> bool:
@@ -275,7 +303,10 @@ static func _valid_gameplay_v5(value: Variant) -> bool:
 	return value is Dictionary and value.size() == 8 and value.has("command_journal") and value.has("storage") and value.has("forage") and not value.has("residents") and _valid_gameplay_common(value)
 
 static func _valid_gameplay_v6(value: Variant) -> bool:
-	return value is Dictionary and value.size() == 9 and value.has("command_journal") and value.has("storage") and value.has("forage") and value.has("residents") and _valid_gameplay_common(value)
+	return value is Dictionary and value.size() == 9 and value.has("command_journal") and value.has("storage") and value.has("forage") and value.has("residents") and not value.has("fact_events") and _valid_gameplay_common(value) and _resident_known_events_empty(value.residents)
+
+static func _valid_gameplay_v7(value: Variant) -> bool:
+	return value is Dictionary and value.size() == 10 and value.has("command_journal") and value.has("storage") and value.has("forage") and value.has("residents") and value.has("fact_events") and _valid_gameplay_common(value)
 
 static func validate_gameplay_snapshot(value: Variant) -> bool:
 	if not (value is Dictionary):
@@ -337,6 +368,8 @@ static func normalized_numbers(value: Variant) -> Variant:
 static func _schema_for_snapshot(snapshot: Dictionary) -> int:
 	if not snapshot.has("gameplay"):
 		return 1
+	if snapshot.gameplay.has("fact_events"):
+		return 7
 	if snapshot.gameplay.has("residents"):
 		return 6
 	if snapshot.gameplay.has("forage"):
@@ -381,7 +414,7 @@ static func decode(text: String) -> Dictionary:
 	var envelope: Variant = normalized_numbers(parser.data)
 	if not keys(envelope,["save_format","schema_version","content_version","save_id","saved_at_utc","snapshot","checksum"]):
 		return failure("SAVE_FIELDS")
-	if envelope.save_format != "qingfeng" or not integer(envelope.schema_version,1,6):
+	if envelope.save_format != "qingfeng" or not integer(envelope.schema_version,1,7):
 		return failure("SAVE_VERSION_UNSUPPORTED")
 	var schema_version := int(envelope.schema_version)
 	if schema_version == 1:
@@ -411,6 +444,11 @@ static func decode(text: String) -> Dictionary:
 		if envelope.content_version != GAMEPLAY_CONTENT_VERSION:
 			return failure("SAVE_CONTENT_UNSUPPORTED")
 		if not validate_gameplay_snapshot(envelope.snapshot) or not _valid_gameplay_v6(envelope.snapshot.gameplay) or envelope.snapshot.gameplay.content_version != envelope.content_version:
+			return failure("SAVE_SNAPSHOT_INVALID")
+	elif schema_version == 7:
+		if envelope.content_version != GAMEPLAY_CONTENT_VERSION:
+			return failure("SAVE_CONTENT_UNSUPPORTED")
+		if not validate_gameplay_snapshot(envelope.snapshot) or not _valid_gameplay_v7(envelope.snapshot.gameplay) or envelope.snapshot.gameplay.content_version != envelope.content_version:
 			return failure("SAVE_SNAPSHOT_INVALID")
 	else:
 		return failure("SAVE_VERSION_UNSUPPORTED")
