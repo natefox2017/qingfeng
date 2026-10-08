@@ -96,7 +96,7 @@ func _initialize() -> void:
 	check(full_inventory.add("item.radish_seed",95).ok and full_inventory.add("item.radish_seed",99*9).ok,"test fills player inventory through domain API")
 	var full_before_inventory := full_inventory.projection()
 	var full_before_wallet := full_wallet.projection()
-	var full_buy := full_economy.handle(economy_command("full-buy","economy.buy",full_inventory.revision,full_wallet.revision,"item.radish",1))
+	var full_buy := full_economy.handle(economy_command("full-buy","economy.buy",full_inventory.revision,full_wallet.revision,"item.radish_seed",1))
 	check(not full_buy.ok and full_buy.error_code=="INVENTORY_FULL" and full_inventory.projection()==full_before_inventory and full_wallet.projection()==full_before_wallet,"full inventory rejects buy without charging wallet")
 
 	var sell_inventory = INVENTORY.new(content)
