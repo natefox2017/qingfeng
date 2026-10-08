@@ -38,7 +38,8 @@ func run() -> void:
 			"snapshot":{
 				"player_name":"小禾",
 				"dog_name":"阿豆",
-				"space_id":"space.village"
+				"space_id":"space.village",
+                "gameplay":{}
 			}
 		}
 	}

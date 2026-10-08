@@ -126,6 +126,9 @@ func run() -> void:
 	# initializes residents from real home anchors, then future saves upgrade to v6.
 	var legacy_gameplay: Dictionary = app.gameplay_session.snapshot()
 	legacy_gameplay.erase("residents")
+	# Schema five predates both resident runtime (v6) and fact events (v7).
+	# A compatibility fixture must remove all later-version fields.
+	legacy_gameplay.erase("fact_events")
 	var identity: Dictionary = app.active_snapshot.duplicate(true)
 	identity.erase("gameplay")
 	identity.space_id="space.village"

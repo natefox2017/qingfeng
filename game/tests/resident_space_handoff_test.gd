@@ -81,7 +81,7 @@ func run() -> void:
 	village.maker_resident.speed_px_per_sec=180.0
 	check(village.apply_resident_runtime(runtime.projection()),"village restores resident runtime")
 	check(village.apply_resident_projection(schedule.projection(480,false),runtime.projection()),"08:00 village applies grocer work target")
-	var grocer_start := village.grocer_resident.position
+	var grocer_start: Vector2 = village.grocer_resident.position
 	await physics_frame
 	await physics_frame
 	check(village.grocer_resident.position!=grocer_start,"grocer physically starts toward shop door")

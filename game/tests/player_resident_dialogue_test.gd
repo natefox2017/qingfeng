@@ -102,8 +102,8 @@ func run() -> void:
 	check(event.kind=="resident.met_player" and event.source_system=="dialogue.authored" and event.participant_ids==["actor.player","resident.neighbor"],"first-meeting fact keeps authored provenance and real participants")
 	check(int(event.game_minute)==minute_before and String(event.payload.dialogue_id)=="dialogue.neighbor.first_meeting","fact records original game minute and dialogue id")
 
-	var facts_after_first := app.gameplay_session.fact_events.projection().events.size()
-	var relationship_before := app.gameplay_session.resident_runtime.relationship_points_for("resident.neighbor")
+	var facts_after_first: int = int(app.gameplay_session.fact_events.projection().events.size())
+	var relationship_before: int = int(app.gameplay_session.resident_runtime.relationship_points_for("resident.neighbor"))
 	open_neighbor_dialogue()
 	await process_frame
 	check(app.locks.has_owner(&"dialogue") and not bool(app._dialogue_context.get("is_first_meeting",true)),"repeat interaction resolves revisit context")
@@ -136,7 +136,7 @@ func run() -> void:
 		app.set_process(false)
 		check(app.gameplay_session.fact_events.has_event(FIRST_EVENT) and app.gameplay_session.resident_runtime.knows_event("resident.neighbor",FIRST_EVENT),"reload restores fact and neighbor knowledge together")
 		check(app.gameplay_session.resident_runtime.relationship_points_for("resident.neighbor")==relationship_before+1,"daily greeting relationship survives schema-seven restart")
-		var restored_fact_count := app.gameplay_session.fact_events.projection().events.size()
+		var restored_fact_count: int = int(app.gameplay_session.fact_events.projection().events.size())
 		open_neighbor_dialogue()
 		await process_frame
 		check(not bool(app._dialogue_context.get("is_first_meeting",true)) and String(app._dialogue_context.get("dialogue_id",""))=="dialogue.neighbor.greeting","reloaded neighbor immediately uses revisit dialogue")
