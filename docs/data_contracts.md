@@ -25,6 +25,8 @@
 | event_ids | string[]；成功事实，失败空列表 |
 
 结果携带原 command_id；对请求的action/actor/payload/version做规范摘要。同ID同请求返回已记录结果；同ID不同请求报 COMMAND_ID_CONFLICT。已记录的可重试失败，条件变化后用新ID重试；提交结果未知时用原ID查询/重放，避免双扣。
+
+首个商店命令：`economy.buy` / `economy.sell` 的 `expected_revision` 是玩家 Inventory revision；payload 严格为 `{item_id:string, quantity:int 1..9999, wallet_revision:int>=0}`。价格和08:00–20:00营业窗口只读 `first_playable_v1`；handler 在同一同步临界段校验营业时间、商品可买/可卖、双方revision、余额/源量/目标容量，再提交 Inventory + Wallet。失败双方不变，交易页即使持有时钟暂停token也以被冻结的 game minute 判断营业状态。
 物理移动不走持久回执。回执生命周期由CORE明确：当前会话保存；未来压缩需防重语义设计，不可悄悄按数量截断。
 
 ## 快照与内容
