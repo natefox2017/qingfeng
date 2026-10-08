@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/phase0/oak_tree.png" id="oak"]
+
+[sub_resource type="RectangleShape2D" id="TreeShape"]
+size = Vector2(24, 24)
+
+[node name="OrchardOak" type="Node2D"]
+
+[node name="Footprint" type="StaticBody2D" parent="."]
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Footprint"]
+shape = SubResource("TreeShape")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, 12)
+texture_filter = 1
+texture = ExtResource("oak")
+offset = Vector2(0, -48)

@@ -1,10 +1,12 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=17 format=3]
 
 [ext_resource type="Script" path="res://world/farm_first_screen.gd" id="farm"]
 [ext_resource type="Script" path="res://world/components/solid_rect.gd" id="solid"]
 [ext_resource type="Script" path="res://actors/player_body.gd" id="player"]
-[ext_resource type="TileSet" path="res://assets/phase0/farm_tileset.tres" id="terrain"]
+[ext_resource type="TileSet" path="res://assets/chapter1/terrain/farm_world_tileset.tres" id="terrain"]
 [ext_resource type="Texture2D" path="res://assets/phase0/farmhouse.png" id="house"]
+[ext_resource type="PackedScene" path="res://world/objects/farmhouse.tscn" id="house_object"]
+[ext_resource type="PackedScene" path="res://world/objects/orchard_oak.tscn" id="oak_object"]
 [ext_resource type="Texture2D" path="res://assets/phase0/oak_tree.png" id="oak"]
 [ext_resource type="Texture2D" path="res://assets/phase0/player_4dir.png" id="farmer"]
 
@@ -53,10 +55,8 @@ texture_filter = 1
 position = Vector2(-8, -8)
 tile_set = ExtResource("terrain")
 
-[node name="Farmhouse" type="Sprite2D" parent="."]
+[node name="Farmhouse" parent="." instance=ExtResource("house_object")]
 position = Vector2(136, 76)
-texture_filter = 1
-texture = ExtResource("house")
 
 [node name="Solids" type="Node2D" parent="."]
 visible = false
@@ -100,16 +100,6 @@ fill_color = Color(0.21, 0.31, 0.22, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/East"]
 shape = SubResource("BoundaryVertical")
-
-[node name="HouseFootprint" type="StaticBody2D" parent="Solids"]
-position = Vector2(136, 88)
-collision_layer = 1
-collision_mask = 2
-script = ExtResource("solid")
-fill_color = Color(0.54, 0.41, 0.28, 1)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/HouseFootprint"]
-shape = SubResource("HouseShape")
 
 [node name="TreeRoot" type="StaticBody2D" parent="Solids"]
 position = Vector2(400, 192)
@@ -157,102 +147,6 @@ collision_mask = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/RiverLowerSouth"]
 shape = SubResource("RiverLowerSouthShape")
 
-[node name="OrchardRoot01" type="StaticBody2D" parent="Solids"]
-position = Vector2(224, 312)
-collision_layer = 1
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot01"]
-shape = SubResource("TreeShape")
-
-[node name="OrchardRoot02" type="StaticBody2D" parent="Solids"]
-position = Vector2(352, 300)
-collision_layer = 1
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot02"]
-shape = SubResource("TreeShape")
-
-[node name="OrchardRoot03" type="StaticBody2D" parent="Solids"]
-position = Vector2(456, 320)
-collision_layer = 1
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot03"]
-shape = SubResource("TreeShape")
-
-[node name="OrchardRoot04" type="StaticBody2D" parent="Solids"]
-position = Vector2(192, 432)
-collision_layer = 1
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot04"]
-shape = SubResource("TreeShape")
-
-[node name="OrchardRoot05" type="StaticBody2D" parent="Solids"]
-position = Vector2(320, 446)
-collision_layer = 1
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot05"]
-shape = SubResource("TreeShape")
-
-[node name="OrchardRoot06" type="StaticBody2D" parent="Solids"]
-position = Vector2(448, 430)
-collision_layer = 1
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot06"]
-shape = SubResource("TreeShape")
-
-[node name="OrchardRoot07" type="StaticBody2D" parent="Solids"]
-position = Vector2(224, 564)
-collision_layer = 1
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot07"]
-shape = SubResource("TreeShape")
-
-[node name="OrchardRoot08" type="StaticBody2D" parent="Solids"]
-position = Vector2(352, 550)
-collision_layer = 1
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot08"]
-shape = SubResource("TreeShape")
-
-[node name="OrchardRoot09" type="StaticBody2D" parent="Solids"]
-position = Vector2(456, 570)
-collision_layer = 1
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot09"]
-shape = SubResource("TreeShape")
-
-[node name="OrchardRoot10" type="StaticBody2D" parent="Solids"]
-position = Vector2(192, 760)
-collision_layer = 1
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot10"]
-shape = SubResource("TreeShape")
-
-[node name="OrchardRoot11" type="StaticBody2D" parent="Solids"]
-position = Vector2(320, 748)
-collision_layer = 1
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot11"]
-shape = SubResource("TreeShape")
-
-[node name="OrchardRoot12" type="StaticBody2D" parent="Solids"]
-position = Vector2(448, 770)
-collision_layer = 1
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot12"]
-shape = SubResource("TreeShape")
-
 [node name="FarmPlots" type="Node2D" parent="."]
 
 [node name="Plot001" type="Marker2D" parent="FarmPlots"]
@@ -287,12 +181,6 @@ position = Vector2(144, 176)
 [node name="FieldApproach" type="Marker2D" parent="Anchors"]
 position = Vector2(256, 160)
 
-[node name="HouseDoorInteract" type="Marker2D" parent="Anchors"]
-position = Vector2(144, 144)
-
-[node name="HouseDoorArrival" type="Marker2D" parent="Anchors"]
-position = Vector2(144, 160)
-
 [node name="BridgeWest" type="Marker2D" parent="Anchors"]
 position = Vector2(480, 208)
 
@@ -311,77 +199,41 @@ texture_filter = 1
 texture = ExtResource("oak")
 offset = Vector2(0, -48)
 
-[node name="OrchardOak01" type="Sprite2D" parent="FootSorted"]
-position = Vector2(224, 324)
-texture_filter = 1
-texture = ExtResource("oak")
-offset = Vector2(0, -48)
+[node name="OrchardOak01" parent="FootSorted" instance=ExtResource("oak_object")]
+position = Vector2(224, 312)
 
-[node name="OrchardOak02" type="Sprite2D" parent="FootSorted"]
-position = Vector2(352, 312)
-texture_filter = 1
-texture = ExtResource("oak")
-offset = Vector2(0, -48)
+[node name="OrchardOak02" parent="FootSorted" instance=ExtResource("oak_object")]
+position = Vector2(352, 300)
 
-[node name="OrchardOak03" type="Sprite2D" parent="FootSorted"]
-position = Vector2(456, 332)
-texture_filter = 1
-texture = ExtResource("oak")
-offset = Vector2(0, -48)
+[node name="OrchardOak03" parent="FootSorted" instance=ExtResource("oak_object")]
+position = Vector2(456, 320)
 
-[node name="OrchardOak04" type="Sprite2D" parent="FootSorted"]
-position = Vector2(192, 444)
-texture_filter = 1
-texture = ExtResource("oak")
-offset = Vector2(0, -48)
+[node name="OrchardOak04" parent="FootSorted" instance=ExtResource("oak_object")]
+position = Vector2(192, 432)
 
-[node name="OrchardOak05" type="Sprite2D" parent="FootSorted"]
-position = Vector2(320, 458)
-texture_filter = 1
-texture = ExtResource("oak")
-offset = Vector2(0, -48)
+[node name="OrchardOak05" parent="FootSorted" instance=ExtResource("oak_object")]
+position = Vector2(320, 446)
 
-[node name="OrchardOak06" type="Sprite2D" parent="FootSorted"]
-position = Vector2(448, 442)
-texture_filter = 1
-texture = ExtResource("oak")
-offset = Vector2(0, -48)
+[node name="OrchardOak06" parent="FootSorted" instance=ExtResource("oak_object")]
+position = Vector2(448, 430)
 
-[node name="OrchardOak07" type="Sprite2D" parent="FootSorted"]
-position = Vector2(224, 576)
-texture_filter = 1
-texture = ExtResource("oak")
-offset = Vector2(0, -48)
+[node name="OrchardOak07" parent="FootSorted" instance=ExtResource("oak_object")]
+position = Vector2(224, 564)
 
-[node name="OrchardOak08" type="Sprite2D" parent="FootSorted"]
-position = Vector2(352, 562)
-texture_filter = 1
-texture = ExtResource("oak")
-offset = Vector2(0, -48)
+[node name="OrchardOak08" parent="FootSorted" instance=ExtResource("oak_object")]
+position = Vector2(352, 550)
 
-[node name="OrchardOak09" type="Sprite2D" parent="FootSorted"]
-position = Vector2(456, 582)
-texture_filter = 1
-texture = ExtResource("oak")
-offset = Vector2(0, -48)
+[node name="OrchardOak09" parent="FootSorted" instance=ExtResource("oak_object")]
+position = Vector2(456, 570)
 
-[node name="OrchardOak10" type="Sprite2D" parent="FootSorted"]
-position = Vector2(192, 772)
-texture_filter = 1
-texture = ExtResource("oak")
-offset = Vector2(0, -48)
+[node name="OrchardOak10" parent="FootSorted" instance=ExtResource("oak_object")]
+position = Vector2(192, 760)
 
-[node name="OrchardOak11" type="Sprite2D" parent="FootSorted"]
-position = Vector2(320, 760)
-texture_filter = 1
-texture = ExtResource("oak")
-offset = Vector2(0, -48)
+[node name="OrchardOak11" parent="FootSorted" instance=ExtResource("oak_object")]
+position = Vector2(320, 748)
 
-[node name="OrchardOak12" type="Sprite2D" parent="FootSorted"]
-position = Vector2(448, 782)
-texture_filter = 1
-texture = ExtResource("oak")
-offset = Vector2(0, -48)
+[node name="OrchardOak12" parent="FootSorted" instance=ExtResource("oak_object")]
+position = Vector2(448, 770)
 
 [node name="Player" type="CharacterBody2D" parent="FootSorted"]
 position = Vector2(144, 176)

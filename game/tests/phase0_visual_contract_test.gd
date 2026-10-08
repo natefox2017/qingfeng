@@ -49,12 +49,12 @@ func run() -> void:
 	check(plot_tiles.get_cell_atlas_coords(Vector2i(17,8))==Vector2i(2,2),"watered tilled field maps to wet-soil atlas")
 	check(plot_tiles.get_cell_atlas_coords(Vector2i(17,7))==Vector2i(0,2),"untilled field maps to unworked-soil atlas")
 
-	var home := farm.get_node("Farmhouse") as Sprite2D
+	var home := farm.get_node("Farmhouse/Sprite2D") as Sprite2D
 	var oak := farm.get_node("FootSorted/OakTree") as Sprite2D
 	check(home != null and home.texture != null and home.texture.get_size()==Vector2(192,152),"farmhouse has authored non-placeholder texture")
 	check(oak != null and oak.texture != null and oak.texture.get_size()==Vector2(80,96) and oak.position==Vector2(400,204),"oak is foot-aligned with its retained collision root")
 	var solids := farm.get_node("Solids") as Node2D
-	var house_collision := farm.get_node("Solids/HouseFootprint/CollisionShape2D") as CollisionShape2D
+	var house_collision := farm.get_node("Farmhouse/Footprint/CollisionShape2D") as CollisionShape2D
 	check(not solids.visible and not house_collision.disabled,"diagnostic solid fills are hidden but physical collision survives")
 	check(farm.get_anchor_position("HouseDoorInteract")==Vector2(144,144) and farm.get_anchor_position("VillagePathInteract")==Vector2(608,208),"farm house door and village exit anchors stay put")
 

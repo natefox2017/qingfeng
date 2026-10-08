@@ -4,8 +4,6 @@ extends Node2D
 ## owns a second copy of map geometry.
 
 const TILE_SIZE := 16
-const WORLD_CELLS := Vector2i(96, 64)
-const WORLD_BOUNDS_PX := Vector2i(1536, 1024)
 const SPACE_ID := "space.farm"
 const FARM_ACTION_RANGE_PX := 28.0
 const FARM_ACTION_LATERAL_PX := 9.0
@@ -14,6 +12,47 @@ var _farm_states: Dictionary = {}
 
 @onready var player: CharacterBody2D = $FootSorted/Player
 @onready var plot_tiles: TileMapLayer = $PlotStates
+
+func _ready() -> void:
+	refresh_world_layout()
+
+func refresh_world_layout() -> void:
+	var bounds := _get_used_cell_bounds()
+	if bounds.size.x <= 0 or bounds.size.y <= 0:
+		return
+	var pixel_left := bounds.position.x * TILE_SIZE
+	var pixel_top := bounds.position.y * TILE_SIZE
+	var pixel_right := bounds.end.x * TILE_SIZE
+	var pixel_bottom := bounds.end.y * TILE_SIZE
+	var width := pixel_right - pixel_left
+	var height := pixel_bottom - pixel_top
+	var camera := $FootSorted/Player/Camera2D as Camera2D
+	camera.limit_left = pixel_left
+	camera.limit_top = pixel_top
+	camera.limit_right = pixel_right
+	camera.limit_bottom = pixel_bottom
+	_set_boundary("North", Vector2(pixel_left + width * 0.5, pixel_top + 8), Vector2(width, 16))
+	_set_boundary("South", Vector2(pixel_left + width * 0.5, pixel_bottom - 8), Vector2(width, 16))
+	_set_boundary("West", Vector2(pixel_left + 8, pixel_top + height * 0.5), Vector2(16, height))
+	_set_boundary("East", Vector2(pixel_right - 8, pixel_top + height * 0.5), Vector2(16, height))
+
+func _get_used_cell_bounds() -> Rect2i:
+	var bounds := Rect2i()
+	var has_bounds := false
+	for child: Node in get_children():
+		if child is TileMapLayer and child.name != "PlotStates":
+			var layer_bounds := (child as TileMapLayer).get_used_rect()
+			if layer_bounds.size.x <= 0 or layer_bounds.size.y <= 0:
+				continue
+			bounds = layer_bounds if not has_bounds else bounds.merge(layer_bounds)
+			has_bounds = true
+	return bounds if has_bounds else Rect2i()
+
+func _set_boundary(node_name: String, world_position: Vector2, size: Vector2) -> void:
+	var body := get_node("Solids/" + node_name) as StaticBody2D
+	body.position = world_position
+	var shape := body.get_node("CollisionShape2D").shape as RectangleShape2D
+	shape.size = size
 
 func set_input_enabled(enabled: bool) -> void:
 	player.set_input_enabled(enabled)
@@ -25,17 +64,24 @@ func get_space_id() -> String:
 	return SPACE_ID
 
 func get_world_bounds() -> Rect2i:
-	return Rect2i(Vector2i.ZERO,WORLD_BOUNDS_PX)
+	var cell_bounds := _get_used_cell_bounds()
+	return Rect2i(cell_bounds.position * TILE_SIZE, cell_bounds.size * TILE_SIZE)
 
 func get_spawn_position() -> Vector2:
 	return $Anchors/PlayerSpawn.position
 
 func get_anchor_position(anchor_name: String) -> Vector2:
-	var node := $Anchors.get_node_or_null(NodePath(anchor_name))
-	return node.position if node is Marker2D else Vector2.INF
+	var node := _anchor(anchor_name)
+	return node.global_position if node is Marker2D else Vector2.INF
+
+func _anchor(anchor_name: String) -> Marker2D:
+	var node := $Anchors.get_node_or_null(NodePath(anchor_name)) as Marker2D
+	if node == null:
+		node = $Farmhouse.get_node_or_null(NodePath(anchor_name)) as Marker2D
+	return node
 
 func resolve_interaction_target() -> Dictionary:
-	if _marker_reachable($Anchors/HouseDoorInteract):
+	if _marker_reachable(_anchor("HouseDoorInteract")):
 		return {
 			"kind":"door",
 			"interaction_id":"door.farm.house",
@@ -43,7 +89,7 @@ func resolve_interaction_target() -> Dictionary:
 			"arrival_anchor_id":"DoorArrival",
 			"arrival_facing":"north"
 		}
-	if _marker_reachable($Anchors/VillagePathInteract):
+	if _marker_reachable(_anchor("VillagePathInteract")):
 		return {
 			"kind":"door",
 			"interaction_id":"door.farm.village",
@@ -148,13 +194,15 @@ func get_plot_definitions() -> Array:
 	return definitions
 
 func layout_contract_valid() -> bool:
+	refresh_world_layout()
 	var definitions := get_plot_definitions()
-	if $TerrainGround.tile_set == null or $PlotStates.tile_set == null or $TerrainGround.get_used_cells().size() != WORLD_CELLS.x*WORLD_CELLS.y:
+	if $TerrainGround.tile_set == null or $PlotStates.tile_set != $TerrainGround.tile_set:
 		return false
-	if $TerrainGround.get_used_rect() != Rect2i(Vector2i.ZERO,WORLD_CELLS):
+	var world_bounds := get_world_bounds()
+	if world_bounds.size.x <= 0 or world_bounds.size.y <= 0:
 		return false
 	var camera := get_node_or_null("FootSorted/Player/Camera2D") as Camera2D
-	if camera == null or camera.limit_right != WORLD_BOUNDS_PX.x or camera.limit_bottom != WORLD_BOUNDS_PX.y:
+	if camera == null or camera.limit_left != world_bounds.position.x or camera.limit_top != world_bounds.position.y or camera.limit_right != world_bounds.end.x or camera.limit_bottom != world_bounds.end.y:
 		return false
 	for anchor_name: String in ["PlayerSpawn","FieldApproach","BridgeWest","BridgeEast","HouseDoorInteract","HouseDoorArrival","VillagePathInteract"]:
 		if get_anchor_position(anchor_name) == Vector2.INF:
@@ -178,4 +226,3 @@ func _marker_for_plot(plot_id: String) -> Marker2D:
 		if child is Marker2D and String(child.get_meta("plot_id","")) == plot_id:
 			return child as Marker2D
 	return null
-

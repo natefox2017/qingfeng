@@ -60,8 +60,9 @@ func run() -> void:
 		Vector2(192,760),Vector2(320,748),Vector2(448,770)]
 	var orchard_matches := true
 	for index in range(1, 13):
-		var root_position: Vector2 = scene.get_node("Solids/OrchardRoot%02d" % index).position
-		var sprite_position: Vector2 = scene.get_node("FootSorted/OrchardOak%02d" % index).position
+		var tree := scene.get_node("FootSorted/OrchardOak%02d" % index) as Node2D
+		var root_position: Vector2 = tree.get_node("Footprint").global_position
+		var sprite_position: Vector2 = tree.get_node("Sprite2D").global_position
 		if root_position != orchard_columns[index - 1] or sprite_position != root_position + Vector2(0, 12):
 			orchard_matches = false
 	check(orchard_matches, "reusable oak sprites and collision roots form the authored orchard rows")

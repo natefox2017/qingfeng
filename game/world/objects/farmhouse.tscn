@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/phase0/farmhouse.png" id="house"]
+
+[sub_resource type="RectangleShape2D" id="HouseShape"]
+size = Vector2(176, 96)
+
+[node name="Farmhouse" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("house")
+
+[node name="Footprint" type="StaticBody2D" parent="."]
+position = Vector2(0, 12)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Footprint"]
+shape = SubResource("HouseShape")
+
+[node name="HouseDoorInteract" type="Marker2D" parent="."]
+position = Vector2(8, 68)
+
+[node name="HouseDoorArrival" type="Marker2D" parent="."]
+position = Vector2(8, 84)

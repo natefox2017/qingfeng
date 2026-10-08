@@ -3,6 +3,7 @@ extends Node2D
 ## live here; final terrain/building art may replace presentation only.
 
 const SPACE_ID := "space.village"
+const TILE_SIZE := 16
 const INTERACT_RANGE_PX := 28.0
 const INTERACT_LATERAL_PX := 10.0
 const RESIDENT_ROOM = preload("res://world/components/resident_room_driver.gd")
@@ -20,6 +21,7 @@ var _active_player_resident_id := ""
 var _resident_room: RefCounted
 
 func _ready() -> void:
+	refresh_world_layout()
 	_resident_room = RESIDENT_ROOM.new(
 		SPACE_ID,
 		{
@@ -43,6 +45,48 @@ func _ready() -> void:
 		Callable(self,"_resident_position_is_safe")
 	)
 
+func refresh_world_layout() -> void:
+	var bounds := _get_used_cell_bounds()
+	if bounds.size.x <= 0 or bounds.size.y <= 0:
+		return
+	var pixel_left := bounds.position.x * TILE_SIZE
+	var pixel_top := bounds.position.y * TILE_SIZE
+	var pixel_right := bounds.end.x * TILE_SIZE
+	var pixel_bottom := bounds.end.y * TILE_SIZE
+	var width := pixel_right - pixel_left
+	var height := pixel_bottom - pixel_top
+	var camera := $FootSorted/Player/Camera2D as Camera2D
+	camera.limit_left = pixel_left
+	camera.limit_top = pixel_top
+	camera.limit_right = pixel_right
+	camera.limit_bottom = pixel_bottom
+	_set_boundary("North", Vector2(pixel_left + width * 0.5, pixel_top + 8), Vector2(width, 16))
+	_set_boundary("South", Vector2(pixel_left + width * 0.5, pixel_bottom - 8), Vector2(width, 16))
+	_set_boundary("West", Vector2(pixel_left + 8, pixel_top + height * 0.5), Vector2(16, height))
+	_set_boundary("East", Vector2(pixel_right - 8, pixel_top + height * 0.5), Vector2(16, height))
+
+func _get_used_cell_bounds() -> Rect2i:
+	var bounds := Rect2i()
+	var has_bounds := false
+	for child: Node in get_children():
+		if child is TileMapLayer:
+			var layer_bounds := (child as TileMapLayer).get_used_rect()
+			if layer_bounds.size.x <= 0 or layer_bounds.size.y <= 0:
+				continue
+			bounds = layer_bounds if not has_bounds else bounds.merge(layer_bounds)
+			has_bounds = true
+	return bounds if has_bounds else Rect2i()
+
+func get_world_bounds() -> Rect2i:
+	var cells := _get_used_cell_bounds()
+	return Rect2i(cells.position * TILE_SIZE, cells.size * TILE_SIZE)
+
+func _set_boundary(node_name: String, world_position: Vector2, size: Vector2) -> void:
+	var body := get_node("Solids/" + node_name) as StaticBody2D
+	body.position = world_position
+	var shape := body.get_node("CollisionShape2D").shape as RectangleShape2D
+	shape.size = size
+
 func set_input_enabled(enabled: bool) -> void:
 	player.set_input_enabled(enabled)
 
@@ -60,6 +104,17 @@ func get_anchor_position(anchor_name: String) -> Vector2:
 	return node.position if node is Marker2D else Vector2.INF
 
 func layout_contract_valid() -> bool:
+	refresh_world_layout()
+	var ground := get_node_or_null("TerrainGround") as TileMapLayer
+	var paths := get_node_or_null("GroundPaths") as TileMapLayer
+	var world_bounds := get_world_bounds()
+	if ground == null or paths == null or ground.tile_set == null or paths.tile_set != ground.tile_set:
+		return false
+	if ground.get_used_cells().is_empty() or paths.get_used_cells().is_empty() or world_bounds.size.x <= 0 or world_bounds.size.y <= 0:
+		return false
+	var camera := $FootSorted/Player/Camera2D as Camera2D
+	if camera.limit_left != world_bounds.position.x or camera.limit_top != world_bounds.position.y or camera.limit_right != world_bounds.end.x or camera.limit_bottom != world_bounds.end.y:
+		return false
 	for anchor_name: String in ["FarmArrival","FarmExitInteract","ShopDoorInteract","ShopDoorArrival","WorkshopDoorInteract","WorkshopDoorArrival"]:
 		if get_anchor_position(anchor_name) == Vector2.INF:
 			return false
@@ -337,16 +392,12 @@ func _facing_vector(facing: StringName) -> Vector2:
 	return Vector2.ZERO
 
 func _draw() -> void:
-	# Diagnostic skin only; not accepted village art.
-	draw_rect(Rect2(0,0,640,360),Color("82966b"))
+	# Native TileMapLayers own the ground and paths; only transient state marks draw here.
 	if _active_conversation_state=="participating" and _active_player_resident_id.is_empty():
 		var midpoint: Vector2 = ($ConversationAnchors/Left.position+$ConversationAnchors/Right.position)*0.5
 		draw_circle(midpoint+Vector2(-6,-18),3.0,Color("f3eee2"))
 		draw_circle(midpoint+Vector2(0,-20),3.0,Color("f3eee2"))
 		draw_circle(midpoint+Vector2(6,-18),3.0,Color("f3eee2"))
-	draw_rect(Rect2(16,160,608,40),Color("bba574"))
-	draw_rect(Rect2(384,128,32,72),Color("bba574"))
-	draw_rect(Rect2(496,160,48,56),Color("bba574"))
 	for child: Node in $ForageSpots.get_children():
 		if child is Marker2D:
 			var marker := child as Marker2D
