@@ -66,6 +66,34 @@ class RunGameLauncherTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(json.loads(self.record.read_text())["godot"], self.env["GODOT_BIN"])
 
+    def test_phase0_test_and_editor_flags_are_routed(self):
+        for flag, expected in [
+            ("--test", "phase0"),
+            ("--test-all", "test"),
+            ("--editor", "editor"),
+        ]:
+            with self.subTest(flag=flag):
+                result = self.launch(flag, "--godot", "/fake/Godot App/bin")
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(
+                    json.loads(self.record.read_text())["args"],
+                    [str(self.project / "tools/runtime.py"), expected, "--godot", "/fake/Godot App/bin"],
+                )
+
+    def test_capture_requires_exactly_one_output_directory(self):
+        directory = str(self.home / "screens with spaces")
+        result = self.launch("--capture", directory)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(
+            json.loads(self.record.read_text())["args"],
+            [str(self.project / "tools/runtime.py"), "capture", "--capture-dir", directory],
+        )
+        self.record.unlink()
+        missing = self.launch("--capture")
+        self.assertEqual(missing.returncode, 2)
+        self.assertFalse(self.record.exists())
+        self.assertIn("--capture", missing.stderr)
+
     def test_preserves_exit_code(self):
         self.env["LAUNCHER_EXIT"] = "23"
         self.assertEqual(self.launch().returncode, 23)
