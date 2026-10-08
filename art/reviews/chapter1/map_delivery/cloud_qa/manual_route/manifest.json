@@ -1,0 +1,82 @@
+{
+  "base_commits": [
+    "2d42184",
+    "91104c4",
+    "38c3877"
+  ],
+  "native_window_px": [
+    1366,
+    768
+  ],
+  "content_px": [
+    1280,
+    720
+  ],
+  "accepted": false,
+  "images": [
+    {
+      "path": "01-house-entered.png",
+      "sha256": "fe6f18099cae563a9affcb5701f49e9ae96a6f46af9a5e65b9601b0a9261a8d3"
+    },
+    {
+      "path": "02-house-return.png",
+      "sha256": "a92996aa60ec25ff3e12adb58a331cdb68946894012e95cb00347527f1a9672b"
+    },
+    {
+      "path": "03-harvested-radish.png",
+      "sha256": "83b30989135d3a50db3e488941d34b0177a77e064a9cd188cfd5b62bace753f2"
+    },
+    {
+      "path": "04-planted-watered.png",
+      "sha256": "a22bd3c223cd9a3c613c44f16dbea6bec3eb9055c3e1f2a7b371aadf8f915184"
+    },
+    {
+      "path": "05-orchard.png",
+      "sha256": "50407823324ab359c543f73d9c7b3c5993498837a4dc90d6da8ac5471dfb8760"
+    },
+    {
+      "path": "06-crossed-bridge-east.png",
+      "sha256": "ae5d9aa6ca2ef698499146be6ca5dc02be40a1d5078cbe1a7bde234eb85c2f38"
+    },
+    {
+      "path": "07-village-entered.png",
+      "sha256": "5220d513b102716aed4fd2ad7743a5001cb15a5489b5045fa97d3af33e4df059"
+    },
+    {
+      "path": "08-shop-entered.png",
+      "sha256": "c243936f62b52242393e8a850d01d8352c781d592f31af8f31456aa9b7cdbb97"
+    },
+    {
+      "path": "09-workshop-entered.png",
+      "sha256": "1db8f778374fa57804eaad0ebf3200e52b7d32188a4084146fb0043480714245"
+    },
+    {
+      "path": "10-returned-farm.png",
+      "sha256": "49eb92f5224c1d8e440e4ecf0082c93a92241fa8dd50699daa4ec8c3f11a6dd2"
+    },
+    {
+      "path": "11-reloaded-route-save.png",
+      "sha256": "ef2e673c6971c2f27071c6d6094693a98ca98efdb68f47ef62f483bbc838953d"
+    },
+    {
+      "path": "12-pause-before-resave.png",
+      "sha256": "8ebf40b23559fb68c9d23912f7850654a6abc1e22668d4b7809785506259465c"
+    },
+    {
+      "path": "13-resaved-title.png",
+      "sha256": "c76397cd1a2536573b4fae5685599b847f621e8e9cafe008c294f09f5ed1138f"
+    },
+    {
+      "path": "north-camera-void-defect.png",
+      "sha256": "86669ad0bf7c2d3b849e1cd79aaf810707b2c0138c951c2fff6cc8eb90389586"
+    },
+    {
+      "path": "pause-money-wrap-defect.png",
+      "sha256": "ee263eb043d7ca1cb67b21dc1fdbbb50dd70f7e2098c5101baf7f6f3adcaa8f6"
+    },
+    {
+      "path": "title-full-window-1366x768.png",
+      "sha256": "06a86e23b5a10a4428d19fb690eec8fe35facfb6149313c60f62b24f6beb2c86"
+    }
+  ]
+}
