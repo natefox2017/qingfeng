@@ -365,8 +365,8 @@ func player_resident_dialogue_context(resident_id: String) -> Dictionary:
 		return {"ok":false,"error_code":"DIALOGUE_RESIDENT_NOT_HERE"}
 	var first: Dictionary = definition.first_meeting
 	var first_event_id := String(first.event_id)
-	var knows_first := resident_runtime.knows_event(resident_id,first_event_id)
-	var fact_exists := fact_events.has_event(first_event_id)
+	var knows_first: bool = bool(resident_runtime.knows_event(resident_id,first_event_id))
+	var fact_exists: bool = bool(fact_events.has_event(first_event_id))
 	if fact_exists and not knows_first:
 		return {"ok":false,"error_code":"DIALOGUE_KNOWLEDGE_INCONSISTENT"}
 	var chosen: Dictionary = definition.repeat if knows_first else first
