@@ -61,7 +61,11 @@ func run() -> void:
 	var farm_target: Dictionary = app.room.resolve_interaction_target()
 	check(farm_target.get("target_space_id","")=="space.village","farm bridge exit resolves village route")
 	app._unhandled_key_input(key(KEY_E))
-	check(await wait_space("space.village"),"farm route commits into village")
+	check(app._transition_pending and is_instance_valid(app._transition_candidate) and app._transition_candidate.get_world_2d() != app.room.get_world_2d(),"staged village uses independent physics world, never farm colliders")
+	var arrived_village: bool = await wait_space("space.village")
+	if not arrived_village:
+		print("VILLAGE_ROUTE_DIAG state=%s error=%s pending=%s" % [app.state, app.last_error, app._transition_pending])
+	check(arrived_village,"farm route commits into village")
 	check(app.gameplay_session==session_identity and app.room.get_player().position==Vector2(48,180) and app.room.get_player().facing==&"east","village arrival preserves gameplay session and target-owned anchor")
 	check(app.room.layout_contract_valid(),"village editable route contract validates")
 
