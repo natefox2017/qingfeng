@@ -85,6 +85,18 @@ position = Vector2(400, 144)
 [node name="ShopDoorArrival" type="Marker2D" parent="Anchors"]
 position = Vector2(400, 168)
 
+[node name="ForageSpots" type="Node2D" parent="."]
+
+[node name="WildHerbA" type="Marker2D" parent="ForageSpots"]
+position = Vector2(184, 144)
+metadata/spot_id = "forage.village.001"
+metadata/forage_id = "forage.wild_herb"
+
+[node name="WildHerbB" type="Marker2D" parent="ForageSpots"]
+position = Vector2(280, 216)
+metadata/spot_id = "forage.village.002"
+metadata/forage_id = "forage.wild_herb"
+
 [node name="FootSorted" type="Node2D" parent="."]
 y_sort_enabled = true
 
