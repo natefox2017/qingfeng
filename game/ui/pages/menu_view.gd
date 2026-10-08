@@ -83,7 +83,9 @@ func _set_approved_menu_art(page: String) -> void:
 	var path: String = ""
 	match page:
 		"title":
-			path = "res://assets/approved/ui_title.png"
+			# The approved reference is a complete mockup with baked labels and
+			# buttons. Wait for the clean, text-free background from UI-ART #98.
+			path = "res://assets/ui/backgrounds/title_clean.png"
 		"new_game":
 			path = "res://assets/approved/ui_new_game.png"
 		"load":
@@ -111,13 +113,15 @@ func _menu_button(parent: Node, action: String, name: String, hint: String, enab
 	node.disabled = not enabled
 	node.add_theme_font_size_override("font_size", 15)
 	node.add_theme_stylebox_override("normal", UI_THEME.menu_action_style(is_primary))
-	node.add_theme_stylebox_override("hover", UI_THEME.menu_action_style(true))
-	node.add_theme_stylebox_override("pressed", UI_THEME.menu_action_style(true,true))
-	node.add_theme_stylebox_override("focus", UI_THEME.menu_action_style(true,true))
+	node.add_theme_stylebox_override("hover", UI_THEME.menu_action_style(enabled))
+	node.add_theme_stylebox_override("pressed", UI_THEME.menu_action_style(enabled,enabled))
+	node.add_theme_stylebox_override("focus", UI_THEME.menu_action_style(enabled,enabled))
 	node.add_theme_stylebox_override("disabled", UI_THEME.menu_action_style(false))
+	node.add_theme_color_override("font_disabled_color", UI_THEME.COLOR_DISABLED)
 	node.pressed.connect(func():emit_action(action))
-	node.mouse_entered.connect(func():notice.text=hint)
-	node.focus_entered.connect(func():notice.text=hint)
+	if enabled:
+		node.mouse_entered.connect(func():notice.text=hint)
+		node.focus_entered.connect(func():notice.text=hint)
 	parent.add_child(node)
 	buttons[action]=node
 	if _first_button==null and enabled:
@@ -144,7 +148,7 @@ func clear_page() -> void:
 	if is_instance_valid(dialogue_panel): remove_child(dialogue_panel);dialogue_panel.queue_free()
 	dialogue_panel=null
 	buttons.clear();_first_button=null;player_name=null;dog_name=null;countdown=null
-	notice.text="";panel.visible=true;get_node("Backdrop").visible=true
+	notice.text="";notice.visible=true;panel.visible=true;get_node("Backdrop").visible=true
 
 func label(text: String, parent: Node = null) -> Label:
 	var node:=Label.new();node.text=text;node.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
@@ -358,6 +362,7 @@ func show_page(page: String, context: Dictionary) -> void:
 			title.text="晴风谷";title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 			subtitle.text="QINGFENG VALLEY  ·  一段新的乡居生活";subtitle.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 			panel.custom_minimum_size=Vector2(356,316)
+			notice.visible=false
 			var menu_panel:=PanelContainer.new()
 			menu_panel.name="TitleMenu"
 			menu_panel.add_theme_stylebox_override("panel",UI_THEME.section_style())
@@ -375,9 +380,6 @@ func show_page(page: String, context: Dictionary) -> void:
 			_menu_button(actions,"settings","设置","调整声音与显示")
 			_menu_button(actions,"quit","退出","退出游戏")
 			_first_button = buttons["continue"] if context.has("recent_id") else buttons["new_game"]
-			var note:=label("在微风与田野之间，开始新的生活。",body)
-			note.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-			UI_THEME.apply_text_role(note,UI_THEME.ROLE_CAPTION)
 
 		"new_game":
 			title.text="开始新的生活";subtitle.text="为你和同行的小狗取个名字"
@@ -721,7 +723,7 @@ func show_page(page: String, context: Dictionary) -> void:
 						hint.text="E 使用 "+selected_name
 				hint.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT);hud.add_child(hint)
 				_build_quickbar(gameplay)
-	if not context.get("error","").is_empty():notice.text=context.error
+	if not context.get("error","").is_empty():notice.text=context.error;notice.visible=true
 	var preferred_action := str(context.get("focus_action",""))
 	if not preferred_action.is_empty() and buttons.has(preferred_action):
 		var preferred_button: Button = buttons[preferred_action] as Button
