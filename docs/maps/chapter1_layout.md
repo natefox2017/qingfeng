@@ -1,6 +1,6 @@
 # 第一章总地图布局、坐标与分层合同
 
-合同版本：`chapter1.map.layout.v1`
+合同版本：`chapter1.map.layout.v1`；所有者：#87；消费者：#88–#97、#104/#106/#107/#109/#111。技术尺寸已明确，区域编号的跨任务同步与视觉比例仍未验收。
 
 唯一空间母版：[`world_chapter1_map`](../../art/approved/refs/world_chapter1_map.png)，1672×941，SHA-256 `ba35eef32eb0a49a5e50ad8ec4498148845c8f4065d3695b315c4ea1286bddd7`。来源与去重映射见 [`chapter1_asset_source_index.json`](../../art/requests/chapter1_asset_source_index.json)。
 
@@ -8,6 +8,8 @@
 
 ## 坐标合同
 
+- 已明确的技术规格：世界地形格 `16×16 px`、item/action 独立 RGBA 图符 `24×24 px`、HUD 独立 RGBA 图符 `16×16 px`、逻辑视口 `640×360 px`。后者与当前 `game/project.godot` 一致。1280×720/1920×1080 是整数放大验证尺寸，不改变世界坐标或原生像素密度。
+- 正式 palette、人物内容高度、屋门占格、脚锚、物件最终画布及镜头视觉比例继续 **TBD / proposed**；`art/style_profile.json` 的空值表示未签收，不能把旧 Phase0 的 30px 内容高度或候选色板当成正式标准。#88 隔离样板 `[8,8]` 格中心只是其 atlas 锚点，不是角色/房屋脚锚合同。
 - 参考图坐标系：左上原点，`x` 向东、`y` 向南，范围为参考图像素 `1672×941`。它只用于描述图中区域方位，不是可编辑地图坐标；不从概念图像素比例换算世界格。
 - 世界格：地形逻辑格为 `16×16 px`。世界格原点、各 `space_id` 的格边界、R01–R09 的世界格矩形、出口 Marker 格坐标及新增对象尺寸均为 **TBD**，必须由可编辑布局和同镜头核对确定。
 - 世界格使用整数 `(x, y)`；每个已冻结 `space_id` 在其场景内采用左上原点、向东/向南递增。禁止以图像缩放、窗口分辨率或美术裁切推导世界坐标。
@@ -29,6 +31,12 @@
 | R09 山间小道 | 左下；山体、岩壁与向南出口标识 | 从农庄南侧道路接出；不得替换成东侧河岸通路 | 出口边界及目标 Space TBD |
 
 道路拓扑的最小不变量：`R01 ↔ R02 ↔ R03 ↔ R04`；`R03 ↔ R06 ↔ R08`；`R05` 在图右侧纵向延伸并被 `R06` 横跨；`R07` 位于桥南的下游河岸；`R03 ↔ R09` 由农庄南侧道路连接。实际分叉、门点和每段格坐标均 TBD，布局实现必须逐段对照 01，不能以这组关系推导未画出的捷径或新 Door。
+
+### 跨任务编号同步阻塞
+
+2026-10-08 实时复核 [#104 正文](https://github.com/natefox2017/qingfeng/issues/104)（`updatedAt=2026-10-08T13:32:11Z`）仍写旧编号：R01 农舍、R02 中央田、R03 果林、R04 河上下游、R05 村镇通路、R06 村广场、R07 店与工坊、R08 家内、R09 林地/山道。[PR #114 Conversation](https://github.com/natefox2017/qingfeng/pull/114#issuecomment-6060582959) 的一致性阻塞因此仍有效；#87 的协调评论不能替代 #104 正文修正。本任务只记录实际状态，不越界改写 WORLD 任务合同。
+
+需由协调/WORLD 所有者将 #104 正文逐项同步为上表，再实时核对才能解除编号依赖。城镇道路、广场、商铺/工坊外观均是 **R04 子区**；室内复用 `space.house`、`space.shop`、`space.workshop`，不是 R08 新户外区。现有 `space.farm`、`space.village` 同样保留，不把区域编号变成新的 Space ID。即使编号同步完成，精确坐标、门点与人工视觉签收仍是独立未验项。
 
 ## 分层与空间所有权
 
@@ -52,6 +60,10 @@
 
 ## 资产唯一来源与验收状态
 
-[`chapter1_asset_source_index.json`](../../art/requests/chapter1_asset_source_index.json) 以 SHA-256 合并相同源，保留实际 Drive file URL 或精确仓库路径，记录复用位置、原始/运行尺寸及当前状态。01/05/06/07 是已批准设计参考；第一屏四个 phase0 PNG 是仓库内的 `proposed` 候选，不代表符合总图或已通过原生审图。未找到可核验的独立源图、SHA 或 URL 时不补造文件记录；未从 Drive 重新下载验证的 Batch 01 云端压缩包只在来源索引中注明证据限制。
+[`chapter1_asset_source_index.json`](../../art/requests/chapter1_asset_source_index.json) 以 SHA-256 合并相同源，记录精确本地源路径、commit、复用位置、原始/运行尺寸及状态。Drive URL 只保留为历史来源，不是本地交付前提。01/05/06/07 是已批准设计参考；第一屏四个 phase0 PNG 是仓库内的 `proposed` 候选，不代表符合总图或已通过原生审图。未找到可核验的独立源图或 SHA 时不补造文件记录；未重新下载验证的 Batch 01 云端压缩包只注明证据限制。
+
+#88 本地提交 `fb8a2f54d517b70015ed590979923d4def8ff2ec` 已索引为 **local-only / proposed**：64×80 RGBA 图集、19 个 16×16 源格及 rect/mask、可编辑 PXO、4×/8× nearest 预览和三尺寸 Godot 截图。它不在本分支或 main，不能假称已集成。源与 runtime atlas SHA 均为 `44b1d5600d4217b3a729b13f3a7184470b2af69dc8c727f712f7c71d4079f7f4`；完整证据逐文件 SHA 在索引中。格中心 `[8,8]`、NESW mask 和 Match Sides 只覆盖窄路样板，不包含宽路/石路/角点 peering 或正式地图通路。
+
+本任务复核文件/hash/rect、nearest 放大和截图尺寸；Godot 4.7.2 执行记录来自 #88 所有者，本任务没有重跑 Godot，也不能仅凭 PNG 独立证明其捕获过程。该固定提交未记录批准母版局部裁图的输入路径/rect/SHA；#88 正在补此证据，后续提交须重新核实，不静默混入当前索引。草叶重复频率、palette、同镜头人物尺度及用户签收均待验，A03/A07 扩产和正式地图接图仍等待样板签收。
 
 本次只完成静态合同和来源映射。尚无 Godot 地图布局、R 区世界格坐标、资产逐件 runtime 验收或人工同镜头视觉签收；不得据此勾选这些完成项。

@@ -6,9 +6,47 @@
     "width": 16,
     "height": 16
   },
-  "view_hint": "low top-down",
+  "view_hint": "top-down three-quarter; proposed until same-camera review",
   "reference_asset_ids": [],
-  "palette_asset_id": "asset.terrain.phase0",
-  "character_content_height_px": 30,
-  "notes": "第一屏创作候选：16px地形、24×32四向主角与暖色农舍，来自本仓库原创手绘PNG；尚无用户设计图对照和Godot原生截图，review_status仍是proposed，不能冒充PixelLab accepted。"
+  "palette_asset_id": null,
+  "character_content_height_px": null,
+  "notes": "仅冻结 #84/#87 明确的技术尺寸；palette、人物内容高度、最终物件画布/占格、门宽、脚锚与镜头视觉比例均 TBD，等待实测和用户签收。Phase0 的 30px 人物高度不是批准标尺。#88 fb8a2f5 是隔离 A01/A02 真像素候选，母版局部输入证据和用户签收仍缺，不把该候选自动指定为正式 palette。",
+  "item_action_size_px": {
+    "width": 24,
+    "height": 24
+  },
+  "hud_icon_size_px": {
+    "width": 16,
+    "height": 16
+  },
+  "logical_viewport_size_px": {
+    "width": 640,
+    "height": 360
+  },
+  "contract_owner": "issue.87",
+  "contract_consumers": [
+    "issue.88",
+    "issue.89",
+    "issue.90",
+    "issue.91",
+    "issue.92",
+    "issue.93",
+    "issue.94",
+    "issue.95",
+    "issue.96",
+    "issue.97",
+    "issue.104",
+    "issue.106",
+    "issue.107",
+    "issue.109",
+    "issue.111"
+  ],
+  "candidate_palette_asset_ids": [
+    "asset.terrain.phase0",
+    "asset.terrain.chapter1.grass",
+    "asset.terrain.chapter1.dirt_path"
+  ],
+  "reference_source_ids": [
+    "world_chapter1_map"
+  ]
 }

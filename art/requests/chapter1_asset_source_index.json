@@ -6,7 +6,9 @@
   "rules": [
     "One entry represents one canonical source image or font; equal SHA-256 values share one entry.",
     "A design reference is not a runtime asset. A proposed runtime candidate is not accepted art.",
-    "drive_url is null when no exact, verified Drive file URL is recorded; do not infer one from a folder or filename."
+    "drive_url is optional historical provenance; local source paths, pinned commit and SHA are sufficient delivery identity. Do not infer a Drive URL.",
+    "Asset IDs in an atlas may share one canonical source; component rects are subordinate to that source, not duplicate atlases.",
+    "Resolve local-only sources at availability.commit_sha in the named asset-owner worktree; do not assume they exist on main or this contract branch."
   ],
   "sources": [
     {
@@ -18,125 +20,190 @@
         "repository_path": "art/approved/refs/world_chapter1_map.png",
         "sha256": "ba35eef32eb0a49a5e50ad8ec4498148845c8f4065d3695b315c4ea1286bddd7",
         "size_bytes": 3616159,
-        "size_px": [1672, 941],
+        "size_px": [
+          1672,
+          941
+        ],
         "drive_url": "https://drive.google.com/file/d/1y8qdqr3I3Pm9Ey2MTQnbVzCD-pX5zjxW/view"
       },
-      "reuse": ["docs/maps/chapter1_layout.md"],
+      "reuse": [
+        "docs/maps/chapter1_layout.md"
+      ],
       "repository_copies": [],
       "runtime_paths": [],
       "status": "approved_reference_not_runtime_art"
     },
     {
       "source_id": "ui_title",
-      "asset_ids": ["asset.ui.approved.ui_title"],
+      "asset_ids": [
+        "asset.ui.approved.ui_title"
+      ],
       "kind": "approved_design_reference",
       "role": "title_page_composition_reference",
       "canonical_source": {
         "repository_path": "art/approved/refs/ui_title.png",
         "sha256": "39efb1446e5698f5604dcccf539276e868361dc2f9c1c28b389160ca52ab85b0",
         "size_bytes": 3135728,
-        "size_px": [1672, 941],
+        "size_px": [
+          1672,
+          941
+        ],
         "drive_url": "https://drive.google.com/file/d/1W8qIZPhIaGRirgYwHXozM8QTNJO0ccYW/view"
       },
-      "reuse": ["title-page design reference"],
-      "repository_copies": ["game/assets/approved/ui_title.png"],
+      "reuse": [
+        "title-page design reference"
+      ],
+      "repository_copies": [
+        "game/assets/approved/ui_title.png"
+      ],
       "runtime_paths": [],
       "runtime_policy": "reference_only; do not use the full reference image as a game screen",
       "status": "approved_reference_not_runtime_art"
     },
     {
       "source_id": "ui_new_game",
-      "asset_ids": ["asset.ui.approved.ui_new_game"],
+      "asset_ids": [
+        "asset.ui.approved.ui_new_game"
+      ],
       "kind": "approved_design_reference",
       "role": "new_game_page_composition_reference",
       "canonical_source": {
         "repository_path": "art/approved/refs/ui_new_game.png",
         "sha256": "83a8d248e7f911766470be817fddd8c9d619465a3da78c5a758313136e24eff6",
         "size_bytes": 2960138,
-        "size_px": [1672, 941],
+        "size_px": [
+          1672,
+          941
+        ],
         "drive_url": "https://drive.google.com/file/d/1mpxQMYUR7VtsSjyNE6YUB_g3fcopsCFl/view"
       },
-      "reuse": ["new-game page design reference"],
-      "repository_copies": ["game/assets/approved/ui_new_game.png"],
+      "reuse": [
+        "new-game page design reference"
+      ],
+      "repository_copies": [
+        "game/assets/approved/ui_new_game.png"
+      ],
       "runtime_paths": [],
       "runtime_policy": "reference_only; do not use the full reference image as a game screen",
       "status": "approved_reference_not_runtime_art"
     },
     {
       "source_id": "ui_load",
-      "asset_ids": ["asset.ui.approved.ui_load"],
+      "asset_ids": [
+        "asset.ui.approved.ui_load"
+      ],
       "kind": "approved_design_reference",
       "role": "load_page_composition_reference",
       "canonical_source": {
         "repository_path": "art/approved/refs/ui_load.png",
         "sha256": "bb44cc1adc116110a3e8fdd5b1190c417d5e76c3076b33513fa9c792b1a8bc15",
         "size_bytes": 2790633,
-        "size_px": [1672, 941],
+        "size_px": [
+          1672,
+          941
+        ],
         "drive_url": "https://drive.google.com/file/d/1iO3P5-LlAS6EsCpbByFUB-nJzBPos4Hf/view"
       },
-      "reuse": ["load-page design reference"],
-      "repository_copies": ["game/assets/approved/ui_load.png"],
+      "reuse": [
+        "load-page design reference"
+      ],
+      "repository_copies": [
+        "game/assets/approved/ui_load.png"
+      ],
       "runtime_paths": [],
       "runtime_policy": "reference_only; do not use the full reference image as a game screen",
       "status": "approved_reference_not_runtime_art"
     },
     {
       "source_id": "phase0_terrain_candidate",
-      "asset_ids": ["asset.terrain.phase0"],
+      "asset_ids": [
+        "asset.terrain.phase0"
+      ],
       "kind": "project_original_runtime_candidate",
       "role": "phase0_farm_terrain_candidate",
       "canonical_source": {
         "repository_path": "game/assets/phase0/farm_terrain_16.png",
         "sha256": "2f09ea3a17d45ba054eac2b444acd3d2a353a5bbb174d2606549f2d4ff0f10ee",
-        "size_px": [128, 64],
+        "size_px": [
+          128,
+          64
+        ],
         "drive_url": null
       },
-      "reuse": ["game/assets/phase0/farm_tileset.tres", "game/world/farm_first_screen.tscn"],
-      "runtime_paths": ["game/assets/phase0/farm_terrain_16.png"],
+      "reuse": [
+        "game/assets/phase0/farm_tileset.tres",
+        "game/world/farm_first_screen.tscn"
+      ],
+      "runtime_paths": [
+        "game/assets/phase0/farm_terrain_16.png"
+      ],
       "license": "project-original; art/PHASE0_SOURCE.md",
       "status": "proposed_not_accepted"
     },
     {
       "source_id": "phase0_farmhouse_candidate",
-      "asset_ids": ["asset.object.phase0_house"],
+      "asset_ids": [
+        "asset.object.phase0_house"
+      ],
       "kind": "project_original_runtime_candidate",
       "role": "phase0_farmhouse_candidate",
       "canonical_source": {
         "repository_path": "game/assets/phase0/farmhouse.png",
         "sha256": "b08cc7e0c6db1de3e33a3d263383f1823d8e260c2c2e61cc8b09c807de17e725",
-        "size_px": [192, 152],
+        "size_px": [
+          192,
+          152
+        ],
         "drive_url": null
       },
-      "reuse": ["game/world/farm_first_screen.tscn"],
-      "runtime_paths": ["game/assets/phase0/farmhouse.png"],
+      "reuse": [
+        "game/world/farm_first_screen.tscn"
+      ],
+      "runtime_paths": [
+        "game/assets/phase0/farmhouse.png"
+      ],
       "license": "project-original; art/PHASE0_SOURCE.md",
       "status": "proposed_not_accepted"
     },
     {
       "source_id": "phase0_oak_candidate",
-      "asset_ids": ["asset.object.phase0_oak"],
+      "asset_ids": [
+        "asset.object.phase0_oak"
+      ],
       "kind": "project_original_runtime_candidate",
       "role": "phase0_tree_candidate",
       "canonical_source": {
         "repository_path": "game/assets/phase0/oak_tree.png",
         "sha256": "56bf08cd63b9c6d4da16396ddbd8a7f6fee4e49eae9188af7cef3920c6a93840",
-        "size_px": [80, 96],
+        "size_px": [
+          80,
+          96
+        ],
         "drive_url": null
       },
-      "reuse": ["game/world/farm_first_screen.tscn"],
-      "runtime_paths": ["game/assets/phase0/oak_tree.png"],
+      "reuse": [
+        "game/world/farm_first_screen.tscn"
+      ],
+      "runtime_paths": [
+        "game/assets/phase0/oak_tree.png"
+      ],
       "license": "project-original; art/PHASE0_SOURCE.md",
       "status": "proposed_not_accepted"
     },
     {
       "source_id": "phase0_player_candidate",
-      "asset_ids": ["asset.character.phase0_player"],
+      "asset_ids": [
+        "asset.character.phase0_player"
+      ],
       "kind": "project_original_runtime_candidate",
       "role": "phase0_player_candidate",
       "canonical_source": {
         "repository_path": "game/assets/phase0/player_4dir.png",
         "sha256": "f3634ba5f365168723432ee6961649a2f18db2ae77609a76f2e4a8497b3ce730",
-        "size_px": [96, 128],
+        "size_px": [
+          96,
+          128
+        ],
         "drive_url": null
       },
       "reuse": [
@@ -146,13 +213,17 @@
         "game/world/shop_interior.tscn",
         "game/world/workshop_interior.tscn"
       ],
-      "runtime_paths": ["game/assets/phase0/player_4dir.png"],
+      "runtime_paths": [
+        "game/assets/phase0/player_4dir.png"
+      ],
       "license": "project-original; art/PHASE0_SOURCE.md",
       "status": "proposed_not_accepted"
     },
     {
       "source_id": "noto_sans_cjk_sc_regular",
-      "asset_ids": ["asset.font.noto_sans_cjk_sc_regular"],
+      "asset_ids": [
+        "asset.font.noto_sans_cjk_sc_regular"
+      ],
       "kind": "licensed_font",
       "role": "simplified_chinese_ui_font",
       "canonical_source": {
@@ -161,10 +232,569 @@
         "source_url": "https://github.com/notofonts/noto-cjk/blob/523d033d6cb47f4a80c58a35753646f5c3608a78/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf",
         "drive_url": null
       },
-      "reuse": ["game UI font resource"],
-      "runtime_paths": ["game/assets/fonts/NotoSansCJKsc-Regular.otf"],
+      "reuse": [
+        "game UI font resource"
+      ],
+      "runtime_paths": [
+        "game/assets/fonts/NotoSansCJKsc-Regular.otf"
+      ],
       "license": "OFL-1.1; art/licenses/noto_sans_cjk_ofl.txt",
       "status": "validated_source"
+    },
+    {
+      "source_id": "chapter1_grass_dirt_sample",
+      "asset_ids": [
+        "asset.terrain.chapter1.dirt_path",
+        "asset.terrain.chapter1.grass"
+      ],
+      "kind": "project_original_runtime_candidate",
+      "role": "A01_A02_isolated_grass_and_cardinal_narrow_path_sample",
+      "canonical_source": {
+        "repository_path": "art/sources/chapter1/terrain/grass_dirt_atlas_16.png",
+        "sha256": "44b1d5600d4217b3a729b13f3a7184470b2af69dc8c727f712f7c71d4079f7f4",
+        "size_bytes": 1039,
+        "size_px": [
+          64,
+          80
+        ],
+        "drive_url": null
+      },
+      "repository_copies": [
+        "game/assets/chapter1/terrain/grass_dirt_atlas_16.png"
+      ],
+      "runtime_paths": [
+        "game/assets/chapter1/terrain/grass_dirt_atlas_16.png"
+      ],
+      "reuse": [
+        "game/assets/chapter1/terrain/terrain_sample.tscn"
+      ],
+      "status": "proposed_not_accepted",
+      "availability": {
+        "repository": "natefox2017/qingfeng",
+        "branch": "codex/issue-88-terrain-art",
+        "commit_sha": "fb8a2f54d517b70015ed590979923d4def8ff2ec",
+        "verified_local_worktree": "/Users/apple/.codex/worktrees/issue-88-terrain-recovery/qingfeng",
+        "integration_status": "local_commit_only_not_in_this_branch",
+        "policy": "Resolve these paths at the pinned local commit; files are not present on main or this contract branch. No remote delivery is claimed."
+      },
+      "metadata": {
+        "repository_path": "game/assets/chapter1/terrain/grass_dirt_atlas.json",
+        "sha256": "1d55fb84f887962142d2cd5c3e6cbf23314068007daecfad457495061a302f47",
+        "size_bytes": 12397
+      },
+      "editable_source": {
+        "repository_path": "art/sources/chapter1/terrain/grass_dirt_atlas_16.pxo",
+        "sha256": "7beb6e7d4f8fdfac1de6b97e4bbf09eab70d33be7460e3fbf998c82561750be7",
+        "size_bytes": 4151
+      },
+      "component_sources": [
+        {
+          "repository_path": "art/sources/chapter1/terrain/grass_base_16.png",
+          "sha256": "6470468a1b5bf9ead1042583007cb436e9f31d762ed743dc859c59fd11cf3f2e",
+          "size_bytes": 171,
+          "size_px": [
+            16,
+            16
+          ],
+          "region_id": "grass_base",
+          "asset_id": "asset.terrain.chapter1.grass",
+          "rect_px": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "anchor_px": [
+            8,
+            8
+          ],
+          "mask": null
+        },
+        {
+          "repository_path": "art/sources/chapter1/terrain/grass_light_16.png",
+          "sha256": "fde4fb552a9c65552fea105c1027dccb7ae199088650e3146a122d43bf5c3c11",
+          "size_bytes": 188,
+          "size_px": [
+            16,
+            16
+          ],
+          "region_id": "grass_light",
+          "asset_id": "asset.terrain.chapter1.grass",
+          "rect_px": [
+            16,
+            0,
+            16,
+            16
+          ],
+          "anchor_px": [
+            8,
+            8
+          ],
+          "mask": null
+        },
+        {
+          "repository_path": "art/sources/chapter1/terrain/grass_dark_16.png",
+          "sha256": "9b503a5d20faf9e9f77463e497a88a61dcad2c538015da89e267ae2657847bd1",
+          "size_bytes": 190,
+          "size_px": [
+            16,
+            16
+          ],
+          "region_id": "grass_dark",
+          "asset_id": "asset.terrain.chapter1.grass",
+          "rect_px": [
+            32,
+            0,
+            16,
+            16
+          ],
+          "anchor_px": [
+            8,
+            8
+          ],
+          "mask": null
+        },
+        {
+          "repository_path": "art/sources/chapter1/terrain/dirt_mask_00_16.png",
+          "sha256": "a230107074954ea0d6f3556e61d6cac8e5338272447f7712a0cbd0baa9ffef9d",
+          "size_bytes": 222,
+          "size_px": [
+            16,
+            16
+          ],
+          "region_id": "dirt_mask_00",
+          "asset_id": "asset.terrain.chapter1.dirt_path",
+          "rect_px": [
+            48,
+            0,
+            16,
+            16
+          ],
+          "anchor_px": [
+            8,
+            8
+          ],
+          "mask": 0
+        },
+        {
+          "repository_path": "art/sources/chapter1/terrain/dirt_mask_01_16.png",
+          "sha256": "828ad392c95cb4bd91431178ee30a418b4f1653140cb43ae733ef4ce9349202a",
+          "size_bytes": 211,
+          "size_px": [
+            16,
+            16
+          ],
+          "region_id": "dirt_mask_01",
+          "asset_id": "asset.terrain.chapter1.dirt_path",
+          "rect_px": [
+            0,
+            16,
+            16,
+            16
+          ],
+          "anchor_px": [
+            8,
+            8
+          ],
+          "mask": 1
+        },
+        {
+          "repository_path": "art/sources/chapter1/terrain/dirt_mask_02_16.png",
+          "sha256": "903b6fd389a45960275a1bed79750be75539d01ce5b9520dd0f6f90df70d3adb",
+          "size_bytes": 218,
+          "size_px": [
+            16,
+            16
+          ],
+          "region_id": "dirt_mask_02",
+          "asset_id": "asset.terrain.chapter1.dirt_path",
+          "rect_px": [
+            16,
+            16,
+            16,
+            16
+          ],
+          "anchor_px": [
+            8,
+            8
+          ],
+          "mask": 2
+        },
+        {
+          "repository_path": "art/sources/chapter1/terrain/dirt_mask_03_16.png",
+          "sha256": "b6728578a6df2d125dabdc60ffc8f2ed722073154c134b3f0a0e9773a834f29b",
+          "size_bytes": 230,
+          "size_px": [
+            16,
+            16
+          ],
+          "region_id": "dirt_mask_03",
+          "asset_id": "asset.terrain.chapter1.dirt_path",
+          "rect_px": [
+            32,
+            16,
+            16,
+            16
+          ],
+          "anchor_px": [
+            8,
+            8
+          ],
+          "mask": 3
+        },
+        {
+          "repository_path": "art/sources/chapter1/terrain/dirt_mask_04_16.png",
+          "sha256": "5183846872241aadae7244bc850739ae9c5135c6c0c7d75143d8119c1f1ccf57",
+          "size_bytes": 196,
+          "size_px": [
+            16,
+            16
+          ],
+          "region_id": "dirt_mask_04",
+          "asset_id": "asset.terrain.chapter1.dirt_path",
+          "rect_px": [
+            48,
+            16,
+            16,
+            16
+          ],
+          "anchor_px": [
+            8,
+            8
+          ],
+          "mask": 4
+        },
+        {
+          "repository_path": "art/sources/chapter1/terrain/dirt_mask_05_16.png",
+          "sha256": "a44ecd09d4d396d19f709dd32299f4eedd2e3425881b4e8e859877b2fa947b15",
+          "size_bytes": 185,
+          "size_px": [
+            16,
+            16
+          ],
+          "region_id": "dirt_mask_05",
+          "asset_id": "asset.terrain.chapter1.dirt_path",
+          "rect_px": [
+            0,
+            32,
+            16,
+            16
+          ],
+          "anchor_px": [
+            8,
+            8
+          ],
+          "mask": 5
+        },
+        {
+          "repository_path": "art/sources/chapter1/terrain/dirt_mask_06_16.png",
+          "sha256": "b5830346eac61b703ada5a1f14afd3e7315eb01ad8e9a05e468fecd21f087c7d",
+          "size_bytes": 192,
+          "size_px": [
+            16,
+            16
+          ],
+          "region_id": "dirt_mask_06",
+          "asset_id": "asset.terrain.chapter1.dirt_path",
+          "rect_px": [
+            16,
+            32,
+            16,
+            16
+          ],
+          "anchor_px": [
+            8,
+            8
+          ],
+          "mask": 6
+        },
+        {
+          "repository_path": "art/sources/chapter1/terrain/dirt_mask_07_16.png",
+          "sha256": "96a02746779687d50321dbd2a8b04132020d68a050926f69343266c8dff6d5a7",
+          "size_bytes": 202,
+          "size_px": [
+            16,
+            16
+          ],
+          "region_id": "dirt_mask_07",
+          "asset_id": "asset.terrain.chapter1.dirt_path",
+          "rect_px": [
+            32,
+            32,
+            16,
+            16
+          ],
+          "anchor_px": [
+            8,
+            8
+          ],
+          "mask": 7
+        },
+        {
+          "repository_path": "art/sources/chapter1/terrain/dirt_mask_08_16.png",
+          "sha256": "9692ce75bc7120b975659a606d2133de29332e1685a89362609fceeae9685fe9",
+          "size_bytes": 235,
+          "size_px": [
+            16,
+            16
+          ],
+          "region_id": "dirt_mask_08",
+          "asset_id": "asset.terrain.chapter1.dirt_path",
+          "rect_px": [
+            48,
+            32,
+            16,
+            16
+          ],
+          "anchor_px": [
+            8,
+            8
+          ],
+          "mask": 8
+        },
+        {
+          "repository_path": "art/sources/chapter1/terrain/dirt_mask_09_16.png",
+          "sha256": "c4a909b89b8f299ee83db0cc237828fa09e2b4ddcfce9a0b66670dd1f69a496a",
+          "size_bytes": 230,
+          "size_px": [
+            16,
+            16
+          ],
+          "region_id": "dirt_mask_09",
+          "asset_id": "asset.terrain.chapter1.dirt_path",
+          "rect_px": [
+            0,
+            48,
+            16,
+            16
+          ],
+          "anchor_px": [
+            8,
+            8
+          ],
+          "mask": 9
+        },
+        {
+          "repository_path": "art/sources/chapter1/terrain/dirt_mask_10_16.png",
+          "sha256": "c9be1465aaf4548cb137011f5e0f31397461961b182f64c0406f58caaae2549a",
+          "size_bytes": 233,
+          "size_px": [
+            16,
+            16
+          ],
+          "region_id": "dirt_mask_10",
+          "asset_id": "asset.terrain.chapter1.dirt_path",
+          "rect_px": [
+            16,
+            48,
+            16,
+            16
+          ],
+          "anchor_px": [
+            8,
+            8
+          ],
+          "mask": 10
+        },
+        {
+          "repository_path": "art/sources/chapter1/terrain/dirt_mask_11_16.png",
+          "sha256": "20923b84bb8b049f2db475eedf101075e88b9235bc973af7e4370d76c23c200f",
+          "size_bytes": 238,
+          "size_px": [
+            16,
+            16
+          ],
+          "region_id": "dirt_mask_11",
+          "asset_id": "asset.terrain.chapter1.dirt_path",
+          "rect_px": [
+            32,
+            48,
+            16,
+            16
+          ],
+          "anchor_px": [
+            8,
+            8
+          ],
+          "mask": 11
+        },
+        {
+          "repository_path": "art/sources/chapter1/terrain/dirt_mask_12_16.png",
+          "sha256": "8f3ac32dc2e12edf1101f8d440e6069380688d63f05eced918ec6386c9110d69",
+          "size_bytes": 216,
+          "size_px": [
+            16,
+            16
+          ],
+          "region_id": "dirt_mask_12",
+          "asset_id": "asset.terrain.chapter1.dirt_path",
+          "rect_px": [
+            48,
+            48,
+            16,
+            16
+          ],
+          "anchor_px": [
+            8,
+            8
+          ],
+          "mask": 12
+        },
+        {
+          "repository_path": "art/sources/chapter1/terrain/dirt_mask_13_16.png",
+          "sha256": "7d3b138347cf020225122199ea67857cf2b5f7ff29f585993afdb88e72be39d2",
+          "size_bytes": 214,
+          "size_px": [
+            16,
+            16
+          ],
+          "region_id": "dirt_mask_13",
+          "asset_id": "asset.terrain.chapter1.dirt_path",
+          "rect_px": [
+            0,
+            64,
+            16,
+            16
+          ],
+          "anchor_px": [
+            8,
+            8
+          ],
+          "mask": 13
+        },
+        {
+          "repository_path": "art/sources/chapter1/terrain/dirt_mask_14_16.png",
+          "sha256": "eb46513aa676c3c3bb5b9dabe9e38cb9ea88f38f57574af888c0a12c3716ab25",
+          "size_bytes": 214,
+          "size_px": [
+            16,
+            16
+          ],
+          "region_id": "dirt_mask_14",
+          "asset_id": "asset.terrain.chapter1.dirt_path",
+          "rect_px": [
+            16,
+            64,
+            16,
+            16
+          ],
+          "anchor_px": [
+            8,
+            8
+          ],
+          "mask": 14
+        },
+        {
+          "repository_path": "art/sources/chapter1/terrain/dirt_mask_15_16.png",
+          "sha256": "1795f2f7e200777a303ded0035783479d6d372eb70c13043de5f943750a6677d",
+          "size_bytes": 215,
+          "size_px": [
+            16,
+            16
+          ],
+          "region_id": "dirt_mask_15",
+          "asset_id": "asset.terrain.chapter1.dirt_path",
+          "rect_px": [
+            32,
+            64,
+            16,
+            16
+          ],
+          "anchor_px": [
+            8,
+            8
+          ],
+          "mask": 15
+        }
+      ],
+      "material_source": {
+        "repository_path": "art/sources/chapter1/terrain/dirt_base_16.png",
+        "sha256": "7c3e152ef574c1c873c1dd308a1b5da90d1a271e109955c5d5c0d2b03ef498e9",
+        "size_bytes": 213,
+        "size_px": [
+          16,
+          16
+        ]
+      },
+      "evidence": [
+        {
+          "repository_path": "art/reviews/chapter1/terrain/grass_dirt_atlas_4x.png",
+          "sha256": "5f8525ce743064bc2b41927257e1333b335192754bba4b7f765855fb8066893b",
+          "size_bytes": 2755,
+          "size_px": [
+            256,
+            320
+          ]
+        },
+        {
+          "repository_path": "art/reviews/chapter1/terrain/grass_dirt_atlas_8x.png",
+          "sha256": "f04bff1bbacfaad89912ac57dd89e13aed1f1b2a44b15d9e6fca7c53aa620b9b",
+          "size_bytes": 4858,
+          "size_px": [
+            512,
+            640
+          ]
+        },
+        {
+          "repository_path": "art/reviews/chapter1/terrain/godot_terrain_640.png",
+          "sha256": "f0f4a138d2abe81d7c7a2c8ccefa53e0dd875f2a3e1940f2ff37d682d4b11cbd",
+          "size_bytes": 7810,
+          "size_px": [
+            640,
+            360
+          ]
+        },
+        {
+          "repository_path": "art/reviews/chapter1/terrain/godot_terrain_1280.png",
+          "sha256": "07717ad44f4a1e9cacfe6ea4a4f19da7ecc5cc1e377e6781cc4219b89fb66af0",
+          "size_bytes": 15228,
+          "size_px": [
+            1280,
+            720
+          ]
+        },
+        {
+          "repository_path": "art/reviews/chapter1/terrain/godot_terrain_1920.png",
+          "sha256": "b7155acc92729b30bf644d29ffdfb67c6ad4657773bf88ad163bdd3d730c01ae",
+          "size_bytes": 26716,
+          "size_px": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "repository_path": "art/reviews/chapter1/terrain/pixel_qa.json",
+          "sha256": "b2dd535b7fd79745fe9f60ac1fad641bcbf413f055350c21e177dabe4c9f29c6",
+          "size_bytes": 1305
+        },
+        {
+          "repository_path": "art/reviews/chapter1/terrain/review.md",
+          "sha256": "4dfade523792c37f57f0c36ba0b26f6bdca78ce42b2907f7cd78d83510e01d28",
+          "size_bytes": 3382
+        }
+      ],
+      "reference": {
+        "source_id": "world_chapter1_map",
+        "sha256": "ba35eef32eb0a49a5e50ad8ec4498148845c8f4065d3695b315c4ea1286bddd7",
+        "crop_input_status": "not_recorded_in_pinned_commit; owner is preparing crop evidence"
+      },
+      "license": "Project-original phase0 source and approved project reference; see art/PHASE0_SOURCE.md and art/approved/ART_RIGHTS.md",
+      "verification": {
+        "independently_rechecked": "19 source PNG hashes and atlas rect pixels; 10 colors; binary alpha; 256 compatible road edges; exact nearest 8x; native capture PNG sizes/hashes and exact nearest 2x/3x",
+        "atlas_contract": "PASS when run from the asset-owner worktree; initial invocation from the contract worktree rejected missing source paths",
+        "godot_version_reported_by_owner": "4.7.2.stable.official.ed1daf0bf",
+        "godot_run_by_this_contract_task": false,
+        "scope": "Evidence files inspected and hashes recomputed; owner runtime claims are not independent execution evidence.",
+        "not_accepted": [
+          "reference crop input provenance",
+          "palette and grass repetition",
+          "same-camera map and actor scale",
+          "wide paths/stone paths/corner peering",
+          "formal map routes/collision",
+          "user visual signoff",
+          "release/export"
+        ]
+      }
     }
   ],
   "unavailable_or_rejected_sources": [
@@ -195,9 +825,10 @@
     }
   ],
   "verification_limits": [
-    "SHA-256 was recomputed for all listed repository PNGs and the four approved master reference PNGs in this worktree.",
+    "SHA-256 was recomputed for all canonical sources and repository copies: existing sources in this contract worktree, and the #88 local-only source at its pinned commit.",
     "No per-file Drive URL or remote SHA was verified for the phase0 candidates; their unique source is the checked-in project-original PNG.",
     "The Batch 01 archive is documented at https://drive.google.com/file/d/1UdLU4RP5cbdeexmrfYvQNcXZunjqi9hi/view, but the remote archive SHA was not re-downloaded or verified in this work; archive members are therefore not registered as canonical individual sources.",
-    "No image review or Godot runtime acceptance is implied by this index."
+    "No image review or Godot runtime acceptance is implied by this index.",
+    "The #88 local-only candidate is pinned to fb8a2f54d517b70015ed590979923d4def8ff2ec; subsequent crop work is not silently included. No shared manifest or formal world integration occurred."
   ]
 }
