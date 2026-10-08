@@ -70,6 +70,26 @@ func run() -> void:
 	Input.action_release("move_right")
 	await physics_frame
 	check(player.velocity.is_zero_approx() and sprite.frame_coords==Vector2i(0,2),"release stops physics and restores east idle frame")
+
+	# The authored farmhouse footprint is solid from y=40..136. This setup
+	# places the player's feet below it; holding Up must not moonwalk into it.
+	player.position = Vector2(144,160)
+	Input.action_press("move_up")
+	for frame in range(22):
+		await physics_frame
+	var stopped_at_house: Vector2 = player.position
+	for frame in range(4):
+		await physics_frame
+	check(player.position.distance_squared_to(stopped_at_house)<0.0001 and stopped_at_house.y>=139.9,"farmhouse wall stops actual northward movement")
+	check(player.facing==&"north" and sprite.frame_coords==Vector2i(0,3),"held input against solid uses north-facing idle, not walk")
+	Input.action_release("move_up")
+	Input.action_press("move_down")
+	for frame in range(4):
+		await physics_frame
+	check(player.position.y>stopped_at_house.y+1.0 and sprite.frame_coords.y==0 and sprite.frame_coords.x>=1,"leaving collision resumes south walk on real displacement")
+	Input.action_release("move_down")
+	await physics_frame
+	check(sprite.frame_coords==Vector2i(0,0),"releasing movement restores south idle")
 	player.set_input_enabled(false)
 
 	for scene: PackedScene in [HOUSE,VILLAGE,SHOP,WORKSHOP]:
