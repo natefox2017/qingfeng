@@ -105,6 +105,7 @@ func run() -> void:
 	check(int(envelope.schema_version)==6 and not persisted.is_empty(),"mid-route save uses schema six resident state")
 	check(point(persisted).distance_to(mid_route)<0.01 and String(persisted.facing)==saved_facing,"save captures actual resident position and facing, not schedule target")
 
+	app.set_process(true)
 	app.return_to_title()
 	app._on_action("read_save",{"save_id":saved.save_id})
 	check(await wait_world() and app.room.get_space_id()=="space.village","schema-six save restarts directly in village")
@@ -136,6 +137,7 @@ func run() -> void:
 	if legacy_write.ok:
 		var legacy_read: Dictionary = app.store.read_save(legacy_write.save_id)
 		check(legacy_read.ok and int(legacy_read.envelope.schema_version)==5,"resident-less compatibility save remains schema five")
+		app.set_process(true)
 		app.return_to_title()
 		app._on_action("read_save",{"save_id":legacy_write.save_id})
 		check(await wait_world() and app.room.get_space_id()=="space.village","schema-five save remains readable")
