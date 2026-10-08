@@ -19,7 +19,7 @@ const SHOP_ROOM := "res://world/shop_interior.tscn"
 const WORKSHOP_ROOM := "res://world/workshop_interior.tscn"
 const DEFAULT_ROOM := LEGACY_ROOM
 const MOVEMENT_ACTIONS := [&"move_left", &"move_right", &"move_up", &"move_down"]
-const GAMEPLAY_PAUSE_OWNERS := [&"pause_menu", &"inventory", &"storage", &"trade", &"focus"]
+const GAMEPLAY_PAUSE_OWNERS := [&"pause_menu", &"inventory", &"storage", &"trade", &"dialogue", &"focus"]
 const QUICK_SLOT_ACTIONS := [&"select_slot_1",&"select_slot_2",&"select_slot_3",&"select_slot_4",&"select_slot_5",&"select_slot_6",&"select_slot_7",&"select_slot_8",&"select_slot_9",&"select_slot_0"]
 const RESIDENT_CONVERSATION_START_MINUTE := 480
 const RESIDENT_CONVERSATION_END_MINUTE := 540
@@ -54,6 +54,9 @@ var _transition_candidate: Node2D
 var _resident_handoff_pending := false
 var _resident_conversation_demo_day := 0
 var _resident_conversation_end_game_minute := -1
+var _player_dialogue_conversation_id := ""
+var _player_dialogue_resident_id := ""
+var _dialogue_context: Dictionary = {}
 
 @onready var view: Control = $Interface/Screen
 
@@ -360,6 +363,10 @@ func return_to_title() -> void:
 	locks.set_locked(&"inventory", false)
 	locks.set_locked(&"storage", false)
 	locks.set_locked(&"trade", false)
+	locks.set_locked(&"dialogue", false)
+	_player_dialogue_conversation_id = ""
+	_player_dialogue_resident_id = ""
+	_dialogue_context.clear()
 	_clear_movement()
 	_update_interface()
 
@@ -396,16 +403,16 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if event.is_echo():
 		return
 	if event.is_action_pressed("interact"):
-		if state == State.WORLD and gameplay_session != null and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"inventory") and not locks.has_owner(&"storage") and not locks.has_owner(&"trade") and not locks.has_owner(&"focus") and not farm_action.is_busy() and not _transition_pending:
+		if state == State.WORLD and gameplay_session != null and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"inventory") and not locks.has_owner(&"storage") and not locks.has_owner(&"trade") and not locks.has_owner(&"dialogue") and not locks.has_owner(&"focus") and not farm_action.is_busy() and not _transition_pending:
 			_interact_world()
 		get_viewport().set_input_as_handled()
 		return
 	if event.is_action_pressed("inventory_menu"):
-		if state == State.WORLD and gameplay_session != null and not farm_action.is_busy() and not _transition_pending and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"storage") and not locks.has_owner(&"trade") and not locks.has_owner(&"focus"):
+		if state == State.WORLD and gameplay_session != null and not farm_action.is_busy() and not _transition_pending and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"storage") and not locks.has_owner(&"trade") and not locks.has_owner(&"dialogue") and not locks.has_owner(&"focus"):
 			set_inventory_menu(not locks.has_owner(&"inventory"))
 			get_viewport().set_input_as_handled()
 		return
-	if state == State.WORLD and gameplay_session != null and not farm_action.is_busy() and not _transition_pending and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"storage") and not locks.has_owner(&"trade") and not locks.has_owner(&"focus"):
+	if state == State.WORLD and gameplay_session != null and not farm_action.is_busy() and not _transition_pending and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"storage") and not locks.has_owner(&"trade") and not locks.has_owner(&"dialogue") and not locks.has_owner(&"focus"):
 		for index in range(QUICK_SLOT_ACTIONS.size()):
 			if event.is_action_pressed(QUICK_SLOT_ACTIONS[index]):
 				_select_inventory_slot(index)
@@ -421,6 +428,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		_finish_farm_recovery()
 	elif view.file_dialog.visible:
 		view.file_dialog.hide()
+	elif locks.has_owner(&"dialogue"):
+		_finish_player_resident_dialogue()
 	elif locks.has_owner(&"trade"):
 		set_trade_menu(false)
 	elif locks.has_owner(&"storage"):
@@ -464,6 +473,71 @@ func set_trade_menu(enabled: bool) -> void:
 			return
 	locks.set_locked(&"trade",enabled)
 	_page = "trade" if enabled else "title"
+	_update_interface()
+
+func _begin_player_resident_dialogue(target: Dictionary) -> void:
+	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured() or locks.has_owner(&"dialogue"):
+		return
+	if not is_instance_valid(room) or not room.has_method("get_space_id") or String(room.get_space_id())!="space.village":
+		return
+	var resident_id := String(target.get("resident_id",""))
+	if target.get("interaction_id","")!="dialogue.village.neighbor" or resident_id!="resident.neighbor":
+		last_error = "对话目标无效。"
+		_update_interface()
+		return
+	var context: Dictionary = gameplay_session.player_resident_dialogue_context(resident_id)
+	if not context.ok:
+		last_error = "现在还不能交谈："+String(context.error_code)
+		_update_interface()
+		return
+	var conversation_id := _new_command_id("conversation.player")
+	var invited: Dictionary = gameplay_session.invite_resident_conversation(conversation_id,"actor.player",resident_id,String(room.get_space_id()))
+	if not invited.ok:
+		last_error = "对方现在正忙着。"
+		_update_interface()
+		return
+	var approaching: Dictionary = gameplay_session.approach_resident_conversation(conversation_id)
+	if not approaching.ok:
+		gameplay_session.cancel_resident_conversation(conversation_id)
+		last_error = "没有开始交谈。"
+		_update_interface()
+		return
+	var participating: Dictionary = gameplay_session.begin_resident_conversation(conversation_id)
+	if not participating.ok:
+		gameplay_session.cancel_resident_conversation(conversation_id)
+		last_error = "没有开始交谈。"
+		_update_interface()
+		return
+	_player_dialogue_conversation_id = conversation_id
+	_player_dialogue_resident_id = resident_id
+	_dialogue_context = context.duplicate(true)
+	locks.set_locked(&"dialogue",true)
+	_page = "dialogue"
+	last_error = ""
+	_refresh_farm_world()
+	_update_interface()
+
+func _finish_player_resident_dialogue() -> void:
+	if not locks.has_owner(&"dialogue") or gameplay_session == null or _player_dialogue_conversation_id.is_empty():
+		return
+	var completed: Dictionary = gameplay_session.complete_player_resident_dialogue(
+		_player_dialogue_resident_id,
+		String(_dialogue_context.get("dialogue_id",""))
+	)
+	if not completed.ok:
+		last_error = "对话事实未能提交："+String(completed.error_code)
+		_update_interface()
+		return
+	var ended: Dictionary = gameplay_session.end_resident_conversation(_player_dialogue_conversation_id)
+	if not ended.ok:
+		gameplay_session.cancel_resident_conversation(_player_dialogue_conversation_id)
+	_player_dialogue_conversation_id = ""
+	_player_dialogue_resident_id = ""
+	_dialogue_context.clear()
+	locks.set_locked(&"dialogue",false)
+	_page = "title"
+	last_error = ""
+	_refresh_farm_world()
 	_update_interface()
 
 func _new_command_id(prefix: String) -> String:
@@ -575,6 +649,9 @@ func _interact_world() -> void:
 					return
 				"forage":
 					_collect_forage(target)
+					return
+				"resident_dialogue":
+					_begin_player_resident_dialogue(target)
 					return
 	_begin_farm_action()
 
@@ -1038,6 +1115,8 @@ func _update_interface() -> void:
 	elif state == State.WORLD:
 		if _page in ["settings","display_confirm"]:
 			page = _page
+		elif locks.has_owner(&"dialogue"):
+			page = "dialogue"
 		elif locks.has_owner(&"trade"):
 			page = "trade"
 		elif locks.has_owner(&"storage"):
@@ -1062,6 +1141,8 @@ func _update_interface() -> void:
 	}
 	if has_gameplay:
 		context["gameplay"] = gameplay_session.projection()
+	if locks.has_owner(&"dialogue"):
+		context["dialogue"] = _dialogue_context.duplicate(true)
 	if state == State.WORLD:
 		context.player_name = active_snapshot.get("player_name","")
 	if page in ["title","load"]:
@@ -1096,6 +1177,8 @@ func save_progress() -> Dictionary:
 		return CODEC.failure("SAVE_TRANSITION_BUSY")
 	if _resident_handoff_pending:
 		return CODEC.failure("SAVE_RESIDENT_HANDOFF_BUSY")
+	if locks.has_owner(&"dialogue"):
+		return CODEC.failure("SAVE_DIALOGUE_BUSY")
 	if not _capture_room_resident_runtime(room):
 		return CODEC.failure("SAVE_RESIDENT_RUNTIME_INVALID")
 	var candidate: Dictionary = active_snapshot.duplicate(true)
@@ -1126,7 +1209,7 @@ func _on_action(action: String, payload: Dictionary) -> void:
 		return
 	if action in ["confirm_settings","revert_settings"] and _page != "display_confirm":
 		return
-	if action in ["pause","resume","save","save_return","inventory","close_inventory","select_slot","close_storage","transfer_storage","close_trade","trade_buy","trade_sell"] and state != State.WORLD:
+	if action in ["pause","resume","save","save_return","inventory","close_inventory","select_slot","close_storage","transfer_storage","close_trade","trade_buy","trade_sell","close_dialogue"] and state != State.WORLD:
 		return
 	if state == State.LOADING and action not in ["cancel_load","quit"]:
 		return
@@ -1236,6 +1319,8 @@ func _on_action(action: String, payload: Dictionary) -> void:
 					_focus_action = "new_game"
 				elif closing_page == "load":
 					_focus_action = "load"
+		"close_dialogue":
+			_finish_player_resident_dialogue()
 		"cancel_load":
 			return_to_title()
 		"inventory":
