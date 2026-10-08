@@ -85,7 +85,7 @@ func run() -> void:
 	check(saved.ok,"shop gameplay position saves")
 	if saved.ok:
 		var envelope: Dictionary = app.store.read_save(saved.save_id).envelope
-		check(envelope.snapshot.space_id=="space.shop" and int(envelope.schema_version)==4,"shop save records current space in schema four")
+		check(envelope.snapshot.space_id=="space.shop" and int(envelope.schema_version)==5,"shop save records current space in schema five")
 		app.return_to_title()
 		app._on_action("read_save",{"save_id":saved.save_id})
 		check(await wait_world() and app.room.get_space_id()=="space.shop","shop save restarts directly in shop")

@@ -1,6 +1,6 @@
 # 首版具体玩法与接入合同
 
-这是**新项目首版玩法的细化规格与当前接入边界**，不是旧项目已有功能清单。当前 Clock、背包/钱包、PlotState、首作物农耕闭环、schema4 存档、第一屏农事输入、农庄↔房屋门、床休息、家庭箱子转移和商店买卖领域已经有实现；WORLD 现已有可编辑 `space.farm`、`space.house`、`space.village`、`space.shop` 路线。商店柜台交易页也已直接绑定 `economy.buy` / `economy.sell`；狗、居民、任务与无钱无种子的可再生采集恢复来源仍须后续 N06–N09 完成。不得把工程色块或新档狗名输入当最终美术/真实伙伴系统。
+这是**新项目首版玩法的细化规格与当前接入边界**，不是旧项目已有功能清单。当前 Clock、背包/钱包、PlotState、首作物农耕闭环、schema4 存档、第一屏农事输入、农庄↔房屋门、床休息、家庭箱子转移和商店买卖领域已经有实现；WORLD 现已有可编辑 `space.farm`、`space.house`、`space.village`、`space.shop` 路线。商店柜台交易页也已直接绑定 `economy.buy` / `economy.sell`；村庄每日可再生采集恢复来源已接入。狗、居民与任务仍须后续 N08–N09 完成。不得把工程色块或新档狗名输入当最终美术/真实伙伴系统。
 
 ## 第一屏与三天目标
 
@@ -10,7 +10,7 @@
 第二天目标：观察已浇水作物的变化，再浇水；处理委托/整理箱子，看到居民从工作到公共活动/回家；狗参与一次实际在场经历。
 第三天目标：采收自己播种的作物，留存/出售/交付，得到相应钱或任务事实，再补种；保存退出，重启恢复位置、钱物、田、任务和居民记忆。
 
-首个可玩平衡现在由 `game/content/first_playable_v1.json` 唯一给出：12格背包、24格家庭箱子、初始200基础货币、4袋萝卜种子、种子买价20、萝卜卖价35、商店08:00–20:00，以及0.7现实秒/游戏分钟的首版世界时间速率；首作物需要2次有效浇水日结，因此第一天播种浇水、第二天再浇水后第三天成熟。`content_catalog.gd` 严格校验该表，`GameClock` 也从同一表读取日长、06:00日初与现实时间换算。世界激活且没有暂停token时，真实 delta 只通过 GameplaySession→唯一 GameClock 转成 game_minute；背包、家庭箱子、交易、暂停菜单和失焦期间不累计被暂停的现实时间。0.7秒/游戏分钟参考成熟同类单机节奏，只作为 `first_playable_v1` 候选平衡，可后续通过 content_version 调整。视觉、UI和后续农耕/经济不得私设这些数值；正式调整必须改 content_version 并说明三天路线影响。
+首个可玩平衡现在由 `game/content/first_playable_v1.json` 唯一给出：12格背包、24格家庭箱子、初始200基础货币、4袋萝卜种子、种子买价20、萝卜卖价35、商店08:00–20:00、2个村庄每日野菜点（各1份、卖价10），以及0.7现实秒/游戏分钟的首版世界时间速率；首作物需要2次有效浇水日结，因此第一天播种浇水、第二天再浇水后第三天成熟。`content_catalog.gd` 严格校验该表，`GameClock` 也从同一表读取日长、06:00日初与现实时间换算。世界激活且没有暂停token时，真实 delta 只通过 GameplaySession→唯一 GameClock 转成 game_minute；背包、家庭箱子、交易、暂停菜单和失焦期间不累计被暂停的现实时间。0.7秒/游戏分钟参考成熟同类单机节奏，只作为 `first_playable_v1` 候选平衡，可后续通过 content_version 调整。视觉、UI和后续农耕/经济不得私设这些数值；正式调整必须改 content_version 并说明三天路线影响。
 
 ## 输入优先级
 
@@ -35,7 +35,7 @@ Move仅移动；Interact优先当前可达的门/床/箱子/NPC/柜台；UseSele
 ## 背包、箱子与买卖
 
 槽位拥有实际item_id/quantity；空槽null。家庭箱子是 `container.home_chest`，容量来自 content_version。首个切片先实现按 item_id/quantity 的玩家↔箱子整组/定量转移：先同时验证双方 revision、源量、目标堆叠/容量，再一次提交；失败两边都不变。同 command_id 重放原结果，不会重复搬运。先交付选择、使用和整组转移，不为首版引入拖拽复杂度；增加拖拽后仍调用相同命令。
-买种子走真实柜台，出售走明确界面；NPC闲聊不能让服务永久不可用。当前领域层提供 `economy.buy` / `economy.sell`：用唯一 Inventory、Wallet、GameClock 和 content_version 在同一无 await 临界段校验营业时间、双方 revision、余额/物品/容量与价格，再原子提交；同 command_id 重放不会重复扣钱或付款。`space.shop` 的稳定 CounterInteract 现用 E 打开真实交易页，页面只投影价格/数量/营业状态并发 buy/sell intent，trade token 独立暂停时钟且 E/B/数字键不穿透；柜台服务不依赖未来 NPC/AI 是否在线。没有种子/钱的玩家仍需后续加入可再生采集物来源，避免首日软锁。
+买种子走真实柜台，出售走明确界面；NPC闲聊不能让服务永久不可用。当前领域层提供 `economy.buy` / `economy.sell`：用唯一 Inventory、Wallet、GameClock 和 content_version 在同一无 await 临界段校验营业时间、双方 revision、余额/物品/容量与价格，再原子提交；同 command_id 重放不会重复扣钱或付款。`space.shop` 的稳定 CounterInteract 现用 E 打开真实交易页，页面只投影价格/数量/营业状态并发 buy/sell intent，trade token 独立暂停时钟且 E/B/数字键不穿透；柜台服务不依赖未来 NPC/AI 是否在线。没有种子/钱时，`space.village` 两个稳定 Forage Marker 每日各恢复1份野菜：采集走 `forage.collect`，与 Inventory 原子提交，满包时野菜不消失；同一采集点同日不可重复，保存/重启保持已采状态。两份野菜按当前 sell_price=10 出售后恰好得到20，可买回1袋萝卜种子，因此不会因为把钱和种子耗光而只能重开档。数值属于 `first_playable_v1` 候选平衡。
 
 家庭箱子页面在 `space.house` 通过真实可达 Marker 用 E 打开；背包和24格箱子都来自 GameplaySession projection，点击非空槽整组存入/取出并发送 `storage.transfer`，空槽禁用。页面持有独立 `storage` 暂停/输入 token，Esc 只关闭箱子，E/数字键/B 不会穿透到世界。页面使用同套图标，保留数量、售价、名字与物品说明；空包、满包、目标满、余额不足都有确定提示，关闭窗口不能吞物。
 

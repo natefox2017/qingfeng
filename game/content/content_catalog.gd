@@ -40,7 +40,7 @@ static func _positive_number(value: Variant) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and float(value) > 0.0
 
 static func validate(data: Variant) -> bool:
-	if not _exact_keys(data, ["content_version","clock","inventory","storage","economy","shop","items","crops","new_game"]):
+	if not _exact_keys(data, ["content_version","clock","inventory","storage","economy","shop","items","crops","forage","new_game"]):
 		return false
 	if data.content_version != "first_playable_v1":
 		return false
@@ -85,6 +85,16 @@ static func validate(data: Variant) -> bool:
 		if not crop.seed_item_id in data.items or not crop.harvest_item_id in data.items:
 			return false
 		if not _positive_int(crop.growth_days) or not _positive_int(crop.yield_quantity):
+			return false
+	if not _exact_keys(data.forage,["types"]) or not (data.forage.types is Dictionary) or data.forage.types.is_empty():
+		return false
+	for forage_id: Variant in data.forage.types:
+		if not (forage_id is String) or not String(forage_id).begins_with("forage."):
+			return false
+		var forage: Variant = data.forage.types[forage_id]
+		if not _exact_keys(forage,["item_id","quantity","respawn_days"]):
+			return false
+		if not forage.item_id in data.items or not _positive_int(forage.quantity) or not _positive_int(forage.respawn_days):
 			return false
 	if not _exact_keys(data.new_game, ["initial_items"]) or not (data.new_game.initial_items is Array):
 		return false

@@ -22,7 +22,7 @@
 
 ## 新存档协议的具体边界
 
-`session_codec.gd`现在认识四代明确格式：schema 1 / `entry_fixture_v1` 兼容旧碰撞入口；schema 2 保存 Clock/Inventory/Wallet/Farm；schema 3 加入命令幂等回执；当前新写入的 schema 4 再加入24格家庭箱子 Storage，机器合同见 `schemas/save_v4.schema.json`。schema 1–3 仍可读取；schema 3 恢复时显式得到空的新箱子，下一次正常保存升级为 schema 4。
+`session_codec.gd`现在认识五代明确格式：schema 1 / `entry_fixture_v1` 兼容旧碰撞入口；schema 2 保存 Clock/Inventory/Wallet/Farm；schema 3 加入命令幂等回执；schema 4 加入24格家庭箱子 Storage；当前新写入的 schema 5 再加入村庄 Forage 采集状态，机器合同见 `schemas/save_v5.schema.json`。schema 1–3 仍可读取；schema 3 恢复时显式得到空的新箱子，下一次正常保存升级为 schema 4。
 
 `main.gd` 现在按存档 `space_id` 明确分流：`space.farm`、`space.house`、`space.village`、`space.shop` 各自加载唯一可编辑 Godot 场景；场景实例化和物理同步后，GameplaySession 始终使用 farm WORLD 的稳定 plot definitions，完整 restore 成功后才发布会话。schema 1 旧入口档继续进入碰撞夹具且没有 GameplaySession。schema 2 与当前 WORLD 的 Space/plot 几何不一致时整笔拒绝，不会只恢复名字/坐标或把存档中的 plot 坐标当地图来源。
 
@@ -32,7 +32,7 @@ SHA256用于损坏检测，**不是防作弊签名/信任认证**。通过校验
 
 `session_store.gd`写入user://qingfeng/saves：临时文件→flush/关闭→读回验证→新随机ID文件rename。采取最多128份的追加式保存，不覆盖已有文件；每次导入是新本地save_id和新session_id。schema 3 导入时会清空源会话 command receipts，因为回执指纹绑定原 session_id，不能复制成新会话的幂等历史。没有自动删除或按大小淘汰，达到上限会明确失败。列表按写入时间排序；导入重新写本机时间，原文件保留。
 
-新游戏在农庄场景、WORLD layout、GameplaySession 和出生点全部验证后才写第一份当前 gameplay 档；写盘失败不进入会话。加载原档不自动重写。当前 schema 4 保存会同时更新位置/朝向以及 Clock、Inventory、Storage、Wallet、Farm 和 CommandJournal；schema 1 兼容档仍只保存原身份/测试场位置。导入预览保存已验证的内容副本，确认时再次验证，不重读可能已被外部修改的源路径。
+新游戏在农庄场景、WORLD layout、GameplaySession 和出生点全部验证后才写第一份当前 gameplay 档；写盘失败不进入会话。加载原档不自动重写。当前 schema 5 保存会同时更新位置/朝向以及 Clock、Inventory、Storage、Wallet、Farm、Forage 和 CommandJournal；schema 1 兼容档仍只保存原身份/测试场位置。导入预览保存已验证的内容副本，确认时再次验证，不重读可能已被外部修改的源路径。
 
 ## 设置语义
 

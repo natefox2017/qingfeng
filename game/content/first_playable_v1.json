@@ -39,6 +39,12 @@
       "buy_price": 0,
       "sell_price": 35,
       "display_name": "萝卜"
+    },
+    "item.wild_herb": {
+      "stack_limit": 99,
+      "buy_price": 0,
+      "sell_price": 10,
+      "display_name": "野菜"
     }
   },
   "crops": {
@@ -67,5 +73,14 @@
   },
   "storage": {
     "chest_capacity": 24
+  },
+  "forage": {
+    "types": {
+      "forage.wild_herb": {
+        "item_id": "item.wild_herb",
+        "quantity": 1,
+        "respawn_days": 1
+      }
+    }
   }
 }

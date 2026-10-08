@@ -122,7 +122,13 @@ def run_tests(engine: str, reports: Path, timeout: float) -> int:
             code, output = execute([engine, '--headless', '--audio-driver', 'Dummy', '--path', str(game), '--script', 'res://tests/world_clock_flow_test.gd'], reports/'world_clock_flow.log', timeout, env)
             markers = re.findall(r'^WORLD_CLOCK_PASS checks=(\d+) failures=0\s*$', output, re.M)
             summary['world_clock_passed'] = clean_run(output, code) and len(markers) == 1 and int(markers[0]) > 0
-            summary['passed'] = summary['test_passed'] and summary['pages_passed'] and summary['core_passed'] and summary['gameplay_passed'] and summary['world_passed'] and summary['receipt_passed'] and summary['farm_interaction_passed'] and summary['door_passed'] and summary['three_day_passed'] and summary['storage_passed'] and summary['storage_ui_passed'] and summary['economy_passed'] and summary['village_shop_passed'] and summary['shop_trade_ui_passed'] and summary['world_clock_passed']
+            code, output = execute([engine, '--headless', '--audio-driver', 'Dummy', '--path', str(game), '--script', 'res://tests/forage_domain_test.gd'], reports/'forage_domain.log', timeout, env)
+            markers = re.findall(r'^FORAGE_PASS checks=(\d+) failures=0\s*$', output, re.M)
+            summary['forage_passed'] = clean_run(output, code) and len(markers) == 1 and int(markers[0]) > 0
+            code, output = execute([engine, '--headless', '--audio-driver', 'Dummy', '--path', str(game), '--script', 'res://tests/forage_recovery_loop_test.gd'], reports/'forage_recovery_loop.log', timeout, env)
+            markers = re.findall(r'^RECOVERY_LOOP_PASS checks=(\d+) failures=0\s*$', output, re.M)
+            summary['recovery_loop_passed'] = clean_run(output, code) and len(markers) == 1 and int(markers[0]) > 0
+            summary['passed'] = summary['test_passed'] and summary['pages_passed'] and summary['core_passed'] and summary['gameplay_passed'] and summary['world_passed'] and summary['receipt_passed'] and summary['farm_interaction_passed'] and summary['door_passed'] and summary['three_day_passed'] and summary['storage_passed'] and summary['storage_ui_passed'] and summary['economy_passed'] and summary['village_shop_passed'] and summary['shop_trade_ui_passed'] and summary['world_clock_passed'] and summary['forage_passed'] and summary['recovery_loop_passed']
             return 0 if summary['passed'] else 1
         finally:
             (reports/'summary.json').write_text(json.dumps(summary, indent=2))
