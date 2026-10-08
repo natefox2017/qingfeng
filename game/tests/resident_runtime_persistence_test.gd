@@ -155,6 +155,16 @@ func run() -> void:
 	var before_bad: Dictionary = app.gameplay_session.snapshot()
 	check(not app.gameplay_session.restore(bad) and app.gameplay_session.snapshot()==before_bad,"invalid resident space cannot partially restore gameplay state")
 
+	var blocked_runtime: Dictionary = app.gameplay_session.resident_runtime.projection()
+	var blocked_neighbor: Dictionary = resident_row(blocked_runtime,"resident.neighbor")
+	blocked_neighbor.space_id="space.village"
+	blocked_neighbor.world_position_px={"x":400.0,"y":80.0}
+	for index in range(blocked_runtime.residents.size()):
+		if String(blocked_runtime.residents[index].resident_id)=="resident.neighbor":
+			blocked_runtime.residents[index]=blocked_neighbor
+	var before_blocked := app.room.neighbor_resident.position
+	check(not app.room.apply_resident_runtime(blocked_runtime) and app.room.neighbor_resident.position==before_blocked,"WORLD rejects resident restore inside a solid footprint without moving the actor")
+
 	finish()
 
 func finish() -> void:
