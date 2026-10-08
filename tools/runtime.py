@@ -26,12 +26,15 @@ def test_passed(output: str, returncode: int) -> bool:
 
 
 def resolve_engine(value: str | None) -> str:
-    candidate = value or os.environ.get('GODOT_BIN') or shutil.which('godot') or shutil.which('godot4')
+    lock = json.loads((ROOT / 'tools/engine_lock.json').read_text())
+    local_binary = ROOT / '.local' / 'godot' / lock['linux_x86_64']['executable']
+    candidate = (value or os.environ.get('GODOT_BIN')
+                 or (str(local_binary) if local_binary.is_file() else None)
+                 or shutil.which('godot') or shutil.which('godot4'))
     executable = shutil.which(candidate) if candidate else None
     if not executable:
         raise ValueError('Godot not found. Set GODOT_BIN to the pinned official binary; launch never installs it.')
     version = subprocess.run([executable, '--version'], capture_output=True, text=True, timeout=10, check=True).stdout.strip()
-    lock = json.loads((ROOT / 'tools/engine_lock.json').read_text())
     if version != lock['version_output']:
         raise ValueError(f"Expected {lock['version_output']}, got {version!r}")
     return executable
