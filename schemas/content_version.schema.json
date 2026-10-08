@@ -13,6 +13,7 @@
     "shop",
     "items",
     "crops",
+    "forage",
     "new_game"
   ],
   "properties": {
@@ -197,6 +198,45 @@
         "chest_capacity": {
           "type": "integer",
           "minimum": 1
+        }
+      }
+    },
+    "forage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "types"
+      ],
+      "properties": {
+        "types": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": false,
+          "patternProperties": {
+            "^forage\\.": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "item_id",
+                "quantity",
+                "respawn_days"
+              ],
+              "properties": {
+                "item_id": {
+                  "type": "string",
+                  "pattern": "^item\\."
+                },
+                "quantity": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "respawn_days": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              }
+            }
+          }
         }
       }
     }
