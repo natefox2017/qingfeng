@@ -42,6 +42,14 @@ func run() -> void:
 		"bridge interaction anchors follow the moved crossing")
 
 	player.set_input_enabled(true)
+	# The expanded courtyard keeps the spawn but its authored south gate is
+	# centered at x272. Leave through that visible opening, not through rails.
+	Input.action_press("move_left")
+	for frame in range(30):
+		await physics_frame
+	Input.action_release("move_left")
+	await physics_frame
+	check(absf(player.position.x-272.0)<4.0, "real movement aligns with the authored courtyard gate")
 	Input.action_press("move_down")
 	for frame in range(135):
 		await physics_frame
@@ -51,11 +59,11 @@ func run() -> void:
 		"real movement reaches the lower bridge approach through multiple screens")
 	var before_bridge := player.position
 	Input.action_press("move_right")
-	for frame in range(740):
+	for frame in range(820):
 		await physics_frame
 	Input.action_release("move_right")
 	await physics_frame
-	check(player.position.x>1450.0 and player.position.distance_to(before_bridge)>1050,
+	check(player.position.x>1552.0 and player.position.distance_to(before_bridge)>1200,
 		"player physically crosses the railed bridge to the eastern forest bank")
 	check(camera.get_screen_center_position().x>600.0,
 		"camera really tracks beyond old 640px screen boundary")
