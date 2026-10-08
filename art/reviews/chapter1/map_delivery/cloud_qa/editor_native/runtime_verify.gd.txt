@@ -1,0 +1,19 @@
+extends "res://tests/chapter1_map_editability_test.gd"
+func run() -> void:
+	var scene = load("res://tests/fixtures/editor_farm_probe.tscn").instantiate()
+	root.add_child(scene)
+	await physics_frame
+	var house = scene.get_node("Farmhouse")
+	check(house.position == Vector2(288,480), "native drag survives reload")
+	check(house.get_node("HouseDoorInteract").global_position == Vector2(288,472), "door interaction follows native drag")
+	check(house.get_node("HouseDoorArrival").global_position == Vector2(288,488), "door arrival follows native drag")
+	for name in ["FootprintLeft", "FootprintRight", "DoorThreshold"]:
+		var body = house.get_node(name)
+		check(body_contains(scene,body.global_position,body), "actual moved house collider " + name)
+	check(scene.get_world_bounds().position.x == -16, "native painted west terrain expands bounds")
+	check(scene.get_world_bounds().size.x == 1808, "native extension adds 16 pixels")
+	verify_bounds(scene)
+	print("EDITOR_NATIVE_RELOAD ",checks," checks ",failures," failures; bounds=",scene.get_world_bounds())
+	scene.queue_free()
+	await process_frame
+	quit(0 if failures==0 else 1)

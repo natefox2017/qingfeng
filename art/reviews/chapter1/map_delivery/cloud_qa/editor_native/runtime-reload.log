@@ -1,0 +1,20 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+MAP_EDIT_CHECK true native drag survives reload
+MAP_EDIT_CHECK true door interaction follows native drag
+MAP_EDIT_CHECK true door arrival follows native drag
+MAP_EDIT_CHECK true actual moved house collider FootprintLeft
+MAP_EDIT_CHECK true actual moved house collider FootprintRight
+MAP_EDIT_CHECK true actual moved house collider DoorThreshold
+MAP_EDIT_CHECK true native painted west terrain expands bounds
+MAP_EDIT_CHECK true native extension adds 16 pixels
+MAP_EDIT_CHECK true camera follows authored expansion space.farm
+MAP_EDIT_CHECK true perimeter shape follows extent North
+MAP_EDIT_CHECK true actual perimeter collision follows extent North
+MAP_EDIT_CHECK true perimeter shape follows extent South
+MAP_EDIT_CHECK true actual perimeter collision follows extent South
+MAP_EDIT_CHECK true perimeter shape follows extent West
+MAP_EDIT_CHECK true actual perimeter collision follows extent West
+MAP_EDIT_CHECK true perimeter shape follows extent East
+MAP_EDIT_CHECK true actual perimeter collision follows extent East
+EDITOR_NATIVE_RELOAD 17 checks 0 failures; bounds=[P: (-16, 0), S: (1808, 1024)]
