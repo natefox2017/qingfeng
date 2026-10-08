@@ -153,7 +153,7 @@ func layout_contract_valid() -> bool:
 		return false
 	if $TerrainGround.get_used_rect() != Rect2i(Vector2i.ZERO,WORLD_CELLS):
 		return false
-	var camera := player.get_node_or_null("Camera2D") as Camera2D
+	var camera := get_node_or_null("FootSorted/Player/Camera2D") as Camera2D
 	if camera == null or camera.limit_right != WORLD_BOUNDS_PX.x or camera.limit_bottom != WORLD_BOUNDS_PX.y:
 		return false
 	for anchor_name: String in ["PlayerSpawn","FieldApproach","BridgeWest","BridgeEast","HouseDoorInteract","HouseDoorArrival","VillagePathInteract"]:
