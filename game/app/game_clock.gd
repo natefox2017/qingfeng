@@ -6,7 +6,9 @@ const CONTENT = preload("res://content/content_catalog.gd")
 
 var minutes_per_day: int = 0
 var day_start_minute: int = 0
+var real_seconds_per_game_minute: float = 0.0
 var game_minute: int = 0
+var _real_second_accumulator: float = 0.0
 var configuration_error: String = ""
 var _pause_owners: Dictionary = {}
 
@@ -23,10 +25,11 @@ func _init(content: Dictionary = {}) -> void:
 		return
 	minutes_per_day = source.clock.minutes_per_day
 	day_start_minute = source.clock.day_start_minute
+	real_seconds_per_game_minute = float(source.clock.real_seconds_per_game_minute)
 	game_minute = day_start_minute
 
 func is_configured() -> bool:
-	return configuration_error.is_empty() and minutes_per_day > 0
+	return configuration_error.is_empty() and minutes_per_day > 0 and real_seconds_per_game_minute > 0.0
 
 func reset(value: Variant = null) -> bool:
 	if not is_configured():
@@ -35,6 +38,7 @@ func reset(value: Variant = null) -> bool:
 	if not (target is int) or target < 0:
 		return false
 	game_minute = target
+	_real_second_accumulator = 0.0
 	_pause_owners.clear()
 	return true
 
@@ -77,6 +81,23 @@ func minute_of_day() -> int:
 	if not is_configured():
 		return 0
 	return game_minute % minutes_per_day
+
+func advance_real_seconds(seconds: float) -> Dictionary:
+	if not is_configured():
+		return {"ok":false,"error_code":"CLOCK_NOT_CONFIGURED","crossed_days":[],"advanced_minutes":0}
+	if not is_finite(seconds) or seconds < 0.0:
+		return {"ok":false,"error_code":"CLOCK_REAL_DELTA_INVALID","crossed_days":[],"advanced_minutes":0}
+	if is_paused() or seconds == 0.0:
+		return {"ok":true,"error_code":"","crossed_days":[],"advanced_minutes":0}
+	_real_second_accumulator += seconds
+	var minutes: int = floori(_real_second_accumulator / real_seconds_per_game_minute)
+	if minutes <= 0:
+		return {"ok":true,"error_code":"","crossed_days":[],"advanced_minutes":0}
+	_real_second_accumulator -= float(minutes) * real_seconds_per_game_minute
+	var result: Dictionary = advance(minutes)
+	if not result.ok:
+		return {"ok":false,"error_code":String(result.error_code),"crossed_days":[],"advanced_minutes":0}
+	return {"ok":true,"error_code":"","crossed_days":result.crossed_days,"advanced_minutes":minutes}
 
 func advance(minutes: int) -> Dictionary:
 	if not is_configured():
