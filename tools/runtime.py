@@ -25,19 +25,131 @@ def test_passed(output: str, returncode: int) -> bool:
     return clean_run(output, returncode) and len(markers) == 1 and int(markers[0][0]) > 0 and markers[0][1] == '0'
 
 
+def _installed_engine_candidates(lock: dict) -> list[str]:
+    """Discover already installed Godot binaries without installing anything.
+
+    Agent/AC desktops may put Godot outside PATH. Keep the search finite and
+    inspect only common executable locations and Godot-named install folders.
+    """
+    release = lock['version']
+    linux_binary = lock['linux_x86_64']['executable']
+    names = (
+        "godot", "godot4", "Godot", "Godot4",
+        "godot-mono", "godot4-mono",
+        linux_binary, "Godot_v" + release + "-stable_linux.x86_64",
+        "Godot_v" + release + "-stable_linux.x86_64_console",
+        "Godot_v" + release + "-stable_macos.universal",
+        "Godot.exe", "Godot_v" + release + "-stable_win64.exe",
+    )
+    home = Path.home()
+    locations = [
+        ROOT / ".local" / "godot",
+        ROOT / ".local" / "bin",
+        home / ".local" / "bin",
+        home / "bin",
+        home / "Applications",
+        home / "apps",
+        home / "tools",
+        Path("/usr/local/bin"),
+        Path("/usr/bin"),
+        Path("/usr/local/games"),
+        Path("/opt/godot"),
+        Path("/opt/godot/bin"),
+        Path("/opt/Godot"),
+        Path("/usr/local/share/godot"),
+        Path("/snap/bin"),
+        Path("/Applications"),
+    ]
+    candidates: list[str] = []
+    seen: set[str] = set()
+
+    def offer(path: str | Path | None) -> None:
+        if not path:
+            return
+        candidate = str(path)
+        normalized = os.path.normcase(os.path.abspath(os.path.expanduser(candidate)))
+        if normalized in seen:
+            return
+        seen.add(normalized)
+        candidates.append(candidate)
+
+    # A pinned repository-local engine takes priority, then every PATH name.
+    offer(ROOT / ".local" / "godot" / linux_binary)
+    for name in names:
+        offer(shutil.which(name))
+
+    for folder in locations:
+        for name in names:
+            offer(folder / name)
+        offer(folder / "Godot.app" / "Contents" / "MacOS" / "Godot")
+
+    # Handle desktop installers such as /opt/Godot_4.7.2/ without recursively
+    # crawling an entire home directory or accidentally finding an old project.
+    for parent in (Path("/opt"), home / "Applications", home / ".local" / "share"):
+        if not parent.is_dir():
+            continue
+        try:
+            children = sorted(
+                (p for p in parent.iterdir() if "godot" in p.name.lower()),
+                key=lambda p: p.name,
+            )[:40]
+        except OSError:
+            continue
+        for item in children:
+            if item.is_file():
+                offer(item)
+            else:
+                for subpath in (
+                    "godot", "godot4", "Godot", linux_binary,
+                    "bin/godot", "bin/godot4", "Contents/MacOS/Godot",
+                ):
+                    offer(item / subpath)
+    return candidates
+
+
 def resolve_engine(value: str | None) -> str:
     lock = json.loads((ROOT / 'tools/engine_lock.json').read_text())
-    local_binary = ROOT / '.local' / 'godot' / lock['linux_x86_64']['executable']
-    candidate = (value or os.environ.get('GODOT_BIN')
-                 or (str(local_binary) if local_binary.is_file() else None)
-                 or shutil.which('godot') or shutil.which('godot4'))
-    executable = shutil.which(candidate) if candidate else None
-    if not executable:
-        raise ValueError('Godot not found. Set GODOT_BIN to the pinned official binary; launch never installs it.')
-    version = subprocess.run([executable, '--version'], capture_output=True, text=True, timeout=10, check=True).stdout.strip()
-    if version != lock['version_output']:
-        raise ValueError(f"Expected {lock['version_output']}, got {version!r}")
-    return executable
+    expected = lock['version_output']
+    explicit = value or os.environ.get('GODOT_BIN')
+    if explicit:
+        candidates = [explicit]
+    else:
+        candidates = _installed_engine_candidates(lock)
+
+    mismatches: list[str] = []
+    for candidate in candidates:
+        executable = shutil.which(candidate)
+        if not executable:
+            continue
+        try:
+            probe = subprocess.run(
+                [executable, '--version'], capture_output=True, text=True,
+                timeout=8, check=True,
+            )
+            detected = probe.stdout.strip()
+        except (OSError, subprocess.SubprocessError) as exc:
+            mismatches.append(f'{executable}: failed --version ({exc})')
+            continue
+        if detected == expected:
+            print(f'GODOT_SELECTED: {executable} ({detected})')
+            return executable
+        mismatches.append(f'{executable}: {detected or "no version output"}')
+
+    if explicit:
+        raise ValueError(
+            f'Specified Godot {explicit!r} was not usable; expected {expected}. '
+            + ('; '.join(mismatches[:3]) if mismatches else 'Path was not executable.')
+        )
+    if mismatches:
+        raise ValueError(
+            f'AC has Godot installed, but none matches required {expected}. '
+            'Found: ' + '; '.join(mismatches[:5])
+        )
+    raise ValueError(
+        f'Cannot find preinstalled Godot {expected} automatically (PATH, '
+        'standard app locations and repo-local .local/godot checked). '
+        'The launcher never downloads an engine or changes existing saves.'
+    )
 
 
 def execute(command: list[str], report: Path, timeout: float, env: dict[str, str]) -> tuple[int, str]:
