@@ -5,6 +5,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location('runtime', ROOT/'tools/runtime.py')
@@ -37,6 +38,44 @@ class RuntimeTests(unittest.TestCase):
             self.assertTrue(path.is_file())
             self.assertIn('RUNNER_TIMEOUT', output)
             self.assertIn('ELAPSED_SECONDS=', path.read_text())
+
+    def test_asset_import_only_when_cache_is_missing_or_stale(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            game = Path(temporary)
+            assets = game / 'assets' / 'phase0'
+            assets.mkdir(parents=True)
+            self.assertFalse(runtime.needs_asset_import(game))  # old text-only fixture
+
+            sprite = assets / 'player_4dir.png'
+            sprite.write_bytes(b'png source fixture')
+            self.assertTrue(runtime.needs_asset_import(game))
+
+            cache = game / '.godot' / 'imported'
+            cache.mkdir(parents=True)
+            imported = cache / 'player_4dir.png-abcdef.ctex'
+            imported.write_bytes(b'imported fixture')
+            os.utime(sprite, (5, 5))
+            os.utime(imported, (10, 10))
+            self.assertFalse(runtime.needs_asset_import(game))
+
+            os.utime(sprite, (15, 15))
+            self.assertTrue(runtime.needs_asset_import(game))
+
+    def test_import_failure_blocks_game_launch(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            game = Path(temporary) / 'game'
+            assets = game / 'assets'
+            assets.mkdir(parents=True)
+            (assets / 'new.png').write_bytes(b'new texture')
+            with patch.object(runtime, 'execute', return_value=(0, 'ERROR: failed import')) as mocked:
+                result = runtime.ensure_assets_imported('godot', game, Path(temporary)/'reports', 60)
+                self.assertFalse(result)
+                self.assertEqual(mocked.call_args.args[0], [
+                    'godot', '--headless', '--path', str(game), '--editor', '--import', '--quit'
+                ])
+            with patch.object(runtime, 'execute', return_value=(0, '')) as mocked:
+                self.assertTrue(runtime.ensure_assets_imported('godot', game, Path(temporary)/'reports', 60))
+                self.assertEqual(mocked.call_count, 1)
 
     def test_declared_runtime_entry(self):
         import json
