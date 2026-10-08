@@ -1,0 +1,143 @@
+{
+  "manifest_version": 1,
+  "chapter_id": "chapter1",
+  "status": "partial_blocked",
+  "assets": [
+    {
+      "source_id": "music.owner.bg",
+      "file_name": "bg.mp3",
+      "runtime_path": "game/assets/audio/bg.mp3",
+      "format": "mp3",
+      "sample_rate_hz": null,
+      "channels": null,
+      "duration_seconds": null,
+      "looping_requested": true,
+      "loop_points_seconds": null,
+      "loudness_lufs": null,
+      "file_size_bytes": 4604893,
+      "sha256": "facfe79d81ea5094f5857d99520bd0739dc9cab3201141d0c33d5b724ee522a4",
+      "license": "Owner-provided; owner states it is AI-made and they own the copyright.",
+      "source_url": null,
+      "drive_file_url": null,
+      "bus_name": "Master",
+      "control": "Existing persisted master_volume setting; no independent music or ambience control.",
+      "current_trigger": "AudioManager autoload initializes and starts this stream on non-headless startup; it currently runs across scenes.",
+      "chapter_assignment": "unverified",
+      "loop_boundary_verified": false,
+      "status": "existing_runtime_music"
+    },
+    {
+      "source_id": "ui.button.click.kenney",
+      "file_name": "button_click.ogg",
+      "runtime_path": "game/assets/audio/button_click.ogg",
+      "format": "ogg_vorbis",
+      "sample_rate_hz": 44100,
+      "channels": 1,
+      "duration_seconds": 0.100023,
+      "looping_requested": false,
+      "loop_points_seconds": null,
+      "loudness_lufs": null,
+      "file_size_bytes": 4876,
+      "sha256": "ccfb7fa0cccdd9faec0eb16033c732b1e308d139d80f799161495d58f7adcdb9",
+      "license": "Creative Commons CC0 1.0",
+      "source_url": "https://kenney.nl/assets/interface-sounds",
+      "drive_file_url": null,
+      "bus_name": "Master",
+      "control": "Existing persisted master_volume setting; no independent effects control.",
+      "current_trigger": "AudioManager connects BaseButton.pressed and requests the click effect for every dynamically added button.",
+      "status": "existing_ui_effect"
+    },
+    {
+      "source_id": "ui.button.focus.kenney",
+      "file_name": "button_focus.ogg",
+      "runtime_path": "game/assets/audio/button_focus.ogg",
+      "format": "ogg_vorbis",
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "duration_seconds": 0.043288,
+      "looping_requested": false,
+      "loop_points_seconds": null,
+      "loudness_lufs": null,
+      "file_size_bytes": 5468,
+      "sha256": "aec0c31ea934a35936ae0d2ab8fac8123c93aa5647f935853a58dbaf90278b7a",
+      "license": "Creative Commons CC0 1.0",
+      "source_url": "https://kenney.nl/assets/interface-sounds",
+      "drive_file_url": null,
+      "bus_name": "Master",
+      "control": "Existing persisted master_volume setting; no independent effects control.",
+      "current_trigger": "AudioManager connects BaseButton.mouse_entered and BaseButton.focus_entered and requests the focus effect.",
+      "status": "existing_ui_effect"
+    }
+  ],
+  "behavior_event_audit": [
+    {
+      "event_ids": [
+        "farm.till",
+        "farm.plant",
+        "farm.water",
+        "farm.harvest",
+        "forage.collect",
+        "storage.transfer",
+        "economy.buy",
+        "economy.sell",
+        "resident.gift"
+      ],
+      "success_boundary": "The owning command returns ok=true and has_changes=true after its synchronous commit.",
+      "audio_binding": "none",
+      "status": "blocked_missing_approved_effects_and_success_event_hook",
+      "notes": "No behavior-specific effect is tied to a committed command result; generic UI click feedback remains tied to button press. Future behavior bindings must deduplicate command replays and fire only after a successful commit or real movement/transition; the required app/world owners are outside this task's file boundary."
+    },
+    {
+      "event_ids": [
+        "world.step",
+        "world.door",
+        "npc.talk",
+        "world.save"
+      ],
+      "success_boundary": "A real movement contact, committed door transition, started authored conversation, or save result with ok=true.",
+      "audio_binding": "none",
+      "status": "blocked_missing_approved_effects_and_success_event_hook",
+      "notes": "These behaviors exist, but no sound source or event-specific audio binding exists. The relevant app/world owners are outside this task's file boundary."
+    }
+  ],
+  "environment_audio": {
+    "assets": [],
+    "events": [
+      "amb.river",
+      "amb.birds",
+      "amb.forest",
+      "amb.village"
+    ],
+    "status": "blocked_no_existing_approved_sources"
+  },
+  "validation": {
+    "engine": "Godot 4.7.2.stable.official.ed1daf0bf",
+    "audio_driver": "Dummy",
+    "hardware_playback": false,
+    "cold_import": "passed in a temporary project copy",
+    "audio_ui_test": {
+      "result": "passed",
+      "checks": 9,
+      "failures": 0
+    },
+    "audio_runtime_probe": {
+      "result": "passed",
+      "checks": 6,
+      "failures": 0,
+      "shutdown_warnings": "Godot reported 10 ObjectDB instances and 5 audio resources still in use at process exit."
+    },
+    "settings_ui_test": {
+      "result": "passed",
+      "checks": 12,
+      "failures": 0
+    },
+    "acoustic_loop_and_loudness_review": "not_performed; no speaker playback or owner-MP3 inspection was authorized"
+  },
+  "blockers": [
+    "No approved river, birds, forest, village, farm-action, pickup/transfer, trade, save, or resident sound sources are present in the repository.",
+    "No single-file Drive URLs are recorded for the existing audio assets.",
+    "GameplaySession and the relevant world/UI owners have no audio-success event integration within this task's file boundary.",
+    "The current project has no dog movement, follow, or bark behavior to bind dog-specific sounds to.",
+    "The existing owner-provided MP3 metadata and audible loop point were intentionally not inspected; it is only known to be wired as global looping startup music."
+  ]
+}
