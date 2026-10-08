@@ -51,17 +51,20 @@ func _ready() -> void:
 	guide_panel.name="EntryGuide"
 	guide_panel.anchor_left=0.0;guide_panel.anchor_right=0.0
 	guide_panel.anchor_top=1.0;guide_panel.anchor_bottom=1.0
-	guide_panel.offset_left=8;guide_panel.offset_right=200
-	guide_panel.offset_top=-104;guide_panel.offset_bottom=-56
+	guide_panel.offset_left=8;guide_panel.offset_right=204
+	guide_panel.offset_top=-106;guide_panel.offset_bottom=-54
 	guide_panel.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	var guide_style: StyleBoxFlat = UI_THEME.hud_panel_style()
-	guide_style.bg_color=Color(0.10,0.16,0.12,0.79)
-	guide_panel.add_theme_stylebox_override("panel",guide_style)
+	guide_panel.add_theme_stylebox_override("panel",UI_THEME.hud_panel_style())
 	guide_panel.visible=false;add_child(guide_panel)
+	var guide_column:=VBoxContainer.new();guide_column.add_theme_constant_override("separation",1);guide_panel.add_child(guide_column)
+	var guide_title:=Label.new();guide_title.text="今天的小目标"
+	guide_title.add_theme_font_size_override("font_size",UI_THEME.FONT_CAPTION)
+	guide_title.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT)
+	guide_title.mouse_filter=Control.MOUSE_FILTER_IGNORE;guide_column.add_child(guide_title)
 	guide_label=Label.new();guide_label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 	guide_label.add_theme_font_size_override("font_size",UI_THEME.FONT_CAPTION)
 	guide_label.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT)
-	guide_label.mouse_filter=Control.MOUSE_FILTER_IGNORE;guide_panel.add_child(guide_label)
+	guide_label.mouse_filter=Control.MOUSE_FILTER_IGNORE;guide_column.add_child(guide_label)
 	file_dialog=FileDialog.new();file_dialog.file_mode=FileDialog.FILE_MODE_OPEN_FILE;file_dialog.access=FileDialog.ACCESS_FILESYSTEM;file_dialog.filters=PackedStringArray(["*.qfsave ; 晴风谷存档"]);file_dialog.title="选择要导入的存档";file_dialog.size=Vector2i(560,300)
 	file_dialog.theme=self.theme;add_child(file_dialog)
 	file_dialog.file_selected.connect(func(path:String):emit_action("preview_import",{"path":path}))
@@ -277,7 +280,7 @@ func _entry_goal_hint(gameplay: Dictionary) -> String:
 		return "菜园萝卜熟了！靠近它，面对按 E 收获。"
 	match String(practice_plot.get("state","")):
 		"untilled":
-			return "收下第一根萝卜！按 1 选锄头，面对空田按 E。"
+			return "收下第一根萝卜！按 1 选锄头，对空田按 E 翻土。"
 		"tilled":
 			return "土翻好了！按 3 选种子，对松土按 E 播种。"
 		"growing":
