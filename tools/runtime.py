@@ -135,40 +135,9 @@ def run_tests(engine: str, reports: Path, timeout: float) -> int:
             markers = re.findall(r'^WORKSHOP_ROUTE_PASS checks=(\d+) failures=0\s*$', output, re.M)
             summary['workshop_route_passed'] = clean_run(output, code) and len(markers) == 1 and int(markers[0]) > 0
             code, output = execute([engine, '--headless', '--audio-driver', 'Dummy', '--path', str(game), '--script', 'res://tests/resident_schedule_contract_test.gd'], reports/'resident_schedule_contract.log', timeout, env)
-            markers = re.findall(r'^RESIDENT_SCHEDULE_PASS checks=(\d+) failures=0\s*            summary['passed'] = summary['test_passed'] and summary['pages_passed'] and summary['core_passed'] and summary['gameplay_passed'] and summary['world_passed'] and summary['receipt_passed'] and summary['farm_interaction_passed'] and summary['door_passed'] and summary['three_day_passed'] and summary['storage_passed'] and summary['storage_ui_passed'] and summary['economy_passed'] and summary['village_shop_passed'] and summary['shop_trade_ui_passed'] and summary['world_clock_passed'] and summary['forage_passed'] and summary['recovery_loop_passed'] and summary['full_economy_loop_passed'] and summary['workshop_route_passed'] and summary['resident_schedule_passed']
-            return 0 if summary['passed'] else 1
-        finally:
-            (reports/'summary.json').write_text(json.dumps(summary, indent=2))
-
-
-def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('mode', choices=['run', 'editor', 'test'])
-    parser.add_argument('--godot')
-    parser.add_argument('--report-dir', type=Path, default=ROOT/'reports/runtime')
-    parser.add_argument('--timeout', type=float, default=60)
-    args = parser.parse_args()
-    if args.timeout <= 0:
-        parser.error('--timeout must be positive')
-    try:
-        engine = resolve_engine(args.godot)
-        if args.mode == 'test':
-            return run_tests(engine, args.report_dir, args.timeout)
-        # There are no imported image/font dependencies in the current foundation.
-        # The editor owns future incremental imports; do not cold-import every launch.
-        command = [engine, '--path', str(ROOT/'game')]
-        if args.mode == 'editor':
-            command += ['--editor', 'res://app/main.tscn']
-        return subprocess.call(command)
-    except (ValueError, OSError, subprocess.SubprocessError) as exc:
-        print(f'RUNTIME_TOOL_ERROR: {exc}')
-        return 2
-
-if __name__ == '__main__':
-    raise SystemExit(main())
-, output, re.M)
+            markers = re.findall(r'^RESIDENT_SCHEDULE_PASS checks=(\d+) failures=0\s*$', output, re.M)
             summary['resident_schedule_passed'] = clean_run(output, code) and len(markers) == 1 and int(markers[0]) > 0
-            summary['passed'] = summary['test_passed'] and summary['pages_passed'] and summary['core_passed'] and summary['gameplay_passed'] and summary['world_passed'] and summary['receipt_passed'] and summary['farm_interaction_passed'] and summary['door_passed'] and summary['three_day_passed'] and summary['storage_passed'] and summary['storage_ui_passed'] and summary['economy_passed'] and summary['village_shop_passed'] and summary['shop_trade_ui_passed'] and summary['world_clock_passed'] and summary['forage_passed'] and summary['recovery_loop_passed'] and summary['full_economy_loop_passed'] and summary['workshop_route_passed']
+            summary['passed'] = summary['test_passed'] and summary['pages_passed'] and summary['core_passed'] and summary['gameplay_passed'] and summary['world_passed'] and summary['receipt_passed'] and summary['farm_interaction_passed'] and summary['door_passed'] and summary['three_day_passed'] and summary['storage_passed'] and summary['storage_ui_passed'] and summary['economy_passed'] and summary['village_shop_passed'] and summary['shop_trade_ui_passed'] and summary['world_clock_passed'] and summary['forage_passed'] and summary['recovery_loop_passed'] and summary['full_economy_loop_passed'] and summary['workshop_route_passed'] and summary['resident_schedule_passed']
             return 0 if summary['passed'] else 1
         finally:
             (reports/'summary.json').write_text(json.dumps(summary, indent=2))
