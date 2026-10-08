@@ -260,8 +260,7 @@ func snapshot() -> Dictionary:
 		"wallet":wallet.projection(),
 		"storage":storage.projection(),
 		"farm":farm.projection(),
-		"command_journal":journal.snapshot(),
-		"fact_events":fact_events.snapshot()
+		"command_journal":journal.snapshot()
 	}
 	if forage.has_spots():
 		result["forage"] = {
@@ -270,6 +269,7 @@ func snapshot() -> Dictionary:
 		}
 	if resident_runtime.has_states():
 		result["residents"] = resident_runtime.snapshot()
+		result["fact_events"] = fact_events.snapshot()
 	return result
 
 func restore(snapshot_value: Variant) -> bool:
