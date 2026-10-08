@@ -30,7 +30,7 @@ N04拥有公共schema/时钟/保存；N05拥有app入口/同地图；N11协调�
 ## PR规则
 分支 feat/fix/refactor/docs/art/test/chore 加语义任务名。PR默认非Draft，一项可验证能力；大Issue通过多个短PR完成。禁止force push、覆盖用户未提交工作或未经检查合并无关PR。
 PR用 [模板](../.github/PULL_REQUEST_TEMPLATE.md)，注明实际来源、运行入口、测试证据、保存语义、未验项。预算授权、视觉接受、功能完成三个结论分别写，不互相替代。
-main实际规则要求`repository-policy`检查通过；它执行真实框架、工具、引擎冷导入和物理/生命周期回归，不是恒绿占位。其他游戏验收仍由review逐项核对，不能凭这一检查替代未覆盖功能；不修改或绕过仓库保护。
+main实际规则仍要求 `repository-policy` context，但该 job 现在只负责开启 GitHub 原生 auto-merge 并立即结束，不执行 Scaffold、Godot 冷导入或游戏回归。PR 自动合并只代表集成流程完成，不代表功能验收；高风险切片按需本地/专项验证，完整冷导入、原生试玩和导出集中到 N11 发布验收。
 
 ## 当前检查与阶段
 ```sh
