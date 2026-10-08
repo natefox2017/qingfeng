@@ -79,7 +79,21 @@ func _initialize() -> void:
 	check(row(rain,"resident.neighbor").activity_id=="rain" and row(rain,"resident.neighbor").space_id=="space.village","rain schedule uses dedicated neighbor shelter anchor")
 
 	check(ids["anchor.resident.grocer.work"]=="space.shop" and ids["anchor.resident.maker.work"]=="space.workshop","service workers reference real already-playable interiors")
-	check(ids["anchor.resident.grocer.work"] != "CounterInteract","resident work anchor is not the player service interaction id")
+	var shop_scene := SHOP.instantiate()
+	check(shop_scene.layout_contract_valid(),"shop keeps its service and resident anchors valid together")
+	var counter_position: Vector2 = shop_scene.get_anchor_position("CounterInteract")
+	var grocer_work_position: Vector2 = shop_scene.get_node("ResidentAnchors/GrocerWork").position
+	check(counter_position != Vector2.INF and counter_position != grocer_work_position,"grocer work target is physically separate from the player service counter")
+	shop_scene.free()
+
+	var normal_entry: Dictionary = content.residents.definitions["resident.grocer"].schedule[1]
+	check(normal_entry.activity_id=="work" and normal_entry.anchor_id==content.residents.definitions["resident.grocer"].work_anchor_id,"normal schedule activity uses its declared work anchor")
+	var rain_entry: Dictionary = content.residents.definitions["resident.grocer"].rain_schedule[1]
+	check(rain_entry.activity_id=="rain" and rain_entry.anchor_id==content.residents.definitions["resident.grocer"].rain_anchor_id,"rain schedule activity uses its declared rain anchor")
+
+	var invalid_content: Dictionary = content.duplicate(true)
+	invalid_content.residents.definitions["resident.grocer"].schedule[1].anchor_id = "anchor.resident.grocer.social"
+	check(not CONTENT.validate(invalid_content),"content validation rejects schedule activity mapped to the wrong declared anchor")
 
 	var missing: Array = anchors.duplicate(true)
 	missing.pop_back()
