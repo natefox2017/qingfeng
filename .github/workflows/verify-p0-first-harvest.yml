@@ -1,0 +1,47 @@
+name: P0 first harvest native verification
+on:
+  push:
+    branches: [feat/p0-first-harvest-guidance]
+    paths:
+      - 'game/**'
+      - 'tools/runtime.py'
+      - '.github/workflows/verify-p0-first-harvest.yml'
+permissions:
+  contents: read
+concurrency:
+  group: p0-first-harvest-native
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate project data and Python tools
+        run: |
+          python3 tools/check_scaffold.py
+          python3 -m unittest discover -s tools/tests -v
+      - name: Download verified Godot for CI only
+        run: python3 tools/install_engine.py --directory .local/godot
+      - name: P0 first minute native regression without a Godot path
+        run: |
+          unset GODOT_BIN
+          ./run_game.sh --test --report-dir reports/phase0 --timeout 90
+      - name: Full engine regression suite
+        run: |
+          unset GODOT_BIN
+          ./run_game.sh --test-all --report-dir reports/runtime --timeout 90
+      - name: Actual 1280 and 1920 graphical screenshots
+        run: |
+          mkdir -p reports/native
+          xvfb-run -a -s "-screen 0 1920x1080x24" ./run_game.sh --capture "$GITHUB_WORKSPACE/reports/native" | tee reports/native.log
+          test -s reports/native/phase0_farm_1280.png
+          test -s reports/native/phase0_farm_1920.png
+      - name: Upload receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: first-harvest-native-evidence
+          path: reports/
+          if-no-files-found: warn
+          retention-days: 7
