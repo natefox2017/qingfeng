@@ -48,6 +48,7 @@ func emit_action(name: String, payload: Dictionary = {}) -> void:
 	action_requested.emit(name,payload)
 
 func clear_page() -> void:
+	panel.custom_minimum_size=UI_THEME.PAGE_MINIMUM_SIZE
 	for child in body.get_children(): body.remove_child(child);child.queue_free()
 	for child in hud.get_children(): hud.remove_child(child);child.queue_free()
 	hud_panel.visible=false
@@ -96,7 +97,7 @@ func _slot_button(parent: Node, slot_index: int, slot: Variant, items: Dictionar
 		node.custom_minimum_size = UI_THEME.QUICKBAR_SLOT_SIZE
 	else:
 		node.text = number_text+"  "+display_name+("" if quantity <= 0 else "  ×"+str(quantity))
-		node.custom_minimum_size = Vector2(104,46)
+		node.custom_minimum_size = Vector2(90,42)
 	node.toggle_mode = true
 	node.button_pressed = selected
 	node.add_theme_stylebox_override("normal",UI_THEME.slot_style(selected))
@@ -114,6 +115,8 @@ func _slot_button(parent: Node, slot_index: int, slot: Variant, items: Dictionar
 	node.mouse_entered.connect(func():notice.text=description)
 	node.focus_entered.connect(func():notice.text=description)
 	parent.add_child(node)
+	if selected and _first_button==null:
+		_first_button=node
 	return node
 
 func _storage_slot_button(parent: Node, source_container_id: String, slot_index: int, slot: Variant, items: Dictionary, direction_label: String) -> Button:
@@ -250,14 +253,42 @@ func show_page(page: String, context: Dictionary) -> void:
 				label("这是旧入口碰撞测试存档；只保存身份和测试场位置。")
 			var actions:=row();button(actions,"resume","resume","继续游戏");button(actions,"save","save","保存到新的独立文件",{},context.get("can_save",false));button(actions,"settings","settings","设置");button(actions,"save_return","back","保存并返回标题",{},context.get("can_save",false))
 		"inventory":
-			title.text="背包";subtitle.text="B / Esc 关闭；数字键 1–0 或点击选择快捷槽。"
+			title.text="背包";subtitle.text="选择随身物品 · B / Esc 关闭"
+			panel.custom_minimum_size=Vector2(600,286)
 			var gameplay: Dictionary = context.get("gameplay",{})
 			if gameplay.get("ok",false):
-				label(_clock_text(gameplay.clock)+"  ·  金币 "+str(gameplay.wallet.money))
-				var grid:=GridContainer.new();grid.columns=4;grid.add_theme_constant_override("h_separation",6);grid.add_theme_constant_override("v_separation",6);body.add_child(grid)
+				var summary:=row()
+				var time_label:=label(_clock_text(gameplay.clock),summary);time_label.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+				var money_label:=label(str(gameplay.wallet.money)+" 币",summary);UI_THEME.apply_text_role(money_label,UI_THEME.ROLE_QUANTITY)
+
+				var content_row:=HBoxContainer.new();content_row.add_theme_constant_override("separation",10);body.add_child(content_row)
+				var grid:=GridContainer.new();grid.name="InventoryGrid";grid.columns=4;grid.add_theme_constant_override("h_separation",5);grid.add_theme_constant_override("v_separation",5);grid.custom_minimum_size=Vector2(375,145);content_row.add_child(grid)
 				for index in range(gameplay.inventory.slots.size()):
 					_slot_button(grid,index,gameplay.inventory.slots[index],gameplay.items,index==gameplay.inventory.selected_slot_index,false)
-				label("槽位选择只发送 inventory.select 命令；界面不持有可写背包副本。")
+
+				var detail_panel:=PanelContainer.new();detail_panel.name="InventoryDetail";detail_panel.custom_minimum_size=Vector2(155,145);detail_panel.add_theme_stylebox_override("panel",UI_THEME.panel_style());content_row.add_child(detail_panel)
+				var detail:=VBoxContainer.new();detail.add_theme_constant_override("separation",5);detail_panel.add_child(detail)
+				var selected_index:=int(gameplay.inventory.selected_slot_index)
+				var selected: Variant=gameplay.inventory.slots[selected_index]
+				var selected_title:=Label.new();UI_THEME.apply_text_role(selected_title,UI_THEME.ROLE_HEADING);detail.add_child(selected_title)
+				var selected_quantity:=Label.new();UI_THEME.apply_text_role(selected_quantity,UI_THEME.ROLE_QUANTITY);detail.add_child(selected_quantity)
+				var value_label:=Label.new();value_label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;UI_THEME.apply_text_role(value_label,UI_THEME.ROLE_CAPTION);detail.add_child(value_label)
+				if selected==null:
+					selected_title.text="空槽"
+					selected_quantity.text="槽位 %d" % [selected_index+1]
+					value_label.text="当前没有选择物品。"
+				else:
+					var selected_meta: Dictionary=gameplay.items.get(String(selected.item_id),{})
+					selected_title.text=String(selected_meta.get("display_name",selected.item_id))
+					selected_quantity.text="持有 ×%d" % int(selected.quantity)
+					var values: Array[String]=[]
+					var buy_price:=int(selected_meta.get("buy_price",0))
+					var sell_price:=int(selected_meta.get("sell_price",0))
+					if buy_price>0: values.append("买入 %d币" % buy_price)
+					if sell_price>0: values.append("出售 %d币" % sell_price)
+					value_label.text=(" · ".join(values) if not values.is_empty() else "不可直接买卖")+"\n已选为当前快捷物品。"
+				var slot_hint:=label("槽位 %d · %s" % [selected_index+1,("快捷键 "+str(selected_index+1) if selected_index<9 else ("快捷键 0" if selected_index==9 else "点击选择"))],detail)
+				UI_THEME.apply_text_role(slot_hint,UI_THEME.ROLE_TOOLTIP)
 			else:
 				label("当前存档没有玩法背包状态。")
 			button(row(),"close_inventory","back","关闭背包 / B / Esc")
