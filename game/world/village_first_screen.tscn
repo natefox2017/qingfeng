@@ -157,10 +157,45 @@ metadata/anchor_id = "anchor.resident.neighbor.rain"
 [node name="FootSorted" type="Node2D" parent="."]
 y_sort_enabled = true
 
+[node name="GrocerResident" type="CharacterBody2D" parent="FootSorted"]
+visible = false
+position = Vector2(344, 240)
+collision_layer = 0
+collision_mask = 0
+motion_mode = 1
+wall_min_slide_angle = 0.0
+script = ExtResource("resident")
+resident_id = "resident.grocer"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FootSorted/GrocerResident"]
+shape = SubResource("ResidentShape")
+
+[node name="DiagnosticGlyph" type="Polygon2D" parent="FootSorted/GrocerResident"]
+color = Color(0.82, 0.52, 0.32, 1)
+polygon = PackedVector2Array(-4, -6, 4, -6, 4, 2, -4, 2)
+
+[node name="MakerResident" type="CharacterBody2D" parent="FootSorted"]
+visible = false
+position = Vector2(560, 176)
+collision_layer = 0
+collision_mask = 0
+motion_mode = 1
+wall_min_slide_angle = 0.0
+script = ExtResource("resident")
+resident_id = "resident.maker"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FootSorted/MakerResident"]
+shape = SubResource("ResidentShape")
+
+[node name="DiagnosticGlyph" type="Polygon2D" parent="FootSorted/MakerResident"]
+color = Color(0.68, 0.48, 0.76, 1)
+polygon = PackedVector2Array(-4, -6, 4, -6, 4, 2, -4, 2)
+
 [node name="NeighborResident" type="CharacterBody2D" parent="FootSorted"]
+visible = false
 position = Vector2(112, 240)
-collision_layer = 4
-collision_mask = 3
+collision_layer = 0
+collision_mask = 0
 motion_mode = 1
 wall_min_slide_angle = 0.0
 script = ExtResource("resident")
