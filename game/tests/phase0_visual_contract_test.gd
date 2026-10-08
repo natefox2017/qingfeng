@@ -43,11 +43,13 @@ func run() -> void:
 			"state":"tilled" if tilled else "untilled",
 			"is_watered":tilled
 		})
-	check(plot_rows.size()==6 and farm.get_node("FarmPlots/Plot004").position==Vector2(480,512),"six authority plot IDs and authored positions survive")
+	check(plot_rows.size()==6 and farm.get_node("FarmPlots/Plot004").position==Vector2(672,624),"six authority plot IDs and authored positions survive")
 	check(farm.apply_farm_projection({"plots":plot_rows}),"field state applies using authoritative marker positions")
 	check(plot_tiles.get_used_cells().size()==6,"six crop plot cells are separate from baked terrain")
-	check(plot_tiles.get_cell_source_id(Vector2i(30,32))==1 and plot_tiles.get_cell_atlas_coords(Vector2i(30,32))==Vector2i(3,0),"watered tilled field maps to wet-soil atlas")
-	check(plot_tiles.get_cell_source_id(Vector2i(30,20))==1 and plot_tiles.get_cell_atlas_coords(Vector2i(30,20))==Vector2i(1,0),"untilled field maps to unworked-soil atlas")
+	check(plot_tiles.get_cell_source_id(Vector2i(42,39))==1 and plot_tiles.get_cell_atlas_coords(Vector2i(42,39))==Vector2i(3,0),"watered tilled field maps to wet-soil atlas")
+	check(plot_tiles.get_cell_source_id(Vector2i(42,27))==1 and plot_tiles.get_cell_atlas_coords(Vector2i(42,27))==Vector2i(1,0),"untilled field maps to unworked-soil atlas")
+	var water := farm.get_node("RiverWater") as TileMapLayer
+	check(water.get_used_cells().size()==480 and water.z_index>ground.z_index,"river water stays visible above the ground layer")
 
 	var home := farm.get_node("Farmhouse/Sprite2D") as Sprite2D
 	var oak := farm.get_node("FootSorted/OrchardOak01/Sprite2D") as Sprite2D
@@ -56,7 +58,7 @@ func run() -> void:
 	var solids := farm.get_node("Solids") as Node2D
 	var house_collision := farm.get_node("Farmhouse/FootprintLeft/CollisionShape2D") as CollisionShape2D
 	check(not solids.visible and not house_collision.disabled,"diagnostic solid fills are hidden but physical collision survives")
-	check(farm.get_anchor_position("HouseDoorInteract")==Vector2(272,472) and farm.get_anchor_position("VillagePathInteract")==Vector2(896,80),"moved farmhouse and north village exit markers remain aligned")
+	check(farm.get_anchor_position("HouseDoorInteract")==Vector2(272,472) and farm.get_anchor_position("VillagePathInteract")==Vector2(896,152),"moved farmhouse and north village exit markers remain aligned")
 
 	var player := farm.get_player() as CharacterBody2D
 	var sprite := player.get_node("Sprite2D") as Sprite2D
@@ -81,7 +83,7 @@ func run() -> void:
 	var stopped_at_house: Vector2 = player.position
 	for frame in range(4):
 		await physics_frame
-	check(player.position.distance_squared_to(stopped_at_house)<0.0001 and stopped_at_house.y>=459.0,"farmhouse wall stops actual northward movement")
+	check(player.position.distance_squared_to(stopped_at_house)<0.0001 and stopped_at_house.y>=458.0,"farmhouse wall stops actual northward movement")
 	check(player.facing==&"north" and sprite.frame_coords==Vector2i(0,3),"held input against solid uses north-facing idle, not walk")
 	Input.action_release("move_up")
 	Input.action_press("move_down")

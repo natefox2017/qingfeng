@@ -603,12 +603,80 @@
       "review_status": "proposed",
       "reviewer": null,
       "usage": "environment_only",
-      "processing": "Exact existing tool bench board crop [24,6,72,22] composited over existing fence_post at [15,24]; no text and no resampling",
+      "processing": "Exact existing tool bench board crop[24,6,72,22] over fence_post at[15,24]; no text or resampling",
       "source_components": [
         "game/assets/chapter1/objects/tool_bench.png",
         "game/assets/chapter1/objects/fence_post.png"
       ],
       "license_note": "Derived from own PixelLab task sources"
+    },
+    {
+      "asset_id": "asset.object.chapter1.radish_growing",
+      "runtime_path": "game/assets/chapter1/objects/radish_growing.png",
+      "source_path": "art/sources/chapter1/objects/radish_growing_clean.png",
+      "original_source_path": "art/sources/chapter1/objects/radish_growing.png",
+      "original_source_sha256": "565414aaf81fc956e14442356a719adfa91dc29c83fb681d7f3232d5f6804a24",
+      "source_sha256": "672b387a9f46ab8af9c935878087e51c727222c6f9794155f5ce1f84bde0514a",
+      "sha256": "bd332e98fd1ed153f2cde2e110ddb21ff42867d5a471dfd5ecef03067edfa86e",
+      "size_px": [
+        32,
+        32
+      ],
+      "anchor_px": [
+        16,
+        32
+      ],
+      "crop_status": "growing",
+      "usage": "existing_crop.radish_visual_only",
+      "review_status": "proposed",
+      "reviewer": null,
+      "source_vertical_translation_px": 7,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_color_count": 22,
+      "job_id": "1de8274e-b20c-45cb-9dd2-2c149d2fa604",
+      "pixel_tool_id": "fa2a33d0-0550-4914-b959-c93800406133",
+      "palette_reference_path": "art/sources/chapter1/objects/reference_radish.png",
+      "palette_reference_sha256": "6fe9970f28aa196069d91ddad29631ec7e6be046809bfdea0e8eaa4204d06133",
+      "processing": "Free guarded pixel cleanup removed growing bare roots and reduced both sprites to <=24 existing source colors; integer translation to shared foot anchor only; no resizing",
+      "license_note": "PixelLab ordinary PixFlux generation, project approved original reference palette; no soil, economics or gameplay changes",
+      "drive_url": null
+    },
+    {
+      "asset_id": "asset.object.chapter1.radish_mature",
+      "runtime_path": "game/assets/chapter1/objects/radish_mature.png",
+      "source_path": "art/sources/chapter1/objects/radish_mature_clean.png",
+      "original_source_path": "art/sources/chapter1/objects/radish_mature.png",
+      "original_source_sha256": "bdeabb72712238c7a038ef49ab1d868a76c71bece9cfcb2a6348be50d4b43b20",
+      "source_sha256": "040f0ab24dff894c42e94762975670a5097b8ab1537e7e986c58670f9f8f9bae",
+      "sha256": "ad198e84c54f91a9c37bbfece3da56000dc9132a57f70cb4ad5b15b20749c86f",
+      "size_px": [
+        32,
+        32
+      ],
+      "anchor_px": [
+        16,
+        32
+      ],
+      "crop_status": "mature",
+      "usage": "existing_crop.radish_visual_only",
+      "review_status": "proposed",
+      "reviewer": null,
+      "source_vertical_translation_px": 2,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_color_count": 24,
+      "job_id": "8ec2c715-1b67-43f4-910f-c4be0df539c1",
+      "pixel_tool_id": "09977592-fc06-4629-9f33-28f6ff3fe9d1",
+      "palette_reference_path": "art/sources/chapter1/objects/reference_radish.png",
+      "palette_reference_sha256": "6fe9970f28aa196069d91ddad29631ec7e6be046809bfdea0e8eaa4204d06133",
+      "processing": "Free guarded pixel cleanup removed growing bare roots and reduced both sprites to <=24 existing source colors; integer translation to shared foot anchor only; no resizing",
+      "license_note": "PixelLab ordinary PixFlux generation, project approved original reference palette; no soil, economics or gameplay changes",
+      "drive_url": null
     }
   ],
   "crop_status_mapping": {
@@ -619,16 +687,14 @@
       "plant_path": null
     },
     "growing": {
-      "plant_path": null,
-      "status": "missing; no accepted radish PNG"
+      "plant_path": "game/assets/chapter1/objects/radish_growing.png"
     },
     "mature": {
-      "plant_path": null,
-      "status": "missing; radish generator returned a stump and was rejected"
+      "plant_path": "game/assets/chapter1/objects/radish_mature.png"
     },
     "harvest": {
       "plant_path": null,
-      "note": "command returns existing PlotState to tilled; no durable harvest state"
+      "note": "Command transitions real PlotState to tilled, not a durable crop state"
     }
   }
 }

@@ -40,7 +40,7 @@ func run() -> void:
 	var expected_ids := ["plot.farm.001","plot.farm.002","plot.farm.003","plot.farm.004","plot.farm.005","plot.farm.006"]
 	var ids: Array = plots.map(func(plot): return plot.plot_id)
 	check(ids == expected_ids, "plot ids remain deterministic after scene traversal")
-	check(plots[0].cell_position == {"x":30,"y":20} and plots[-1].cell_position == {"x":66,"y":32}, "plot cells derive from scene marker positions")
+	check(plots[0].cell_position == {"x":42,"y":27} and plots[-1].cell_position == {"x":74,"y":39}, "plot cells derive from scene marker positions")
 
 	var spawn: Vector2 = scene.get_spawn_position()
 	check(scene.get_player().position == spawn and not _blocked(spawn), "player spawn is the same editable anchor and is collision safe")
@@ -53,6 +53,8 @@ func run() -> void:
 	check(_blocked(Vector2(220,464)), "moved farmhouse walls block movement")
 	check(_blocked(Vector2(64,48)), "orchard root has its own physical footprint")
 	check(_blocked(Vector2(1408,512)) and _blocked(Vector2(1536,512)), "river banks block movement outside bridge approaches")
+	check(scene.get_anchor_position("RiverBankProbe") == Vector2(1376,512) and not _blocked(scene.get_anchor_position("RiverBankProbe")), "river safe-bank probe stays on walkable ground")
+	check(scene.get_anchor_position("RiverBlockedProbe") == Vector2(1408,512) and _blocked(scene.get_anchor_position("RiverBlockedProbe")), "river blocked probe stays on solid bank")
 	check(not _blocked(Vector2(1472,432)), "bridge lane remains physically passable")
 	check(not _blocked(Vector2(144,176)), "legacy save spawn remains physically recoverable")
 	var orchard_columns := [Vector2(64,48),Vector2(200,48),Vector2(336,48),Vector2(472,48),
