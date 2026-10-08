@@ -23,7 +23,7 @@ func append(value: Variant) -> Dictionary:
 	if not _valid_fact(value):
 		return _failure("FACT_EVENT_INVALID")
 	var event: Dictionary = value.duplicate(true)
-	var event_id := String(event.event_id)
+	var event_id: String = String(event.event_id)
 	if _by_id.has(event_id):
 		if _by_id[event_id] == event:
 			return {"ok":true,"error_code":"","has_changes":false,"revision":revision,"event_id":event_id}
@@ -65,7 +65,7 @@ func restore(value: Variant) -> bool:
 		if not _valid_fact(row):
 			return false
 		var event: Dictionary = row.duplicate(true)
-		var event_id := String(event.event_id)
+		var event_id: String = String(event.event_id)
 		if next_by_id.has(event_id):
 			return false
 		next_events.append(event)
@@ -95,8 +95,8 @@ func _valid_fact(value: Variant) -> bool:
 		return false
 	if not (value.game_minute is int) or value.game_minute<0:
 		return false
-	var has_command := value.source_command_id is String and not String(value.source_command_id).is_empty() and String(value.source_command_id).length()<=128
-	var has_system := value.source_system is String and not String(value.source_system).is_empty() and String(value.source_system).length()<=128
+	var has_command: bool = value.source_command_id is String and not String(value.source_command_id).is_empty() and String(value.source_command_id).length()<=128
+	var has_system: bool = value.source_system is String and not String(value.source_system).is_empty() and String(value.source_system).length()<=128
 	if has_command == has_system:
 		return false
 	if value.source_command_id != null and not has_command:
