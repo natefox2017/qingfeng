@@ -565,7 +565,7 @@ func show_page(page: String, context: Dictionary) -> void:
 					if context.get("space_id","")=="space.house":
 						hint.text="E 与门 / 床 / 箱子交互 · B 背包"
 					elif context.get("space_id","")=="space.shop":
-						hint.text="E 与柜台 / 门交互 · B 背包"
+						hint.text="E 与店主 / 柜台 / 门交互 · B 背包"
 					elif context.get("space_id","")=="space.village":
 						hint.text="E 交谈 / 采集 / 门 / 出口 · B 背包"
 					elif context.get("space_id","")=="space.workshop":
