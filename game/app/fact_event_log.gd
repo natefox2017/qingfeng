@@ -16,6 +16,9 @@ var revision := 0
 var _events: Array[Dictionary] = []
 var _by_id: Dictionary = {}
 
+func is_configured() -> bool:
+	return true
+
 func append(value: Variant) -> Dictionary:
 	if not _valid_fact(value):
 		return _failure("FACT_EVENT_INVALID")
