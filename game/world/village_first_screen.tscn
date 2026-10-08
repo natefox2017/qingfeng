@@ -116,6 +116,40 @@ position = Vector2(280, 216)
 metadata/spot_id = "forage.village.002"
 metadata/forage_id = "forage.wild_herb"
 
+[node name="ResidentAnchors" type="Node2D" parent="."]
+
+[node name="GrocerHome" type="Marker2D" parent="ResidentAnchors"]
+position = Vector2(344, 240)
+metadata/anchor_id = "anchor.resident.grocer.home"
+
+[node name="GrocerSocial" type="Marker2D" parent="ResidentAnchors"]
+position = Vector2(336, 208)
+metadata/anchor_id = "anchor.resident.grocer.social"
+
+[node name="MakerHome" type="Marker2D" parent="ResidentAnchors"]
+position = Vector2(560, 176)
+metadata/anchor_id = "anchor.resident.maker.home"
+
+[node name="MakerSocial" type="Marker2D" parent="ResidentAnchors"]
+position = Vector2(472, 208)
+metadata/anchor_id = "anchor.resident.maker.social"
+
+[node name="NeighborHome" type="Marker2D" parent="ResidentAnchors"]
+position = Vector2(112, 240)
+metadata/anchor_id = "anchor.resident.neighbor.home"
+
+[node name="NeighborWork" type="Marker2D" parent="ResidentAnchors"]
+position = Vector2(208, 208)
+metadata/anchor_id = "anchor.resident.neighbor.work"
+
+[node name="NeighborSocial" type="Marker2D" parent="ResidentAnchors"]
+position = Vector2(288, 208)
+metadata/anchor_id = "anchor.resident.neighbor.social"
+
+[node name="NeighborRain" type="Marker2D" parent="ResidentAnchors"]
+position = Vector2(240, 144)
+metadata/anchor_id = "anchor.resident.neighbor.rain"
+
 [node name="FootSorted" type="Node2D" parent="."]
 y_sort_enabled = true
 
