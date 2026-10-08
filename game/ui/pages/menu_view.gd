@@ -374,6 +374,7 @@ func show_page(page: String, context: Dictionary) -> void:
 			_menu_button(actions,"load","选择存档","读取或导入存档")
 			_menu_button(actions,"settings","设置","调整声音与显示")
 			_menu_button(actions,"quit","退出","退出游戏")
+			_first_button = buttons["continue"] if context.has("recent_id") else buttons["new_game"]
 			var note:=label("在微风与田野之间，开始新的生活。",body)
 			note.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 			UI_THEME.apply_text_role(note,UI_THEME.ROLE_CAPTION)
@@ -382,8 +383,8 @@ func show_page(page: String, context: Dictionary) -> void:
 			title.text="开始新的生活";subtitle.text="为你和同行的小狗取个名字"
 			panel.custom_minimum_size=Vector2(500,286)
 			var identity_panel:=PanelContainer.new();identity_panel.name="NewGameIdentity";identity_panel.add_theme_stylebox_override("panel",UI_THEME.section_style());body.add_child(identity_panel)
-			var sprout:=label("🌱  新的开始",identity_panel);UI_THEME.apply_text_role(sprout,UI_THEME.ROLE_CAPTION)
 			var identity:=VBoxContainer.new();identity.add_theme_constant_override("separation",5);identity_panel.add_child(identity)
+			var sprout:=label("新的开始 · 写下春天的故事",identity);UI_THEME.apply_text_role(sprout,UI_THEME.ROLE_CAPTION)
 
 			var player_label:=label("你的名字",identity);UI_THEME.apply_text_role(player_label,UI_THEME.ROLE_CAPTION)
 			player_name=LineEdit.new();player_name.name="PlayerNameInput";player_name.max_length=16;player_name.placeholder_text="1–16字";player_name.text=context.get("player_name","");player_name.tooltip_text="输入玩家名字，1–16字";player_name.accessibility_name="玩家名字";identity.add_child(player_name)
@@ -392,7 +393,9 @@ func show_page(page: String, context: Dictionary) -> void:
 			dog_name=LineEdit.new();dog_name.name="DogNameInput";dog_name.max_length=16;dog_name.placeholder_text="可留空";dog_name.text=context.get("dog_name","");dog_name.tooltip_text="输入狗的名字，可留空";dog_name.accessibility_name="狗的名字，可留空";identity.add_child(dog_name)
 
 			var save_note:=label("开始后会创建一份新的独立存档，并从农庄第一天开始。已有存档不会被覆盖。");save_note.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;UI_THEME.apply_text_role(save_note,UI_THEME.ROLE_CAPTION)
-			var actions:=row();button(actions,"create","accept","创建独立存档并进入农庄");button(actions,"back","back","返回标题，不创建存档")
+			var actions:=row()
+			var create_button:=button(actions,"create","accept","创建独立存档并进入农庄");create_button.text="确认进入";create_button.custom_minimum_size=Vector2(146,35)
+			var back_button:=button(actions,"back","back","返回标题，不创建存档");back_button.text="返回";back_button.custom_minimum_size=Vector2(110,35)
 			player_name.grab_focus()
 		"load":
 			title.text="存档";subtitle.text="选择一份本机进度继续，或导入 .qfsave 存档"
