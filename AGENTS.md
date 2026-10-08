@@ -21,7 +21,7 @@
 新代码以组合为主；不创建 Candidate/Trial/Current 继承链，不预造空 Manager 或多厂商抽象层。
 
 ## 提交与完成
-默认普通非 Draft PR；一项可回滚能力一个 PR。从最新 main 开分支，不 force push，不覆盖他人工作。PR 填真实入口、命令、结果、来源、未验项与回退。
-运行 `python3 tools/check_scaffold.py` 和工具自测；引擎阶段还必须运行该阶段新增的游戏检查。只有文档检查通过，不能说游戏通过。
-原生画面、headless、导出包、真实 Provider 各自记录证据；传送截图不证明通路，录制 FPS 不证明实时性能。失败测试不能删断言凑绿灯。
+默认普通非 Draft PR；一项可回滚能力一个 PR。从最新 main 开分支，不 force push，不覆盖他人工作。PR 填真实入口、命令、结果、来源、未验项与回退。仓库 PR 只保留秒级 `repository-policy` 自动合并门，不在 GitHub Actions 跑 Godot/Scaffold 回归；PR 创建后由原生 auto-merge 自动合入。
+需要验证时在开发切片内按风险运行最小相关检查，发布/N11 再执行完整冷导入、原生试玩与导出验收；不要把“已自动合并”写成“已测试通过”。失败测试不能删断言凑绿灯。
+原生画面、headless、导出包、真实 Provider 各自记录证据；传送截图不证明通路，录制 FPS 不证明实时性能。
 代码合入并按验收复核后才勾任务。废止用 not_planned，迁仓用明确目标链接，不能当作功能完成。

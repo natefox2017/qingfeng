@@ -30,14 +30,14 @@ N04拥有公共schema/时钟/保存；N05拥有app入口/同地图；N11协调�
 ## PR规则
 分支 feat/fix/refactor/docs/art/test/chore 加语义任务名。PR默认非Draft，一项可验证能力；大Issue通过多个短PR完成。禁止force push、覆盖用户未提交工作或未经检查合并无关PR。
 PR用 [模板](../.github/PULL_REQUEST_TEMPLATE.md)，注明实际来源、运行入口、测试证据、保存语义、未验项。预算授权、视觉接受、功能完成三个结论分别写，不互相替代。
-main实际规则要求`repository-policy`检查通过；它执行真实框架、工具、引擎冷导入和物理/生命周期回归，不是恒绿占位。其他游戏验收仍由review逐项核对，不能凭这一检查替代未覆盖功能；不修改或绕过仓库保护。
+main实际规则仍要求 `repository-policy` context，但该 job 现在只负责开启 GitHub 原生 auto-merge 并立即结束，不执行 Scaffold、Godot 冷导入或游戏回归。PR 自动合并只代表集成流程完成，不代表功能验收；高风险切片按需本地/专项验证，完整冷导入、原生试玩和导出集中到 N11 发布验收。
 
 ## 当前检查与阶段
 ```sh
 python3 tools/check_scaffold.py
 python3 -m unittest discover -s tools/tests -v
 ```
-上面的命令只检查文档/工具；当前foundation引擎回归另执行 `python3 tools/runtime.py test`，详见[运行基础](runtime_foundation.md)。scaffold没有可启动工程；preproduction有新素材但未接正式运行；foundation开始须有固定引擎版本、project.godot、正式main_scene和真实游戏CI；playable必须N11验收。
+上面的命令仍可按需本地执行；`python3 tools/runtime.py test` 保留为专项/发布回归工具，但不再作为每个 PR 的 GitHub Actions 门。scaffold没有可启动工程；preproduction有新素材但未接正式运行；foundation须有固定引擎版本、project.godot和正式main_scene；playable必须N11完成完整原生与导出验收。
 阶段由project.json唯一声明，README/Notion同步。不能把本次工具测试数字当新游戏回归。变更交接用[handoff](../templates/handoff.md)，不另造多套总册。
 
 ## 实际任务链接
