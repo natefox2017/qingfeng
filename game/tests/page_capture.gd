@@ -25,6 +25,13 @@ func run() -> void:
 			await physics_frame
 			if app.state==app.State.WORLD:break
 		assert(app.state==app.State.WORLD,app.last_error)
+		assert(is_instance_valid(app.room) and app.room.get_space_id()=="space.farm", "Phase0 capture must use a new gameplay farm, not the legacy collision fixture")
+		var terrain := app.room.get_node("TerrainGround") as TileMapLayer
+		assert(terrain != null and terrain.tile_set != null and terrain.get_used_cells().size()==920, "Phase0 capture requires 920 imported editable ground tiles")
+		var farmer := app.room.get_player().get_node_or_null("Sprite2D") as Sprite2D
+		assert(farmer != null and farmer.texture != null and farmer.texture.get_size()==Vector2(96,128), "Phase0 capture requires the real four-direction player texture")
+		assert(app.room.get_player().get_node_or_null("DiagnosticGlyph")==null, "Phase0 capture must not show the diagnostic player rectangle")
+		await capture("phase0_farm_%d"%size.x)
 		await capture("world_%d"%size.x)
 		app.set_pause_menu(true);await capture("pause_%d"%size.x)
 		app.view.buttons["settings"].pressed.emit();await capture("settings_%d"%size.x)
