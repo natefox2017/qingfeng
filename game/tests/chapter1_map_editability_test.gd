@@ -104,6 +104,17 @@ func run() -> void:
 	for x in range(4):
 		for y in range(4):
 			ground.set_cell(expanded + Vector2i(x,y), source_id, atlas, alternative)
+	for definition: Dictionary in scene.get_plot_definitions():
+		var point := Vector2(definition.cell_position.x,definition.cell_position.y)*float(scene.TILE_SIZE)
+		var query := PhysicsShapeQueryParameters2D.new()
+		var circle := CircleShape2D.new()
+		circle.radius = 4.0
+		query.shape = circle
+		query.transform = Transform2D(0.0,point)
+		query.collision_mask = 1
+		print("MAP_PLOT_POINT ",definition.plot_id," ",point)
+		for hit: Dictionary in scene.get_world_2d().direct_space_state.intersect_shape(query,16):
+			print("MAP_PLOT_COLLIDER ",definition.plot_id," point=",point," collider=",hit.collider.get_path()," name=",hit.collider.name," inside_tree=",hit.collider.is_inside_tree()," global=",hit.collider.global_position)
 	var object := scene.get_node_or_null("Farmhouse") as Node2D
 	if object == null: object = independent_object(scene)
 	check(object != null, "independent object scene owns collision")
@@ -123,9 +134,13 @@ func run() -> void:
 		old_left_edge = shape.global_position - Vector2(rect.size.x/2.0-2,0)
 		for marker: Node in object.find_children("*", "Marker2D", true, false):
 			marker_positions[scene.get_path_to(marker)] = marker.global_position + Vector2(32,16)
+		print("MAP_EDIT_MOVE_BEFORE object=",object.get_path(), " pos=",object.position, " shape=",shape.get_path()," global=",shape.global_position, " expected=",collision_position)
+		for child: Node in object.get_children():
+			if child is Node2D: print("MAP_EDIT_CHILD ", child.get_path(), " global=", child.global_position," top_level=",child.top_level)
 		object.position += Vector2(32,16)
 		moved_position = object.position
 		await physics_frame
+		print("MAP_EDIT_MOVE_AFTER object_pos=",object.position," shape_global=",shape.global_position)
 		check(shape.global_position == collision_position, "moving instance moves its collision by same offset")
 		var body := shape.get_parent() as StaticBody2D
 		check(body_contains(scene,collision_position,body) and not body_contains(scene,old_left_edge,body), "physics collider moves and vacates old footprint edge")

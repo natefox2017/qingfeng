@@ -1,0 +1,26 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+CHECK_FAIL village_shop farm bridge exit resolves village route
+CHECK_FAIL village_shop staged village uses independent physics world, never farm colliders
+VILLAGE_ROUTE_DIAG state=2 error=前方没有可达的菜地。请面向相邻田格再按 E。 pending=false
+CHECK_FAIL village_shop farm route commits into village
+CHECK_FAIL village_shop village arrival preserves gameplay session and target-owned anchor
+CHECK_FAIL village_shop village shop door resolves shop interior
+CHECK_FAIL village_shop village shop door commits into shop
+CHECK_FAIL village_shop shop arrival preserves the one gameplay session
+CHECK_FAIL village_shop shop owns stable counter interaction anchor
+CHECK_FAIL village_shop shop save records current space in schema seven
+CHECK_FAIL village_shop shop save restarts directly in shop
+CHECK_FAIL village_shop shop door returns to village
+CHECK_FAIL village_shop shop exit uses village-owned safe arrival
+CHECK_FAIL village_shop farm bridge arrival is safe and target-owned
+VILLAGE_SHOP_PASS checks=19 failures=13
+WARNING: 1370 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 1466 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 63 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+ERROR: 252 RID allocations of type 'P11GodotBody2D' were leaked at exit.
+ERROR: 23 RID allocations of type 'P12GodotShape2D' were leaked at exit.
+ERROR: 33 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
