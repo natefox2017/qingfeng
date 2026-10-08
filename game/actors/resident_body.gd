@@ -56,6 +56,28 @@ func projection() -> Dictionary:
 		"replan_count":_replan_count
 	}
 
+func runtime_snapshot(space_id: String) -> Dictionary:
+	return {
+		"resident_id":resident_id,
+		"space_id":space_id,
+		"world_position_px":{"x":position.x,"y":position.y},
+		"facing":str(facing)
+	}
+
+func restore_runtime_position(world_position: Vector2, restored_facing: StringName) -> bool:
+	if not is_finite(world_position.x) or not is_finite(world_position.y) or restored_facing not in [&"north",&"south",&"east",&"west"]:
+		return false
+	position = world_position
+	facing = restored_facing
+	velocity = Vector2.ZERO
+	_has_target = false
+	_waypoints.clear()
+	_waypoint_index = 0
+	_stall_elapsed = 0.0
+	_wait_elapsed = 0.0
+	movement_state = "idle"
+	return true
+
 func _physics_process(delta: float) -> void:
 	if not _has_target:
 		velocity = Vector2.ZERO

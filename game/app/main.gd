@@ -199,6 +199,10 @@ func _activate_room(scene: PackedScene, requested_generation: int) -> void:
 
 	gameplay_session = next_gameplay
 	active_snapshot = _entry_snapshot.duplicate(true)
+	if not _apply_resident_runtime_to(room):
+		last_error = "居民运行状态无法恢复到当前世界，未进入游戏。"
+		return_to_title()
+		return
 	_refresh_farm_world()
 	room.get_player().position = position
 	room.get_player().facing = StringName(active_snapshot.facing)
@@ -661,6 +665,13 @@ func _begin_door_transition(target: Dictionary) -> void:
 		_fail_transition(candidate,"目标门落点无效或被阻挡，仍留在原位置。")
 		return
 
+	if not _capture_room_resident_runtime(room):
+		_fail_transition(candidate,"当前区域居民运行状态无法提交，仍留在原位置。")
+		return
+	if not _apply_resident_runtime_to(candidate):
+		_fail_transition(candidate,"目标区域无法恢复居民运行状态，仍留在原位置。")
+		return
+
 	var old_room := room
 	room = candidate
 	_transition_candidate = null
@@ -776,6 +787,22 @@ func _finish_farm_recovery() -> bool:
 	locks.set_locked(&"farm_action",false)
 	_update_interface()
 	return true
+
+func _capture_room_resident_runtime(candidate: Node2D) -> bool:
+	if gameplay_session == null or not gameplay_session.is_configured() or not is_instance_valid(candidate) or not candidate.has_method("capture_resident_runtime"):
+		return true
+	var rows: Variant = candidate.capture_resident_runtime()
+	if not (rows is Array):
+		return false
+	for row: Variant in rows:
+		if not gameplay_session.update_resident_runtime(row):
+			return false
+	return true
+
+func _apply_resident_runtime_to(candidate: Node2D) -> bool:
+	if gameplay_session == null or not gameplay_session.is_configured() or not is_instance_valid(candidate) or not candidate.has_method("apply_resident_runtime"):
+		return true
+	return candidate.apply_resident_runtime(gameplay_session.resident_runtime.projection())
 
 func _refresh_farm_world() -> void:
 	if gameplay_session == null or not gameplay_session.is_configured() or not is_instance_valid(room):
@@ -925,6 +952,8 @@ func save_progress() -> Dictionary:
 		return CODEC.failure("SAVE_ACTION_BUSY")
 	if _transition_pending:
 		return CODEC.failure("SAVE_TRANSITION_BUSY")
+	if not _capture_room_resident_runtime(room):
+		return CODEC.failure("SAVE_RESIDENT_RUNTIME_INVALID")
 	var candidate: Dictionary = active_snapshot.duplicate(true)
 	var player: CharacterBody2D = room.get_player()
 	candidate.space_id = String(room.get_space_id()) if room.has_method("get_space_id") else candidate.space_id

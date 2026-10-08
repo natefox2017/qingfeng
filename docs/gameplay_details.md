@@ -1,6 +1,6 @@
 # 首版具体玩法与接入合同
 
-这是**新项目首版玩法的细化规格与当前接入边界**，不是旧项目已有功能清单。当前 Clock、背包/钱包、PlotState、首作物农耕闭环、schema5 存档、第一屏农事输入、农庄↔房屋门、床休息、家庭箱子转移和商店买卖领域已经有实现；WORLD 现已有可编辑 `space.farm`、`space.house`、`space.village`、`space.shop`、`space.workshop` 路线。商店柜台交易页也已直接绑定 `economy.buy` / `economy.sell`；村庄每日可再生采集恢复来源已接入。N08 已开始居民底座：`first_playable_v1` 登记三名稳定 resident_id、职业与普通/雨天 schedule，村庄/商店/工坊提供对应 WORLD-owned home/work/social/rain Marker，纯 `ResidentSchedule` 只把游戏时间与天气解析为目标 anchor/space。**当前已有第一名工程居民 Actor：`resident.neighbor` 在 village 内由 schedule 目标驱动真实 CharacterBody2D 移动**；它遇静态/玩家碰撞不会穿透，停滞先切换轴向路线，仍阻塞则等待后重试。店主/工匠跨 Space 行走、居民会话、关系和记忆运行时仍未完成；狗与任务也仍须后续完成。不得把日程解析、工程色块或新档狗名输入当最终人物系统/美术。
+这是**新项目首版玩法的细化规格与当前接入边界**，不是旧项目已有功能清单。当前 Clock、背包/钱包、PlotState、首作物农耕闭环、schema6 存档、第一屏农事输入、农庄↔房屋门、床休息、家庭箱子转移和商店买卖领域已经有实现；WORLD 现已有可编辑 `space.farm`、`space.house`、`space.village`、`space.shop`、`space.workshop` 路线。商店柜台交易页也已直接绑定 `economy.buy` / `economy.sell`；村庄每日可再生采集恢复来源已接入。N08 已开始居民底座：`first_playable_v1` 登记三名稳定 resident_id、职业与普通/雨天 schedule，村庄/商店/工坊提供对应 WORLD-owned home/work/social/rain Marker，纯 `ResidentSchedule` 只把游戏时间与天气解析为目标 anchor/space。**当前已有第一名工程居民 Actor：`resident.neighbor` 在 village 内由 schedule 目标驱动真实 CharacterBody2D 移动**；它遇静态/玩家碰撞不会穿透，停滞先切换轴向路线，仍阻塞则等待后重试。店主/工匠跨 Space 行走、居民会话、关系和记忆运行时仍未完成；狗与任务也仍须后续完成。不得把日程解析、工程色块或新档狗名输入当最终人物系统/美术。
 
 ## 第一屏与三天目标
 
@@ -42,7 +42,7 @@ Move仅移动；Interact优先当前可达的门/床/箱子/NPC/柜台；UseSele
 ## 狗和居民
 
 狗follow/wait由权威状态决定；召回在实际可达网格上重新规划，卡住先局部让路/等候，再使用明确安全重聚规则，不能为了录屏解除世界碰撞。转场先找到双方合法落点后一起提交，失败双方仍在原Space。
-居民拥有职业服务时段、工作/休闲/交流/回家和雨天/夜间变体。当前底座已经把三人的 `resident_id`、`occupation_id`、普通/雨天 schedule 放进唯一 content_version，并让 schedule 中每个 home/work/social/rain activity 必须引用该居民声明的对应 anchor；所有 anchor 必须来自现有 `space.village` / `space.shop` / `space.workshop` Marker，缺锚直接拒绝配置。解析器是纯确定性模块，不移动 Actor、不调用 AI，也不会把商店柜台服务绑到店主是否在场：`CounterInteract` 继续独立提供交易。`resident.neighbor` 已作为第一条运行切片接到这些目标：GameplaySession 每个游戏分钟只更新其 schedule target，WORLD 保留同一个 CharacterBody2D 位置并通过 move_and_slide 实际走到 home/work/social/rain anchor；目标变化不改当前位置，堵路会重规划/等待，不能瞬移到 schedule 目标冒充日程。跨 Space 的店主/工匠仍只完成目标合同，后续必须走真实门/路径再实例化，不能按时刻直接 teleport。实际位置和图标头像不是两套身份。玩家对话暂停自己会话，NPC之间交流不停止全部世界。
+居民拥有职业服务时段、工作/休闲/交流/回家和雨天/夜间变体。当前底座已经把三人的 `resident_id`、`occupation_id`、普通/雨天 schedule 放进唯一 content_version，并让 schedule 中每个 home/work/social/rain activity 必须引用该居民声明的对应 anchor；所有 anchor 必须来自现有 `space.village` / `space.shop` / `space.workshop` Marker，缺锚直接拒绝配置。解析器是纯确定性模块，不移动 Actor、不调用 AI，也不会把商店柜台服务绑到店主是否在场：`CounterInteract` 继续独立提供交易。`resident.neighbor` 已作为第一条运行切片接到这些目标：GameplaySession 每个游戏分钟只更新其 schedule target，WORLD 保留同一个 CharacterBody2D 位置并通过 move_and_slide 实际走到 home/work/social/rain anchor；目标变化不改当前位置，堵路会重规划/等待，不能瞬移到 schedule 目标冒充日程。居民实际位置现由 `ResidentRuntimeState` 持久化：保存或离区前采样 WORLD Actor，重启/重入区域先恢复实际位置与朝向，再继续朝当前 schedule target 行走；旧 schema5 无该字段时从真实 home Marker 初始化。跨 Space 的店主/工匠仍只完成目标合同，后续必须走真实门/路径再实例化，不能按时刻直接 teleport。实际位置和图标头像不是两套身份。玩家对话暂停自己会话，NPC之间交流不停止全部世界。
 事实event和记忆summary分离。A亲历事件可以提及，B没有观察或被告知就不能全知；交付/赠礼是不同意图，成功事实才触发进度和关系，重复寒暄和重复礼物有日限，不能无限刷。
 
 ## 任务与可选AI

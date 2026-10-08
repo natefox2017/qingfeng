@@ -199,7 +199,7 @@ func run() -> void:
 	check(save.ok,"completed economy loop saves")
 	if save.ok:
 		var envelope: Dictionary = app.store.read_save(save.save_id).envelope
-		check(int(envelope.schema_version)==5,"completed loop writes current schema-five gameplay save")
+		check(int(envelope.schema_version)==6,"completed loop writes current schema-six gameplay save")
 		app.set_process(true)
 		app.return_to_title()
 		app._on_action("read_save",{"save_id":save.save_id})

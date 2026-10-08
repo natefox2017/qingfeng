@@ -141,6 +141,39 @@ static func _valid_forage(value: Variant, current_day: int) -> bool:
 		ids[spot.spot_id]=true
 	return true
 
+static func _valid_residents(value: Variant, content: Dictionary) -> bool:
+	if not keys(value,["residents"]) or not (value.residents is Array):
+		return false
+	if value.residents.size()!=content.residents.definitions.size():
+		return false
+	var ids: Dictionary = {}
+	for resident: Variant in value.residents:
+		if not keys(resident,["resident_id","space_id","world_position_px","facing","relationship_points","known_event_ids"]):
+			return false
+		if not (resident.resident_id is String) or not content.residents.definitions.has(resident.resident_id) or ids.has(resident.resident_id):
+			return false
+		if not (resident.space_id is String) or not String(resident.space_id).begins_with("space."):
+			return false
+		if resident.facing not in ["north","south","east","west"]:
+			return false
+		if not integer(resident.relationship_points,-1000000,1000000):
+			return false
+		var point: Variant = resident.world_position_px
+		if not keys(point,["x","y"]):
+			return false
+		for axis: String in ["x","y"]:
+			if not (point[axis] is int or point[axis] is float) or not is_finite(float(point[axis])) or absf(float(point[axis]))>MAX_WORLD_COORDINATE:
+				return false
+		if not (resident.known_event_ids is Array) or resident.known_event_ids.size()>256:
+			return false
+		var known: Dictionary = {}
+		for event_id: Variant in resident.known_event_ids:
+			if not (event_id is String) or event_id.is_empty() or event_id.length()>128 or known.has(event_id):
+				return false
+			known[event_id]=true
+		ids[String(resident.resident_id)]=true
+	return ids.size()==content.residents.definitions.size()
+
 static func _valid_wallet(value: Variant) -> bool:
 	if not keys(value,["revision","owner_id","money"]):
 		return false
@@ -203,11 +236,13 @@ static func _valid_gameplay_common(value: Variant) -> bool:
 		if not value.has(key):
 			return false
 	for key: Variant in value.keys():
-		if key not in ["content_version","clock","inventory","wallet","farm","command_journal","storage","forage"]:
+		if key not in ["content_version","clock","inventory","wallet","farm","command_journal","storage","forage","residents"]:
 			return false
 	if value.has("storage") and not value.has("command_journal"):
 		return false
 	if value.has("forage") and (not value.has("storage") or not value.has("command_journal")):
+		return false
+	if value.has("residents") and (not value.has("forage") or not value.has("storage") or not value.has("command_journal")):
 		return false
 	if value.has("command_journal") and not _valid_command_journal(value.command_journal):
 		return false
@@ -223,6 +258,8 @@ static func _valid_gameplay_common(value: Variant) -> bool:
 	var current_day := floori(float(value.clock.game_minute) / float(content.clock.minutes_per_day)) + 1
 	if value.has("forage") and not _valid_forage(value.forage,current_day):
 		return false
+	if value.has("residents") and not _valid_residents(value.residents,content):
+		return false
 	return _valid_inventory(value.inventory,content) and _valid_wallet(value.wallet) and _valid_farm(value.farm,content,current_day)
 
 static func _valid_gameplay_v2(value: Variant) -> bool:
@@ -235,7 +272,10 @@ static func _valid_gameplay_v4(value: Variant) -> bool:
 	return value is Dictionary and value.size() == 7 and value.has("command_journal") and value.has("storage") and not value.has("forage") and _valid_gameplay_common(value)
 
 static func _valid_gameplay_v5(value: Variant) -> bool:
-	return value is Dictionary and value.size() == 8 and value.has("command_journal") and value.has("storage") and value.has("forage") and _valid_gameplay_common(value)
+	return value is Dictionary and value.size() == 8 and value.has("command_journal") and value.has("storage") and value.has("forage") and not value.has("residents") and _valid_gameplay_common(value)
+
+static func _valid_gameplay_v6(value: Variant) -> bool:
+	return value is Dictionary and value.size() == 9 and value.has("command_journal") and value.has("storage") and value.has("forage") and value.has("residents") and _valid_gameplay_common(value)
 
 static func validate_gameplay_snapshot(value: Variant) -> bool:
 	if not (value is Dictionary):
@@ -297,6 +337,8 @@ static func normalized_numbers(value: Variant) -> Variant:
 static func _schema_for_snapshot(snapshot: Dictionary) -> int:
 	if not snapshot.has("gameplay"):
 		return 1
+	if snapshot.gameplay.has("residents"):
+		return 6
 	if snapshot.gameplay.has("forage"):
 		return 5
 	if snapshot.gameplay.has("storage"):
@@ -339,7 +381,7 @@ static func decode(text: String) -> Dictionary:
 	var envelope: Variant = normalized_numbers(parser.data)
 	if not keys(envelope,["save_format","schema_version","content_version","save_id","saved_at_utc","snapshot","checksum"]):
 		return failure("SAVE_FIELDS")
-	if envelope.save_format != "qingfeng" or not integer(envelope.schema_version,1,5):
+	if envelope.save_format != "qingfeng" or not integer(envelope.schema_version,1,6):
 		return failure("SAVE_VERSION_UNSUPPORTED")
 	var schema_version := int(envelope.schema_version)
 	if schema_version == 1:
@@ -364,6 +406,11 @@ static func decode(text: String) -> Dictionary:
 		if envelope.content_version != GAMEPLAY_CONTENT_VERSION:
 			return failure("SAVE_CONTENT_UNSUPPORTED")
 		if not validate_gameplay_snapshot(envelope.snapshot) or not _valid_gameplay_v5(envelope.snapshot.gameplay) or envelope.snapshot.gameplay.content_version != envelope.content_version:
+			return failure("SAVE_SNAPSHOT_INVALID")
+	elif schema_version == 6:
+		if envelope.content_version != GAMEPLAY_CONTENT_VERSION:
+			return failure("SAVE_CONTENT_UNSUPPORTED")
+		if not validate_gameplay_snapshot(envelope.snapshot) or not _valid_gameplay_v6(envelope.snapshot.gameplay) or envelope.snapshot.gameplay.content_version != envelope.content_version:
 			return failure("SAVE_SNAPSHOT_INVALID")
 	else:
 		return failure("SAVE_VERSION_UNSUPPORTED")
