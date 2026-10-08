@@ -16,6 +16,8 @@
 [ext_resource type="Texture2D" path="res://assets/chapter1/town/stone_wall.png" id="14_011l2"]
 [ext_resource type="PackedScene" path="res://world/objects/market_stall_orange.tscn" id="15_stall_orange"]
 
+[ext_resource type="PackedScene" path="res://world/objects/meadow_shrub_cluster.tscn" id="shrub_cluster"]
+
 [sub_resource type="RectangleShape2D" id="BoundaryHorizontal"]
 resource_local_to_scene = true
 size = Vector2(1280, 16)
@@ -456,3 +458,21 @@ collision_mask = 2
 
 [node name="@CollisionShape2D@145" type="CollisionShape2D" parent="FootSorted/NorthWall_992/@StaticBody2D@144" unique_id=248745407]
 shape = SubResource("RectangleShape2D_nni7o")
+
+[node name="MeadowBorderCluster00" type="Node2D" parent="FootSorted" instance=ExtResource("shrub_cluster")]
+position = Vector2(432, 528)
+
+[node name="MeadowBorderCluster01" type="Node2D" parent="FootSorted" instance=ExtResource("shrub_cluster")]
+position = Vector2(832, 528)
+
+[node name="MeadowBorderCluster02" type="Node2D" parent="FootSorted" instance=ExtResource("shrub_cluster")]
+position = Vector2(336, 464)
+
+[node name="MeadowBorderCluster03" type="Node2D" parent="FootSorted" instance=ExtResource("shrub_cluster")]
+position = Vector2(928, 464)
+
+[node name="MeadowBorderCluster04" type="Node2D" parent="FootSorted" instance=ExtResource("shrub_cluster")]
+position = Vector2(272, 400)
+
+[node name="MeadowBorderCluster05" type="Node2D" parent="FootSorted" instance=ExtResource("shrub_cluster")]
+position = Vector2(992, 400)

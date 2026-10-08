@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://world/objects/yard_bush.tscn" id="bush"]
+
+[node name="MeadowShrubCluster" type="Node2D"]
+y_sort_enabled = true
+
+[node name="WestBush" parent="." instance=ExtResource("bush")]
+position = Vector2(-24, -4)
+
+[node name="EastBush" parent="." instance=ExtResource("bush")]
+position = Vector2(20, 12)
