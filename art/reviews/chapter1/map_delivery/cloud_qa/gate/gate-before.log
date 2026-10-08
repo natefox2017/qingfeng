@@ -1,0 +1,5 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+GATE_PASSAGE_FAIL real input walks straight under arch farm_first_screen final=(896.0, 99.06669)
+GATE_PASSAGE_FAIL real input walks straight under arch village_first_screen final=(640.0, 547.0667)
+GATE_PASSAGE_RESULT checks=6 failures=2
