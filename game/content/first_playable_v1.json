@@ -263,6 +263,19 @@
           "dialogue_id": "dialogue.grocer.greeting",
           "text": "今天想种点什么？看看种子够不够，种下以后记得浇水。"
         }
+      },
+      "resident.maker": {
+        "space_id": "space.workshop",
+        "first_meeting": {
+          "dialogue_id": "dialogue.maker.first_meeting",
+          "event_id": "event.resident.maker.met_player",
+          "event_kind": "resident.met_player",
+          "text": "你是农庄那边新来的吧？我是这里的工匠。平时就在工坊忙活。种地辛苦，工具用完记得收好，明天才好找。"
+        },
+        "repeat": {
+          "dialogue_id": "dialogue.maker.greeting",
+          "text": "刚整理完工作台。又要去田里忙了吗？记得天黑前回家休息。"
+        }
       }
     }
   }
