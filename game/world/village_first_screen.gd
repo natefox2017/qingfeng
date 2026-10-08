@@ -340,7 +340,7 @@ func _draw() -> void:
 	# Diagnostic skin only; not accepted village art.
 	draw_rect(Rect2(0,0,640,360),Color("82966b"))
 	if _active_conversation_state=="participating" and _active_player_resident_id.is_empty():
-		var midpoint := ($ConversationAnchors/Left.position+$ConversationAnchors/Right.position)*0.5
+		var midpoint: Vector2 = ($ConversationAnchors/Left.position+$ConversationAnchors/Right.position)*0.5
 		draw_circle(midpoint+Vector2(-6,-18),3.0,Color("f3eee2"))
 		draw_circle(midpoint+Vector2(0,-20),3.0,Color("f3eee2"))
 		draw_circle(midpoint+Vector2(6,-18),3.0,Color("f3eee2"))
