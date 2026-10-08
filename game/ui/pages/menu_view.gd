@@ -43,21 +43,21 @@ func _ready() -> void:
 	notice=Label.new();notice.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;UI_THEME.apply_text_role(notice,UI_THEME.ROLE_ERROR);column.add_child(notice)
 	hud_panel=PanelContainer.new()
 	hud_panel.anchor_left=1.0;hud_panel.anchor_right=1.0;hud_panel.anchor_top=0.0;hud_panel.anchor_bottom=0.0
-	hud_panel.offset_left=-208;hud_panel.offset_right=-8;hud_panel.offset_top=8;hud_panel.offset_bottom=8
-	hud_panel.custom_minimum_size=Vector2(200,0)
+	hud_panel.offset_left=-222;hud_panel.offset_right=-8;hud_panel.offset_top=8;hud_panel.offset_bottom=8
+	hud_panel.custom_minimum_size=Vector2(214,0)
 	hud_panel.add_theme_stylebox_override("panel",UI_THEME.hud_panel_style());hud_panel.visible=false;add_child(hud_panel)
 	hud=VBoxContainer.new();hud.add_theme_constant_override("separation",2);hud_panel.add_child(hud)
 	guide_panel=PanelContainer.new()
 	guide_panel.name="EntryGuide"
 	guide_panel.anchor_left=0.0;guide_panel.anchor_right=0.0
 	guide_panel.anchor_top=1.0;guide_panel.anchor_bottom=1.0
-	guide_panel.offset_left=8;guide_panel.offset_right=204
-	guide_panel.offset_top=-106;guide_panel.offset_bottom=-54
+	guide_panel.offset_left=8;guide_panel.offset_right=236
+	guide_panel.offset_top=-114;guide_panel.offset_bottom=-54
 	guide_panel.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	guide_panel.add_theme_stylebox_override("panel",UI_THEME.hud_panel_style())
 	guide_panel.visible=false;add_child(guide_panel)
-	var guide_column:=VBoxContainer.new();guide_column.add_theme_constant_override("separation",1);guide_panel.add_child(guide_column)
-	var guide_title:=Label.new();guide_title.text="今天的小目标"
+	var guide_column:=VBoxContainer.new();guide_column.add_theme_constant_override("separation",2);guide_panel.add_child(guide_column)
+	var guide_title:=Label.new();guide_title.text="门前菜园 · 今天的小目标"
 	guide_title.add_theme_font_size_override("font_size",UI_THEME.FONT_CAPTION)
 	guide_title.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT)
 	guide_title.mouse_filter=Control.MOUSE_FILTER_IGNORE;guide_column.add_child(guide_title)
@@ -277,7 +277,7 @@ func _entry_goal_hint(gameplay: Dictionary) -> String:
 	if harvest_plot.is_empty() or practice_plot.is_empty():
 		return ""
 	if String(harvest_plot.get("state","")) == "mature":
-		return "菜园萝卜熟了！靠近它，面对按 E 收获。"
+		return "右上菜园有成熟萝卜。靠近它，面向它按 E 收获。"
 	match String(practice_plot.get("state","")):
 		"untilled":
 			return "收下第一根萝卜！按 1 选锄头，对空田按 E 翻土。"
@@ -285,10 +285,10 @@ func _entry_goal_hint(gameplay: Dictionary) -> String:
 			return "土翻好了！按 3 选种子，对松土按 E 播种。"
 		"growing":
 			if not bool(practice_plot.get("is_watered",false)):
-				return "种子种好了！按 2 选浇水壶，对田地按 E。"
-			return "今天浇好水了！明天再来看，也能去村庄。"
+				return "新种子在土里了。按 2 选浇水壶，对田地按 E。"
+			return "种子喝饱水了！明天再来看，也可以先去村庄。"
 		"mature":
-			return "自己种的萝卜熟啦！面对它按 E 收获。"
+			return "亲手种的萝卜成熟啦！面向田地按 E 收获。"
 	return ""
 
 func show_page(page: String, context: Dictionary) -> void:
@@ -614,11 +614,9 @@ func show_page(page: String, context: Dictionary) -> void:
 			guide_panel.visible = not goal.is_empty()
 			guide_label.text = goal
 			var status:=row(hud)
-			var pause_button:=button(status,"pause","pause","暂停 / Esc")
-			pause_button.custom_minimum_size=Vector2(28,28)
+			button(status,"pause","pause","暂停 / Esc")
 			if context.get("has_gameplay",false):
-				var inventory_button:=button(status,"inventory","inventory","背包 / B")
-				inventory_button.custom_minimum_size=Vector2(28,28)
+				button(status,"inventory","inventory","背包 / B")
 			var area:=Label.new();area.text=_space_display_name(String(context.get("space_id","")));area.size_flags_horizontal=Control.SIZE_EXPAND_FILL;area.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT);status.add_child(area)
 			var gameplay: Dictionary = context.get("gameplay",{})
 			if gameplay.get("ok",false):
@@ -644,9 +642,7 @@ func show_page(page: String, context: Dictionary) -> void:
 						if selected!=null:
 							selected_name=str(gameplay.items.get(String(selected.item_id),{}).get("display_name",selected.item_id))
 						hint.text="E 使用 "+selected_name
-				if String(context.get("space_id","")) != "space.farm":
-					hint.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT)
-					hud.add_child(hint)
+				hint.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT);hud.add_child(hint)
 				_build_quickbar(gameplay)
 	if not context.get("error","").is_empty():notice.text=context.error
 	var preferred_action := str(context.get("focus_action",""))
