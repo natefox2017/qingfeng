@@ -1,0 +1,823 @@
+{
+  "source_sha256": "8579ef86b9057287a0deff32f02d3bd5990d499cdf912a52ff5f3678122094b0",
+  "raw_trace_sha256": "a182216a22c0a791d0dae01e7ee99092ff4be53f1aef1a793b69eea174354058",
+  "first_68_shop_samples": [
+    {
+      "time_ms": 72892,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 73204,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 73516,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 73816,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 74142,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 74430,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 74751,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 75071,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 75362,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 75661,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 75972,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 76276,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 76588,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 76877,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 77180,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 77492,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 77801,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 78094,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 78412,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 78716,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 79054,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 79350,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 79647,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 79947,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 80266,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 80557,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 80882,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 81187,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 81481,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 81806,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 82103,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 82412,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 82713,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 83031,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 83324,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 83638,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 83955,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 84270,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 84568,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 84874,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 85187,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 85491,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 85789,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 86095,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 86405,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 86700,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 87013,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 87321,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 87621,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 87933,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 88249,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 88560,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 88871,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 89213,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 89532,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 89831,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 90130,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 90437,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 90757,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 91065,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 91366,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 91686,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 91973,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 92288,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 92590,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 92903,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 93193,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    },
+    {
+      "time_ms": 93510,
+      "space": "space.shop",
+      "player": [
+        320.0,
+        320.0
+      ],
+      "input_vector": "(0.0, 0.0)",
+      "velocity": "(0.0, 0.0)",
+      "slide_colliders": [],
+      "pause_inventory": false
+    }
+  ],
+  "shop_positions_after_reload_evidence": "02-reloaded-shop.png; native state at capture (320,320),200 coins; return via actual E to village(400,168)"
+}

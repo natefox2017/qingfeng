@@ -7,7 +7,8 @@ Latest verified cloud work continues PR #117 on `codex/chapter1-map-delivery`; f
 - Native keyboard farming/orchard/bridge/shop/workshop/return/save/reload evidence: [manual route](cloud_qa/manual_route/).
 - Actual editor object drag, terrain painting, save/restart and 17 physics/anchor/bounds checks: [native editor](cloud_qa/editor_native/).
 - Clean cold-import official suite and 12 focused scripts: [regression](cloud_qa/final_regression/). All exits 0; 46 aggregate logs include import. Three-size quantity/settings checks pass.
-- Latest real renderer output and known gaps: [visual progress](cloud_qa/final_native/). Village density/storefront correspondence and broad uniform terrain remain unfinished against the approved reference and are the next active Issue84 work; these screenshots are progress evidence, not final acceptance.
+- Latest real renderer output and known gaps: [visual progress](cloud_qa/final_native/). Subsequent [village courtyard work](cloud_qa/village_courtyard/) brings existing buildings into view, adds visible functional entrances and a low open basin. It remains a user-review candidate; terrain density, facade polish, and diagnostic interiors/resident glyphs still differ from the approved reference.
+- Final arrival safety: [resident overlap repair](cloud_qa/arrival_safety/) passed45 occupancy checks,52 app save/door/load/cancel checks, actual native replay of the unchanged earlier manual save, and a fresh complete cold suite (exit0). Only genuinely overlapping NPCs yield to bounded, swept-clear nearby points; player anchors and source save bytes stay intact.
 - All work uses the cloud workspace `/workspace/shared/qingfeng-pr117`. PR stays Draft; do not merge or close Issue84. The user retains final visual approval.
 
 ---
