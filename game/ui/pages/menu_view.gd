@@ -25,6 +25,7 @@ var fullscreen: CheckBox
 var vsync: CheckBox
 var buttons: Dictionary = {}
 var file_dialog: FileDialog
+var approved_art_backdrop: TextureRect
 var _first_button: Button
 
 func _ready() -> void:
@@ -33,6 +34,15 @@ func _ready() -> void:
 	self.theme = UI_THEME.build()
 	var backdrop := ColorRect.new()
 	backdrop.name = "Backdrop";backdrop.color = UI_THEME.COLOR_BACKDROP;backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);backdrop.mouse_filter=Control.MOUSE_FILTER_IGNORE;add_child(backdrop)
+	approved_art_backdrop = TextureRect.new()
+	approved_art_backdrop.name = "ApprovedArtBackdrop"
+	approved_art_backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	approved_art_backdrop.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	approved_art_backdrop.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	approved_art_backdrop.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	approved_art_backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	approved_art_backdrop.visible = false
+	add_child(approved_art_backdrop)
 	center = CenterContainer.new();center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);center.mouse_filter=Control.MOUSE_FILTER_IGNORE;add_child(center)
 	panel = PanelContainer.new();panel.custom_minimum_size=UI_THEME.PAGE_MINIMUM_SIZE;center.add_child(panel)
 	panel.add_theme_stylebox_override("panel",UI_THEME.panel_style())
@@ -69,6 +79,51 @@ func _ready() -> void:
 	file_dialog.theme=self.theme;add_child(file_dialog)
 	file_dialog.file_selected.connect(func(path:String):emit_action("preview_import",{"path":path}))
 
+func _set_approved_menu_art(page: String) -> void:
+	var path: String = ""
+	match page:
+		"title":
+			path = "res://assets/approved/ui_title.png"
+		"new_game":
+			path = "res://assets/approved/ui_new_game.png"
+		"load":
+			path = "res://assets/approved/ui_load.png"
+	if path.is_empty() or not ResourceLoader.exists(path, "Texture2D"):
+		return
+	var texture := load(path) as Texture2D
+	if texture == null:
+		return
+	approved_art_backdrop.texture = texture
+	approved_art_backdrop.visible = true
+	# Approved title art has an original logo. Keep our accessible text node but
+	# do not paint a second logo on top of the artwork.
+	if page == "title":
+		title.visible = false
+		subtitle.visible = false
+
+func _menu_button(parent: Node, action: String, name: String, hint: String, enabled: bool = true, is_primary: bool = false) -> Button:
+	var node := Button.new()
+	node.name = "Menu_" + action
+	node.text = name
+	node.custom_minimum_size = Vector2(195,32)
+	node.tooltip_text = hint
+	node.accessibility_name = hint
+	node.disabled = not enabled
+	node.add_theme_font_size_override("font_size", 15)
+	node.add_theme_stylebox_override("normal", UI_THEME.menu_action_style(is_primary))
+	node.add_theme_stylebox_override("hover", UI_THEME.menu_action_style(true))
+	node.add_theme_stylebox_override("pressed", UI_THEME.menu_action_style(true,true))
+	node.add_theme_stylebox_override("focus", UI_THEME.menu_action_style(true,true))
+	node.add_theme_stylebox_override("disabled", UI_THEME.menu_action_style(false))
+	node.pressed.connect(func():emit_action(action))
+	node.mouse_entered.connect(func():notice.text=hint)
+	node.focus_entered.connect(func():notice.text=hint)
+	parent.add_child(node)
+	buttons[action]=node
+	if _first_button==null and enabled:
+		_first_button=node
+	return node
+
 func emit_action(name: String, payload: Dictionary = {}) -> void:
 	action_requested.emit(name,payload)
 
@@ -76,6 +131,10 @@ func clear_page() -> void:
 	panel.custom_minimum_size=UI_THEME.PAGE_MINIMUM_SIZE
 	title.horizontal_alignment=HORIZONTAL_ALIGNMENT_LEFT
 	subtitle.horizontal_alignment=HORIZONTAL_ALIGNMENT_LEFT
+	title.visible=true
+	subtitle.visible=true
+	approved_art_backdrop.texture=null
+	approved_art_backdrop.visible=false
 	for child in body.get_children(): body.remove_child(child);child.queue_free()
 	for child in hud.get_children(): hud.remove_child(child);child.queue_free()
 	hud_panel.visible=false
@@ -293,29 +352,37 @@ func _entry_goal_hint(gameplay: Dictionary) -> String:
 
 func show_page(page: String, context: Dictionary) -> void:
 	clear_page()
+	_set_approved_menu_art(page)
 	match page:
 		"title":
 			title.text="晴风谷";title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 			subtitle.text="QINGFENG VALLEY  ·  一段新的乡居生活";subtitle.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-			panel.custom_minimum_size=Vector2(500,250)
-			var spacer:=Control.new();spacer.custom_minimum_size.y=18;body.add_child(spacer)
-			var menu_panel:=PanelContainer.new();menu_panel.name="TitleMenu";menu_panel.add_theme_stylebox_override("panel",UI_THEME.section_style());body.add_child(menu_panel)
-			var actions:=HBoxContainer.new();actions.name="TitleActions";actions.alignment=BoxContainer.ALIGNMENT_CENTER;actions.add_theme_constant_override("separation",14);menu_panel.add_child(actions)
-			for entry: Array in [
-				["continue","play","继续","继续最近的有效存档"],
-				["new_game","new","新建","开始新的生活"],
-				["load","load","存档","读取或导入存档"],
-				["settings","settings","设置","调整声音与显示"],
-				["quit","quit","退出","退出游戏"]
-			]:
-				var cell:=VBoxContainer.new();cell.custom_minimum_size=Vector2(68,58);actions.add_child(cell)
-				button(cell,String(entry[0]),String(entry[1]),String(entry[3]),{},entry[0]!="continue" or context.has("recent_id"))
-				var caption:=label(String(entry[2]),cell);caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;UI_THEME.apply_text_role(caption,UI_THEME.ROLE_CAPTION)
+			panel.custom_minimum_size=Vector2(356,316)
+			var menu_panel:=PanelContainer.new()
+			menu_panel.name="TitleMenu"
+			menu_panel.add_theme_stylebox_override("panel",UI_THEME.section_style())
+			body.add_child(menu_panel)
+			var actions:=VBoxContainer.new()
+			actions.name="TitleActions"
+			actions.alignment=BoxContainer.ALIGNMENT_CENTER
+			actions.add_theme_constant_override("separation",5)
+			menu_panel.add_child(actions)
+			# The approved mockups contain placeholder text. Only live Buttons
+			# create saves or navigate; no screenshot pixel can capture input.
+			_menu_button(actions,"new_game","开始游戏","开始新的生活",true,true)
+			_menu_button(actions,"continue","继续游戏","继续最近的有效存档",context.has("recent_id"))
+			_menu_button(actions,"load","选择存档","读取或导入存档")
+			_menu_button(actions,"settings","设置","调整声音与显示")
+			_menu_button(actions,"quit","退出","退出游戏")
+			var note:=label("在微风与田野之间，开始新的生活。",body)
+			note.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+			UI_THEME.apply_text_role(note,UI_THEME.ROLE_CAPTION)
 
 		"new_game":
 			title.text="开始新的生活";subtitle.text="为你和同行的小狗取个名字"
 			panel.custom_minimum_size=Vector2(500,286)
 			var identity_panel:=PanelContainer.new();identity_panel.name="NewGameIdentity";identity_panel.add_theme_stylebox_override("panel",UI_THEME.section_style());body.add_child(identity_panel)
+			var sprout:=label("🌱  新的开始",identity_panel);UI_THEME.apply_text_role(sprout,UI_THEME.ROLE_CAPTION)
 			var identity:=VBoxContainer.new();identity.add_theme_constant_override("separation",5);identity_panel.add_child(identity)
 
 			var player_label:=label("你的名字",identity);UI_THEME.apply_text_role(player_label,UI_THEME.ROLE_CAPTION)
