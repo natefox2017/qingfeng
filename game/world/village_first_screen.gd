@@ -56,7 +56,7 @@ func get_resident_anchor_definitions() -> Array:
 	var definitions: Array = []
 	for child: Node in $ResidentAnchors.get_children():
 		if child is Marker2D and child.has_meta("anchor_id"):
-			definitions.append({"anchor_id":String(child.get_meta("anchor_id")),"space_id":SPACE_ID})
+			definitions.append({"anchor_id":String(child.get_meta("anchor_id")),"space_id":SPACE_ID,"world_position_px":{"x":child.position.x,"y":child.position.y}})
 	definitions.sort_custom(func(a:Dictionary,b:Dictionary): return a.anchor_id < b.anchor_id)
 	return definitions
 
