@@ -42,7 +42,7 @@ Move仅移动；Interact优先当前可达的门/床/箱子/NPC/柜台；UseSele
 ## 狗和居民
 
 狗follow/wait由权威状态决定；召回在实际可达网格上重新规划，卡住先局部让路/等候，再使用明确安全重聚规则，不能为了录屏解除世界碰撞。转场先找到双方合法落点后一起提交，失败双方仍在原Space。
-居民拥有职业服务时段、工作/休闲/交流/回家和雨天/夜间变体。先确定三人真实home/work/social锚，再配置有限行为选择；实际位置和图标头像不是两套身份。玩家对话暂停自己会话，NPC之间交流不停止全部世界。
+居民拥有职业服务时段、工作/休闲/交流/回家和雨天/夜间变体。当前底座已经把三人的 `resident_id`、`occupation_id`、普通/雨天 schedule 放进唯一 content_version，并让 schedule 中每个 home/work/social/rain activity 必须引用该居民声明的对应 anchor；所有 anchor 必须来自现有 `space.village` / `space.shop` / `space.workshop` Marker，缺锚直接拒绝配置。解析器是纯确定性模块，不移动 Actor、不调用 AI，也不会把商店柜台服务绑到店主是否在场：`CounterInteract` 继续独立提供交易。下一切片才把这些目标接到真实居民 Actor、寻路/等待/重规划；不能瞬移到 schedule 目标冒充日程。实际位置和图标头像不是两套身份。玩家对话暂停自己会话，NPC之间交流不停止全部世界。
 事实event和记忆summary分离。A亲历事件可以提及，B没有观察或被告知就不能全知；交付/赠礼是不同意图，成功事实才触发进度和关系，重复寒暄和重复礼物有日限，不能无限刷。
 
 ## 任务与可选AI
