@@ -37,16 +37,10 @@ func refresh_world_layout() -> void:
 	_set_boundary("East", Vector2(pixel_right - 8, pixel_top + height * 0.5), Vector2(16, height))
 
 func _get_used_cell_bounds() -> Rect2i:
-	var bounds := Rect2i()
-	var has_bounds := false
-	for child: Node in get_children():
-		if child is TileMapLayer and child.name != "PlotStates":
-			var layer_bounds := (child as TileMapLayer).get_used_rect()
-			if layer_bounds.size.x <= 0 or layer_bounds.size.y <= 0:
-				continue
-			bounds = layer_bounds if not has_bounds else bounds.merge(layer_bounds)
-			has_bounds = true
-	return bounds if has_bounds else Rect2i()
+	# Only authored ground defines world extent. River, paths, town stone and
+	# decorative overlays must never resize the camera or perimeter by accident.
+	var ground := get_node_or_null("TerrainGround") as TileMapLayer
+	return ground.get_used_rect() if ground != null else Rect2i()
 
 func _set_boundary(node_name: String, world_position: Vector2, size: Vector2) -> void:
 	var body := get_node("Solids/" + node_name) as StaticBody2D
