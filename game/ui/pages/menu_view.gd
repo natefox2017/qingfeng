@@ -249,15 +249,34 @@ func show_page(page: String, context: Dictionary) -> void:
 			label("玩家："+context.envelope.snapshot.player_name+"\n狗名："+context.envelope.snapshot.dog_name+"\n保存时间："+context.envelope.saved_at_utc+"\n内容版本："+context.envelope.content_version)
 			var actions:=row();button(actions,"confirm_import","accept","确认创建本机副本");button(actions,"cancel_import","back","取消导入，不写入任何存档")
 		"settings":
-			title.text="设置";subtitle.text="更改后先预览，10秒内确认；否则自动恢复。"
-			label("主音量（当前没有正式音乐与音效素材）")
-			volume=HSlider.new();volume.min_value=0;volume.max_value=1;volume.step=0.05;volume.value=context.settings.master_volume;body.add_child(volume)
-			fullscreen=CheckBox.new();fullscreen.text="全屏显示";fullscreen.button_pressed=context.settings.is_fullscreen;body.add_child(fullscreen)
-			vsync=CheckBox.new();vsync.text="垂直同步";vsync.button_pressed=context.settings.is_vsync_enabled;body.add_child(vsync)
+			title.text="设置";subtitle.text="先预览，再确认 · 未确认的显示变更会自动恢复"
+			panel.custom_minimum_size=Vector2(520,286)
+
+			var sound_panel:=PanelContainer.new();sound_panel.name="SettingsSoundSection";sound_panel.add_theme_stylebox_override("panel",UI_THEME.section_style());body.add_child(sound_panel)
+			var sound_column:=VBoxContainer.new();sound_column.add_theme_constant_override("separation",5);sound_panel.add_child(sound_column)
+			var sound_title:=label("声音",sound_column);UI_THEME.apply_text_role(sound_title,UI_THEME.ROLE_HEADING)
+			var volume_row:=row(sound_column)
+			var volume_name:=label("主音量",volume_row);volume_name.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+			var volume_value:=label("%d%%" % roundi(float(context.settings.master_volume)*100.0),volume_row);volume_value.name="VolumeValue";UI_THEME.apply_text_role(volume_value,UI_THEME.ROLE_QUANTITY)
+			volume=HSlider.new();volume.name="SettingVolume";volume.min_value=0;volume.max_value=1;volume.step=0.05;volume.value=context.settings.master_volume;volume.tooltip_text="调整主音量";volume.accessibility_name="主音量";sound_column.add_child(volume)
+			volume.value_changed.connect(func(value:float):volume_value.text="%d%%" % roundi(value*100.0))
+
+			var display_panel:=PanelContainer.new();display_panel.name="SettingsDisplaySection";display_panel.add_theme_stylebox_override("panel",UI_THEME.section_style());body.add_child(display_panel)
+			var display_column:=VBoxContainer.new();display_column.add_theme_constant_override("separation",4);display_panel.add_child(display_column)
+			var display_title:=label("显示",display_column);UI_THEME.apply_text_role(display_title,UI_THEME.ROLE_HEADING)
+			fullscreen=CheckBox.new();fullscreen.name="SettingFullscreen";fullscreen.text="全屏显示";fullscreen.button_pressed=context.settings.is_fullscreen;fullscreen.tooltip_text="切换全屏显示";fullscreen.accessibility_name="全屏显示";display_column.add_child(fullscreen)
+			vsync=CheckBox.new();vsync.name="SettingVsync";vsync.text="垂直同步";vsync.button_pressed=context.settings.is_vsync_enabled;vsync.tooltip_text="切换垂直同步";vsync.accessibility_name="垂直同步";display_column.add_child(vsync)
+
+			var settings_note:=label("预览只临时应用；确认后才写入设置文件。");UI_THEME.apply_text_role(settings_note,UI_THEME.ROLE_CAPTION)
 			var actions:=row();button(actions,"preview_settings","accept","预览设置");button(actions,"back","back","放弃未应用更改")
+			volume.grab_focus()
 		"display_confirm":
-			title.text="保留显示设置？";subtitle.text="Esc、失焦或超时会恢复之前的设置。"
-			countdown=label("10 秒后自动恢复")
+			title.text="保留显示设置？";subtitle.text="确认前仍是临时预览"
+			panel.custom_minimum_size=Vector2(440,230)
+			var confirm_panel:=PanelContainer.new();confirm_panel.name="DisplayConfirmSummary";confirm_panel.add_theme_stylebox_override("panel",UI_THEME.section_style());body.add_child(confirm_panel)
+			var confirm_column:=VBoxContainer.new();confirm_column.add_theme_constant_override("separation",6);confirm_panel.add_child(confirm_column)
+			var confirm_text:=label("画面设置已经临时应用。若窗口失焦、按 Esc 或倒计时结束，将恢复之前的设置。",confirm_column);confirm_text.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+			countdown=label("10 秒后自动恢复",confirm_column);countdown.name="SettingsCountdown";UI_THEME.apply_text_role(countdown,UI_THEME.ROLE_HEADING)
 			var actions:=row();button(actions,"confirm_settings","accept","保留并保存设置");button(actions,"revert_settings","back","立即恢复")
 		"loading":
 			title.text="准备进入";subtitle.text="正在加载场景和校验落点；操作取消前不会创建新档。"
