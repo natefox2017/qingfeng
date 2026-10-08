@@ -690,6 +690,33 @@
       "processing": "Free guarded pixel cleanup removed growing bare roots and reduced both sprites to <=24 existing source colors; integer translation to shared foot anchor only; no resizing",
       "license_note": "PixelLab ordinary PixFlux generation, project approved original reference palette; no soil, economics or gameplay changes",
       "drive_url": null
+    },
+    {
+      "asset_id": "asset.object.chapter1.shrub_ground_shadow",
+      "runtime_path": "game/assets/chapter1/objects/shrub_ground_shadow.png",
+      "source_path": "art/sources/chapter1/objects/shrub_ground_shadow.png",
+      "editable_source_path": "art/sources/chapter1/objects/shrub_ground_shadow.aseprite",
+      "rebuild_script": "art/sources/chapter1/objects/shrub_ground_shadow.js",
+      "source_sha256": "ce33aa555b4fd47368daa6543a12a3b580acb7857c4d2fb5512097c3c8822e6b",
+      "sha256": "ce33aa555b4fd47368daa6543a12a3b580acb7857c4d2fb5512097c3c8822e6b",
+      "size_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        62
+      ],
+      "alpha_values": [
+        0,
+        255
+      ],
+      "review_status": "proposed",
+      "reviewer": null,
+      "world_scale": 1,
+      "license_note": "Project-original native LibreSprite pixel strokes; no new PixelLab call. Existing bush canvas used only for dimensions.",
+      "processing": "Two intentional stepped pencil colors; no noise, filtering, resampling or gradients",
+      "usage": "ground_contact_shadow"
     }
   ],
   "crop_status_mapping": {

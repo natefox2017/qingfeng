@@ -18,6 +18,8 @@
 
 [ext_resource type="PackedScene" path="res://world/objects/meadow_shrub_cluster.tscn" id="shrub_cluster"]
 
+[ext_resource type="PackedScene" path="res://world/objects/cherry_tree.tscn" id="seasonal_tree"]
+
 [sub_resource type="RectangleShape2D" id="BoundaryHorizontal"]
 resource_local_to_scene = true
 size = Vector2(1280, 16)
@@ -474,5 +476,5 @@ position = Vector2(928, 464)
 [node name="MeadowBorderCluster04" type="Node2D" parent="FootSorted" instance=ExtResource("shrub_cluster")]
 position = Vector2(272, 400)
 
-[node name="MeadowBorderCluster05" type="Node2D" parent="FootSorted" instance=ExtResource("shrub_cluster")]
+[node name="MeadowBorderCluster05" type="Node2D" parent="FootSorted" instance=ExtResource("seasonal_tree")]
 position = Vector2(992, 400)
