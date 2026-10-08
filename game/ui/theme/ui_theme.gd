@@ -16,23 +16,24 @@ const FONT_QUANTITY := 12
 const FONT_TOOLTIP := 11
 const FONT_ERROR := 12
 
-const COLOR_INK := Color("2c4035")
-const COLOR_MUTED := Color("697664")
-const COLOR_ERROR := Color("846242")
-const COLOR_ICON := Color("365547")
-const COLOR_ICON_DISABLED := Color("979e92")
-const COLOR_BACKDROP := Color("ebecdd")
-const COLOR_SURFACE := Color("f8f6e9")
-const COLOR_BUTTON := Color("e5e8d5")
-const COLOR_BUTTON_ACTIVE := Color("d4debe")
-const COLOR_BORDER := Color("cad0bb")
-const COLOR_FOCUS := Color("6d896c")
-const COLOR_HUD_TEXT := Color("f5f3de")
-const COLOR_HUD_SURFACE := Color(0.10,0.16,0.12,0.90)
-const COLOR_HUD_BORDER := Color("718473")
-const COLOR_SLOT_SURFACE := Color("f4f0dd")
-const COLOR_SLOT_SELECTED := Color("ead596")
-const COLOR_SLOT_BORDER := Color("88917d")
+## Natural wood, sunlit parchment, and leaf-green focus: approved spring farm UI.
+const COLOR_INK := Color("563721")
+const COLOR_MUTED := Color("7e644c")
+const COLOR_ERROR := Color("a14f38")
+const COLOR_ICON := Color("654126")
+const COLOR_ICON_DISABLED := Color("aaa08d")
+const COLOR_BACKDROP := Color("7eaa79")
+const COLOR_SURFACE := Color("f9e9cc")
+const COLOR_BUTTON := Color("eed6ab")
+const COLOR_BUTTON_ACTIVE := Color("e5bd75")
+const COLOR_BORDER := Color("976845")
+const COLOR_FOCUS := Color("658745")
+const COLOR_HUD_TEXT := Color("fff2d4")
+const COLOR_HUD_SURFACE := Color(0.19,0.27,0.18,0.92)
+const COLOR_HUD_BORDER := Color("6d8555")
+const COLOR_SLOT_SURFACE := Color("f4dfba")
+const COLOR_SLOT_SELECTED := Color("ecc36d")
+const COLOR_SLOT_BORDER := Color("9e7953")
 
 const PAGE_MINIMUM_SIZE := Vector2(490, 280)
 const PAGE_MARGIN := 20.0
@@ -57,6 +58,9 @@ static func panel_style() -> StyleBoxFlat:
 	style.set_border_width_all(1)
 	style.set_corner_radius_all(PAGE_RADIUS)
 	style.set_content_margin_all(PAGE_MARGIN)
+	style.set_border_width_all(3)
+	style.shadow_color = Color(0.20,0.13,0.08,0.44)
+	style.shadow_size = 4
 	return style
 
 static func section_style() -> StyleBoxFlat:
@@ -66,6 +70,8 @@ static func section_style() -> StyleBoxFlat:
 	style.set_border_width_all(1)
 	style.set_corner_radius_all(CONTROL_RADIUS)
 	style.set_content_margin_all(7.0)
+	style.shadow_color = Color(0.28,0.16,0.07,0.20)
+	style.shadow_size = 2
 	return style
 
 static func hud_panel_style() -> StyleBoxFlat:
@@ -84,6 +90,18 @@ static func slot_style(selected: bool, emphasized := false) -> StyleBoxFlat:
 	style.set_border_width_all(2 if selected or emphasized else 1)
 	style.set_corner_radius_all(CONTROL_RADIUS)
 	style.set_content_margin_all(2.0)
+	return style
+
+static func menu_action_style(highlighted: bool, focused: bool = false) -> StyleBoxFlat:
+	# Texture-independent fallback; final backdrop PNG never owns interactions.
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color("c9dd8e") if highlighted else Color("efd3a0")
+	style.border_color = COLOR_FOCUS if focused else Color("91633e")
+	style.set_border_width_all(3 if focused else 2)
+	style.set_corner_radius_all(6)
+	style.set_content_margin_all(6)
+	style.shadow_color = Color(0.19,0.12,0.07,0.31)
+	style.shadow_size = 2
 	return style
 
 static func build() -> Theme:

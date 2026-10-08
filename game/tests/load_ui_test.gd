@@ -57,6 +57,7 @@ func run() -> void:
 	var list := view.body.find_child("SaveList",true,false) as ScrollContainer
 	var entries := view.body.find_child("SaveEntries",true,false) as VBoxContainer
 	check(list!=null and entries!=null and entries.get_child_count()==2,"save page renders one card per save result")
+	check((entries.get_child(0) is PanelContainer) and (entries.get_child(1) is PanelContainer),"saved cards remain real Godot panels, not rendered screenshot slots")
 	var text := ""
 	for child: Node in view.body.find_children("*","Label",true,false):
 		text += (child as Label).text+"\n"
