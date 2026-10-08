@@ -1,6 +1,7 @@
 extends SceneTree
 
 const MAIN = preload("res://app/main.tscn")
+const CODEC = preload("res://persistence/session_codec.gd")
 
 var checks := 0
 var failures := 0
@@ -193,10 +194,17 @@ func run() -> void:
 	check(app.gameplay_session.farm.get_plot("plot.farm.004").is_watered,"replacement crop is watered for the next cycle")
 	check(app.gameplay_session.storage.quantity_of("item.radish_seed")==seeds_to_store,"chest reserve remains untouched through sell and replant")
 	check(app.gameplay_session.wallet.money==195,"three-day buy/sell/rebuy loop leaves deterministic configured money")
+	var precision_snapshot: Dictionary = app.active_snapshot.duplicate(true)
+	precision_snapshot.gameplay.residents.residents[2].world_position_px.x=114.66665649414063
+	var precision_save: Dictionary = app.store.write_new(precision_snapshot)
+	check(precision_save.ok,"fractional resident position saves with a stable checksum")
+	if precision_save.ok:
+		var precision_read: Dictionary = app.store.read_save(precision_save.save_id)
+		check(precision_read.ok and CODEC.canonical(precision_read.envelope.snapshot)==CODEC.canonical(precision_snapshot),"fractional resident position survives save read")
 
 	# Save/restart full cross-system state at the end of the loop.
 	var save: Dictionary = app.save_progress()
-	check(save.ok,"completed economy loop saves")
+	check(save.ok,"completed economy loop saves; error="+save.get("error_code",""))
 	if save.ok:
 		var envelope: Dictionary = app.store.read_save(save.save_id).envelope
 		check(int(envelope.schema_version)==7,"completed loop writes current schema-seven gameplay save")
