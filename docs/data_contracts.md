@@ -34,7 +34,7 @@
 | --- | --- |
 | SaveEnvelope | save_format:string固定qingfeng；schema_version:int，入口夹具=1、无回执玩法快照=2、持久化命令回执=3；content_version:string；save_id:string；saved_at_utc:string UTC ISO8601；snapshot:严格对象；checksum:sha256；由persistence写 |
 | SessionState | session_id:string；generation:int>=0；领域快照；由app/session管理 |
-| ClockState | game_minute:int>=0，自第1天00:00累加的游戏分钟；非UTC；由Clock写 |
+| ClockState | game_minute:int>=0，自第1天00:00累加的游戏分钟；非UTC；由Clock写。现实时间换算率不进快照，来自content_version的real_seconds_per_game_minute:number>0 |
 | ActorState | actor_id/display_name/appearance_id/space_id:string；world_position_px:{x:number,y:number}；facing:north/south/east/west；由运动/会话交接 |
 | DogState | ActorState加mode:follow/wait，last_safe_anchor_id:string；recall是命令，不是第三份坐标 |
 | ContainerState | container_id:string，capacity:int>0，slots:固定容量数组；空槽null，否则item_id:string、quantity:int>0；玩家背包由Inventory写，家庭箱子由Storage写 |
@@ -47,7 +47,7 @@
 
 首个完整玩法存档机器合同见 `schemas/save_v2.schema.json`；当前写入版本为 `schemas/save_v4.schema.json`。schema 4 在 schema 3 的幂等回执基础上加入 `storage` 家庭箱子快照；旧 schema 3 读取时显式迁移为空箱子，下一次正常保存升级为 schema 4。schema 3 在 Clock / Inventory / Wallet / Farm 之外保存当前会话 `CommandJournal` 回执（最多512条，仍受256 KiB文件上限约束），使同 command_id 同请求在保存重启后继续回放原结果，同ID异请求继续冲突。schema 2 继续只读兼容，读取时不会伪造历史回执；用户主动导入副本会生成新 session_id，并清空源会话回执，因为指纹绑定原 session_id。地图 plot 坐标的最终合法性仍由加载后的 WORLD 布局 + `GameplaySession.restore()` 再验，存档不能成为第二份地图来源。schema 1 只保留当前碰撞入口夹具兼容。
 
-嵌套对象须在实施前补机器schema；上表未规定的业务上限由content_version表定义，不散落代码。首个运行表是 `first_playable_v1`（机器结构见 `schemas/content_version.schema.json`，运行校验见 `game/content/content_catalog.gd`），当前固定12格背包、24格家庭箱子、200初始货币、4袋首作物种子、06:00日初和08:00–20:00商店窗口；后续领域/UI只读取，不复制。新档发物只一次，所有发布所需领域一起验证/恢复；不得加载旧项目格式或访问旧用户目录。
+嵌套对象须在实施前补机器schema；上表未规定的业务上限由content_version表定义，不散落代码。首个运行表是 `first_playable_v1`（机器结构见 `schemas/content_version.schema.json`，运行校验见 `game/content/content_catalog.gd`），当前固定12格背包、24格家庭箱子、200初始货币、4袋首作物种子、06:00日初、0.7现实秒/游戏分钟和08:00–20:00商店窗口；后续领域/UI只读取，不复制。新档发物只一次，所有发布所需领域一起验证/恢复；不得加载旧项目格式或访问旧用户目录。
 地形格16px不等于导出屏幕像素。cell_position是整数地图格，source_anchor_px是源图片左上角坐标，world_position_px是未缩放世界像素，viewport_position_px是渲染视口坐标；转换由布局统一。
 
 ## 布局对象与UI
