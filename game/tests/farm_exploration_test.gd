@@ -24,6 +24,7 @@ func run() -> void:
 	var player := scene.get_player() as CharacterBody2D
 	var camera := player.get_node("Camera2D") as Camera2D
 	var tiles := scene.get_node("TerrainGround") as TileMapLayer
+	var details := scene.get_node("GroundDetails") as TileMapLayer
 	check(tiles.get_used_cells().size()==6144 and tiles.get_used_rect()==Rect2i(0,0,96,64),
 		"editable authored map extends to 1536 by 1024 world pixels")
 	check(camera.limit_right==1536 and camera.limit_bottom==1024 and camera.enabled,
@@ -31,6 +32,11 @@ func run() -> void:
 	check(scene.get_spawn_position()==Vector2(144,176),"legacy save and front door spawn stay fixed")
 	check(scene.layout_contract_valid(),"expanded scene retains authoritative plot and door contract")
 	check(tiles.get_cell_source_id(Vector2i(92,59))==0,"distant map chunks are real editable TileMapLayer cells")
+	check(tiles.get_cell_atlas_coords(Vector2i(30,40)).y==1 and tiles.get_cell_atlas_coords(Vector2i(35,43)).y==1,
+		"southern bridge deck uses the existing plank atlas across the walk lane")
+	check(details.get_cell_atlas_coords(Vector2i(30,40))==Vector2i(7,3)
+		and details.get_cell_atlas_coords(Vector2i(35,43))==Vector2i(7,3),
+		"southern bridge has visible rails at both banks")
 
 	player.set_input_enabled(true)
 	Input.action_press("move_down")
@@ -47,7 +53,7 @@ func run() -> void:
 	Input.action_release("move_right")
 	await physics_frame
 	check(player.position.x>760.0 and player.position.distance_to(before_bridge)>520,
-		"player physically crosses the lower river bridge into the eastern meadow")
+		"player physically crosses the railed southern bridge into the eastern meadow")
 	check(camera.get_screen_center_position().x>600.0,
 		"camera really tracks beyond old 640px screen boundary")
 	check(player.is_input_enabled and player.velocity.is_zero_approx(),

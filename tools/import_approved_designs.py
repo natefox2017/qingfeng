@@ -80,17 +80,22 @@ def main() -> int:
     for name in ("ui_title", "ui_new_game", "ui_load"):
         register_ui_asset(assets, name, raws[name])
 
-    # Write only after every input and manifest assertion passes.
+    # Source verification always covers all eight originals, but the repository
+    # stores only canonical references. The three alternate farm/HUD images are
+    # retained in the source manifest for provenance and are not copied.
     references = ROOT / "art/approved/refs"
     references.mkdir(parents=True, exist_ok=True)
-    for name, raw in raws.items():
-        (references / f"{name}.png").write_bytes(raw)
+    for entry in expected["images"]:
+        path = entry.get("repo_reference_path")
+        if path is not None:
+            (ROOT / path).write_bytes(raws[entry["id"]])
     runtime = ROOT / "game/assets/approved"
     runtime.mkdir(parents=True, exist_ok=True)
     for name in ("ui_title", "ui_new_game", "ui_load"):
         (runtime / f"{name}.png").write_bytes(raws[name])
     ASSETS_PATH.write_text(json.dumps(assets, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print("APPROVED_ART_IMPORTED references=8 runtime_ui=3 SHA256_verified=8")
+    stored_references = sum(entry.get("repo_reference_path") is not None for entry in expected["images"])
+    print(f"APPROVED_ART_IMPORTED references={stored_references} runtime_ui=3 SHA256_verified={len(raws)}")
     print("Next: open Godot and check the real controls above the menu backdrops.")
     return 0
 

@@ -54,6 +54,17 @@ func run() -> void:
 	check(_blocked(Vector2(400,192)), "tree root blocks movement")
 	check(_blocked(Vector2(528,96)) and _blocked(Vector2(528,296)), "river segments block movement away from bridge")
 	check(not _blocked(Vector2(528,208)), "bridge lane remains physically passable")
+	var orchard_columns := [Vector2(224,312),Vector2(352,300),Vector2(456,320),
+		Vector2(192,432),Vector2(320,446),Vector2(448,430),
+		Vector2(224,564),Vector2(352,550),Vector2(456,570),
+		Vector2(192,760),Vector2(320,748),Vector2(448,770)]
+	var orchard_matches := true
+	for index in range(1, 13):
+		var root_position: Vector2 = scene.get_node("Solids/OrchardRoot%02d" % index).position
+		var sprite_position: Vector2 = scene.get_node("FootSorted/OrchardOak%02d" % index).position
+		if root_position != orchard_columns[index - 1] or sprite_position != root_position + Vector2(0, 12):
+			orchard_matches = false
+	check(orchard_matches, "reusable oak sprites and collision roots form the authored orchard rows")
 
 	scene.set_input_enabled(false)
 	check(not scene.get_player().is_input_enabled, "world input can be disabled by app lifecycle")
