@@ -1,0 +1,203 @@
+{
+  "schema_version": 1,
+  "contract_id": "chapter1.asset_source_index.v1",
+  "layout_contract": "docs/maps/chapter1_layout.md",
+  "dedupe_key": "canonical_source.sha256",
+  "rules": [
+    "One entry represents one canonical source image or font; equal SHA-256 values share one entry.",
+    "A design reference is not a runtime asset. A proposed runtime candidate is not accepted art.",
+    "drive_url is null when no exact, verified Drive file URL is recorded; do not infer one from a folder or filename."
+  ],
+  "sources": [
+    {
+      "source_id": "world_chapter1_map",
+      "asset_ids": [],
+      "kind": "approved_design_reference",
+      "role": "chapter_one_world_topology_only",
+      "canonical_source": {
+        "repository_path": "art/approved/refs/world_chapter1_map.png",
+        "sha256": "ba35eef32eb0a49a5e50ad8ec4498148845c8f4065d3695b315c4ea1286bddd7",
+        "size_bytes": 3616159,
+        "size_px": [1672, 941],
+        "drive_url": "https://drive.google.com/file/d/1y8qdqr3I3Pm9Ey2MTQnbVzCD-pX5zjxW/view"
+      },
+      "reuse": ["docs/maps/chapter1_layout.md"],
+      "repository_copies": [],
+      "runtime_paths": [],
+      "status": "approved_reference_not_runtime_art"
+    },
+    {
+      "source_id": "ui_title",
+      "asset_ids": ["asset.ui.approved.ui_title"],
+      "kind": "approved_design_reference",
+      "role": "title_page_composition_reference",
+      "canonical_source": {
+        "repository_path": "art/approved/refs/ui_title.png",
+        "sha256": "39efb1446e5698f5604dcccf539276e868361dc2f9c1c28b389160ca52ab85b0",
+        "size_bytes": 3135728,
+        "size_px": [1672, 941],
+        "drive_url": "https://drive.google.com/file/d/1W8qIZPhIaGRirgYwHXozM8QTNJO0ccYW/view"
+      },
+      "reuse": ["title-page design reference"],
+      "repository_copies": ["game/assets/approved/ui_title.png"],
+      "runtime_paths": [],
+      "runtime_policy": "reference_only; do not use the full reference image as a game screen",
+      "status": "approved_reference_not_runtime_art"
+    },
+    {
+      "source_id": "ui_new_game",
+      "asset_ids": ["asset.ui.approved.ui_new_game"],
+      "kind": "approved_design_reference",
+      "role": "new_game_page_composition_reference",
+      "canonical_source": {
+        "repository_path": "art/approved/refs/ui_new_game.png",
+        "sha256": "83a8d248e7f911766470be817fddd8c9d619465a3da78c5a758313136e24eff6",
+        "size_bytes": 2960138,
+        "size_px": [1672, 941],
+        "drive_url": "https://drive.google.com/file/d/1mpxQMYUR7VtsSjyNE6YUB_g3fcopsCFl/view"
+      },
+      "reuse": ["new-game page design reference"],
+      "repository_copies": ["game/assets/approved/ui_new_game.png"],
+      "runtime_paths": [],
+      "runtime_policy": "reference_only; do not use the full reference image as a game screen",
+      "status": "approved_reference_not_runtime_art"
+    },
+    {
+      "source_id": "ui_load",
+      "asset_ids": ["asset.ui.approved.ui_load"],
+      "kind": "approved_design_reference",
+      "role": "load_page_composition_reference",
+      "canonical_source": {
+        "repository_path": "art/approved/refs/ui_load.png",
+        "sha256": "bb44cc1adc116110a3e8fdd5b1190c417d5e76c3076b33513fa9c792b1a8bc15",
+        "size_bytes": 2790633,
+        "size_px": [1672, 941],
+        "drive_url": "https://drive.google.com/file/d/1iO3P5-LlAS6EsCpbByFUB-nJzBPos4Hf/view"
+      },
+      "reuse": ["load-page design reference"],
+      "repository_copies": ["game/assets/approved/ui_load.png"],
+      "runtime_paths": [],
+      "runtime_policy": "reference_only; do not use the full reference image as a game screen",
+      "status": "approved_reference_not_runtime_art"
+    },
+    {
+      "source_id": "phase0_terrain_candidate",
+      "asset_ids": ["asset.terrain.phase0"],
+      "kind": "project_original_runtime_candidate",
+      "role": "phase0_farm_terrain_candidate",
+      "canonical_source": {
+        "repository_path": "game/assets/phase0/farm_terrain_16.png",
+        "sha256": "2f09ea3a17d45ba054eac2b444acd3d2a353a5bbb174d2606549f2d4ff0f10ee",
+        "size_px": [128, 64],
+        "drive_url": null
+      },
+      "reuse": ["game/assets/phase0/farm_tileset.tres", "game/world/farm_first_screen.tscn"],
+      "runtime_paths": ["game/assets/phase0/farm_terrain_16.png"],
+      "license": "project-original; art/PHASE0_SOURCE.md",
+      "status": "proposed_not_accepted"
+    },
+    {
+      "source_id": "phase0_farmhouse_candidate",
+      "asset_ids": ["asset.object.phase0_house"],
+      "kind": "project_original_runtime_candidate",
+      "role": "phase0_farmhouse_candidate",
+      "canonical_source": {
+        "repository_path": "game/assets/phase0/farmhouse.png",
+        "sha256": "b08cc7e0c6db1de3e33a3d263383f1823d8e260c2c2e61cc8b09c807de17e725",
+        "size_px": [192, 152],
+        "drive_url": null
+      },
+      "reuse": ["game/world/farm_first_screen.tscn"],
+      "runtime_paths": ["game/assets/phase0/farmhouse.png"],
+      "license": "project-original; art/PHASE0_SOURCE.md",
+      "status": "proposed_not_accepted"
+    },
+    {
+      "source_id": "phase0_oak_candidate",
+      "asset_ids": ["asset.object.phase0_oak"],
+      "kind": "project_original_runtime_candidate",
+      "role": "phase0_tree_candidate",
+      "canonical_source": {
+        "repository_path": "game/assets/phase0/oak_tree.png",
+        "sha256": "56bf08cd63b9c6d4da16396ddbd8a7f6fee4e49eae9188af7cef3920c6a93840",
+        "size_px": [80, 96],
+        "drive_url": null
+      },
+      "reuse": ["game/world/farm_first_screen.tscn"],
+      "runtime_paths": ["game/assets/phase0/oak_tree.png"],
+      "license": "project-original; art/PHASE0_SOURCE.md",
+      "status": "proposed_not_accepted"
+    },
+    {
+      "source_id": "phase0_player_candidate",
+      "asset_ids": ["asset.character.phase0_player"],
+      "kind": "project_original_runtime_candidate",
+      "role": "phase0_player_candidate",
+      "canonical_source": {
+        "repository_path": "game/assets/phase0/player_4dir.png",
+        "sha256": "f3634ba5f365168723432ee6961649a2f18db2ae77609a76f2e4a8497b3ce730",
+        "size_px": [96, 128],
+        "drive_url": null
+      },
+      "reuse": [
+        "game/world/farm_first_screen.tscn",
+        "game/world/village_first_screen.tscn",
+        "game/world/house_interior.tscn",
+        "game/world/shop_interior.tscn",
+        "game/world/workshop_interior.tscn"
+      ],
+      "runtime_paths": ["game/assets/phase0/player_4dir.png"],
+      "license": "project-original; art/PHASE0_SOURCE.md",
+      "status": "proposed_not_accepted"
+    },
+    {
+      "source_id": "noto_sans_cjk_sc_regular",
+      "asset_ids": ["asset.font.noto_sans_cjk_sc_regular"],
+      "kind": "licensed_font",
+      "role": "simplified_chinese_ui_font",
+      "canonical_source": {
+        "repository_path": "game/assets/fonts/NotoSansCJKsc-Regular.otf",
+        "sha256": "2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b",
+        "source_url": "https://github.com/notofonts/noto-cjk/blob/523d033d6cb47f4a80c58a35753646f5c3608a78/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf",
+        "drive_url": null
+      },
+      "reuse": ["game UI font resource"],
+      "runtime_paths": ["game/assets/fonts/NotoSansCJKsc-Regular.otf"],
+      "license": "OFL-1.1; art/licenses/noto_sans_cjk_ofl.txt",
+      "status": "validated_source"
+    }
+  ],
+  "unavailable_or_rejected_sources": [
+    {
+      "source_id": "farm_exploration_reference",
+      "sha256": "613bc17a28ba295e066add7c8764698bd78114f2de8ce9c326769dcdf2afb095",
+      "repository_path": null,
+      "drive_url": null,
+      "recorded_relation": "semantic duplicate of farm_first_screen",
+      "status": "excluded_semantic_duplicate; no repository copy"
+    },
+    {
+      "source_id": "riverside_reference",
+      "sha256": "64daa2b878760d5fd25a9baebe4ae2b9fd05b3ee09676f7be763f374f18bc48f",
+      "repository_path": null,
+      "drive_url": null,
+      "recorded_relation": "historical local reference; does not override world_chapter1_map",
+      "status": "excluded_from_canonical_masters; no repository copy"
+    },
+    {
+      "source_id": "rejected_map_asset_poster",
+      "sha256": "81399ab9863c65c460cbd9c870dd4e344896adf1f52789fa4f68c6f10c609b33",
+      "repository_path": null,
+      "drive_url": null,
+      "evidence_url": "https://github.com/natefox2017/qingfeng/issues/84#issuecomment-6059449342",
+      "recorded_relation": "rejected generated map-and-asset poster; not the approved map",
+      "status": "rejected_do_not_use"
+    }
+  ],
+  "verification_limits": [
+    "SHA-256 was recomputed for all listed repository PNGs and the four approved master reference PNGs in this worktree.",
+    "No per-file Drive URL or remote SHA was verified for the phase0 candidates; their unique source is the checked-in project-original PNG.",
+    "The Batch 01 archive is documented at https://drive.google.com/file/d/1UdLU4RP5cbdeexmrfYvQNcXZunjqi9hi/view, but the remote archive SHA was not re-downloaded or verified in this work; archive members are therefore not registered as canonical individual sources.",
+    "No image review or Godot runtime acceptance is implied by this index."
+  ]
+}
