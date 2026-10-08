@@ -3,6 +3,7 @@ extends SceneTree
 ## Centered sprites such as fence posts have a different explicit offset and
 ## are intentionally outside this top-left authoring convention.
 var anchors: Dictionary = {}
+var observed: Dictionary = {}
 var checks := 0
 var failures := 0
 
@@ -21,8 +22,17 @@ func _initialize() -> void:
 		audit_scene("res://world/objects/" + file)
 	for path: String in ["res://world/farm_first_screen.tscn", "res://world/village_first_screen.tscn"]:
 		audit_scene(path)
+	var expected: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/chapter1/object_anchor_contracts.json"))
+	# Fixed reviewed membership must not disappear if texture or offset changes.
+	# Extra future nodes still receive the metadata-based anchor test above.
+	for key: String in expected:
+		checks += 1
+		if not observed.has(key) or JSON.stringify(observed[key]) != JSON.stringify(expected[key]):
+			failures += 1
+			print("OBJECT_ANCHOR_MEMBERSHIP_FAIL ", key)
+
 	print("OBJECT_ANCHOR_RESULT checks=%d failures=%d" % [checks, failures])
-	quit(0 if failures == 0 and checks > 100 else 1)
+	quit(0 if failures == 0 and observed.size() >= expected.size() and not expected.is_empty() else 1)
 
 func audit_scene(path: String) -> void:
 	var scene := (load(path) as PackedScene).instantiate()
@@ -34,6 +44,7 @@ func audit_scene(path: String) -> void:
 		# Only test sprites already authored with a top-left (-anchor) offset.
 		var authored_delta := sprite.offset + anchor
 		if sprite.offset.x >= 0 or sprite.offset.y >= 0 or absf(authored_delta.x) > 0.01 or absf(authored_delta.y) > 2.0: continue
+		observed[path + "#" + String(scene.get_path_to(sprite))] = {"texture":sprite.texture.resource_path,"anchor":[anchor.x,anchor.y],"seating_delta":[authored_delta.x,authored_delta.y]}
 		checks += 1
 		var drawn_delta := sprite.get_rect().position + anchor
 		if drawn_delta != authored_delta:
