@@ -521,6 +521,8 @@ func show_page(page: String, context: Dictionary) -> void:
 			if bool(dialogue.get("is_first_meeting",false)):
 				var first_caption:=label("第一次交谈",dialogue_column);UI_THEME.apply_text_role(first_caption,UI_THEME.ROLE_CAPTION)
 			var line:=Label.new();line.name="DialogueText";line.text=String(dialogue.get("text",""));line.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;line.size_flags_vertical=Control.SIZE_EXPAND_FILL;UI_THEME.apply_text_role(line,UI_THEME.ROLE_BODY);dialogue_column.add_child(line)
+			if not String(context.get("error","")).is_empty():
+				var dialogue_error:=Label.new();dialogue_error.text=String(context.error);dialogue_error.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;UI_THEME.apply_text_role(dialogue_error,UI_THEME.ROLE_ERROR);dialogue_column.add_child(dialogue_error)
 			var dialogue_actions:=HBoxContainer.new();dialogue_actions.alignment=BoxContainer.ALIGNMENT_END;dialogue_column.add_child(dialogue_actions)
 			button(dialogue_actions,"close_dialogue","accept","结束交谈 / Esc")
 			var close_caption:=label("结束",dialogue_actions);UI_THEME.apply_text_role(close_caption,UI_THEME.ROLE_CAPTION)
