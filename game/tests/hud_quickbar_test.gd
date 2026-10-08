@@ -56,6 +56,12 @@ func run() -> void:
 	await process_frame
 
 	check(view.hud_panel.visible and not view.panel.visible,"world HUD uses dedicated visible panel")
+	check(view.hud_panel.anchor_left==1.0 and view.hud_panel.custom_minimum_size.x<=220,"world status occupies a compact top-right corner, not a screen-width banner")
+	check(view.quickbar_panel.offset_right-view.quickbar_panel.offset_left<=440,"quickbar does not dominate the entire viewport")
+	var cjk: Font = view.theme.default_font
+	check(cjk != null and cjk.has_char("晴".unicode_at(0)) and cjk.has_char("谷".unicode_at(0)) and cjk.has_char("锄".unicode_at(0)),"bundled CJK font contains the game's visible Chinese characters")
+	var empty_slot := view.quickbar.get_child(1) as Button
+	check(empty_slot.text=="2" and empty_slot.tooltip_text.contains("空"),"empty quickbar slot is visually quiet while tooltip keeps its meaning")
 	check(view.quickbar_panel!=null and view.quickbar_panel.anchor_top==1.0,"quickbar panel is anchored to bottom")
 	check(view.quickbar!=null and view.quickbar.get_child_count()==12,"quickbar renders all twelve authoritative inventory slots")
 	var slot_one := view.quickbar.get_child(0) as Button
