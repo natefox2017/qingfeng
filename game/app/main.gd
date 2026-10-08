@@ -128,11 +128,16 @@ func _activate_room(scene: PackedScene, requested_generation: int) -> void:
 			return_to_title()
 			return
 		var plot_definitions: Array = _plot_definitions_for_gameplay(room)
+		var forage_definitions: Array = _forage_definitions_for_gameplay(room)
 		if plot_definitions.is_empty():
 			last_error = "无法读取权威农庄田格布局，未创建或恢复会话。"
 			return_to_title()
 			return
-		next_gameplay = GAMEPLAY.new(plot_definitions)
+		if forage_definitions.is_empty():
+			last_error = "无法读取权威村庄采集点布局，未创建或恢复会话。"
+			return_to_title()
+			return
+		next_gameplay = GAMEPLAY.new(plot_definitions,{},forage_definitions)
 		if not next_gameplay.is_configured():
 			last_error = "玩法会话无法从权威农庄布局初始化。"
 			return_to_title()
@@ -228,6 +233,26 @@ func _plot_definitions_for_gameplay(candidate: Node2D) -> Array:
 		return []
 	var definitions: Array = farm_instance.get_plot_definitions().duplicate(true)
 	farm_instance.free()
+	return definitions
+
+func _forage_definitions_for_gameplay(candidate: Node2D) -> Array:
+	if candidate.has_method("get_forage_definitions"):
+		var direct: Array = candidate.get_forage_definitions()
+		if not direct.is_empty():
+			return direct.duplicate(true)
+	var village_scene := load(VILLAGE_ROOM) as PackedScene
+	if village_scene == null:
+		return []
+	var village_instance := village_scene.instantiate() as Node2D
+	if village_instance == null or not village_instance.has_method("get_forage_definitions") or not village_instance.has_method("layout_contract_valid"):
+		if village_instance != null:
+			village_instance.free()
+		return []
+	if not village_instance.layout_contract_valid():
+		village_instance.free()
+		return []
+	var definitions: Array = village_instance.get_forage_definitions().duplicate(true)
+	village_instance.free()
 	return definitions
 
 func _scene_path_for_space(space_id: String) -> String:
@@ -506,7 +531,49 @@ func _interact_world() -> void:
 					if target.get("interaction_id","") == "trade.shop.counter":
 						set_trade_menu(true)
 					return
+				"forage":
+					_collect_forage(target)
+					return
 	_begin_farm_action()
+
+func _collect_forage(target: Dictionary) -> void:
+	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured():
+		return
+	if target.get("interaction_id","") != "forage.village.pickup":
+		last_error = "采集目标无效。"
+		_update_interface()
+		return
+	var spot_id := String(target.get("spot_id",""))
+	if spot_id.is_empty():
+		last_error = "采集点缺少稳定ID。"
+		_update_interface()
+		return
+	var projection: Dictionary = gameplay_session.projection()
+	var command := {
+		"protocol_version":1,
+		"command_id":_new_command_id("forage.collect"),
+		"session_id":str(active_snapshot.get("session_id","")),
+		"actor_id":"actor.player",
+		"action":"forage.collect",
+		"expected_revision":int(projection.forage.revision),
+		"payload":{
+			"spot_id":spot_id,
+			"inventory_revision":int(projection.inventory.revision)
+		}
+	}
+	var result: Dictionary = gameplay_session.execute(command)
+	if result.ok:
+		last_error = "采到一份野菜。可以带去商店出售。"
+	else:
+		match String(result.error_code):
+			"INVENTORY_FULL":
+				last_error = "背包已满，野菜仍留在原地。"
+			"FORAGE_ALREADY_COLLECTED":
+				last_error = "这个采集点今天已经采过了。"
+			_:
+				last_error = "采集失败："+String(result.error_code)
+	_refresh_farm_world()
+	_update_interface()
 
 func _rest_at_bed(target: Dictionary) -> void:
 	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured():
@@ -686,9 +753,13 @@ func _finish_farm_recovery() -> bool:
 	return true
 
 func _refresh_farm_world() -> void:
-	if gameplay_session == null or not gameplay_session.is_configured() or not is_instance_valid(room) or not room.has_method("apply_farm_projection"):
+	if gameplay_session == null or not gameplay_session.is_configured() or not is_instance_valid(room):
 		return
-	room.apply_farm_projection(gameplay_session.projection().farm)
+	var projection: Dictionary = gameplay_session.projection()
+	if room.has_method("apply_farm_projection"):
+		room.apply_farm_projection(projection.farm)
+	if room.has_method("apply_forage_projection"):
+		room.apply_forage_projection(projection.forage)
 
 func _farm_action_label(action: String) -> String:
 	match action:
