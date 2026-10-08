@@ -99,6 +99,35 @@ func _slot_button(parent: Node, slot_index: int, slot: Variant, items: Dictionar
 	parent.add_child(node)
 	return node
 
+func _storage_slot_button(parent: Node, source_container_id: String, slot_index: int, slot: Variant, items: Dictionary, direction_label: String) -> Button:
+	var node := Button.new()
+	node.custom_minimum_size = Vector2(64,40)
+	var display_name := "空"
+	var quantity := 0
+	if slot != null:
+		var metadata: Dictionary = items.get(String(slot.item_id),{})
+		display_name = str(metadata.get("display_name",slot.item_id))
+		quantity = int(slot.quantity)
+	node.text = "%d\n%s" % [slot_index+1, "空" if slot == null else display_name.left(2)+("×"+str(quantity) if quantity > 1 else "")]
+	node.disabled = slot == null
+	var description := "槽位 %d：%s" % [slot_index+1, display_name if slot == null else display_name+" ×"+str(quantity)]
+	if slot != null:
+		description += "；"+direction_label
+	node.tooltip_text = description
+	node.accessibility_name = description
+	if slot != null:
+		var item_id := String(slot.item_id)
+		var transfer_quantity := int(slot.quantity)
+		node.pressed.connect(func():emit_action("transfer_storage",{
+			"source_container_id":source_container_id,
+			"item_id":item_id,
+			"quantity":transfer_quantity
+		}))
+	if _first_button == null and not node.disabled:
+		_first_button = node
+	parent.add_child(node)
+	return node
+
 func _clock_text(clock: Dictionary) -> String:
 	var minute_of_day := int(clock.get("minute_of_day",0))
 	return "第%d天  %02d:%02d" % [int(clock.get("day",1)),minute_of_day/60,minute_of_day%60]
@@ -182,6 +211,25 @@ func show_page(page: String, context: Dictionary) -> void:
 			else:
 				label("当前存档没有玩法背包状态。")
 			button(row(),"close_inventory","back","关闭背包 / B / Esc")
+		"storage":
+			title.text="家中木箱";subtitle.text="点击非空槽整组存入 / 取出；Esc 关闭。"
+			var gameplay: Dictionary = context.get("gameplay",{})
+			if gameplay.get("ok",false) and gameplay.has("storage"):
+				label("背包 %d格  ↔  木箱 %d格" % [int(gameplay.inventory.capacity),int(gameplay.storage.capacity)])
+				var scroll:=ScrollContainer.new();scroll.custom_minimum_size=Vector2(450,180);body.add_child(scroll)
+				var sections:=VBoxContainer.new();sections.size_flags_horizontal=Control.SIZE_EXPAND_FILL;scroll.add_child(sections)
+				label("背包 · 点击存入",sections)
+				var bag_grid:=GridContainer.new();bag_grid.columns=6;bag_grid.add_theme_constant_override("h_separation",4);bag_grid.add_theme_constant_override("v_separation",4);sections.add_child(bag_grid)
+				for index in range(gameplay.inventory.slots.size()):
+					_storage_slot_button(bag_grid,String(gameplay.inventory.container_id),index,gameplay.inventory.slots[index],gameplay.items,"存入木箱")
+				label("木箱 · 点击取出",sections)
+				var chest_grid:=GridContainer.new();chest_grid.columns=6;chest_grid.add_theme_constant_override("h_separation",4);chest_grid.add_theme_constant_override("v_separation",4);sections.add_child(chest_grid)
+				for index in range(gameplay.storage.slots.size()):
+					_storage_slot_button(chest_grid,String(gameplay.storage.container_id),index,gameplay.storage.slots[index],gameplay.items,"取回背包")
+				label("转移使用 storage.transfer；容量或 revision 校验失败时两边都不变。",sections)
+			else:
+				label("当前存档没有可用的家庭箱子状态。")
+			button(row(),"close_storage","storage","关闭木箱 / Esc")
 		"world":
 			panel.hide();get_node("Backdrop").hide()
 			button(hud,"pause","pause","暂停 / Esc")
@@ -197,7 +245,7 @@ func show_page(page: String, context: Dictionary) -> void:
 					hint.text=String(action_state.get("label","操作"))+(" · 准备中，Esc取消" if action_state.get("phase","")=="prepare" else " · 已提交，收势中")
 				else:
 					if context.get("space_id","")=="space.house":
-						hint.text="E 与门 / 床交互 · B 背包"
+						hint.text="E 与门 / 床 / 箱子交互 · B 背包"
 					else:
 						var selected: Variant=gameplay.inventory.slots[gameplay.inventory.selected_slot_index]
 						var selected_name:="空手"

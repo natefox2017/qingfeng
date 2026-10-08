@@ -26,6 +26,10 @@ func _draw() -> void:
 			for x in [-7,1]:
 				for y in [-7,1]:
 					draw_rect(Rect2(center+Vector2(x,y),Vector2(6,6)),color,false,2)
+		"storage":
+			draw_rect(Rect2(center-Vector2(10,6),Vector2(20,14)),color,false,2)
+			draw_line(center+Vector2(-10,-2),center+Vector2(10,-2),color,2)
+			draw_line(center+Vector2(-4,1),center+Vector2(4,1),color,2)
 		"settings":
 			draw_arc(center,7,0,TAU,24,color,2)
 			for i in 8:
