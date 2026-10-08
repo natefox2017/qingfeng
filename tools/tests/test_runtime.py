@@ -77,6 +77,93 @@ class RuntimeTests(unittest.TestCase):
                 self.assertTrue(runtime.ensure_assets_imported('godot', game, Path(temporary)/'reports', 60))
                 self.assertEqual(mocked.call_count, 1)
 
+    def _fake_engine(self, path: Path) -> Path:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("#!/bin/sh\nexit 0\n")
+        path.chmod(0o755)
+        return path
+
+    def test_auto_discovers_ac_path_without_configuring_godot_bin(self):
+        from types import SimpleNamespace
+        with tempfile.TemporaryDirectory(prefix="qingfeng-ac-godot-") as tmp:
+            root = Path(tmp) / "checkout"
+            (root / "tools").mkdir(parents=True)
+            (root / "tools" / "engine_lock.json").write_text(
+                (ROOT / "tools" / "engine_lock.json").read_text()
+            )
+            executable = self._fake_engine(Path(tmp) / "ac-bin" / "godot4")
+            version = "4.7.2.stable.official.ed1daf0bf"
+            with patch.object(runtime, "ROOT", root), \
+                    patch.dict(os.environ, {"GODOT_BIN": "", "PATH": str(executable.parent)}), \
+                    patch.object(runtime.subprocess, "run", return_value=SimpleNamespace(stdout=version)):
+                self.assertEqual(runtime.resolve_engine(None), str(executable))
+
+    def test_auto_skips_incompatible_installed_godot_in_favor_of_correct_one(self):
+        from types import SimpleNamespace
+        with tempfile.TemporaryDirectory(prefix="qingfeng-ac-godot-") as tmp:
+            root = Path(tmp) / "checkout"
+            (root / "tools").mkdir(parents=True)
+            lock = (ROOT / "tools" / "engine_lock.json").read_text()
+            (root / "tools" / "engine_lock.json").write_text(lock)
+            wrong = self._fake_engine(root / ".local" / "godot" / "Godot_v4.7.2-stable_linux.x86_64")
+            correct = self._fake_engine(Path(tmp) / "ac-bin" / "godot")
+            calls = []
+
+            def version_probe(args, **kwargs):
+                calls.append(args[0])
+                return SimpleNamespace(stdout=(
+                    "4.6.stable.official.fake" if args[0] == str(wrong)
+                    else "4.7.2.stable.official.ed1daf0bf"
+                ))
+
+            with patch.object(runtime, "ROOT", root), \
+                    patch.dict(os.environ, {"GODOT_BIN": "", "PATH": str(correct.parent)}), \
+                    patch.object(runtime.subprocess, "run", side_effect=version_probe):
+                self.assertEqual(runtime.resolve_engine(None), str(correct))
+            self.assertEqual(calls, [str(wrong), str(correct)])
+
+    def test_explicit_godot_path_stays_authoritative(self):
+        from types import SimpleNamespace
+        with tempfile.TemporaryDirectory(prefix="qingfeng-ac-godot-") as tmp:
+            wrong = self._fake_engine(Path(tmp) / "wrong-godot")
+            correct = self._fake_engine(Path(tmp) / "bin" / "godot4")
+            with patch.dict(os.environ, {"GODOT_BIN": "", "PATH": str(correct.parent)}), \
+                    patch.object(runtime.subprocess, "run", return_value=SimpleNamespace(stdout="4.6.stable")):
+                with self.assertRaisesRegex(ValueError, "Specified Godot"):
+                    runtime.resolve_engine(str(wrong))
+
+    def test_default_reports_found_but_incompatible_version(self):
+        from types import SimpleNamespace
+        with tempfile.TemporaryDirectory(prefix="qingfeng-ac-godot-") as tmp:
+            root = Path(tmp) / "checkout"
+            (root / "tools").mkdir(parents=True)
+            (root / "tools" / "engine_lock.json").write_text(
+                (ROOT / "tools" / "engine_lock.json").read_text()
+            )
+            wrong = self._fake_engine(Path(tmp) / "ac-bin" / "godot")
+            with patch.object(runtime, "ROOT", root), \
+                    patch.dict(os.environ, {"GODOT_BIN": "", "PATH": str(wrong.parent)}), \
+                    patch.object(runtime.subprocess, "run", return_value=SimpleNamespace(stdout="4.6.stable")):
+                with self.assertRaisesRegex(ValueError, r"none matches required.*Found"):
+                    runtime.resolve_engine(None)
+
+    def test_known_local_ac_install_dirs_are_considered(self):
+        from types import SimpleNamespace
+        with tempfile.TemporaryDirectory(prefix="qingfeng-ac-godot-") as tmp:
+            root = Path(tmp) / "checkout"
+            (root / "tools").mkdir(parents=True)
+            (root / "tools" / "engine_lock.json").write_text(
+                (ROOT / "tools" / "engine_lock.json").read_text()
+            )
+            ac_home = Path(tmp) / "ac-home"
+            executable = self._fake_engine(ac_home / ".local" / "bin" / "Godot")
+            with patch.object(runtime, "ROOT", root), \
+                    patch.object(runtime.Path, "home", return_value=ac_home), \
+                    patch.dict(os.environ, {"GODOT_BIN": "", "PATH": str(Path(tmp) / "no-bin")}), \
+                    patch.object(runtime.subprocess, "run",
+                                 return_value=SimpleNamespace(stdout="4.7.2.stable.official.ed1daf0bf")):
+                self.assertEqual(runtime.resolve_engine(None), str(executable))
+
     def test_declared_runtime_entry(self):
         import json
         config = json.loads((ROOT/'project.json').read_text())
