@@ -57,6 +57,7 @@ func run() -> void:
 	var list := view.body.find_child("SaveList",true,false) as ScrollContainer
 	var entries := view.body.find_child("SaveEntries",true,false) as VBoxContainer
 	check(list!=null and entries!=null and entries.get_child_count()==2,"save page renders one card per save result")
+	check((entries.get_child(0) as PanelContainer).get_node_or_null("HBoxContainer")!=null,"save cards preserve data-driven container structure")
 	var text := ""
 	for child: Node in view.body.find_children("*","Label",true,false):
 		text += (child as Label).text+"\n"
