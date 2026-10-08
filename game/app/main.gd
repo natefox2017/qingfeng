@@ -6,6 +6,7 @@ extends Control
 const REQUEST = preload("res://app/scene_request.gd")
 const LOCKS = preload("res://app/input_locks.gd")
 const CODEC = preload("res://persistence/session_codec.gd")
+const MAP_LAYOUT_MIGRATION = preload("res://app/chapter1_map_migration.gd")
 const STORE = preload("res://persistence/session_store.gd")
 const SETTINGS = preload("res://persistence/settings_store.gd")
 const GAMEPLAY = preload("res://app/gameplay_session.gd")
@@ -162,7 +163,25 @@ func _activate_room(scene: PackedScene, requested_generation: int) -> void:
 			return_to_title()
 			return
 		if _entry_snapshot.has("gameplay"):
-			if _entry_snapshot.space_id != room.get_space_id() or not next_gameplay.restore(_entry_snapshot.gameplay):
+			if _entry_snapshot.space_id != room.get_space_id():
+				last_error = "存档区域与目标世界不一致，未恢复任何状态。"
+				return_to_title()
+				return
+			# Only the exact pre-PR117 six-plot fingerprint may migrate. The old
+			# signed save stays on disk; all changes are to an in-memory copy.
+			var migration: Dictionary = MAP_LAYOUT_MIGRATION.migrate(
+				_entry_snapshot, plot_definitions, resident_anchor_definitions, room.get_spawn_position()
+			)
+			if not bool(migration.ok):
+				last_error = "旧地图存档迁移失败：" + String(migration.get("reason", "UNKNOWN"))
+				return_to_title()
+				return
+			if bool(migration.migrated) and not CODEC.validate_snapshot(migration.snapshot):
+				last_error = "旧地图存档迁移数据无效，原档未修改。"
+				return_to_title()
+				return
+			_entry_snapshot = migration.snapshot
+			if not next_gameplay.restore(_entry_snapshot.gameplay):
 				last_error = "完整玩法存档与当前世界布局不兼容，未恢复任何状态。"
 				return_to_title()
 				return
