@@ -162,7 +162,7 @@ func run() -> void:
 	for index in range(blocked_runtime.residents.size()):
 		if String(blocked_runtime.residents[index].resident_id)=="resident.neighbor":
 			blocked_runtime.residents[index]=blocked_neighbor
-	var before_blocked := app.room.neighbor_resident.position
+	var before_blocked: Vector2 = app.room.neighbor_resident.position
 	check(not app.room.apply_resident_runtime(blocked_runtime) and app.room.neighbor_resident.position==before_blocked,"WORLD rejects resident restore inside a solid footprint without moving the actor")
 
 	finish()
