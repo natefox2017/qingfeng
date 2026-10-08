@@ -100,6 +100,34 @@ func run() -> void:
 	var hybrid_result: Dictionary = MIGRATION.migrate(hybrid, plot_defs, resident_defs, spawn)
 	check(bool(hybrid_result.ok) and not bool(hybrid_result.migrated), "unknown partially remapped save is not silently rewritten")
 
+	var legacy_village: Dictionary = legacy.duplicate(true)
+	legacy_village.space_id = "space.village"
+	legacy_village.world_position_px = {"x":48.0, "y":180.0}
+	var village_scene := load("res://world/village_first_screen.tscn") as PackedScene
+	var village_instance := village_scene.instantiate() as Node2D
+	var village_spawn: Vector2 = village_instance.get_spawn_position()
+	village_instance.free()
+	var village_result: Dictionary = MIGRATION.migrate(legacy_village, plot_defs, resident_defs, village_spawn)
+	check(bool(village_result.ok) and bool(village_result.migrated), "legacy village save also migrates")
+	check(village_result.snapshot.world_position_px == {"x":village_spawn.x,"y":village_spawn.y}, "legacy village player reanchors without changing space identity")
+	var found_village_resident := false
+	for resident: Variant in village_result.snapshot.gameplay.residents.residents:
+		if String(resident.space_id) != "space.village":
+			continue
+		found_village_resident = true
+		for anchor: Variant in resident_defs:
+			if String(anchor.anchor_id) == "anchor.%s.social" % String(resident.resident_id):
+				check(resident.world_position_px == anchor.world_position_px, "village resident reanchors to valid authored social point")
+				break
+	check(found_village_resident, "legacy fixture contains a village resident to verify")
+
+	var legacy_interior: Dictionary = legacy.duplicate(true)
+	legacy_interior.space_id = "space.house"
+	legacy_interior.world_position_px = {"x":320.0, "y":320.0}
+	var interior_result: Dictionary = MIGRATION.migrate(legacy_interior, plot_defs, resident_defs, Vector2(0,0))
+	check(bool(interior_result.ok) and bool(interior_result.migrated), "interior old save migrates farm plots")
+	check(interior_result.snapshot.world_position_px == legacy_interior.world_position_px, "unchanged interior player coordinates survive farm migration")
+
 	var old_save: Dictionary = app.store.write_new(legacy)
 	check(bool(old_save.get("ok", false)), "signed legacy layout save written through real store")
 	if not bool(old_save.get("ok", false)):
