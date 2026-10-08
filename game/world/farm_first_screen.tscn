@@ -156,6 +156,9 @@ position = Vector2(480, 208)
 [node name="BridgeEast" type="Marker2D" parent="Anchors"]
 position = Vector2(592, 208)
 
+[node name="VillagePathInteract" type="Marker2D" parent="Anchors"]
+position = Vector2(608, 208)
+
 [node name="FootSorted" type="Node2D" parent="."]
 y_sort_enabled = true
 
