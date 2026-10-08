@@ -30,6 +30,14 @@ func layout_contract_valid() -> bool:
 	for anchor_name: String in ["FarmArrival","FarmExitInteract","ShopDoorInteract","ShopDoorArrival","WorkshopDoorInteract","WorkshopDoorArrival"]:
 		if get_anchor_position(anchor_name) == Vector2.INF:
 			return false
+	var resident_anchors := get_resident_anchor_definitions()
+	if resident_anchors.size() != $ResidentAnchors.get_child_count() or resident_anchors.is_empty():
+		return false
+	var resident_ids: Dictionary = {}
+	for definition: Dictionary in resident_anchors:
+		if resident_ids.has(definition.anchor_id):
+			return false
+		resident_ids[definition.anchor_id]=true
 	var definitions := get_forage_definitions()
 	if definitions.size() != $ForageSpots.get_child_count() or definitions.is_empty():
 		return false
@@ -39,6 +47,14 @@ func layout_contract_valid() -> bool:
 			return false
 		ids[definition.spot_id]=true
 	return true
+
+func get_resident_anchor_definitions() -> Array:
+	var definitions: Array = []
+	for child: Node in $ResidentAnchors.get_children():
+		if child is Marker2D and child.has_meta("anchor_id"):
+			definitions.append({"anchor_id":String(child.get_meta("anchor_id")),"space_id":SPACE_ID})
+	definitions.sort_custom(func(a:Dictionary,b:Dictionary): return a.anchor_id < b.anchor_id)
+	return definitions
 
 func get_forage_definitions() -> Array:
 	var definitions: Array = []
