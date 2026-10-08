@@ -193,7 +193,7 @@ func run() -> void:
 	var blocked_snapshot:=snapshot.duplicate(true);blocked_snapshot.world_position_px={"x":176,"y":140}
 	var blocked_file:Dictionary=store.write_new(blocked_snapshot)
 	app._entry_snapshot=store.read_save(blocked_file.save_id).envelope.snapshot
-	app.start_world()
+	app.start_world(app.LEGACY_ROOM)
 	check(not await wait_world() and app.room==null,"wall-embedded legacy save rejected without teleport fallback")
 	finish()
 
