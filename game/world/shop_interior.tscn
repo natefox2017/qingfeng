@@ -1,0 +1,121 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://world/shop_interior.gd" id="shop"]
+[ext_resource type="Script" path="res://world/components/solid_rect.gd" id="solid"]
+[ext_resource type="Script" path="res://actors/player_body.gd" id="player"]
+
+[sub_resource type="RectangleShape2D" id="BoundaryHorizontal"]
+size = Vector2(640, 16)
+
+[sub_resource type="RectangleShape2D" id="BoundaryVertical"]
+size = Vector2(16, 360)
+
+[sub_resource type="RectangleShape2D" id="SouthSide"]
+size = Vector2(296, 16)
+
+[sub_resource type="RectangleShape2D" id="CounterShape"]
+size = Vector2(160, 32)
+
+[sub_resource type="CircleShape2D" id="PlayerShape"]
+radius = 4.0
+
+[node name="ShopInterior" type="Node2D"]
+script = ExtResource("shop")
+
+[node name="Solids" type="Node2D" parent="."]
+
+[node name="North" type="StaticBody2D" parent="Solids"]
+position = Vector2(320, 8)
+collision_layer = 1
+collision_mask = 2
+script = ExtResource("solid")
+fill_color = Color(0.27, 0.21, 0.16, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/North"]
+shape = SubResource("BoundaryHorizontal")
+
+[node name="West" type="StaticBody2D" parent="Solids"]
+position = Vector2(8, 180)
+collision_layer = 1
+collision_mask = 2
+script = ExtResource("solid")
+fill_color = Color(0.27, 0.21, 0.16, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/West"]
+shape = SubResource("BoundaryVertical")
+
+[node name="East" type="StaticBody2D" parent="Solids"]
+position = Vector2(632, 180)
+collision_layer = 1
+collision_mask = 2
+script = ExtResource("solid")
+fill_color = Color(0.27, 0.21, 0.16, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/East"]
+shape = SubResource("BoundaryVertical")
+
+[node name="SouthLeft" type="StaticBody2D" parent="Solids"]
+position = Vector2(148, 352)
+collision_layer = 1
+collision_mask = 2
+script = ExtResource("solid")
+fill_color = Color(0.27, 0.21, 0.16, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/SouthLeft"]
+shape = SubResource("SouthSide")
+
+[node name="SouthRight" type="StaticBody2D" parent="Solids"]
+position = Vector2(492, 352)
+collision_layer = 1
+collision_mask = 2
+script = ExtResource("solid")
+fill_color = Color(0.27, 0.21, 0.16, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/SouthRight"]
+shape = SubResource("SouthSide")
+
+[node name="Counter" type="StaticBody2D" parent="Solids"]
+position = Vector2(320, 112)
+collision_layer = 1
+collision_mask = 2
+script = ExtResource("solid")
+fill_color = Color(0.44, 0.31, 0.20, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/Counter"]
+shape = SubResource("CounterShape")
+
+[node name="Anchors" type="Node2D" parent="."]
+
+[node name="DoorArrival" type="Marker2D" parent="Anchors"]
+position = Vector2(320, 320)
+
+[node name="DoorInteract" type="Marker2D" parent="Anchors"]
+position = Vector2(320, 336)
+
+[node name="CounterInteract" type="Marker2D" parent="Anchors"]
+position = Vector2(320, 144)
+
+[node name="FootSorted" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Player" type="CharacterBody2D" parent="FootSorted"]
+position = Vector2(320, 320)
+collision_layer = 2
+collision_mask = 1
+motion_mode = 1
+wall_min_slide_angle = 0.0
+script = ExtResource("player")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FootSorted/Player"]
+shape = SubResource("PlayerShape")
+
+[node name="DiagnosticGlyph" type="Polygon2D" parent="FootSorted/Player"]
+color = Color(0.95, 0.76, 0.32, 1)
+polygon = PackedVector2Array(-4, -6, 4, -6, 4, 2, -4, 2)
+
+[node name="Camera2D" type="Camera2D" parent="FootSorted/Player"]
+limit_left = 0
+limit_top = 0
+limit_right = 640
+limit_bottom = 360
+position_smoothing_enabled = false
