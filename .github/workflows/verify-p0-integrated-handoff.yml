@@ -1,0 +1,49 @@
+name: P0 merged handoff native evidence
+on:
+  push:
+    branches:
+      - verify/p0-integrated-handoff-20261008
+permissions:
+  contents: read
+jobs:
+  integration:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check tools and schema
+        run: |
+          python3 tools/check_scaffold.py
+          python3 -m unittest discover -s tools/tests -q
+      - name: Install exact locked Godot for isolated CI
+        run: python3 tools/install_engine.py --directory .local/godot
+      - name: Native merged P0 gameplay
+        run: |
+          unset GODOT_BIN
+          ./run_game.sh --test --report-dir reports/merged-p0 --timeout 120
+      - name: Native merged full regression
+        run: |
+          unset GODOT_BIN
+          ./run_game.sh --test-all --report-dir reports/merged-full --timeout 120
+      - name: Native 1280/1920 gameplay and second world screen
+        run: |
+          mkdir -p reports/merged-images
+          xvfb-run -a -s "-screen 0 1920x1080x24" ./run_game.sh --capture "$GITHUB_WORKSPACE/reports/merged-images" | tee reports/merged-gameplay.log
+          test -s reports/merged-images/phase0_farm_1280.png
+          test -s reports/merged-images/phase0_farm_1920.png
+          test -s reports/merged-images/phase0_farm_explore_1280.png
+      - name: Native title/new-game/save page screenshots
+        run: |
+          mkdir -p reports/merged-entry
+          xvfb-run -a -s "-screen 0 1920x1080x24" timeout 120s "$GITHUB_WORKSPACE/.local/godot/Godot_v4.7.2-stable_linux.x86_64" --path game --script res://tests/entry_native_capture.gd -- "$GITHUB_WORKSPACE/reports/merged-entry" | tee reports/merged-entry.log
+          test -s reports/merged-entry/entry_title_1280.png
+          test -s reports/merged-entry/entry_new_game_1280.png
+          test -s reports/merged-entry/entry_load_1280.png
+      - name: Keep QA receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: merged-p0-handoff-evidence
+          path: reports/
+          if-no-files-found: warn
+          retention-days: 14
