@@ -86,6 +86,12 @@ func _process(_delta: float) -> void:
 		view.countdown.text = "%d 秒后自动恢复" % ceili(settings.remaining_seconds)
 	if farm_action.is_busy():
 		_tick_farm_action(_delta)
+	if state == State.WORLD and gameplay_session != null and gameplay_session.is_configured():
+		var tick: Dictionary = gameplay_session.tick_real_seconds(_delta)
+		if tick.ok and int(tick.advanced_minutes) > 0:
+			if not tick.crossed_days.is_empty():
+				_refresh_farm_world()
+			_update_interface()
 	if state != State.LOADING or _activation_pending or _request == null:
 		return
 	var status: int = _request.status()
