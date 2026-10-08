@@ -77,8 +77,8 @@ func run() -> void:
 		finish()
 		return
 	var initial_read: Dictionary = app.store.read_save(app.active_save_id)
-	check(initial_read.ok and int(initial_read.envelope.schema_version)==6,"new gameplay save writes schema six")
-	check(initial_read.envelope.snapshot.gameplay.residents.residents.size()==3,"schema six persists all three resident runtime rows")
+	check(initial_read.ok and int(initial_read.envelope.schema_version)==7,"new gameplay save writes schema seven")
+	check(initial_read.envelope.snapshot.gameplay.residents.residents.size()==3,"schema seven persists all three resident runtime rows")
 
 	app.set_process(false)
 	check(await farm_to_village(),"normal route reaches village")
@@ -102,13 +102,13 @@ func run() -> void:
 		return
 	var envelope: Dictionary = app.store.read_save(saved.save_id).envelope
 	var persisted: Dictionary = resident_row(envelope.snapshot.gameplay.residents,"resident.neighbor")
-	check(int(envelope.schema_version)==6 and not persisted.is_empty(),"mid-route save uses schema six resident state")
+	check(int(envelope.schema_version)==7 and not persisted.is_empty(),"mid-route save uses schema seven resident state")
 	check(point(persisted).distance_to(mid_route)<0.01 and String(persisted.facing)==saved_facing,"save captures actual resident position and facing, not schedule target")
 
 	app.set_process(true)
 	app.return_to_title()
 	app._on_action("read_save",{"save_id":saved.save_id})
-	check(await wait_world() and app.room.get_space_id()=="space.village","schema-six save restarts directly in village")
+	check(await wait_world() and app.room.get_space_id()=="space.village","schema-seven save restarts directly in village")
 	app.set_process(false)
 	var restored_neighbor: CharacterBody2D = app.room.neighbor_resident
 	var restored_position := restored_neighbor.position
@@ -144,7 +144,7 @@ func run() -> void:
 		app.set_process(false)
 		check(app.room.neighbor_resident.position.distance_to(Vector2(112,240))<8.0,"schema-five migration initializes neighbor from WORLD home anchor")
 		var upgraded: Dictionary = app.save_progress()
-		check(upgraded.ok and int(app.store.read_save(upgraded.save_id).envelope.schema_version)==6,"next save after schema-five restore upgrades to schema six")
+		check(upgraded.ok and int(app.store.read_save(upgraded.save_id).envelope.schema_version)==7,"next save after schema-five restore upgrades to schema seven")
 
 	var bad: Dictionary = app.gameplay_session.snapshot()
 	var bad_neighbor: Dictionary = resident_row(bad.residents,"resident.neighbor")
