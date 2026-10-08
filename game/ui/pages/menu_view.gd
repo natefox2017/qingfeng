@@ -115,6 +115,8 @@ func _slot_button(parent: Node, slot_index: int, slot: Variant, items: Dictionar
 	node.mouse_entered.connect(func():notice.text=description)
 	node.focus_entered.connect(func():notice.text=description)
 	parent.add_child(node)
+	if selected and _first_button==null:
+		_first_button=node
 	return node
 
 func _storage_slot_button(parent: Node, source_container_id: String, slot_index: int, slot: Variant, items: Dictionary, direction_label: String) -> Button:
@@ -260,11 +262,11 @@ func show_page(page: String, context: Dictionary) -> void:
 				var money_label:=label(str(gameplay.wallet.money)+" 币",summary);UI_THEME.apply_text_role(money_label,UI_THEME.ROLE_QUANTITY)
 
 				var content_row:=HBoxContainer.new();content_row.add_theme_constant_override("separation",10);body.add_child(content_row)
-				var grid:=GridContainer.new();grid.columns=4;grid.add_theme_constant_override("h_separation",5);grid.add_theme_constant_override("v_separation",5);grid.custom_minimum_size=Vector2(375,145);content_row.add_child(grid)
+				var grid:=GridContainer.new();grid.name="InventoryGrid";grid.columns=4;grid.add_theme_constant_override("h_separation",5);grid.add_theme_constant_override("v_separation",5);grid.custom_minimum_size=Vector2(375,145);content_row.add_child(grid)
 				for index in range(gameplay.inventory.slots.size()):
 					_slot_button(grid,index,gameplay.inventory.slots[index],gameplay.items,index==gameplay.inventory.selected_slot_index,false)
 
-				var detail_panel:=PanelContainer.new();detail_panel.custom_minimum_size=Vector2(155,145);detail_panel.add_theme_stylebox_override("panel",UI_THEME.panel_style());content_row.add_child(detail_panel)
+				var detail_panel:=PanelContainer.new();detail_panel.name="InventoryDetail";detail_panel.custom_minimum_size=Vector2(155,145);detail_panel.add_theme_stylebox_override("panel",UI_THEME.panel_style());content_row.add_child(detail_panel)
 				var detail:=VBoxContainer.new();detail.add_theme_constant_override("separation",5);detail_panel.add_child(detail)
 				var selected_index:=int(gameplay.inventory.selected_slot_index)
 				var selected: Variant=gameplay.inventory.slots[selected_index]
