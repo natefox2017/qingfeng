@@ -138,6 +138,22 @@ func acquire_pause(owner: StringName) -> bool:
 func release_pause(owner: StringName) -> bool:
 	return is_configured() and clock.release_pause(owner)
 
+func advance_real_seconds(seconds: float) -> Dictionary:
+	if not is_configured():
+		return {"ok":false,"error_code":"GAMEPLAY_SESSION_NOT_CONFIGURED","advanced_minutes":0,"crossed_days":[]}
+	var clock_result: Dictionary = clock.advance_real_seconds(seconds)
+	if not clock_result.ok:
+		return clock_result
+	var settlement: Dictionary = _settle_crossed_days(clock_result.crossed_days)
+	if not settlement.ok:
+		return {"ok":false,"error_code":settlement.error_code,"advanced_minutes":int(clock_result.advanced_minutes),"crossed_days":clock_result.crossed_days}
+	return {
+		"ok":true,
+		"error_code":"",
+		"advanced_minutes":int(clock_result.advanced_minutes),
+		"crossed_days":clock_result.crossed_days
+	}
+
 func advance(minutes: int) -> Dictionary:
 	if not is_configured():
 		return _failure("","GAMEPLAY_SESSION_NOT_CONFIGURED")
