@@ -162,6 +162,20 @@ func _used_slot_count(slots: Array) -> int:
 			count += 1
 	return count
 
+func _space_display_name(space_id: String) -> String:
+	match space_id:
+		"space.farm":
+			return "农庄"
+		"space.house":
+			return "家"
+		"space.village":
+			return "村庄"
+		"space.shop":
+			return "杂货铺"
+		"space.workshop":
+			return "工坊"
+	return "旧入口" if space_id=="space.entry_fixture" else space_id
+
 func _minute_text(value: int) -> String:
 	return "%02d:%02d" % [value/60,value%60]
 
@@ -252,16 +266,34 @@ func show_page(page: String, context: Dictionary) -> void:
 			var actions:=row();button(actions,"create","accept","创建独立存档并进入农庄");button(actions,"back","back","返回标题，不创建存档")
 			player_name.grab_focus()
 		"load":
-			title.text="存档";subtitle.text="读取本机进度，或导入经过校验的 .qfsave 文件。"
-			var scroll:=ScrollContainer.new();scroll.custom_minimum_size=Vector2(440,118);body.add_child(scroll)
-			var entries:=VBoxContainer.new();entries.size_flags_horizontal=Control.SIZE_EXPAND_FILL;scroll.add_child(entries)
-			if context.saves.is_empty():label("还没有存档。先新建游戏，或使用下方导入。",entries)
-			for item:Dictionary in context.saves:
-				var line:=row(entries)
-				var text:String=(item.envelope.snapshot.player_name+"  ·  "+item.envelope.saved_at_utc) if item.ok else ("无法读取 · "+item.error_code)
-				var name_label:=label(text,line);name_label.size_flags_horizontal=Control.SIZE_EXPAND_FILL
-				button(line,"read_save","play","读取这个存档",{"save_id":item.save_id},item.ok)
-			var actions:=row();button(actions,"choose_import","import","选择存档文件");button(actions,"back","back","返回标题")
+			title.text="存档";subtitle.text="选择一份本机进度继续，或导入 .qfsave 存档"
+			panel.custom_minimum_size=Vector2(560,286)
+			var scroll:=ScrollContainer.new();scroll.name="SaveList";scroll.custom_minimum_size=Vector2(510,160);scroll.size_flags_vertical=Control.SIZE_EXPAND_FILL;body.add_child(scroll)
+			var entries:=VBoxContainer.new();entries.name="SaveEntries";entries.size_flags_horizontal=Control.SIZE_EXPAND_FILL;entries.add_theme_constant_override("separation",5);scroll.add_child(entries)
+			if context.saves.is_empty():
+				var empty_panel:=PanelContainer.new();empty_panel.add_theme_stylebox_override("panel",UI_THEME.section_style());entries.add_child(empty_panel)
+				var empty_text:=label("还没有本机存档。可以返回新建游戏，或从下方导入存档。",empty_panel);empty_text.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+			for item: Dictionary in context.saves:
+				var card:=PanelContainer.new();card.add_theme_stylebox_override("panel",UI_THEME.section_style());entries.add_child(card)
+				var card_row:=HBoxContainer.new();card_row.add_theme_constant_override("separation",8);card.add_child(card_row)
+				var details:=VBoxContainer.new();details.size_flags_horizontal=Control.SIZE_EXPAND_FILL;details.add_theme_constant_override("separation",2);card_row.add_child(details)
+				if item.ok:
+					var snapshot: Dictionary=item.envelope.snapshot
+					var player:=label(String(snapshot.get("player_name","未命名")),details);UI_THEME.apply_text_role(player,UI_THEME.ROLE_HEADING)
+					var location:=_space_display_name(String(snapshot.get("space_id","")))
+					var dog_name_value:=String(snapshot.get("dog_name",""))
+					var meta_text:=location
+					if not dog_name_value.is_empty():
+						meta_text+="  ·  小狗 "+dog_name_value
+					var meta:=label(meta_text,details);UI_THEME.apply_text_role(meta,UI_THEME.ROLE_CAPTION)
+					var saved:=label(String(item.envelope.get("saved_at_utc","")),details);UI_THEME.apply_text_role(saved,UI_THEME.ROLE_CAPTION)
+					var content_label:=label("内容 "+String(item.envelope.get("content_version","")),details);UI_THEME.apply_text_role(content_label,UI_THEME.ROLE_TOOLTIP)
+					button(card_row,"read_save","play","读取 "+String(snapshot.get("player_name","这个"))+" 的存档",{"save_id":item.save_id},true)
+				else:
+					var invalid:=label("无法读取这个存档",details);UI_THEME.apply_text_role(invalid,UI_THEME.ROLE_HEADING)
+					var reason:=label(String(item.error_code),details);UI_THEME.apply_text_role(reason,UI_THEME.ROLE_ERROR)
+					button(card_row,"read_save","play","此存档无法读取："+String(item.error_code),{"save_id":item.save_id},false)
+			var actions:=row();button(actions,"choose_import","import","选择 .qfsave 存档文件");button(actions,"back","back","返回标题")
 		"import_review":
 			title.text="确认导入";subtitle.text="将创建一份本机副本，原文件与已有存档不变。"
 			label("玩家："+context.envelope.snapshot.player_name+"\n狗名："+context.envelope.snapshot.dog_name+"\n保存时间："+context.envelope.saved_at_utc+"\n内容版本："+context.envelope.content_version)
