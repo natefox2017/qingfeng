@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://world/workshop_interior.gd" id="workshop"]
 [ext_resource type="Script" path="res://world/components/solid_rect.gd" id="solid"]
 [ext_resource type="Script" path="res://actors/player_body.gd" id="player"]
+[ext_resource type="Texture2D" path="res://assets/phase0/player_4dir.png" id="farmer"]
 [ext_resource type="Script" path="res://actors/resident_body.gd" id="resident"]
 
 [sub_resource type="RectangleShape2D" id="BoundaryHorizontal"]
@@ -143,9 +144,12 @@ script = ExtResource("player")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="FootSorted/Player"]
 shape = SubResource("PlayerShape")
 
-[node name="DiagnosticGlyph" type="Polygon2D" parent="FootSorted/Player"]
-color = Color(0.95, 0.76, 0.32, 1)
-polygon = PackedVector2Array(-4, -6, 4, -6, 4, 2, -4, 2)
+[node name="Sprite2D" type="Sprite2D" parent="FootSorted/Player"]
+texture_filter = 1
+texture = ExtResource("farmer")
+hframes = 4
+vframes = 4
+offset = Vector2(0, -16)
 
 [node name="Camera2D" type="Camera2D" parent="FootSorted/Player"]
 limit_left = 0

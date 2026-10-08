@@ -1220,7 +1220,7 @@ func _world_label(has_gameplay: bool) -> String:
 			return "商店内部 · 工程美术"
 		"space.workshop":
 			return "工坊内部 · 工程美术"
-	return "农庄第一屏 · 工程美术"
+	return "农庄 · 门前菜园"
 
 func save_progress() -> Dictionary:
 	if state != State.WORLD or active_snapshot.is_empty():

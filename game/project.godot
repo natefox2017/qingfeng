@@ -1,8 +1,8 @@
-; New Qingfeng runtime. Geometry is an explicit engineering fixture.
+; Qingfeng runtime: Phase0 farm screen now uses editable pixels; other areas may still use diagnostic art.
 config_version=5
 
 [application]
-config/name="Qingfeng Foundation"
+config/name="晴风谷"
 run/main_scene="res://app/main.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/use_custom_user_dir=true

@@ -1,4 +1,190 @@
 {
   "schema_version": 1,
-  "assets": []
+  "assets": [
+    {
+      "asset_id": "asset.terrain.phase0",
+      "runtime_path": "game/assets/phase0/farm_terrain_16.png",
+      "sha256": "2f09ea3a17d45ba054eac2b444acd3d2a353a5bbb174d2606549f2d4ff0f10ee",
+      "source_url": "https://github.com/natefox2017/qingfeng",
+      "source_version": "hand-painted-phase0-2026-10-08",
+      "license_id": "project-original",
+      "license_path": "art/PHASE0_SOURCE.md",
+      "size_px": {
+        "width": 128,
+        "height": 64
+      },
+      "source_anchor_px": {
+        "x": 8,
+        "y": 16
+      },
+      "review_status": "proposed",
+      "reviewer": null,
+      "evidence_paths": [],
+      "animations": [],
+      "kind": "terrain"
+    },
+    {
+      "asset_id": "asset.object.phase0_house",
+      "runtime_path": "game/assets/phase0/farmhouse.png",
+      "sha256": "b08cc7e0c6db1de3e33a3d263383f1823d8e260c2c2e61cc8b09c807de17e725",
+      "source_url": "https://github.com/natefox2017/qingfeng",
+      "source_version": "hand-painted-phase0-2026-10-08",
+      "license_id": "project-original",
+      "license_path": "art/PHASE0_SOURCE.md",
+      "size_px": {
+        "width": 192,
+        "height": 152
+      },
+      "source_anchor_px": {
+        "x": 96,
+        "y": 149
+      },
+      "review_status": "proposed",
+      "reviewer": null,
+      "evidence_paths": [],
+      "animations": [],
+      "kind": "object"
+    },
+    {
+      "asset_id": "asset.object.phase0_oak",
+      "runtime_path": "game/assets/phase0/oak_tree.png",
+      "sha256": "56bf08cd63b9c6d4da16396ddbd8a7f6fee4e49eae9188af7cef3920c6a93840",
+      "source_url": "https://github.com/natefox2017/qingfeng",
+      "source_version": "hand-painted-phase0-2026-10-08",
+      "license_id": "project-original",
+      "license_path": "art/PHASE0_SOURCE.md",
+      "size_px": {
+        "width": 80,
+        "height": 96
+      },
+      "source_anchor_px": {
+        "x": 40,
+        "y": 95
+      },
+      "review_status": "proposed",
+      "reviewer": null,
+      "evidence_paths": [],
+      "animations": [],
+      "kind": "object"
+    },
+    {
+      "asset_id": "asset.character.phase0_player",
+      "runtime_path": "game/assets/phase0/player_4dir.png",
+      "sha256": "f3634ba5f365168723432ee6961649a2f18db2ae77609a76f2e4a8497b3ce730",
+      "source_url": "https://github.com/natefox2017/qingfeng",
+      "source_version": "hand-painted-phase0-2026-10-08",
+      "license_id": "project-original",
+      "license_path": "art/PHASE0_SOURCE.md",
+      "size_px": {
+        "width": 96,
+        "height": 128
+      },
+      "source_anchor_px": {
+        "x": 12,
+        "y": 31
+      },
+      "review_status": "proposed",
+      "reviewer": null,
+      "evidence_paths": [],
+      "animations": [
+        {
+          "animation_id": "player.idle.south",
+          "direction": "south",
+          "frame_count": 1,
+          "frame_durations_msec": [
+            125
+          ],
+          "contact_frame": null,
+          "contact_offset_msec": null,
+          "is_looping": true
+        },
+        {
+          "animation_id": "player.walk.south",
+          "direction": "south",
+          "frame_count": 3,
+          "frame_durations_msec": [
+            125,
+            125,
+            125
+          ],
+          "contact_frame": null,
+          "contact_offset_msec": null,
+          "is_looping": true
+        },
+        {
+          "animation_id": "player.idle.west",
+          "direction": "west",
+          "frame_count": 1,
+          "frame_durations_msec": [
+            125
+          ],
+          "contact_frame": null,
+          "contact_offset_msec": null,
+          "is_looping": true
+        },
+        {
+          "animation_id": "player.walk.west",
+          "direction": "west",
+          "frame_count": 3,
+          "frame_durations_msec": [
+            125,
+            125,
+            125
+          ],
+          "contact_frame": null,
+          "contact_offset_msec": null,
+          "is_looping": true
+        },
+        {
+          "animation_id": "player.idle.east",
+          "direction": "east",
+          "frame_count": 1,
+          "frame_durations_msec": [
+            125
+          ],
+          "contact_frame": null,
+          "contact_offset_msec": null,
+          "is_looping": true
+        },
+        {
+          "animation_id": "player.walk.east",
+          "direction": "east",
+          "frame_count": 3,
+          "frame_durations_msec": [
+            125,
+            125,
+            125
+          ],
+          "contact_frame": null,
+          "contact_offset_msec": null,
+          "is_looping": true
+        },
+        {
+          "animation_id": "player.idle.north",
+          "direction": "north",
+          "frame_count": 1,
+          "frame_durations_msec": [
+            125
+          ],
+          "contact_frame": null,
+          "contact_offset_msec": null,
+          "is_looping": true
+        },
+        {
+          "animation_id": "player.walk.north",
+          "direction": "north",
+          "frame_count": 3,
+          "frame_durations_msec": [
+            125,
+            125,
+            125
+          ],
+          "contact_frame": null,
+          "contact_offset_msec": null,
+          "is_looping": true
+        }
+      ],
+      "kind": "character"
+    }
+  ]
 }
