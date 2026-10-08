@@ -45,6 +45,17 @@ func clear_schedule_target() -> void:
 	velocity = Vector2.ZERO
 	movement_state = "idle"
 
+func set_world_active(active: bool) -> void:
+	visible = active
+	collision_layer = 4 if active else 0
+	collision_mask = 3 if active else 0
+	set_physics_process(active)
+	if not active:
+		clear_schedule_target()
+
+func is_world_active() -> bool:
+	return visible and collision_layer == 4 and is_physics_processing()
+
 func projection() -> Dictionary:
 	return {
 		"resident_id":resident_id,
