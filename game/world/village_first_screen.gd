@@ -10,6 +10,7 @@ const RESIDENT_ROOM = preload("res://world/components/resident_room_driver.gd")
 var _forage_states: Dictionary = {}
 var _active_conversation_id := ""
 var _active_conversation_state := ""
+var _active_player_resident_id := ""
 
 @onready var player: CharacterBody2D = $FootSorted/Player
 @onready var grocer_resident: CharacterBody2D = $FootSorted/GrocerResident
@@ -117,6 +118,7 @@ func apply_conversation_projection(value: Variant) -> bool:
 		return false
 	_active_conversation_id = ""
 	_active_conversation_state = ""
+	_active_player_resident_id = ""
 	for conversation: Variant in value.conversations:
 		if not (conversation is Dictionary) or String(conversation.get("space_id",""))!=SPACE_ID:
 			continue
@@ -125,12 +127,29 @@ func apply_conversation_projection(value: Variant) -> bool:
 			continue
 		var first_id := String(participants[0])
 		var second_id := String(participants[1])
+		var state := String(conversation.get("state",""))
+		if state not in ["invited","approaching","participating"]:
+			continue
+		var player_resident_id := ""
+		if first_id=="actor.player" and _resident_actor(second_id)!=null:
+			player_resident_id=second_id
+		elif second_id=="actor.player" and _resident_actor(first_id)!=null:
+			player_resident_id=first_id
+		if not player_resident_id.is_empty():
+			var resident_actor := _resident_actor(player_resident_id)
+			if resident_actor==null or not resident_actor.is_world_active():
+				continue
+			_active_conversation_id = String(conversation.get("conversation_id",""))
+			_active_conversation_state = state
+			_active_player_resident_id = player_resident_id
+			if state=="participating":
+				resident_actor.clear_schedule_target()
+				resident_actor.face_toward(player.position)
+			queue_redraw()
+			return true
 		var first_actor := _resident_actor(first_id)
 		var second_actor := _resident_actor(second_id)
 		if first_actor==null or second_actor==null:
-			continue
-		var state := String(conversation.get("state",""))
-		if state not in ["invited","approaching","participating"]:
 			continue
 		_active_conversation_id = String(conversation.get("conversation_id",""))
 		_active_conversation_state = state
@@ -154,6 +173,8 @@ func apply_conversation_projection(value: Variant) -> bool:
 	return true
 
 func conversation_participants_arrived(conversation_id: String) -> bool:
+	if not _active_player_resident_id.is_empty():
+		return false
 	if conversation_id.is_empty() or conversation_id != _active_conversation_id:
 		return false
 	var left_target := "conversation.%s.left" % conversation_id
@@ -235,6 +256,12 @@ func _marker_for_spot(spot_id:String) -> Marker2D:
 	return null
 
 func resolve_interaction_target() -> Dictionary:
+	if _resident_reachable(neighbor_resident):
+		return {
+			"kind":"resident_dialogue",
+			"interaction_id":"dialogue.village.neighbor",
+			"resident_id":"resident.neighbor"
+		}
 	for child: Node in $ForageSpots.get_children():
 		if child is Marker2D:
 			var spot_id := String(child.get_meta("spot_id",""))
@@ -271,6 +298,20 @@ func resolve_interaction_target() -> Dictionary:
 		}
 	return {}
 
+func _resident_reachable(resident: CharacterBody2D) -> bool:
+	if resident==null or not resident.has_method("is_world_active") or not resident.is_world_active():
+		return false
+	var direction := _facing_vector(player.facing)
+	if direction.is_zero_approx():
+		return false
+	var offset: Vector2 = resident.global_position-player.global_position
+	var forward := offset.dot(direction)
+	var lateral := absf(offset.dot(Vector2(-direction.y,direction.x)))
+	if forward <= 2.0 or forward > INTERACT_RANGE_PX or lateral > INTERACT_LATERAL_PX:
+		return false
+	var ray := PhysicsRayQueryParameters2D.create(player.global_position,resident.global_position,1)
+	return get_world_2d().direct_space_state.intersect_ray(ray).is_empty()
+
 func _marker_reachable(marker: Marker2D) -> bool:
 	var direction := _facing_vector(player.facing)
 	if direction.is_zero_approx():
@@ -298,7 +339,7 @@ func _facing_vector(facing: StringName) -> Vector2:
 func _draw() -> void:
 	# Diagnostic skin only; not accepted village art.
 	draw_rect(Rect2(0,0,640,360),Color("82966b"))
-	if _active_conversation_state=="participating":
+	if _active_conversation_state=="participating" and _active_player_resident_id.is_empty():
 		var midpoint := ($ConversationAnchors/Left.position+$ConversationAnchors/Right.position)*0.5
 		draw_circle(midpoint+Vector2(-6,-18),3.0,Color("f3eee2"))
 		draw_circle(midpoint+Vector2(0,-20),3.0,Color("f3eee2"))
