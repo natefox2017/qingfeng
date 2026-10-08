@@ -52,7 +52,7 @@ var _transition_pending: bool = false
 var _transition_generation: int = 0
 var _transition_candidate: Node2D
 var _resident_handoff_pending := false
-var _resident_social_demo_day := 0
+var _resident_conversation_demo_day := 0
 var _resident_conversation_end_game_minute := -1
 
 @onready var view: Control = $Interface/Screen
@@ -348,7 +348,7 @@ func return_to_title() -> void:
 	_transition_generation += 1
 	_transition_pending = false
 	_resident_handoff_pending = false
-	_resident_social_demo_day = 0
+	_resident_conversation_demo_day = 0
 	_resident_conversation_end_game_minute = -1
 	if is_instance_valid(_transition_candidate):
 		_transition_candidate.queue_free()
@@ -869,7 +869,7 @@ func _poll_resident_conversation() -> void:
 
 	var day := gameplay_session.clock.current_day()
 	var minute := gameplay_session.clock.minute_of_day()
-	if day==_resident_social_demo_day or minute<RESIDENT_CONVERSATION_START_MINUTE or minute>=RESIDENT_CONVERSATION_END_MINUTE:
+	if day==_resident_conversation_demo_day or minute<RESIDENT_CONVERSATION_START_MINUTE or minute>=RESIDENT_CONVERSATION_END_MINUTE:
 		return
 	if _resident_runtime_space(projection.resident_runtime,"resident.maker")!="space.village" or _resident_runtime_space(projection.resident_runtime,"resident.neighbor")!="space.village":
 		return
@@ -882,7 +882,7 @@ func _poll_resident_conversation() -> void:
 	)
 	if not invited.ok:
 		return
-	_resident_social_demo_day = day
+	_resident_conversation_demo_day = day
 	var approaching: Dictionary = gameplay_session.approach_resident_conversation(conversation_id)
 	if approaching.ok:
 		_refresh_farm_world()
