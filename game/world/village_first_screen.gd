@@ -64,11 +64,11 @@ func layout_contract_valid() -> bool:
 	if resident_anchors.size() != $ResidentAnchors.get_child_count() or resident_anchors.is_empty():
 		return false
 	for resident_id: String in ["resident.grocer","resident.maker","resident.neighbor"]:
-		var node_name := {
+		var node_name: String = String({
 			"resident.grocer":"GrocerResident",
 			"resident.maker":"MakerResident",
 			"resident.neighbor":"NeighborResident"
-		}[resident_id]
+		}[resident_id])
 		var resident := get_node_or_null("FootSorted/"+node_name)
 		if resident==null or not resident.has_method("set_schedule_target") or String(resident.resident_id)!=resident_id:
 			return false
