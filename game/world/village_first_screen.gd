@@ -104,12 +104,24 @@ func apply_resident_runtime(value: Variant) -> bool:
 		var point: Variant = resident.get("world_position_px",{})
 		if not (point is Dictionary) or not point.has("x") or not point.has("y"):
 			return false
+		var restored_position := Vector2(float(point.x),float(point.y))
+		if _resident_position_is_blocked(restored_position):
+			return false
 		neighbor_resident.visible=true
 		return neighbor_resident.restore_runtime_position(
-			Vector2(float(point.x),float(point.y)),
+			restored_position,
 			StringName(String(resident.get("facing","")))
 		)
 	return false
+
+func _resident_position_is_blocked(local_position: Vector2) -> bool:
+	var circle := CircleShape2D.new()
+	circle.radius = 4.0
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape = circle
+	query.collision_mask = 1
+	query.transform = Transform2D(0.0,to_global(local_position))
+	return not get_world_2d().direct_space_state.intersect_shape(query,1).is_empty()
 
 func _marker_for_resident_anchor(anchor_id:String) -> Marker2D:
 	for child: Node in $ResidentAnchors.get_children():
