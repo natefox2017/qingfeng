@@ -98,7 +98,7 @@ func run() -> void:
 		finish()
 		return
 	var envelope: Dictionary = app.store.read_save(save.save_id).envelope
-	check(int(envelope.schema_version)==5 and envelope.snapshot.gameplay.forage.spots[0].last_collected_day==1,"schema-five app save records forage collection day")
+	check(int(envelope.schema_version)==6 and envelope.snapshot.gameplay.forage.spots[0].last_collected_day==1,"schema-six app save records forage collection day")
 	# Loading is polled by main._process(), so re-enable it only for the transition.
 	app.set_process(true)
 	app.return_to_title()
