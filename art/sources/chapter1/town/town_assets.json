@@ -1,0 +1,331 @@
+{
+  "schema_version": 1,
+  "issue": 93,
+  "baseline_sha": "a871fdb2f18eea1f9208dcb6c478823677966460",
+  "status": "proposed",
+  "world_grid_px": 16,
+  "canvas_dimensions_status": "proposed engineering sizes",
+  "palette_status": "proposed",
+  "collision_owner": "WORLD; metadata below is proposed only, no baked collision",
+  "assets": [
+    {
+      "asset_id": "asset.chapter1.town.stone_gate",
+      "source_path": "art/sources/chapter1/town/stone_gate.png",
+      "runtime_path": "game/assets/chapter1/town/stone_gate.png",
+      "source_sha256": "f40337121022c0e1b645adfc221989086c004cb82468fae3888a80fd0ab954a2",
+      "runtime_sha256": "f40337121022c0e1b645adfc221989086c004cb82468fae3888a80fd0ab954a2",
+      "size_px": [
+        64,
+        64
+      ],
+      "rect_px": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        60
+      ],
+      "review_status": "proposed",
+      "reviewer": null,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_color_count": 26,
+      "layer_paths": [
+        "game/assets/chapter1/town/stone_gate_overhang.png",
+        "game/assets/chapter1/town/stone_gate_base.png"
+      ],
+      "layer_split_y_px": 32,
+      "layer_sha256": {
+        "game/assets/chapter1/town/stone_gate_overhang.png": "343d3231ab3a516f14316407bde852f6e007098c312bbdb567c6cfaeba13e63b",
+        "game/assets/chapter1/town/stone_gate_base.png": "a235eb9f7b327c6d74f3e6e140af58e5afb633c926d005ac72b37e40bb36c109"
+      }
+    },
+    {
+      "asset_id": "asset.chapter1.town.market_blue_white",
+      "source_path": "art/sources/chapter1/town/market_blue_white.png",
+      "runtime_path": "game/assets/chapter1/town/market_blue_white.png",
+      "source_sha256": "cbcf41ac13a12fec8cf18d08708bdaa4b5100f9a09e0aedfe8079b62ee978d79",
+      "runtime_sha256": "cbcf41ac13a12fec8cf18d08708bdaa4b5100f9a09e0aedfe8079b62ee978d79",
+      "size_px": [
+        64,
+        48
+      ],
+      "rect_px": [
+        0,
+        0,
+        64,
+        48
+      ],
+      "anchor_px": [
+        32,
+        46
+      ],
+      "review_status": "proposed",
+      "reviewer": null,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_color_count": 50,
+      "layer_paths": [
+        "game/assets/chapter1/town/market_blue_white_overhang.png",
+        "game/assets/chapter1/town/market_blue_white_base.png"
+      ],
+      "layer_split_y_px": 30,
+      "layer_sha256": {
+        "game/assets/chapter1/town/market_blue_white_overhang.png": "76074037cdc6e065f5fd9dd5eac02700100903fbafcf1db9a67bbe8e3a74c5b3",
+        "game/assets/chapter1/town/market_blue_white_base.png": "dbf23718c3a1dd1dbeb25d76f2ac6697fb1779bb951462c1e3c47cd9c26f61f1"
+      }
+    },
+    {
+      "asset_id": "asset.chapter1.town.market_orange_white",
+      "source_path": "art/sources/chapter1/town/market_orange_white.png",
+      "runtime_path": "game/assets/chapter1/town/market_orange_white.png",
+      "source_sha256": "39d4011121ad485dbb3913674a88894119dbabf774381ab23c074f934bf5f5d4",
+      "runtime_sha256": "39d4011121ad485dbb3913674a88894119dbabf774381ab23c074f934bf5f5d4",
+      "size_px": [
+        64,
+        48
+      ],
+      "rect_px": [
+        0,
+        0,
+        64,
+        48
+      ],
+      "anchor_px": [
+        32,
+        46
+      ],
+      "review_status": "proposed",
+      "reviewer": null,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_color_count": 61,
+      "layer_paths": [
+        "game/assets/chapter1/town/market_orange_white_overhang.png",
+        "game/assets/chapter1/town/market_orange_white_base.png"
+      ],
+      "layer_split_y_px": 30,
+      "layer_sha256": {
+        "game/assets/chapter1/town/market_orange_white_overhang.png": "ed0894e8c86a7ef03989daf26cf463e15978a0a1725143b5a0eac68870d74ba1",
+        "game/assets/chapter1/town/market_orange_white_base.png": "dbf23718c3a1dd1dbeb25d76f2ac6697fb1779bb951462c1e3c47cd9c26f61f1"
+      }
+    },
+    {
+      "asset_id": "asset.chapter1.town.plaza_stone_16",
+      "source_path": "art/sources/chapter1/town/plaza_stone_16.png",
+      "runtime_path": "game/assets/chapter1/town/plaza_stone_16.png",
+      "source_sha256": "a595ff8ee9f8ff7fac9c970e1cf68bb42ede466757fd2374a001d3ebef58048e",
+      "runtime_sha256": "a595ff8ee9f8ff7fac9c970e1cf68bb42ede466757fd2374a001d3ebef58048e",
+      "size_px": [
+        16,
+        16
+      ],
+      "rect_px": [
+        0,
+        0,
+        16,
+        16
+      ],
+      "anchor_px": [
+        0,
+        0
+      ],
+      "review_status": "proposed",
+      "reviewer": null,
+      "alpha_values": [
+        255
+      ],
+      "opaque_color_count": 5,
+      "layer_paths": [],
+      "layer_sha256": {}
+    },
+    {
+      "asset_id": "asset.chapter1.town.stone_wall",
+      "source_path": "art/sources/chapter1/town/stone_wall.png",
+      "runtime_path": "game/assets/chapter1/town/stone_wall.png",
+      "source_sha256": "ec0f44135174038c8718d54c72bb6a8be60a7221a6598790c869539b8d38dca3",
+      "runtime_sha256": "ec0f44135174038c8718d54c72bb6a8be60a7221a6598790c869539b8d38dca3",
+      "size_px": [
+        32,
+        16
+      ],
+      "rect_px": [
+        0,
+        0,
+        32,
+        16
+      ],
+      "anchor_px": [
+        16,
+        16
+      ],
+      "review_status": "proposed",
+      "reviewer": null,
+      "alpha_values": [
+        255
+      ],
+      "opaque_color_count": 4,
+      "layer_paths": [],
+      "layer_sha256": {}
+    },
+    {
+      "asset_id": "asset.chapter1.town.street_lamp",
+      "source_path": "art/sources/chapter1/town/street_lamp.png",
+      "runtime_path": "game/assets/chapter1/town/street_lamp.png",
+      "source_sha256": "0835ee857ab9df4f0978641d11006e28db3ea6d128425140eeb37dbc9318f6ba",
+      "runtime_sha256": "0835ee857ab9df4f0978641d11006e28db3ea6d128425140eeb37dbc9318f6ba",
+      "size_px": [
+        16,
+        48
+      ],
+      "rect_px": [
+        0,
+        0,
+        16,
+        48
+      ],
+      "anchor_px": [
+        8,
+        47
+      ],
+      "review_status": "proposed",
+      "reviewer": null,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_color_count": 6,
+      "layer_paths": [],
+      "layer_sha256": {}
+    },
+    {
+      "asset_id": "asset.chapter1.town.wood_bench",
+      "source_path": "art/sources/chapter1/town/wood_bench.png",
+      "runtime_path": "game/assets/chapter1/town/wood_bench.png",
+      "source_sha256": "47624bfc6c42ca6494ac1cbc6f52b84e637944d234ef885001eb2263468cb462",
+      "runtime_sha256": "47624bfc6c42ca6494ac1cbc6f52b84e637944d234ef885001eb2263468cb462",
+      "size_px": [
+        40,
+        32
+      ],
+      "rect_px": [
+        0,
+        0,
+        40,
+        32
+      ],
+      "anchor_px": [
+        20,
+        31
+      ],
+      "review_status": "proposed",
+      "reviewer": null,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_color_count": 5,
+      "layer_paths": [],
+      "layer_sha256": {}
+    },
+    {
+      "asset_id": "asset.chapter1.town.blank_sign",
+      "source_path": "art/sources/chapter1/town/blank_sign.png",
+      "runtime_path": "game/assets/chapter1/town/blank_sign.png",
+      "source_sha256": "aabbd7c34ed0632dee924608dbe775fcc6350aa4ee50944ab3783e78308be9cd",
+      "runtime_sha256": "aabbd7c34ed0632dee924608dbe775fcc6350aa4ee50944ab3783e78308be9cd",
+      "size_px": [
+        40,
+        48
+      ],
+      "rect_px": [
+        0,
+        0,
+        40,
+        48
+      ],
+      "anchor_px": [
+        20,
+        47
+      ],
+      "review_status": "proposed",
+      "reviewer": null,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_color_count": 5,
+      "layer_paths": [],
+      "layer_sha256": {}
+    },
+    {
+      "asset_id": "asset.chapter1.town.townhouse_red",
+      "source_path": "art/sources/chapter1/town/townhouse_red.png",
+      "runtime_path": "game/assets/chapter1/town/townhouse_red.png",
+      "source_sha256": "3b3e8840dc97da7688bdb711aa0f36d9c1473b322229e9f4ce4a505f048bd660",
+      "runtime_sha256": "3b3e8840dc97da7688bdb711aa0f36d9c1473b322229e9f4ce4a505f048bd660",
+      "size_px": [
+        96,
+        96
+      ],
+      "rect_px": [
+        0,
+        0,
+        96,
+        96
+      ],
+      "anchor_px": [
+        48,
+        93
+      ],
+      "review_status": "proposed",
+      "reviewer": null,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_color_count": 32,
+      "layer_paths": [
+        "game/assets/chapter1/town/townhouse_red_overhang.png",
+        "game/assets/chapter1/town/townhouse_red_base.png"
+      ],
+      "layer_split_y_px": 55,
+      "layer_sha256": {
+        "game/assets/chapter1/town/townhouse_red_overhang.png": "590ac188fc447b820fb644c40ce0cd1d97c71ef248635b2b8e41ae6be2144cfc",
+        "game/assets/chapter1/town/townhouse_red_base.png": "97af27e18e112e9de426b01958da11771c8d9979eedce9f784b4b1fe2fe45e59"
+      }
+    }
+  ],
+  "portal_opening": {
+    "asset": "stone_gate",
+    "test_pixel_px": [
+      32,
+      48
+    ],
+    "proposed_pier_footprints_px": [
+      [
+        4,
+        50,
+        14,
+        10
+      ],
+      [
+        46,
+        50,
+        14,
+        10
+      ]
+    ],
+    "foreground": "stone_gate_overhang"
+  },
+  "layer_note": "Layers have identical full canvas and anchor; use base+overhang OR composite, never both. Horizontal splits preserve all source pixels. House split is preliminary, no final Y-sort approval."
+}

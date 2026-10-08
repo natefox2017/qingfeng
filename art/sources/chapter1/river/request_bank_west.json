@@ -1,0 +1,15 @@
+{
+  "view": "high top-down",
+  "outline": "selective outline",
+  "shading": "medium shading",
+  "detail": "medium detail",
+  "seed": 901,
+  "description": "One vertical narrow strip of grey mossy riverbank rocks extends from exact TOP edge to exact BOTTOM edge, left side has bright green grass, right side fully transparent. Draw a north-south bank viewed from directly above: grass is WEST, cliffs CENTRAL, river would be EAST but must stay transparent. Continuous vertical32px high,16px wide rock and grass strip in32x32 canvas. NO horizontal shore. NO water. No landscape. Native16pixel grid, crisp pixel clusters.",
+  "width": 32,
+  "height": 32,
+  "no_background": true,
+  "color_reference": "reference_east_river.png",
+  "reference_sha256": "a15984b57c0a21e5334d7375d3a202e15cf71b3633a864f4e92c8c7e7c6c4c1e",
+  "request_sha256": "99edc4c8b44a39bd382118de39bedbb4f8bcdd6f5f7eace6bc8c114fe607b241",
+  "fallback_reason": "Built-in image_gen first attempted native32x32 vertical bank; actual large pseudo-pixel image rejected without downscaling. PixelLab native-sized fallback."
+}

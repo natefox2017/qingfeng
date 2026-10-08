@@ -1,0 +1,751 @@
+{
+  "png_tiles": 19,
+  "size_px": [
+    64,
+    80
+  ],
+  "colors": 7,
+  "alpha_values": [
+    0,
+    255
+  ],
+  "compatible_path_edge_pairs_checked": 256,
+  "preview_8x_exact": true,
+  "native_source_size_px": [
+    16,
+    16
+  ],
+  "godot_version": "4.7.2.stable.official.ed1daf0bf",
+  "renderer": "macOS OpenGL Compatibility, Apple M4 Pro",
+  "godot_authored_cells": 920,
+  "godot_terrain_solver_road_cells": 46,
+  "native_captures": [
+    {
+      "path": "art/reviews/chapter1/terrain/godot_terrain_640.png",
+      "size_px": [
+        640,
+        360
+      ],
+      "sha256": "2fd4556e9f447c37fd6676a5fa84559468918ece12b57546897aa8d5de789f5e",
+      "integer_nearest_scale": 1
+    },
+    {
+      "path": "art/reviews/chapter1/terrain/godot_terrain_1280.png",
+      "size_px": [
+        1280,
+        720
+      ],
+      "sha256": "1d40122b21e5d27a92204701b78947a6faf2bc750c3d02b2d12fb4c53c8db175",
+      "integer_nearest_scale": 2
+    },
+    {
+      "path": "art/reviews/chapter1/terrain/godot_terrain_1920.png",
+      "size_px": [
+        1920,
+        1080
+      ],
+      "sha256": "884e94b9548829d62d0a358a7609792f3a5dfbf796ab42da34f5c2171af532d1",
+      "integer_nearest_scale": 3
+    }
+  ],
+  "visual_review": "proposed_for_playable_development_no_user_visual_acceptance",
+  "gameplay_and_release_tests": "not_run_art_sample_only",
+  "runtime_atlas_sha256": "c95926e8b0e07162b1961c8be81e5901c76ae6d2449a58219fd8bb3f6609eb68",
+  "reference_crop": {
+    "path": "art/reviews/chapter1/terrain/reference_grass_path_crop.png",
+    "reference_path": "art/approved/refs/world_chapter1_map.png",
+    "reference_sha256": "ba35eef32eb0a49a5e50ad8ec4498148845c8f4065d3695b315c4ea1286bddd7",
+    "rect_px": [
+      470,
+      340,
+      165,
+      190
+    ],
+    "sha256": "586c295e50e6140041c75ef71465b88848690646615f0d47ebf8ff9ba2a1fe07",
+    "role": "review_only_not_runtime"
+  },
+  "repeat_test": "8x isolated, three 5x5 repeats at nearest2x, 95/105 quiet mixed patch; before/after visually inspected",
+  "import": "actual Godot reimport passed; not a clean-cache import",
+  "remaining_visual_limits": [
+    "Accent tiles still repeat when evenly flooded; WORLD should use >=90% quiet tile0. Formal whole-map render pending.",
+    "Soil explicit states only; field edge/transitions not supplied",
+    "Decor four basic types; no collision; not every A07 variant",
+    "Formal world/gameplay and export tests not run in this art slice"
+  ],
+  "artifacts": [
+    {
+      "path": "art/sources/chapter1/terrain/dirt_base_16.png",
+      "sha256": "24d107b957d108da63a687ea3b3190d94745382dd30b4ba71ba654d8152ec210",
+      "bytes": 180,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/dirt_base_16.pxo",
+      "sha256": "462a4bbc5165e8d7ddb3b144b786ba799243d9796c77246d2ff8e082469126fb",
+      "bytes": 1860
+    },
+    {
+      "path": "art/sources/chapter1/terrain/dirt_full_16.png",
+      "sha256": "b564bc64670589a4b16ba2cc2ef6a4675b962502c1c90a162be4f829b95eb1d2",
+      "bytes": 163,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/dirt_mask_00_16.png",
+      "sha256": "70e862b2ccb4a83642c5120069488ecf524e70d106d6bd3a3cbae5485351b49d",
+      "bytes": 261,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/dirt_mask_01_16.png",
+      "sha256": "3a1d960e836154cac015613658065c9bd26ba84eb2163c6146cd53cfc6d8ba29",
+      "bytes": 225,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/dirt_mask_02_16.png",
+      "sha256": "ebbcf275f142dc8b85c63a553ba3d097c606d1d7f4852e9f5ab6e235ce7e29bf",
+      "bytes": 248,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/dirt_mask_03_16.png",
+      "sha256": "3dd898ee8da0431105d428611cd21fa13909e48b52ba13cad31e8c82a8665697",
+      "bytes": 245,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/dirt_mask_04_16.png",
+      "sha256": "582ae515ffa0e42d10f324ba328e51b60a7c155260509a5fb7526c15660c235e",
+      "bytes": 250,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/dirt_mask_05_16.png",
+      "sha256": "3ff0294882d6bc38700a6022c1d272d56ffd26754d385cd687d8009387c3efb4",
+      "bytes": 216,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/dirt_mask_06_16.png",
+      "sha256": "2511fcb0e0776be11e69b8222296c76f6bd5b9c44b76e4f3b81242bfc453c499",
+      "bytes": 234,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/dirt_mask_07_16.png",
+      "sha256": "8f93bffb11d4f48119b3bf6267611da94e381700e4ddfb667936d1bee0566211",
+      "bytes": 221,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/dirt_mask_08_16.png",
+      "sha256": "6fbe73ce470a22f6e049e38d60e27764593643a85734cafca2fc6652d8dee09a",
+      "bytes": 229,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/dirt_mask_09_16.png",
+      "sha256": "1493fc448d70ed466001c3cb86ebef38af27e17ae2ba59553d20c2b5187c6903",
+      "bytes": 220,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/dirt_mask_10_16.png",
+      "sha256": "188810514f111ae397a444dc6c8aa4d01b2f6846533d91c4e9a3f2ff6e07ab3d",
+      "bytes": 216,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/dirt_mask_11_16.png",
+      "sha256": "9c1d4d353a25ac688b3fb14cbfe1fe0693488c8aa9d7cbb189db011628c42f71",
+      "bytes": 219,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/dirt_mask_12_16.png",
+      "sha256": "3eea9b27e997d7aee5f4a7ade0e529259d261f93cbe46abb31f02685956a08fa",
+      "bytes": 227,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/dirt_mask_13_16.png",
+      "sha256": "f9d33a085ca5d1be93c5b9793724ef5e6503ebb7098f70824617a58948133d28",
+      "bytes": 207,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/dirt_mask_14_16.png",
+      "sha256": "c7f029440b6fbdff26ec4ef60eab6b0336f21ca9bbebfa7dd022183ecf13de9e",
+      "bytes": 209,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/dirt_mask_15_16.png",
+      "sha256": "8e2ffefa6df0aa16903dfc7f77aa2473d76a36d3f5a770ea9d8798d479634551",
+      "bytes": 192,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/grass_base_16.png",
+      "sha256": "913dc85d901e6fd100ce935c6c9f5d448c25678db7fb47e9c6c9163ea1169471",
+      "bytes": 94,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/grass_base_16.pxo",
+      "sha256": "815cd338e5ca649c271b254760e62a6cda18b831c55b9064aa25ea4132a85f35",
+      "bytes": 1623
+    },
+    {
+      "path": "art/sources/chapter1/terrain/grass_dark_16.png",
+      "sha256": "22f5f3ce07c9037442aeb59c57fe593ee2176507503d174ba1968f5a86b87b92",
+      "bytes": 130,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/grass_dark_16.pxo",
+      "sha256": "129999925683361d7b28d8fd7bf6820acb310c67d2e778f369e8d06d4dec2ce4",
+      "bytes": 1767
+    },
+    {
+      "path": "art/sources/chapter1/terrain/grass_dirt_atlas_16.png",
+      "sha256": "c95926e8b0e07162b1961c8be81e5901c76ae6d2449a58219fd8bb3f6609eb68",
+      "bytes": 949,
+      "size_px": [
+        64,
+        80
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/grass_dirt_atlas_16.pxo",
+      "sha256": "30631d2cbf29157c68ba359bdfa9d8809160c915035c2c07e012652e5e9c7aa9",
+      "bytes": 4190
+    },
+    {
+      "path": "art/sources/chapter1/terrain/grass_light_16.png",
+      "sha256": "62a5e98417bd07ac6b29468e17f8ac58a3ddb8b5c1fe2dacc857cdd08f8dbf3f",
+      "bytes": 126,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/grass_light_16.pxo",
+      "sha256": "79bbf4d5d0adadba640b48b7059b3779927c034dee2fb32dda30fc4112607598",
+      "bytes": 1779
+    },
+    {
+      "path": "art/sources/chapter1/terrain/grass_tuft_16.png",
+      "sha256": "54bd1e454c5844dfa0f1251c382989dc6e328fc44fa9fbd18022edb2082c5704",
+      "bytes": 170,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/ground_decor_16.png",
+      "sha256": "bf802d003539b1b7cda92e5082da22b0d54aeb0778417a0256dba0fbb4919000",
+      "bytes": 514,
+      "size_px": [
+        64,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/ground_decor_16.pxo",
+      "sha256": "3e145379875203dd3a86e36bddb9278ffc7fb38449640721057c75739b860ae3",
+      "bytes": 2538
+    },
+    {
+      "path": "art/sources/chapter1/terrain/pebbles_16.png",
+      "sha256": "161c42abe8a701341e4f4f1f11f7eab08ce35fb52207f0d403b9c6994ec86dd3",
+      "bytes": 146,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/pixellab_dirt_clean_32.png",
+      "sha256": "c3936304709deea129e6797c22bee718472b9c31aba4ed70b3aa3218157e7f0d",
+      "bytes": 708,
+      "size_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/pixellab_dirt_clean_32.pxo",
+      "sha256": "7614f59e4f8a4ac612b39cf4bc3ebf047010a68edcb0cbcfaf822c941f3a6707",
+      "bytes": 3148
+    },
+    {
+      "path": "art/sources/chapter1/terrain/pixellab_dirt_native_32.png",
+      "sha256": "5714a4a7d28dd0f6d055e9c6b2656510cfdf6fb043a3c4ad9940feb79fa5a4c1",
+      "bytes": 2016,
+      "size_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/pixellab_dirt_reference_32.png",
+      "sha256": "1ce643bc2cd33436569c7896acbe34d7d6a3f2c1e503e2386e57ab8bd58d5d8e",
+      "bytes": 2000,
+      "size_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/pixellab_grass_clean_32.png",
+      "sha256": "26e1aacec8403cf943faa0881725ad39ff5361e40e23f04bad50a0ba61fefd74",
+      "bytes": 1725,
+      "size_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/pixellab_grass_clean_32.pxo",
+      "sha256": "00201544242d3aef87c3e817610697a5a26ec3090bbfa1c929dd2bf0483f4a88",
+      "bytes": 4293
+    },
+    {
+      "path": "art/sources/chapter1/terrain/pixellab_grass_native_32.png",
+      "sha256": "ec31bfbb1338e98613c103cb1f2accc1c3e22cdf7e409d3494e7da76d39927a8",
+      "bytes": 3128,
+      "size_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/pixellab_grass_palette_reference.png",
+      "sha256": "9694df54aaa46577236b2cfb8b8a2878f3a75982f27aadf2de8266b5d27f7653",
+      "bytes": 2267,
+      "size_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/pixellab_grass_raw_32.png",
+      "sha256": "6ec6ecd4a865a0bba13e4e73e60a4a2f4287eab3f04f5018b56ee9041693aa10",
+      "bytes": 1575,
+      "size_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/pixellab_grass_reference_32.png",
+      "sha256": "e2951e46aea0c380fd1eb89603d122eb5953c2c16b51560e2036975c5c403e4b",
+      "bytes": 2240,
+      "size_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/soil_surfaces_16.png",
+      "sha256": "bb61c7e91ec2ad9345b1bd61e73a803f1ccc6dcb4180d77a6a94e412ea55e5e2",
+      "bytes": 498,
+      "size_px": [
+        64,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/soil_surfaces_16.pxo",
+      "sha256": "1db5fb18175871356bcfa9e8c4abe972fe65729e957952d4c1e76e6d39d616ac",
+      "bytes": 2476
+    },
+    {
+      "path": "art/sources/chapter1/terrain/soil_tilled_16.png",
+      "sha256": "a9a5d02546546f7a905ed4d8a8f326764d89086422c44e0d79717851d3f2233f",
+      "bytes": 192,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/soil_untilled_16.png",
+      "sha256": "36e43720758302eab443200b67a72376c559314e570c89e193d5269d90b4c96d",
+      "bytes": 163,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/soil_wet_16.png",
+      "sha256": "1ba04b289a1ec7536373dd5842c8a3a40872c63dbdd4d049342236d68668d938",
+      "bytes": 190,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/white_flowers_16.png",
+      "sha256": "b2b5fea36346ce95cdc5cce1b90701d2321722e3fd4035f0f90254e39b9d65f6",
+      "bytes": 193,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/sources/chapter1/terrain/yellow_flowers_16.png",
+      "sha256": "fec005d4cd107fbdd7ad5fba4f7fa7c35d893a2cff18ec418c3df17321ac559c",
+      "bytes": 195,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "art/reviews/chapter1/terrain/godot_terrain_1280.png",
+      "sha256": "1d40122b21e5d27a92204701b78947a6faf2bc750c3d02b2d12fb4c53c8db175",
+      "bytes": 19519,
+      "size_px": [
+        1280,
+        720
+      ]
+    },
+    {
+      "path": "art/reviews/chapter1/terrain/godot_terrain_1920.png",
+      "sha256": "884e94b9548829d62d0a358a7609792f3a5dfbf796ab42da34f5c2171af532d1",
+      "bytes": 27324,
+      "size_px": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "art/reviews/chapter1/terrain/godot_terrain_640.png",
+      "sha256": "2fd4556e9f447c37fd6676a5fa84559468918ece12b57546897aa8d5de789f5e",
+      "bytes": 11178,
+      "size_px": [
+        640,
+        360
+      ]
+    },
+    {
+      "path": "art/reviews/chapter1/terrain/grass_dirt_atlas_4x.png",
+      "sha256": "7579137054f1ace84884ec21a3039ea6174ad3e4818a09a7ca31ba1a046e6262",
+      "bytes": 2669,
+      "size_px": [
+        256,
+        320
+      ]
+    },
+    {
+      "path": "art/reviews/chapter1/terrain/grass_dirt_atlas_8x.png",
+      "sha256": "80dfdfd3a3a24248cf38da9b005396f3162b01a3f617e7f722448d7de8060ea1",
+      "bytes": 4927,
+      "size_px": [
+        512,
+        640
+      ]
+    },
+    {
+      "path": "art/reviews/chapter1/terrain/ground_decor_8x.png",
+      "sha256": "06e6d510225d686a0a3d2f21797b5451f038dfab3b15cdd9edc968216536b524",
+      "bytes": 1179,
+      "size_px": [
+        512,
+        128
+      ]
+    },
+    {
+      "path": "art/reviews/chapter1/terrain/pixellab_dirt_clean_8x.png",
+      "sha256": "422c0469c41237e6fc5b5d8690c5c85077d6ea926511847c7343c051b2af122a",
+      "bytes": 1867,
+      "size_px": [
+        256,
+        256
+      ]
+    },
+    {
+      "path": "art/reviews/chapter1/terrain/pixellab_dirt_native_8x.png",
+      "sha256": "e8bcacd7805c5467396ef6c5a7efb856c536af19afaffb2d52af90ae9b3f28c1",
+      "bytes": 3648,
+      "size_px": [
+        256,
+        256
+      ]
+    },
+    {
+      "path": "art/reviews/chapter1/terrain/pixellab_grass_clean_8x.png",
+      "sha256": "76d558ac2d33ebca253394d3357878bee6e336fcaf639a10f52a05a3053b4c15",
+      "bytes": 2917,
+      "size_px": [
+        256,
+        256
+      ]
+    },
+    {
+      "path": "art/reviews/chapter1/terrain/pixellab_grass_native_8x.png",
+      "sha256": "f7778846512758972430509df63bf594372050dfb2ffe8fa149a1f7dad28bd7a",
+      "bytes": 5409,
+      "size_px": [
+        256,
+        256
+      ]
+    },
+    {
+      "path": "art/reviews/chapter1/terrain/reference_comparison.png",
+      "sha256": "cc3c15e2aa038ddc6d4ba92e0be72ef80e6c92c4c3afa8e540a5e1fad1188aee",
+      "bytes": 198736,
+      "size_px": [
+        1024,
+        800
+      ]
+    },
+    {
+      "path": "art/reviews/chapter1/terrain/reference_grass_path_crop.png",
+      "sha256": "586c295e50e6140041c75ef71465b88848690646615f0d47ebf8ff9ba2a1fe07",
+      "bytes": 66126,
+      "size_px": [
+        165,
+        190
+      ]
+    },
+    {
+      "path": "art/reviews/chapter1/terrain/soil_surfaces_8x.png",
+      "sha256": "380421f2628c5e47aabbffd467619878462decc1a890df31244e6c831c9437e5",
+      "bytes": 1353,
+      "size_px": [
+        512,
+        128
+      ]
+    },
+    {
+      "path": "art/reviews/chapter1/terrain/sparse_before_after.png",
+      "sha256": "3bd2145d3a378ecc2115a4af3279fecb9526402e5354bba60c4a15ee8e022da0",
+      "bytes": 58692,
+      "size_px": [
+        1280,
+        400
+      ]
+    },
+    {
+      "path": "game/assets/chapter1/terrain/dirt_base_16.png",
+      "sha256": "24d107b957d108da63a687ea3b3190d94745382dd30b4ba71ba654d8152ec210",
+      "bytes": 180,
+      "size_px": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "game/assets/chapter1/terrain/grass_dirt_atlas_16.png",
+      "sha256": "c95926e8b0e07162b1961c8be81e5901c76ae6d2449a58219fd8bb3f6609eb68",
+      "bytes": 949,
+      "size_px": [
+        64,
+        80
+      ]
+    },
+    {
+      "path": "game/assets/chapter1/terrain/ground_decor_16.png",
+      "sha256": "bf802d003539b1b7cda92e5082da22b0d54aeb0778417a0256dba0fbb4919000",
+      "bytes": 514,
+      "size_px": [
+        64,
+        16
+      ]
+    },
+    {
+      "path": "game/assets/chapter1/terrain/soil_surfaces_16.png",
+      "sha256": "bb61c7e91ec2ad9345b1bd61e73a803f1ccc6dcb4180d77a6a94e412ea55e5e2",
+      "bytes": 498,
+      "size_px": [
+        64,
+        16
+      ]
+    },
+    {
+      "path": "art/reviews/chapter1/terrain/quiet_grass_before_after.png",
+      "sha256": "9334db2050580816826165a2c80c0b10bfb114f6feed2da1361b2ee84dfaae1b",
+      "bytes": 11151,
+      "size_px": [
+        1280,
+        560
+      ]
+    }
+  ],
+  "pixel_lab_generations": 3,
+  "godot_soil_surface_cells": 100,
+  "godot_decor_cells": 24,
+  "atlas_source_ids": {
+    "0": "existing19grass_dirt_match_sides",
+    "1": "dirt_full_untilled_tilled_wet_explicit",
+    "2": "grass_white_flower_yellow_flower_pebbles_overlay"
+  },
+  "sparse_redraw": {
+    "baseline_commit": "3e62452b0e54b695f9418b5cadaf8ff05ad8005e",
+    "tool": "Pixelorama native draw_pixels",
+    "extra_generations": 0,
+    "grass_base_fraction_each_variant": 0.84375,
+    "grass_cluster_pixels": 4,
+    "dirt_base_fraction": 0.921875,
+    "visual_review": "developer selected after graphical before/after comparison; pending formal map view/user acceptance",
+    "contract": "same IDs,regions,anchors,mask geometry,TileSet,scene,code",
+    "actual_reference_pixel_samples": [
+      {
+        "role": "grass",
+        "hex": "#93b73c",
+        "reference_xy_px": [
+          1145,
+          505
+        ]
+      },
+      {
+        "role": "grass",
+        "hex": "#6c9b2d",
+        "reference_xy_px": [
+          1121,
+          510
+        ]
+      },
+      {
+        "role": "grass",
+        "hex": "#bdd54a",
+        "reference_xy_px": [
+          1120,
+          521
+        ]
+      },
+      {
+        "role": "dirt",
+        "hex": "#e5ba67",
+        "reference_xy_px": [
+          577,
+          492
+        ]
+      },
+      {
+        "role": "dirt",
+        "hex": "#fdd179",
+        "reference_xy_px": [
+          563,
+          499
+        ]
+      },
+      {
+        "role": "dirt",
+        "hex": "#c8aa55",
+        "reference_xy_px": [
+          574,
+          496
+        ]
+      }
+    ],
+    "historical_only": true
+  },
+  "quiet_grass_refinement": {
+    "baseline_commit": "4e75a01f3bb61fdb095680b4308351a808a56454",
+    "tool": "Pixelorama draw_rect/draw_pixels; native pxo saved; lossless source slicing",
+    "extra_generations": 0,
+    "detail_pixels_per_tile": [
+      0,
+      8,
+      8
+    ],
+    "base_fraction_per_tile": [
+      1.0,
+      0.96875,
+      0.96875
+    ],
+    "clusters_per_tile": [
+      0,
+      2,
+      2
+    ],
+    "cluster_size_px": [
+      2,
+      2
+    ],
+    "palette": "original six approved-map colors unchanged, plus transparent unused atlas cell",
+    "world_consumption": "source0(0,0) quiet base >=90%; source0(1,0)/(2,0) localized accents <=10%; no WORLD files edited",
+    "contract": "IDs,source0/1/2,rect,anchor,NESW path pixels,TileSet,scene,code unchanged",
+    "preview": "quiet_grass_before_after.png left=4e75a01 right=current; row1 8x isolated; row2 5x5 repeats nearest2x; row3 105-cell mixed patch with 95 quiet +10 accent cells",
+    "status": "proposed; whole-map renderer/gameplay pending WORLD"
+  },
+  "current_validation": {
+    "pixel_qa": "19 tiles/7 colors/256 edges/exact8x passed; soil and decor unchanged, hash checks passed",
+    "atlas_contract": "grass metadata static passed",
+    "import": "Godot4.7.2 editor reimport exit0, existing cache",
+    "capture": "actual macOS OpenGL renderer, 640/1280/1920 exit0; exact nearest2x/3x; no ERROR/WARNING",
+    "solver": "not rerun this round; no scene, TileSet, geometry or code changes; earlier solver run is historical",
+    "logs": ".tmp/issue-88-quiet/",
+    "formal_world": "not run in ART slice"
+  }
+}

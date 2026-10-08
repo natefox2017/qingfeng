@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "budget_max_generations": 8,
+  "requests": [
+    {
+      "tool": "create_image_pixflux",
+      "job_id": "1f1fb84e-ad42-4abd-b4c1-8e19b5b40333",
+      "reported_cost_generations": 1,
+      "args": {
+        "description": "Seamless flat spring grass ground tile texture only, viewed high top-down. Native 32x32 pixel art, 2x2 16px ground cells. Closely use the supplied reference palette: lush yellow-green blades on warm olive green ground, purposeful tiny 2-4 pixel irregular leaf clusters with dark green bases and bright yellow-green tips. Medium density, organic clumps separated by calm flat ground. Match sunny rural farm map ground, NOT tree canopy or bushes. No objects, flowers, stones, path, fences, text, border, perspective horizon, gradient, antialiasing, painterly brush texture, noise, blur or downscaled illustration. Exact integer pixels, hard edges and small finite palette. Make all four outer edges tile seamlessly.",
+        "width": 32,
+        "height": 32,
+        "no_background": false,
+        "view": "high top-down",
+        "outline": "lineless",
+        "shading": "basic shading",
+        "detail": "medium detail",
+        "seed": 880108,
+        "text_guidance_scale": 8,
+        "color_image_input": {
+          "path": "art/sources/chapter1/terrain/pixellab_grass_palette_reference.png",
+          "reference_path": "art/approved/refs/world_chapter1_map.png",
+          "rect_px": [
+            1120,
+            460,
+            32,
+            32
+          ],
+          "transport": "color_image_base64",
+          "role": "forced_palette_not_runtime"
+        }
+      },
+      "status": "completed",
+      "review_status": "rejected_for_A01",
+      "reason": "Generated central dirt square despite grass-only prompt; forced palette input included dirt. Retained raw32 PNG, not runtime.",
+      "output_path": "art/sources/chapter1/terrain/pixellab_grass_raw_32.png",
+      "output_sha256": "6ec6ecd4a865a0bba13e4e73e60a4a2f4287eab3f04f5018b56ee9041693aa10",
+      "input_sha256": "9694df54aaa46577236b2cfb8b8a2878f3a75982f27aadf2de8266b5d27f7653"
+    },
+    {
+      "tool": "create_image_pixflux",
+      "job_id": "84c51e79-6543-4be5-b56c-85af8fe19329",
+      "reported_cost_generations": 1,
+      "args": {
+        "description": "Pure yellow-green spring meadow grass ground texture, seamless all edges, full canvas grass only. Dense tiny irregular bent grass blades: dark olive base clusters, saturated spring green middle, pale yellow-green lit tips, on calm moss-green soil. Follow supplied reference colors. No brown dirt area, no path, no square patch, no border, no flowers, no bushes or tree canopy. Native 32x32 pixel art at 1 pixel grid, intentional 2-4px clusters, flat finite-color shading, no blur, no gradients, no outlines. 2x2 ground cells of 16px each.",
+        "width": 32,
+        "height": 32,
+        "no_background": false,
+        "view": "high top-down",
+        "outline": "lineless",
+        "shading": "basic shading",
+        "detail": "highly detailed",
+        "seed": 880109,
+        "text_guidance_scale": 9
+      },
+      "input_path": "art/sources/chapter1/terrain/pixellab_grass_reference_32.png",
+      "reference_rect_px": [
+        1120,
+        490,
+        32,
+        32
+      ],
+      "status": "completed",
+      "review_status": "proposed_after_native_repair",
+      "input_sha256": "e2951e46aea0c380fd1eb89603d122eb5953c2c16b51560e2036975c5c403e4b",
+      "output_path": "art/sources/chapter1/terrain/pixellab_grass_native_32.png",
+      "output_sha256": "ec31bfbb1338e98613c103cb1f2accc1c3e22cdf7e409d3494e7da76d39927a8",
+      "raw_color_count": 179,
+      "clean_path": "art/sources/chapter1/terrain/pixellab_grass_clean_32.png",
+      "clean_sha256": "26e1aacec8403cf943faa0881725ad39ff5361e40e23f04bad50a0ba61fefd74",
+      "repair": "Pixelorama finite palette remap; exact16px slice; native shared-edge repaint, no scaling",
+      "raw_limits": "Too many similar shades and untileable edges"
+    },
+    {
+      "tool": "create_image_pixflux",
+      "job_id": "831adbfd-74eb-430a-9f4d-0ed8061cd989",
+      "reported_cost_generations": 1,
+      "args": {
+        "description": "Seamless warm sandy ochre dirt footpath surface ONLY, filling the entire canvas. Match the provided farm path colors: golden tan ground, scattered small 2px pale sand chips and darker ochre pebble dimples, calm irregular texture clusters. No grass, no green, no flowers, no rectangular grass border, no objects. Native 32x32 pixel art, 2x2 ground cells of 16px, crisp integer pixels, no antialiasing, no gradients, no brush texture, no noise. Seamless all four edges.",
+        "width": 32,
+        "height": 32,
+        "no_background": false,
+        "view": "high top-down",
+        "outline": "lineless",
+        "shading": "basic shading",
+        "detail": "medium detail",
+        "seed": 880110,
+        "text_guidance_scale": 9
+      },
+      "input_path": "art/sources/chapter1/terrain/pixellab_dirt_reference_32.png",
+      "reference_rect_px": [
+        550,
+        490,
+        32,
+        32
+      ],
+      "status": "completed",
+      "review_status": "proposed_after_native_repair",
+      "input_sha256": "1ce643bc2cd33436569c7896acbe34d7d6a3f2c1e503e2386e57ab8bd58d5d8e",
+      "output_path": "art/sources/chapter1/terrain/pixellab_dirt_native_32.png",
+      "output_sha256": "5714a4a7d28dd0f6d055e9c6b2656510cfdf6fb043a3c4ad9940feb79fa5a4c1",
+      "raw_color_count": 57,
+      "clean_path": "art/sources/chapter1/terrain/pixellab_dirt_clean_32.png",
+      "clean_sha256": "c3936304709deea129e6797c22bee718472b9c31aba4ed70b3aa3218157e7f0d",
+      "repair": "Pixelorama finite palette remap; exact16px slice; native shared-edge repaint, no scaling",
+      "raw_limits": "Grass sides generated despite no-grass prompt; native warm palette substitution and center crop"
+    }
+  ],
+  "reference_sha256": "ba35eef32eb0a49a5e50ad8ec4498148845c8f4065d3695b315c4ea1286bddd7",
+  "reported_generations_used": 3,
+  "purchase": false,
+  "final_native_refinement": "4e sparse redraw superseded for three grass cells only: Pixelorama quiet base0 detail pixels; light/dark8 detail pixels each as two2x2 leaf clusters. Original palette and all dirt geometry unchanged; preserved raw MCP generation provenance, no new generation.",
+  "additional_native_assets": [
+    "soil_surfaces_16.pxo",
+    "ground_decor_16.pxo"
+  ],
+  "additional_ai_generations": 0
+}

@@ -1,0 +1,659 @@
+{
+  "job": {
+    "canvas": [
+      128,
+      48
+    ],
+    "frame_count": 1,
+    "views": [
+      {
+        "id": "south",
+        "offset": [
+          0,
+          0
+        ]
+      }
+    ],
+    "source_bookends_exact": false
+  },
+  "scene": {
+    "palette": {
+      "ink": "#504439",
+      "wood_dark": "#735033",
+      "wood": "#aa733d",
+      "wood_light": "#d5a05b",
+      "wood_top": "#e7b76b",
+      "metal": "#4d5a54",
+      "metal_light": "#788577",
+      "cream": "#f1d998",
+      "lamp": "#ffe7a4",
+      "stone_dark": "#9b9178",
+      "stone": "#cfbf9f",
+      "stone_light": "#dfcfaa",
+      "stone_shadow": "#b8ab8c"
+    },
+    "layers": [
+      {
+        "id": "props",
+        "name": "Body - town public objects"
+      }
+    ],
+    "views": {
+      "south": {
+        "nodes": {
+          "props": {
+            "layer": "props",
+            "at": [
+              0,
+              0
+            ],
+            "draw": [
+              {
+                "op": "rect",
+                "box": [
+                  0,
+                  34,
+                  31,
+                  47
+                ],
+                "color": "stone_dark"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  0,
+                  35,
+                  7,
+                  40
+                ],
+                "color": "stone"
+              },
+              {
+                "op": "path",
+                "points": [
+                  [
+                    0,
+                    35
+                  ],
+                  [
+                    7,
+                    35
+                  ]
+                ],
+                "color": "stone_light"
+              },
+              {
+                "op": "path",
+                "points": [
+                  [
+                    0,
+                    40
+                  ],
+                  [
+                    7,
+                    40
+                  ]
+                ],
+                "color": "stone_shadow"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  9,
+                  35,
+                  22,
+                  40
+                ],
+                "color": "stone"
+              },
+              {
+                "op": "path",
+                "points": [
+                  [
+                    9,
+                    35
+                  ],
+                  [
+                    22,
+                    35
+                  ]
+                ],
+                "color": "stone_light"
+              },
+              {
+                "op": "path",
+                "points": [
+                  [
+                    9,
+                    40
+                  ],
+                  [
+                    22,
+                    40
+                  ]
+                ],
+                "color": "stone_shadow"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  24,
+                  35,
+                  31,
+                  40
+                ],
+                "color": "stone"
+              },
+              {
+                "op": "path",
+                "points": [
+                  [
+                    24,
+                    35
+                  ],
+                  [
+                    31,
+                    35
+                  ]
+                ],
+                "color": "stone_light"
+              },
+              {
+                "op": "path",
+                "points": [
+                  [
+                    24,
+                    40
+                  ],
+                  [
+                    31,
+                    40
+                  ]
+                ],
+                "color": "stone_shadow"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  0,
+                  41,
+                  14,
+                  46
+                ],
+                "color": "stone"
+              },
+              {
+                "op": "path",
+                "points": [
+                  [
+                    0,
+                    41
+                  ],
+                  [
+                    14,
+                    41
+                  ]
+                ],
+                "color": "stone_light"
+              },
+              {
+                "op": "path",
+                "points": [
+                  [
+                    0,
+                    46
+                  ],
+                  [
+                    14,
+                    46
+                  ]
+                ],
+                "color": "stone_shadow"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  16,
+                  41,
+                  31,
+                  46
+                ],
+                "color": "stone"
+              },
+              {
+                "op": "path",
+                "points": [
+                  [
+                    16,
+                    41
+                  ],
+                  [
+                    31,
+                    41
+                  ]
+                ],
+                "color": "stone_light"
+              },
+              {
+                "op": "path",
+                "points": [
+                  [
+                    16,
+                    46
+                  ],
+                  [
+                    31,
+                    46
+                  ]
+                ],
+                "color": "stone_shadow"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  0,
+                  32,
+                  31,
+                  33
+                ],
+                "color": "stone_light"
+              },
+              {
+                "op": "path",
+                "points": [
+                  [
+                    0,
+                    34
+                  ],
+                  [
+                    31,
+                    34
+                  ]
+                ],
+                "color": "stone_shadow"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  38,
+                  12,
+                  41,
+                  43
+                ],
+                "color": "ink"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  39,
+                  13,
+                  40,
+                  43
+                ],
+                "color": "wood"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  36,
+                  44,
+                  43,
+                  45
+                ],
+                "color": "metal"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  35,
+                  46,
+                  44,
+                  47
+                ],
+                "color": "ink"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  34,
+                  4,
+                  45,
+                  5
+                ],
+                "color": "metal"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  35,
+                  6,
+                  44,
+                  16
+                ],
+                "color": "ink"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  37,
+                  7,
+                  42,
+                  14
+                ],
+                "color": "lamp"
+              },
+              {
+                "op": "path",
+                "points": [
+                  [
+                    39,
+                    7
+                  ],
+                  [
+                    39,
+                    14
+                  ]
+                ],
+                "color": "wood_light"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  34,
+                  17,
+                  45,
+                  18
+                ],
+                "color": "metal"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  37,
+                  1,
+                  42,
+                  3
+                ],
+                "color": "metal"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  39,
+                  0,
+                  40,
+                  1
+                ],
+                "color": "metal_light"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  53,
+                  27,
+                  55,
+                  43
+                ],
+                "color": "ink"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  54,
+                  28,
+                  55,
+                  42
+                ],
+                "color": "wood_dark"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  80,
+                  27,
+                  82,
+                  43
+                ],
+                "color": "ink"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  81,
+                  28,
+                  82,
+                  42
+                ],
+                "color": "wood_dark"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  51,
+                  18,
+                  84,
+                  20
+                ],
+                "color": "ink"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  52,
+                  18,
+                  83,
+                  19
+                ],
+                "color": "wood_light"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  51,
+                  22,
+                  84,
+                  24
+                ],
+                "color": "ink"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  52,
+                  22,
+                  83,
+                  23
+                ],
+                "color": "wood"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  50,
+                  28,
+                  85,
+                  32
+                ],
+                "color": "ink"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  51,
+                  28,
+                  84,
+                  29
+                ],
+                "color": "wood_top"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  51,
+                  30,
+                  84,
+                  31
+                ],
+                "color": "wood"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  49,
+                  26,
+                  51,
+                  29
+                ],
+                "color": "wood_dark"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  84,
+                  26,
+                  86,
+                  29
+                ],
+                "color": "wood_dark"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  52,
+                  33,
+                  54,
+                  35
+                ],
+                "color": "wood_dark"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  81,
+                  33,
+                  83,
+                  35
+                ],
+                "color": "wood_dark"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  105,
+                  20,
+                  108,
+                  46
+                ],
+                "color": "ink"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  106,
+                  21,
+                  107,
+                  45
+                ],
+                "color": "wood"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  91,
+                  13,
+                  124,
+                  25
+                ],
+                "color": "ink"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  92,
+                  14,
+                  122,
+                  24
+                ],
+                "color": "wood_dark"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  93,
+                  14,
+                  121,
+                  15
+                ],
+                "color": "wood_top"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  93,
+                  16,
+                  122,
+                  22
+                ],
+                "color": "wood"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  93,
+                  23,
+                  121,
+                  23
+                ],
+                "color": "wood_light"
+              },
+              {
+                "op": "path",
+                "points": [
+                  [
+                    124,
+                    15
+                  ],
+                  [
+                    126,
+                    19
+                  ],
+                  [
+                    124,
+                    23
+                  ]
+                ],
+                "color": "ink"
+              },
+              {
+                "op": "pixels",
+                "pixels": [
+                  [
+                    95,
+                    17,
+                    "wood_light"
+                  ],
+                  [
+                    119,
+                    17,
+                    "wood_light"
+                  ],
+                  [
+                    95,
+                    21,
+                    "wood_dark"
+                  ],
+                  [
+                    119,
+                    21,
+                    "wood_dark"
+                  ]
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "reference_crop_path": "art/sources/chapter1/town/public_props_reference_crop.png"
+}

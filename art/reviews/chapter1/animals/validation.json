@@ -1,0 +1,101 @@
+{
+  "technical_checks": [
+    {
+      "name": "dog",
+      "size": [
+        32,
+        32
+      ],
+      "content_rect": [
+        2,
+        2,
+        30,
+        30
+      ],
+      "colors": 46,
+      "alpha_levels": [
+        0,
+        255
+      ],
+      "preview_exact_nearest": true,
+      "source_no_rescale": true
+    },
+    {
+      "name": "chicken",
+      "size": [
+        24,
+        24
+      ],
+      "content_rect": [
+        2,
+        2,
+        21,
+        22
+      ],
+      "colors": 55,
+      "alpha_levels": [
+        0,
+        255
+      ],
+      "preview_exact_nearest": true,
+      "source_no_rescale": true
+    },
+    {
+      "name": "duck",
+      "size": [
+        32,
+        32
+      ],
+      "content_rect": [
+        9,
+        12,
+        25,
+        23
+      ],
+      "colors": 22,
+      "alpha_levels": [
+        0,
+        255
+      ],
+      "preview_exact_nearest": true,
+      "source_no_rescale": true
+    },
+    {
+      "name": "butterfly",
+      "size": [
+        16,
+        16
+      ],
+      "content_rect": [
+        1,
+        2,
+        15,
+        13
+      ],
+      "colors": 28,
+      "alpha_levels": [
+        0,
+        255
+      ],
+      "preview_exact_nearest": true,
+      "source_no_rescale": true
+    }
+  ],
+  "native_engine": "4.7.2.stable.official.ed1daf0bf",
+  "native_command": "/Applications/Godot.app/Contents/MacOS/Godot --path .tmp/issue-92/native --audio-driver Dummy --script res://capture.gd",
+  "native_exit": 0,
+  "native_log": "ANIMAL_NATIVE_SAMPLE: 4 actual PNG ImageTextures and player reference rendered; no map acceptance",
+  "native_renderer": "OpenGL API 4.1 Metal Compatibility Apple M4 Pro",
+  "native_sample_sha256": "69fe122c4119a9b8bd4a274bebc48758f9cdb9f19ff83c08682589b2eb570e3f",
+  "verification_command": "bundled python .tmp/issue-92/verify.py",
+  "scope": "isolated PNG technical/native renderer sample only",
+  "not_verified": [
+    "user visual acceptance",
+    "WORLD integration or yard_dog replacement",
+    "animation",
+    "walking or interaction",
+    "full map route",
+    "export"
+  ],
+  "review_status": "proposed"
+}

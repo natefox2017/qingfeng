@@ -1,0 +1,14 @@
+{
+  "godot_version": "4.7.2.stable.official.ed1daf0bf",
+  "backend": "OpenGL 4.1 Metal compatibility / Apple M4 Pro",
+  "import_command": "/Applications/Godot.app/Contents/MacOS/Godot --headless --path game --editor --import --quit",
+  "import_exit": 0,
+  "capture_command": "/Applications/Godot.app/Contents/MacOS/Godot --path game --script res://assets/chapter1/town/town_preview.gd",
+  "capture_exit": 0,
+  "capture_log": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\nOpenGL API 4.1 Metal - 91.7 - Compatibility - Using Device: Apple - Apple M4 Pro\n\nTOWN_NATIVE_CAPTURE: (1280, 720) save=0 TileMapLayer=264 cells, 12 prop sprites\n",
+  "screenshot_path": "art/reviews/chapter1/town/godot_native_town.png",
+  "screenshot_sha256": "73e40930dc7d143dd4b14b432215d65cce7f7433a7d054f662443b2d1d07616a",
+  "initial_capture_issue": "First three capture attempts rendered but MP3 playback resource leaked on exit. --verbose located AudioStreamMP3 and AudioStreamPlaybackMP3. Final preview calls existing AudioManager.shutdown_audio(), frees stage and defers quit; final capture contains no WARNING/ERROR.",
+  "scope": "Isolated editable TileMapLayer and sprites loaded/rendered by real graphical Godot. No native input/gameplay route or collision validation performed.",
+  "review_status": "proposed"
+}

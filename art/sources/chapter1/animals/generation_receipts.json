@@ -1,0 +1,58 @@
+{
+  "baseline": "a871fdb2f18eea1f9208dcb6c478823677966460",
+  "imagegen": {
+    "status": "rejected",
+    "reason": "1254x1254 image; 256 alpha levels; 30217 RGBA colors; not an exact native 32px grid",
+    "candidate_sha256": "cfcaa8575036545eca38af53e33b8170e2d73315f1a449b1932eab119992e1bb"
+  },
+  "requests": {
+    "dog": {
+      "request": {
+        "description": "Single small orange and white farm dog, orange upright ears and back, white muzzle chest belly and paws, curled tail, four paws, calm standing idle. Same identity as provided orange-white reference palette; no collar, no heart. Compact farm RPG low top-down sprite, body fits 27x23 pixels, crisp 1px clusters. No scenery, ground shadow or text.",
+        "width": 32,
+        "height": 32,
+        "direction": "south-east",
+        "view": "low top-down",
+        "no_background": true,
+        "detail": "low detail",
+        "shading": "basic shading",
+        "outline": "selective outline",
+        "seed": 9201
+      },
+      "palette_input": "reference_dog.png",
+      "submission": {
+        "content": [
+          {
+            "type": "text",
+            "text": "id: a544ed0c-8702-4288-b255-de5982c1e0b9\njob_id: a544ed0c-8702-4288-b255-de5982c1e0b9\ndescription: Single small orange and white farm dog, orange upright ears and back, white muzzle chest belly and paws, curled tail, four paws, calm standing idle. Same identity as provided orange-white reference palette; no collar, no heart. Compact farm RPG low top-down sprite, body fits 27x23 pixels, crisp 1px clusters. No scenery, ground shadow or text.\nsize: 32x32px\ntransparent: True\nasset_id: 20cc38f4-c744-501b-9a19-c5566b59a1f2\nasset_status: pending (saved when generation completes)\nforced_palette: yes\nseed: 9201\ncost: 1 generation\nstatus: processing (~10-40s)\n\nhint: get_image(job_id=\"a544ed0c-8702-4288-b255-de5982c1e0b9\")"
+          }
+        ],
+        "isError": false
+      }
+    },
+    "chicken": {
+      "request": {
+        "description": "Single small white farm hen, red comb, orange beak and two tiny orange feet, rounded white body with pale gray wing, facing southeast, calm standing idle. Compact low top-down farm RPG sprite, content about 18x19 pixels, no scenery shadow or text.",
+        "width": 32,
+        "height": 32,
+        "direction": "south-east",
+        "view": "low top-down",
+        "no_background": true,
+        "detail": "low detail",
+        "shading": "basic shading",
+        "outline": "selective outline",
+        "seed": 9202
+      },
+      "palette_input": "reference_chicken.png",
+      "submission": {
+        "content": [
+          {
+            "type": "text",
+            "text": "id: c809ebc7-2c6c-4768-9884-662339057fba\njob_id: c809ebc7-2c6c-4768-9884-662339057fba\ndescription: Single small white farm hen, red comb, orange beak and two tiny orange feet, rounded white body with pale gray wing, facing southeast, calm standing idle. Compact low top-down farm RPG sprite, content about 18x19 pixels, no scenery shadow or text.\nsize: 32x32px\ntransparent: True\nasset_id: 81715d7c-9860-5e36-b6ee-6c1e7942b2a7\nasset_status: pending (saved when generation completes)\nforced_palette: yes\nseed: 9202\ncost: 1 generation\nstatus: processing (~10-40s)\n\nhint: get_image(job_id=\"c809ebc7-2c6c-4768-9884-662339057fba\")"
+          }
+        ],
+        "isError": false
+      }
+    }
+  }
+}

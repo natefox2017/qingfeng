@@ -1,0 +1,14 @@
+{
+  "view": "low top-down",
+  "outline": "selective outline",
+  "shading": "medium shading",
+  "detail": "medium detail",
+  "seed": 89,
+  "description": "Only one small rectangular WOODEN DOCK DECK on transparent background. Topdown orthographic32x32pixel. Warm golden wooden vertical plank floor full width, square footprint. Separate decking component no rails no posts no water no barrels no scene. For modular pier plank repeat on16px grid, authentic detailed crisp native pixels.",
+  "width": 32,
+  "height": 32,
+  "no_background": true,
+  "color_reference": "reference_dock.png",
+  "reference_sha256": "d261d3287ecb6059db3137d34f9369659f222a7f888db46d7bc5583ded09a79a",
+  "request_sha256": "a7fd0ac48499fa4920c738a6b583f97efc607ba99d10c44db9fa6dacc99580ae"
+}

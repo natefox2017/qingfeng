@@ -1,0 +1,14 @@
+{
+  "view": "low top-down",
+  "outline": "selective outline",
+  "shading": "medium shading",
+  "detail": "medium detail",
+  "seed": 89,
+  "description": "Single narrow vertical waterfall falling SOUTH on16px game grid. White pale cyan water streams from top to bottom, long thin straight ribbons of skyblue white foam, mouth at top and splash foam at bottom. Tall64px nativepixel sprite. Transparent around independent falling water only, no rocks landscape or bank scene. Crisp1px clusters.",
+  "width": 16,
+  "height": 64,
+  "no_background": true,
+  "color_reference": "reference_waterfall.png",
+  "reference_sha256": "8d7d5a4c90075863344287d98f8bcbb0b33b4ecdca45741c80e84fea4560838d",
+  "request_sha256": "54ffe7b705eb5247e97874978d48fb626bf98d2e190c7d540bd8b5ddd2cc91c0"
+}

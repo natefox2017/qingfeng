@@ -1,0 +1,37 @@
+{
+  "source": "object:25da47eb-024b-4398-8fc3-c466a23eb75a",
+  "changes": [
+    {
+      "operation": "map_colors",
+      "frames": [
+        1
+      ],
+      "region": [
+        0,
+        0,
+        63,
+        29
+      ],
+      "colors": {
+        "#3071e1ff": "#d5761eff",
+        "#4562bdff": "#b36c29ff",
+        "#357bcbff": "#c07c1fff",
+        "#2f78f5ff": "#e87b1eff",
+        "#317af2ff": "#e57c1eff",
+        "#2774ebff": "#df781eff",
+        "#064566ff": "#60591eff",
+        "#04156eff": "#683a1eff",
+        "#061461ff": "#5c3a1eff",
+        "#04187aff": "#733c1eff",
+        "#0b3794ff": "#8c501eff",
+        "#0626abff": "#a2451eff",
+        "#a2abe2ff": "#d69c61ff",
+        "#abb5e7ff": "#dba266ff",
+        "#0b54ccff": "#c1631eff",
+        "#2b3147ff": "#434c1eff",
+        "#534b72ff": "#6c5d31ff"
+      },
+      "reason": "Orange-white awning variant uses same original shape and wood support."
+    }
+  ]
+}

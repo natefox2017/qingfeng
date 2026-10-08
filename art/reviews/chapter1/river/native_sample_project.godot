@@ -1,0 +1,14 @@
+config_version=5
+[application]
+config/name="River asset isolated rendering sample"
+run/main_scene="res://native_sample.tscn"
+[display]
+window/size/viewport_width=320
+window/size/viewport_height=192
+window/size/window_width_override=960
+window/size/window_height_override=576
+window/flags/no_focus=true
+window/stretch/mode="canvas_items"
+[rendering]
+renderer/rendering_method="gl_compatibility"
+textures/default_filters/use_nearest_mipmap_filter=false

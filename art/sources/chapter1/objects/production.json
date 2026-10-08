@@ -1,0 +1,177 @@
+{
+  "reference_path": "art/approved/refs/world_chapter1_map.png",
+  "reference_sha256": "ba35eef32eb0a49a5e50ad8ec4498148845c8f4065d3695b315c4ea1286bddd7",
+  "crops": {
+    "doghouse": [
+      74,
+      477,
+      146,
+      565
+    ],
+    "tool_bench": [
+      394,
+      511,
+      514,
+      607
+    ],
+    "scarecrow": [
+      750,
+      475,
+      806,
+      551
+    ],
+    "pine_tree": [
+      572,
+      113,
+      684,
+      273
+    ],
+    "bush": [
+      633,
+      746,
+      713,
+      826
+    ],
+    "rock": [
+      457,
+      765,
+      537,
+      861
+    ],
+    "cabbage": [
+      654,
+      405,
+      702,
+      453
+    ],
+    "wheat": [
+      816,
+      512,
+      864,
+      576
+    ],
+    "flower": [
+      777,
+      405,
+      825,
+      453
+    ],
+    "radish": [
+      1020,
+      543,
+      1068,
+      591
+    ],
+    "well": [
+      422,
+      386,
+      518,
+      498
+    ],
+    "fence": [
+      162,
+      196,
+      258,
+      260
+    ],
+    "apple_tree": [
+      262,
+      47,
+      374,
+      191
+    ],
+    "cherry_tree": [
+      336,
+      273,
+      464,
+      401
+    ],
+    "yard": [
+      64,
+      265,
+      541,
+      661
+    ]
+  },
+  "review_status": "proposed",
+  "budget_max_generations": 14,
+  "coordinate_authority": "WORLD",
+  "generation_source": "PixelLab ordinary create_map_object; no pro or purchased credits",
+  "existing_reuse": [
+    {
+      "path": "game/assets/phase0/farmhouse.png",
+      "sha256": "b08cc7e0c6db1de3e33a3d263383f1823d8e260c2c2e61cc8b09c807de17e725",
+      "size_px": [
+        192,
+        152
+      ]
+    },
+    {
+      "path": "game/assets/phase0/oak_tree.png",
+      "sha256": "56bf08cd63b9c6d4da16396ddbd8a7f6fee4e49eae9188af7cef3920c6a93840",
+      "size_px": [
+        80,
+        96
+      ]
+    }
+  ],
+  "rejected": [
+    {
+      "job_id": "ffa2fab7-ae71-4e02-952a-40017607eb4e",
+      "path": "art/sources/chapter1/objects/radish_rejected.png",
+      "reason": "Returned brown stump/tree seedling instead of white radish; not usable for CropStatus"
+    },
+    {
+      "tool": "image_gen",
+      "path": ".tmp/objects/scarecrow_imagegen_rejected.png",
+      "reason": "1024x1536 output ignores integer enlarged logical grid, wide glow and alpha0..254; no clean opaque native pixel sprite",
+      "sha256": "f2910a1797497b976a6d40d9a91c661854df184553aeec84b7de231a361e87e3"
+    }
+  ],
+  "budget_generations_submitted": 14,
+  "roof_reference_samples": {
+    "224,281": [
+      43,
+      80,
+      117
+    ],
+    "224,295": [
+      20,
+      52,
+      82
+    ],
+    "224,312": [
+      42,
+      85,
+      119
+    ],
+    "234,327": [
+      95,
+      129,
+      140
+    ],
+    "235,348": [
+      182,
+      217,
+      213
+    ],
+    "161,341": [
+      99,
+      131,
+      145
+    ],
+    "175,332": [
+      32,
+      67,
+      104
+    ]
+  },
+  "budget_override": "Coordinator authorized2 additional ordinary subscription generations only for32x32 radish growing/mature",
+  "native_engine": "Godot4.7.2 stable ed1daf0bf OpenGL4.1Metal AppleM4Pro",
+  "native_evidence_path": "art/reviews/chapter1/objects/native_objects.png",
+  "native_evidence_size_px": [
+    1024,
+    800
+  ],
+  "runtime_acceptance": "Not complete map acceptance; no route/collision/door/N11 export or human visual signoff in this ART task"
+}
