@@ -295,9 +295,22 @@ func show_page(page: String, context: Dictionary) -> void:
 					button(card_row,"read_save","play","此存档无法读取："+String(item.error_code),{"save_id":item.save_id},false)
 			var actions:=row();button(actions,"choose_import","import","选择 .qfsave 存档文件");button(actions,"back","back","返回标题")
 		"import_review":
-			title.text="确认导入";subtitle.text="将创建一份本机副本，原文件与已有存档不变。"
-			label("玩家："+context.envelope.snapshot.player_name+"\n狗名："+context.envelope.snapshot.dog_name+"\n保存时间："+context.envelope.saved_at_utc+"\n内容版本："+context.envelope.content_version)
-			var actions:=row();button(actions,"confirm_import","accept","确认创建本机副本");button(actions,"cancel_import","back","取消导入，不写入任何存档")
+			title.text="确认导入";subtitle.text="检查外部存档，再创建本机独立副本"
+			panel.custom_minimum_size=Vector2(500,276)
+			var import_panel:=PanelContainer.new();import_panel.name="ImportSummary";import_panel.add_theme_stylebox_override("panel",UI_THEME.section_style());body.add_child(import_panel)
+			var import_column:=VBoxContainer.new();import_column.add_theme_constant_override("separation",4);import_panel.add_child(import_column)
+			var snapshot: Dictionary=context.envelope.snapshot
+			var import_player:=label(String(snapshot.get("player_name","未命名")),import_column);UI_THEME.apply_text_role(import_player,UI_THEME.ROLE_HEADING)
+			var dog_value:=String(snapshot.get("dog_name",""))
+			var import_meta:=_space_display_name(String(snapshot.get("space_id","")))
+			if not dog_value.is_empty():
+				import_meta+="  ·  小狗 "+dog_value
+			var meta_label:=label(import_meta,import_column);UI_THEME.apply_text_role(meta_label,UI_THEME.ROLE_CAPTION)
+			var saved_label:=label("保存时间  "+String(context.envelope.get("saved_at_utc","")),import_column);UI_THEME.apply_text_role(saved_label,UI_THEME.ROLE_CAPTION)
+			var version_label:=label("内容版本  "+String(context.envelope.get("content_version","")),import_column);UI_THEME.apply_text_role(version_label,UI_THEME.ROLE_TOOLTIP)
+
+			var import_note:=label("确认后会创建新的本机存档副本，并使用新的本地会话身份。原文件和已有存档都不会被修改。");import_note.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;UI_THEME.apply_text_role(import_note,UI_THEME.ROLE_CAPTION)
+			var actions:=row();button(actions,"confirm_import","accept","确认创建本机独立副本");button(actions,"cancel_import","back","取消导入，不写入任何存档")
 		"settings":
 			title.text="设置";subtitle.text="先预览，再确认 · 未确认的显示变更会自动恢复"
 			panel.custom_minimum_size=Vector2(520,286)
