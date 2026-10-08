@@ -145,6 +145,9 @@ func apply_conversation_projection(value: Variant) -> bool:
 				$ConversationAnchors/Right.position,
 				"conversation"
 			)
+		if state=="participating":
+			first_actor.face_toward(second_actor.position)
+			second_actor.face_toward(first_actor.position)
 		queue_redraw()
 		return true
 	queue_redraw()
