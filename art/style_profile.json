@@ -8,7 +8,7 @@
   },
   "view_hint": "low top-down",
   "reference_asset_ids": [],
-  "palette_asset_id": null,
-  "character_content_height_px": null,
-  "notes": "制作候选；先做同屏对照，未生成、未接受最终美术。"
+  "palette_asset_id": "asset.terrain.phase0",
+  "character_content_height_px": 30,
+  "notes": "第一屏创作候选：16px地形、24×32四向主角与暖色农舍，来自本仓库原创手绘PNG；尚无用户设计图对照和Godot原生截图，review_status仍是proposed，不能冒充PixelLab accepted。"
 }
