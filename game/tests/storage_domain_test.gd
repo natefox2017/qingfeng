@@ -51,8 +51,8 @@ func _initialize() -> void:
 	var deposit := transfer_command("deposit-seed",inventory.revision,storage.revision,inventory.container_id,storage.container_id,"item.radish_seed",2)
 	var deposited: Dictionary = journal.execute(deposit,transfer.handle)
 	check(deposited.ok and inventory.quantity_of("item.radish_seed")==2 and storage.quantity_of("item.radish_seed")==2,"deposit atomically moves quantity from player to chest")
-	var inventory_revision_after := inventory.revision
-	var storage_revision_after := storage.revision
+	var inventory_revision_after: int = inventory.revision
+	var storage_revision_after: int = storage.revision
 	var replay: Dictionary = journal.execute(deposit,transfer.handle)
 	check(replay==deposited and inventory.revision==inventory_revision_after and storage.revision==storage_revision_after,"deposit replay does not move items twice")
 	var conflict: Dictionary = journal.execute(transfer_command("deposit-seed",inventory_revision_after,storage_revision_after,inventory.container_id,storage.container_id,"item.radish_seed",1),transfer.handle)
