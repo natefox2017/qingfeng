@@ -207,6 +207,8 @@ static func _valid_gameplay_common(value: Variant) -> bool:
 			return false
 	if value.has("storage") and not value.has("command_journal"):
 		return false
+	if value.has("forage") and (not value.has("storage") or not value.has("command_journal")):
+		return false
 	if value.has("command_journal") and not _valid_command_journal(value.command_journal):
 		return false
 	if value.content_version != GAMEPLAY_CONTENT_VERSION:
