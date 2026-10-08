@@ -157,6 +157,102 @@ collision_mask = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/RiverLowerSouth"]
 shape = SubResource("RiverLowerSouthShape")
 
+[node name="OrchardRoot01" type="StaticBody2D" parent="Solids"]
+position = Vector2(240, 420)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot01"]
+shape = SubResource("TreeShape")
+
+[node name="OrchardRoot02" type="StaticBody2D" parent="Solids"]
+position = Vector2(360, 470)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot02"]
+shape = SubResource("TreeShape")
+
+[node name="OrchardRoot03" type="StaticBody2D" parent="Solids"]
+position = Vector2(120, 850)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot03"]
+shape = SubResource("TreeShape")
+
+[node name="OrchardRoot04" type="StaticBody2D" parent="Solids"]
+position = Vector2(390, 850)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot04"]
+shape = SubResource("TreeShape")
+
+[node name="OrchardRoot05" type="StaticBody2D" parent="Solids"]
+position = Vector2(690, 320)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot05"]
+shape = SubResource("TreeShape")
+
+[node name="OrchardRoot06" type="StaticBody2D" parent="Solids"]
+position = Vector2(920, 350)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot06"]
+shape = SubResource("TreeShape")
+
+[node name="OrchardRoot07" type="StaticBody2D" parent="Solids"]
+position = Vector2(1240, 370)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot07"]
+shape = SubResource("TreeShape")
+
+[node name="OrchardRoot08" type="StaticBody2D" parent="Solids"]
+position = Vector2(1320, 550)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot08"]
+shape = SubResource("TreeShape")
+
+[node name="OrchardRoot09" type="StaticBody2D" parent="Solids"]
+position = Vector2(1130, 840)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot09"]
+shape = SubResource("TreeShape")
+
+[node name="OrchardRoot10" type="StaticBody2D" parent="Solids"]
+position = Vector2(900, 940)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot10"]
+shape = SubResource("TreeShape")
+
+[node name="OrchardRoot11" type="StaticBody2D" parent="Solids"]
+position = Vector2(1430, 870)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot11"]
+shape = SubResource("TreeShape")
+
+[node name="OrchardRoot12" type="StaticBody2D" parent="Solids"]
+position = Vector2(250, 940)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Solids/OrchardRoot12"]
+shape = SubResource("TreeShape")
+
 [node name="FarmPlots" type="Node2D" parent="."]
 
 [node name="Plot001" type="Marker2D" parent="FarmPlots"]
@@ -211,6 +307,78 @@ y_sort_enabled = true
 
 [node name="OakTree" type="Sprite2D" parent="FootSorted"]
 position = Vector2(400, 204)
+texture_filter = 1
+texture = ExtResource("oak")
+offset = Vector2(0, -48)
+
+[node name="OrchardOak01" type="Sprite2D" parent="FootSorted"]
+position = Vector2(240, 432)
+texture_filter = 1
+texture = ExtResource("oak")
+offset = Vector2(0, -48)
+
+[node name="OrchardOak02" type="Sprite2D" parent="FootSorted"]
+position = Vector2(360, 482)
+texture_filter = 1
+texture = ExtResource("oak")
+offset = Vector2(0, -48)
+
+[node name="OrchardOak03" type="Sprite2D" parent="FootSorted"]
+position = Vector2(120, 862)
+texture_filter = 1
+texture = ExtResource("oak")
+offset = Vector2(0, -48)
+
+[node name="OrchardOak04" type="Sprite2D" parent="FootSorted"]
+position = Vector2(390, 862)
+texture_filter = 1
+texture = ExtResource("oak")
+offset = Vector2(0, -48)
+
+[node name="OrchardOak05" type="Sprite2D" parent="FootSorted"]
+position = Vector2(690, 332)
+texture_filter = 1
+texture = ExtResource("oak")
+offset = Vector2(0, -48)
+
+[node name="OrchardOak06" type="Sprite2D" parent="FootSorted"]
+position = Vector2(920, 362)
+texture_filter = 1
+texture = ExtResource("oak")
+offset = Vector2(0, -48)
+
+[node name="OrchardOak07" type="Sprite2D" parent="FootSorted"]
+position = Vector2(1240, 382)
+texture_filter = 1
+texture = ExtResource("oak")
+offset = Vector2(0, -48)
+
+[node name="OrchardOak08" type="Sprite2D" parent="FootSorted"]
+position = Vector2(1320, 562)
+texture_filter = 1
+texture = ExtResource("oak")
+offset = Vector2(0, -48)
+
+[node name="OrchardOak09" type="Sprite2D" parent="FootSorted"]
+position = Vector2(1130, 852)
+texture_filter = 1
+texture = ExtResource("oak")
+offset = Vector2(0, -48)
+
+[node name="OrchardOak10" type="Sprite2D" parent="FootSorted"]
+position = Vector2(900, 952)
+texture_filter = 1
+texture = ExtResource("oak")
+offset = Vector2(0, -48)
+
+[node name="OrchardOak11" type="Sprite2D" parent="FootSorted"]
+position = Vector2(1430, 882)
+texture_filter = 1
+texture = ExtResource("oak")
+offset = Vector2(0, -48)
+
+[node name="OrchardOak12" type="Sprite2D" parent="FootSorted"]
+position = Vector2(250, 952)
 texture_filter = 1
 texture = ExtResource("oak")
 offset = Vector2(0, -48)
