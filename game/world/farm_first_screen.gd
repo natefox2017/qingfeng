@@ -37,6 +37,14 @@ func resolve_interaction_target() -> Dictionary:
 			"arrival_anchor_id":"DoorArrival",
 			"arrival_facing":"north"
 		}
+	if _marker_reachable($Anchors/VillagePathInteract):
+		return {
+			"kind":"door",
+			"interaction_id":"door.farm.village",
+			"target_space_id":"space.village",
+			"arrival_anchor_id":"FarmArrival",
+			"arrival_facing":"east"
+		}
 	return {}
 
 func _marker_reachable(marker: Marker2D) -> bool:
@@ -121,7 +129,7 @@ func get_plot_definitions() -> Array:
 
 func layout_contract_valid() -> bool:
 	var definitions := get_plot_definitions()
-	for anchor_name: String in ["PlayerSpawn","FieldApproach","BridgeWest","BridgeEast","HouseDoorInteract","HouseDoorArrival"]:
+	for anchor_name: String in ["PlayerSpawn","FieldApproach","BridgeWest","BridgeEast","HouseDoorInteract","HouseDoorArrival","VillagePathInteract"]:
 		if get_anchor_position(anchor_name) == Vector2.INF:
 			return false
 	if definitions.size() != $FarmPlots.get_child_count() or definitions.is_empty():
