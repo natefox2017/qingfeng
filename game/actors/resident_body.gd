@@ -75,6 +75,9 @@ func runtime_snapshot(space_id: String) -> Dictionary:
 		"facing":str(facing)
 	}
 
+func face_toward(world_position: Vector2) -> void:
+	_update_facing(position.direction_to(world_position))
+
 func restore_runtime_position(world_position: Vector2, restored_facing: StringName) -> bool:
 	if not is_finite(world_position.x) or not is_finite(world_position.y) or restored_facing not in [&"north",&"south",&"east",&"west"]:
 		return false

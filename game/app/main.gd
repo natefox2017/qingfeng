@@ -21,6 +21,9 @@ const DEFAULT_ROOM := LEGACY_ROOM
 const MOVEMENT_ACTIONS := [&"move_left", &"move_right", &"move_up", &"move_down"]
 const GAMEPLAY_PAUSE_OWNERS := [&"pause_menu", &"inventory", &"storage", &"trade", &"focus"]
 const QUICK_SLOT_ACTIONS := [&"select_slot_1",&"select_slot_2",&"select_slot_3",&"select_slot_4",&"select_slot_5",&"select_slot_6",&"select_slot_7",&"select_slot_8",&"select_slot_9",&"select_slot_0"]
+const RESIDENT_CONVERSATION_START_MINUTE := 480
+const RESIDENT_CONVERSATION_END_MINUTE := 540
+const RESIDENT_CONVERSATION_DURATION_MINUTES := 10
 
 enum State { TITLE, LOADING, WORLD }
 
@@ -49,6 +52,8 @@ var _transition_pending: bool = false
 var _transition_generation: int = 0
 var _transition_candidate: Node2D
 var _resident_handoff_pending := false
+var _resident_conversation_demo_day := 0
+var _resident_conversation_end_game_minute := -1
 
 @onready var view: Control = $Interface/Screen
 
@@ -94,6 +99,7 @@ func _process(_delta: float) -> void:
 			_refresh_farm_world()
 			_update_interface()
 		_poll_resident_handoff()
+		_poll_resident_conversation()
 	if state != State.LOADING or _activation_pending or _request == null:
 		return
 	var status: int = _request.status()
@@ -342,6 +348,8 @@ func return_to_title() -> void:
 	_transition_generation += 1
 	_transition_pending = false
 	_resident_handoff_pending = false
+	_resident_conversation_demo_day = 0
+	_resident_conversation_end_game_minute = -1
 	if is_instance_valid(_transition_candidate):
 		_transition_candidate.queue_free()
 	_transition_candidate = null
@@ -678,6 +686,7 @@ func _begin_door_transition(target: Dictionary) -> void:
 		return
 
 	gameplay_session.release_resident_conversations_for_space(String(room.get_space_id()))
+	_resident_conversation_end_game_minute = -1
 	var old_room := room
 	room = candidate
 	_transition_candidate = null
@@ -820,6 +829,69 @@ func _refresh_farm_world() -> void:
 		room.apply_forage_projection(projection.forage)
 	if room.has_method("apply_resident_projection"):
 		room.apply_resident_projection(projection.residents,projection.resident_runtime)
+	if room.has_method("apply_conversation_projection"):
+		room.apply_conversation_projection(projection.conversations)
+
+func _poll_resident_conversation() -> void:
+	if _transition_pending or _resident_handoff_pending or state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured():
+		return
+	if not is_instance_valid(room) or not room.has_method("get_space_id") or String(room.get_space_id())!="space.village":
+		return
+	if not room.has_method("conversation_participants_arrived"):
+		return
+	var projection: Dictionary = gameplay_session.projection()
+	var active: Dictionary = {}
+	for row: Variant in projection.conversations.conversations:
+		if row is Dictionary and String(row.get("space_id",""))=="space.village":
+			active = row
+			break
+	if not active.is_empty():
+		var conversation_id := String(active.get("conversation_id",""))
+		var conversation_state := String(active.get("state",""))
+		if conversation_state=="invited":
+			var approaching: Dictionary = gameplay_session.approach_resident_conversation(conversation_id)
+			if approaching.ok:
+				_refresh_farm_world()
+			return
+		if conversation_state=="approaching" and room.conversation_participants_arrived(conversation_id):
+			var participating: Dictionary = gameplay_session.begin_resident_conversation(conversation_id)
+			if participating.ok:
+				_resident_conversation_demo_day = gameplay_session.clock.current_day()
+				_resident_conversation_end_game_minute = gameplay_session.clock.game_minute+RESIDENT_CONVERSATION_DURATION_MINUTES
+				_refresh_farm_world()
+			return
+		if conversation_state=="participating" and _resident_conversation_end_game_minute>=0 and gameplay_session.clock.game_minute>=_resident_conversation_end_game_minute:
+			var ended: Dictionary = gameplay_session.end_resident_conversation(conversation_id)
+			if ended.ok:
+				_resident_conversation_end_game_minute = -1
+				_refresh_farm_world()
+			return
+		return
+
+	var day := gameplay_session.clock.current_day()
+	var minute := gameplay_session.clock.minute_of_day()
+	if day==_resident_conversation_demo_day or minute<RESIDENT_CONVERSATION_START_MINUTE or minute>=RESIDENT_CONVERSATION_END_MINUTE:
+		return
+	if _resident_runtime_space(projection.resident_runtime,"resident.maker")!="space.village" or _resident_runtime_space(projection.resident_runtime,"resident.neighbor")!="space.village":
+		return
+	var conversation_id := "conversation.village.morning.day.%d" % day
+	var invited: Dictionary = gameplay_session.invite_resident_conversation(
+		conversation_id,
+		"resident.maker",
+		"resident.neighbor",
+		"space.village"
+	)
+	if not invited.ok:
+		return
+	var approaching: Dictionary = gameplay_session.approach_resident_conversation(conversation_id)
+	if approaching.ok:
+		_refresh_farm_world()
+
+func _resident_runtime_space(runtime_projection: Dictionary, resident_id: String) -> String:
+	for row: Variant in runtime_projection.residents:
+		if row is Dictionary and String(row.get("resident_id",""))==resident_id:
+			return String(row.get("space_id",""))
+	return ""
 
 func _poll_resident_handoff() -> void:
 	if _resident_handoff_pending or _transition_pending or state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured():

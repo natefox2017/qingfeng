@@ -120,6 +120,14 @@ position = Vector2(280, 216)
 metadata/spot_id = "forage.village.002"
 metadata/forage_id = "forage.wild_herb"
 
+[node name="ConversationAnchors" type="Node2D" parent="."]
+
+[node name="Left" type="Marker2D" parent="ConversationAnchors"]
+position = Vector2(392, 208)
+
+[node name="Right" type="Marker2D" parent="ConversationAnchors"]
+position = Vector2(416, 208)
+
 [node name="ResidentAnchors" type="Node2D" parent="."]
 
 [node name="GrocerHome" type="Marker2D" parent="ResidentAnchors"]

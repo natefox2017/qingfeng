@@ -8,6 +8,8 @@ const INTERACT_LATERAL_PX := 10.0
 const RESIDENT_ROOM = preload("res://world/components/resident_room_driver.gd")
 
 var _forage_states: Dictionary = {}
+var _active_conversation_id := ""
+var _active_conversation_state := ""
 
 @onready var player: CharacterBody2D = $FootSorted/Player
 @onready var grocer_resident: CharacterBody2D = $FootSorted/GrocerResident
@@ -109,6 +111,79 @@ func apply_resident_runtime(value: Variant) -> bool:
 
 func resident_handoff_requests() -> Array:
 	return _resident_room.handoff_requests() if _resident_room != null else []
+
+func apply_conversation_projection(value: Variant) -> bool:
+	if not (value is Dictionary) or not value.has("conversations") or not (value.conversations is Array):
+		return false
+	_active_conversation_id = ""
+	_active_conversation_state = ""
+	for conversation: Variant in value.conversations:
+		if not (conversation is Dictionary) or String(conversation.get("space_id",""))!=SPACE_ID:
+			continue
+		var participants: Variant = conversation.get("participants",[])
+		if not (participants is Array) or participants.size()!=2:
+			continue
+		var first_id := String(participants[0])
+		var second_id := String(participants[1])
+		var first_actor := _resident_actor(first_id)
+		var second_actor := _resident_actor(second_id)
+		if first_actor==null or second_actor==null:
+			continue
+		var state := String(conversation.get("state",""))
+		if state not in ["invited","approaching","participating"]:
+			continue
+		_active_conversation_id = String(conversation.get("conversation_id",""))
+		_active_conversation_state = state
+		if state in ["invited","approaching","participating"]:
+			first_actor.set_schedule_target(
+				"conversation.%s.left" % _active_conversation_id,
+				$ConversationAnchors/Left.position,
+				"conversation"
+			)
+			second_actor.set_schedule_target(
+				"conversation.%s.right" % _active_conversation_id,
+				$ConversationAnchors/Right.position,
+				"conversation"
+			)
+		if state=="participating":
+			first_actor.face_toward(second_actor.position)
+			second_actor.face_toward(first_actor.position)
+		queue_redraw()
+		return true
+	queue_redraw()
+	return true
+
+func conversation_participants_arrived(conversation_id: String) -> bool:
+	if conversation_id.is_empty() or conversation_id != _active_conversation_id:
+		return false
+	var left_target := "conversation.%s.left" % conversation_id
+	var right_target := "conversation.%s.right" % conversation_id
+	var arrived_count := 0
+	for actor: Variant in [grocer_resident,maker_resident,neighbor_resident]:
+		var resident := actor as CharacterBody2D
+		var state: Dictionary = resident.projection()
+		if String(state.get("anchor_id","")) in [left_target,right_target]:
+			if String(state.get("movement_state",""))!="arrived":
+				return false
+			arrived_count += 1
+	return arrived_count==2
+
+func conversation_visual_state() -> Dictionary:
+	return {
+		"conversation_id":_active_conversation_id,
+		"state":_active_conversation_state,
+		"is_visible":_active_conversation_state=="participating"
+	}
+
+func _resident_actor(resident_id: String) -> CharacterBody2D:
+	match resident_id:
+		"resident.grocer":
+			return grocer_resident
+		"resident.maker":
+			return maker_resident
+		"resident.neighbor":
+			return neighbor_resident
+	return null
 
 func _resident_position_is_safe(local_position: Vector2) -> bool:
 	var circle := CircleShape2D.new()
@@ -223,6 +298,11 @@ func _facing_vector(facing: StringName) -> Vector2:
 func _draw() -> void:
 	# Diagnostic skin only; not accepted village art.
 	draw_rect(Rect2(0,0,640,360),Color("82966b"))
+	if _active_conversation_state=="participating":
+		var midpoint := ($ConversationAnchors/Left.position+$ConversationAnchors/Right.position)*0.5
+		draw_circle(midpoint+Vector2(-6,-18),3.0,Color("f3eee2"))
+		draw_circle(midpoint+Vector2(0,-20),3.0,Color("f3eee2"))
+		draw_circle(midpoint+Vector2(6,-18),3.0,Color("f3eee2"))
 	draw_rect(Rect2(16,160,608,40),Color("bba574"))
 	draw_rect(Rect2(384,128,32,72),Color("bba574"))
 	draw_rect(Rect2(496,160,48,56),Color("bba574"))
