@@ -342,9 +342,13 @@ func show_page(page: String, context: Dictionary) -> void:
 			countdown=label("10 秒后自动恢复",confirm_column);countdown.name="SettingsCountdown";UI_THEME.apply_text_role(countdown,UI_THEME.ROLE_HEADING)
 			var actions:=row();button(actions,"confirm_settings","accept","保留并保存设置");button(actions,"revert_settings","back","立即恢复")
 		"loading":
-			title.text="准备进入";subtitle.text="正在加载场景和校验落点；操作取消前不会创建新档。"
-			label("请稍候…")
-			button(row(),"cancel_load","back","取消加载，返回标题")
+			title.text="准备进入晴风谷";subtitle.text="正在加载场景并校验安全落点"
+			panel.custom_minimum_size=Vector2(440,220)
+			var loading_panel:=PanelContainer.new();loading_panel.name="LoadingSummary";loading_panel.add_theme_stylebox_override("panel",UI_THEME.section_style());body.add_child(loading_panel)
+			var loading_column:=VBoxContainer.new();loading_column.add_theme_constant_override("separation",6);loading_panel.add_child(loading_column)
+			var loading_title:=label("正在准备世界…",loading_column);UI_THEME.apply_text_role(loading_title,UI_THEME.ROLE_HEADING)
+			var loading_note:=label("只有场景、布局合同和落点都通过后才会进入世界。这里不显示无法准确测量的百分比进度。",loading_column);loading_note.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;UI_THEME.apply_text_role(loading_note,UI_THEME.ROLE_CAPTION)
+			button(row(),"cancel_load","back","取消加载并返回标题 / Esc")
 		"pause":
 			title.text="暂歇一下";subtitle.text="世界已暂停 · Esc 返回游戏"
 			panel.custom_minimum_size=Vector2(520,280)
