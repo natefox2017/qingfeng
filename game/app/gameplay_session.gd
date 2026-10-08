@@ -4,6 +4,7 @@ extends RefCounted
 
 const CONTENT = preload("res://content/content_catalog.gd")
 const JOURNAL = preload("res://app/command_journal.gd")
+const FACT_EVENTS = preload("res://app/fact_event_log.gd")
 const CLOCK = preload("res://app/game_clock.gd")
 const INVENTORY = preload("res://systems/inventory_domain.gd")
 const WALLET = preload("res://systems/wallet_domain.gd")
@@ -22,6 +23,7 @@ const RESIDENT_KNOWLEDGE = preload("res://systems/resident_knowledge_state.gd")
 var configuration_error := ""
 var content: Dictionary = {}
 var journal: RefCounted
+var fact_events: RefCounted
 var clock: RefCounted
 var inventory: RefCounted
 var wallet: RefCounted
@@ -56,6 +58,7 @@ func _init(plot_definitions: Array = [], content_override: Dictionary = {}, fora
 	_forage_definitions = forage_definitions.duplicate(true)
 	_resident_anchor_definitions = resident_anchor_definitions.duplicate(true)
 	journal = JOURNAL.new()
+	fact_events = FACT_EVENTS.new()
 	clock = CLOCK.new(content)
 	inventory = INVENTORY.new(content)
 	wallet = WALLET.new(content)
@@ -70,7 +73,7 @@ func _init(plot_definitions: Array = [], content_override: Dictionary = {}, fora
 	resident_runtime = RESIDENT_RUNTIME.new(resident_anchor_definitions,content)
 	resident_conversations = RESIDENT_CONVERSATIONS.new(content)
 	resident_knowledge = RESIDENT_KNOWLEDGE.new(resident_runtime)
-	if not clock.is_configured() or not inventory.is_configured() or not wallet.is_configured() or not farm.is_configured() or not farming.is_configured() or not storage.is_configured() or not storage_transfer.is_configured() or not economy.is_configured() or not forage.is_configured() or not foraging.is_configured() or not resident_schedule.is_configured() or not resident_runtime.is_configured() or not resident_conversations.is_configured() or not resident_knowledge.is_configured():
+	if fact_events == null or not clock.is_configured() or not inventory.is_configured() or not wallet.is_configured() or not farm.is_configured() or not farming.is_configured() or not storage.is_configured() or not storage_transfer.is_configured() or not economy.is_configured() or not forage.is_configured() or not foraging.is_configured() or not resident_schedule.is_configured() or not resident_runtime.is_configured() or not resident_conversations.is_configured() or not resident_knowledge.is_configured():
 		configuration_error = "GAMEPLAY_SESSION_DOMAIN_INVALID"
 
 func is_configured() -> bool:
@@ -231,6 +234,7 @@ func projection() -> Dictionary:
 		"residents":resident_schedule.projection(clock.game_minute,false),
 		"resident_runtime":resident_runtime.projection(),
 		"resident_knowledge":resident_knowledge.projection(),
+		"fact_events":fact_events.projection(),
 		"conversations":resident_conversations.projection(),
 		"farm":farm.projection()
 	}
@@ -256,7 +260,8 @@ func snapshot() -> Dictionary:
 		"wallet":wallet.projection(),
 		"storage":storage.projection(),
 		"farm":farm.projection(),
-		"command_journal":journal.snapshot()
+		"command_journal":journal.snapshot(),
+		"fact_events":fact_events.snapshot()
 	}
 	if forage.has_spots():
 		result["forage"] = {
@@ -275,7 +280,8 @@ func restore(snapshot_value: Variant) -> bool:
 	var has_storage: bool = snapshot_value.has("storage")
 	var has_forage: bool = snapshot_value.has("forage")
 	var has_residents: bool = snapshot_value.has("residents")
-	var expected_size := base_required.size() + (1 if has_journal else 0) + (1 if has_storage else 0) + (1 if has_forage else 0) + (1 if has_residents else 0)
+	var has_fact_events: bool = snapshot_value.has("fact_events")
+	var expected_size := base_required.size() + (1 if has_journal else 0) + (1 if has_storage else 0) + (1 if has_forage else 0) + (1 if has_residents else 0) + (1 if has_fact_events else 0)
 	if snapshot_value.size() != expected_size:
 		return false
 	for key: String in base_required:
@@ -290,6 +296,7 @@ func restore(snapshot_value: Variant) -> bool:
 	var next_storage: RefCounted = STORAGE.new(content)
 	var next_forage: RefCounted = FORAGE.new(_forage_definitions,content)
 	var next_journal: RefCounted = JOURNAL.new()
+	var next_fact_events: RefCounted = FACT_EVENTS.new()
 	var next_resident_schedule: RefCounted = RESIDENT_SCHEDULE.new(_resident_anchor_definitions,content)
 	var next_resident_runtime: RefCounted = RESIDENT_RUNTIME.new(_resident_anchor_definitions,content)
 	var next_resident_conversations: RefCounted = RESIDENT_CONVERSATIONS.new(content)
@@ -310,6 +317,12 @@ func restore(snapshot_value: Variant) -> bool:
 		return false
 	if has_residents and not next_resident_runtime.restore(snapshot_value.residents):
 		return false
+	if has_fact_events and not next_fact_events.restore(snapshot_value.fact_events):
+		return false
+	if has_residents:
+		for resident: Variant in next_resident_runtime.projection().residents:
+			if not next_fact_events.known_ids_exist(resident.known_event_ids):
+				return false
 	if has_journal and not next_journal.restore(snapshot_value.command_journal):
 		return false
 	var next_farming: RefCounted = FARMING.new(next_inventory,next_farm,content)
@@ -332,6 +345,7 @@ func restore(snapshot_value: Variant) -> bool:
 	resident_runtime = next_resident_runtime
 	resident_conversations = next_resident_conversations
 	resident_knowledge = next_resident_knowledge
+	fact_events = next_fact_events
 	journal = next_journal
 	return true
 
@@ -358,6 +372,18 @@ func release_resident_conversations_for_space(space_id: String) -> Array:
 
 func clear_resident_conversations() -> int:
 	return resident_conversations.clear_all()
+
+func append_fact_event(fact: Variant) -> Dictionary:
+	return fact_events.append(fact)
+
+func fact_event(event_id: String) -> Dictionary:
+	return fact_events.get_event(event_id)
+
+func resident_learn_event(resident_id: String, event_id: String, acquisition: String) -> Dictionary:
+	var fact: Dictionary = fact_events.get_event(event_id)
+	if fact.is_empty():
+		return {"ok":false,"error_code":"FACT_EVENT_UNKNOWN","has_changes":false}
+	return resident_knowledge.learn_from_fact(resident_id,fact,acquisition)
 
 func resident_learn_from_fact(resident_id: String, fact: Variant, acquisition: String) -> Dictionary:
 	return resident_knowledge.learn_from_fact(resident_id,fact,acquisition)
