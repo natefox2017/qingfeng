@@ -665,11 +665,11 @@ func _begin_door_transition(target: Dictionary) -> void:
 		_fail_transition(candidate,"目标门落点无效或被阻挡，仍留在原位置。")
 		return
 
-	if not _apply_resident_runtime_to(candidate):
-		_fail_transition(candidate,"目标区域无法恢复居民运行状态，仍留在原位置。")
-		return
 	if not _capture_room_resident_runtime(room):
 		_fail_transition(candidate,"当前区域居民运行状态无法提交，仍留在原位置。")
+		return
+	if not _apply_resident_runtime_to(candidate):
+		_fail_transition(candidate,"目标区域无法恢复居民运行状态，仍留在原位置。")
 		return
 
 	var old_room := room
