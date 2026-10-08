@@ -33,14 +33,16 @@ func projection() -> Dictionary:
 	var ids: Array = _conversations.keys()
 	ids.sort()
 	for conversation_id: Variant in ids:
-		rows.append((_conversations[conversation_id] as Dictionary).duplicate(true))
+		var row: Dictionary = _conversations[conversation_id]
+		rows.append(row.duplicate(true))
 	return {"revision":revision,"conversations":rows}
 
 func conversation_for_actor(actor_id: String) -> Dictionary:
 	if not _occupancy.has(actor_id):
 		return {}
 	var conversation_id := String(_occupancy[actor_id])
-	return (_conversations.get(conversation_id,{}) as Dictionary).duplicate(true)
+	var row: Dictionary = _conversations.get(conversation_id,{})
+	return row.duplicate(true)
 
 func invite(conversation_id: String, inviter_id: String, invitee_id: String, space_id: String) -> Dictionary:
 	if not is_configured():
