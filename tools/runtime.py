@@ -258,7 +258,7 @@ def run_tests(engine: str, reports: Path, timeout: float) -> int:
             markers = re.findall(r'^INTRO_HARVEST_PASS checks=(\d+) failures=0\s*$', output, re.M)
             summary['intro_harvest_passed'] = clean_run(output, code) and len(markers) == 1 and int(markers[0]) > 0
             code, output = execute([engine, '--headless', '--audio-driver', 'Dummy', '--path', str(game), '--script', 'res://tests/farm_exploration_test.gd'], reports/'farm_exploration.log', timeout, env)
-            markers = re.findall(r'^FARM_EXPLORATION_PASS checks=(\\d+) failures=0\\s*$', output, re.M)
+            markers = re.findall(r'^FARM_EXPLORATION_PASS checks=(\d+) failures=0\s*$', output, re.M)
             summary['farm_exploration_passed'] = clean_run(output, code) and len(markers) == 1 and int(markers[0]) > 0
             code, output = execute([engine, '--headless', '--audio-driver', 'Dummy', '--path', str(game), '--script', 'res://tests/phase0_visual_contract_test.gd'], reports/'phase0_visual.log', timeout, env)
             markers = re.findall(r'^PHASE0_VISUAL_PASS checks=(\d+) failures=0\s*$', output, re.M)
