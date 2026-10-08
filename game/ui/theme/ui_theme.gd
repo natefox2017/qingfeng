@@ -28,11 +28,19 @@ const COLOR_BUTTON_ACTIVE := Color("d4debe")
 const COLOR_BORDER := Color("cad0bb")
 const COLOR_FOCUS := Color("6d896c")
 const COLOR_HUD_TEXT := Color("f5f3de")
+const COLOR_HUD_SURFACE := Color(0.10,0.16,0.12,0.90)
+const COLOR_HUD_BORDER := Color("718473")
+const COLOR_SLOT_SURFACE := Color("f4f0dd")
+const COLOR_SLOT_SELECTED := Color("ead596")
+const COLOR_SLOT_BORDER := Color("88917d")
 
 const PAGE_MINIMUM_SIZE := Vector2(490, 280)
 const PAGE_MARGIN := 20.0
 const PAGE_RADIUS := 8
 const CONTROL_RADIUS := 3
+const HUD_RADIUS := 5
+const HUD_MARGIN := 6.0
+const QUICKBAR_SLOT_SIZE := Vector2(38,42)
 
 static func _control_style(state: String) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
@@ -49,6 +57,24 @@ static func panel_style() -> StyleBoxFlat:
 	style.set_border_width_all(1)
 	style.set_corner_radius_all(PAGE_RADIUS)
 	style.set_content_margin_all(PAGE_MARGIN)
+	return style
+
+static func hud_panel_style() -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = COLOR_HUD_SURFACE
+	style.border_color = COLOR_HUD_BORDER
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(HUD_RADIUS)
+	style.set_content_margin_all(HUD_MARGIN)
+	return style
+
+static func slot_style(selected: bool, emphasized := false) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = COLOR_SLOT_SELECTED if selected else COLOR_SLOT_SURFACE
+	style.border_color = COLOR_FOCUS if selected or emphasized else COLOR_SLOT_BORDER
+	style.set_border_width_all(2 if selected or emphasized else 1)
+	style.set_corner_radius_all(CONTROL_RADIUS)
+	style.set_content_margin_all(2.0)
 	return style
 
 static func build() -> Theme:
