@@ -405,10 +405,13 @@ func show_page(page: String, context: Dictionary) -> void:
 			if context.saves.is_empty():
 				var empty_panel:=PanelContainer.new();empty_panel.add_theme_stylebox_override("panel",UI_THEME.section_style());entries.add_child(empty_panel)
 				var empty_text:=label("还没有本机存档。可以返回新建游戏，或从下方导入存档。",empty_panel);empty_text.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+			var slot_number:=0
 			for item: Dictionary in context.saves:
+				slot_number+=1
 				var card:=PanelContainer.new();card.add_theme_stylebox_override("panel",UI_THEME.section_style());entries.add_child(card)
 				var card_row:=HBoxContainer.new();card_row.add_theme_constant_override("separation",8);card.add_child(card_row)
 				var details:=VBoxContainer.new();details.size_flags_horizontal=Control.SIZE_EXPAND_FILL;details.add_theme_constant_override("separation",2);card_row.add_child(details)
+				var slot_heading:=label("存档 %d" % slot_number,details);UI_THEME.apply_text_role(slot_heading,UI_THEME.ROLE_CAPTION)
 				if item.ok:
 					var snapshot: Dictionary=item.envelope.snapshot
 					var player:=label(String(snapshot.get("player_name","未命名")),details);UI_THEME.apply_text_role(player,UI_THEME.ROLE_HEADING)
@@ -422,12 +425,16 @@ func show_page(page: String, context: Dictionary) -> void:
 					var meta:=label(meta_text,details);UI_THEME.apply_text_role(meta,UI_THEME.ROLE_CAPTION)
 					var saved:=label(String(item.envelope.get("saved_at_utc","")),details);UI_THEME.apply_text_role(saved,UI_THEME.ROLE_CAPTION)
 					var content_label:=label("内容 "+String(item.envelope.get("content_version","")),details);UI_THEME.apply_text_role(content_label,UI_THEME.ROLE_TOOLTIP)
-					button(card_row,"read_save","play","读取 "+String(snapshot.get("player_name","这个"))+" 的存档",{"save_id":item.save_id},true)
+					var resume_button:=button(card_row,"read_save","play","读取 "+String(snapshot.get("player_name","这个"))+" 的存档",{"save_id":item.save_id},true)
+					resume_button.text="继续";resume_button.custom_minimum_size=Vector2(72,35)
 				else:
 					var invalid:=label("无法读取这个存档",details);UI_THEME.apply_text_role(invalid,UI_THEME.ROLE_HEADING)
 					var reason:=label(String(item.error_code),details);UI_THEME.apply_text_role(reason,UI_THEME.ROLE_ERROR)
-					button(card_row,"read_save","play","此存档无法读取："+String(item.error_code),{"save_id":item.save_id},false)
-			var actions:=row();button(actions,"choose_import","import","选择 .qfsave 存档文件");button(actions,"back","back","返回标题")
+					var invalid_button:=button(card_row,"read_save","play","此存档无法读取："+String(item.error_code),{"save_id":item.save_id},false)
+					invalid_button.text="损坏";invalid_button.custom_minimum_size=Vector2(72,35)
+			var actions:=row()
+			var import_button:=button(actions,"choose_import","import","选择 .qfsave 存档文件");import_button.text="导入存档";import_button.custom_minimum_size=Vector2(102,32)
+			var back_button:=button(actions,"back","back","返回标题");back_button.text="返回";back_button.custom_minimum_size=Vector2(86,32)
 		"import_review":
 			title.text="确认导入";subtitle.text="检查外部存档，再创建本机独立副本"
 			panel.custom_minimum_size=Vector2(500,276)
