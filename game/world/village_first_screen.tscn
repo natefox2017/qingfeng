@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://world/village_first_screen.gd" id="village"]
 [ext_resource type="Script" path="res://world/components/solid_rect.gd" id="solid"]
 [ext_resource type="Script" path="res://actors/player_body.gd" id="player"]
+[ext_resource type="Script" path="res://actors/resident_body.gd" id="resident"]
 
 [sub_resource type="RectangleShape2D" id="BoundaryHorizontal"]
 size = Vector2(640, 16)
@@ -17,6 +18,9 @@ size = Vector2(160, 96)
 size = Vector2(144, 96)
 
 [sub_resource type="CircleShape2D" id="PlayerShape"]
+radius = 4.0
+
+[sub_resource type="CircleShape2D" id="ResidentShape"]
 radius = 4.0
 
 [node name="VillageFirstScreen" type="Node2D"]
@@ -153,10 +157,26 @@ metadata/anchor_id = "anchor.resident.neighbor.rain"
 [node name="FootSorted" type="Node2D" parent="."]
 y_sort_enabled = true
 
+[node name="NeighborResident" type="CharacterBody2D" parent="FootSorted"]
+position = Vector2(112, 240)
+collision_layer = 4
+collision_mask = 3
+motion_mode = 1
+wall_min_slide_angle = 0.0
+script = ExtResource("resident")
+resident_id = "resident.neighbor"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FootSorted/NeighborResident"]
+shape = SubResource("ResidentShape")
+
+[node name="DiagnosticGlyph" type="Polygon2D" parent="FootSorted/NeighborResident"]
+color = Color(0.44, 0.72, 0.92, 1)
+polygon = PackedVector2Array(-4, -6, 4, -6, 4, 2, -4, 2)
+
 [node name="Player" type="CharacterBody2D" parent="FootSorted"]
 position = Vector2(48, 180)
 collision_layer = 2
-collision_mask = 1
+collision_mask = 5
 motion_mode = 1
 wall_min_slide_angle = 0.0
 script = ExtResource("player")
