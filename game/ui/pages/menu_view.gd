@@ -10,6 +10,7 @@ var notice: Label
 var countdown: Label
 var panel: PanelContainer
 var center: CenterContainer
+var title_overlay: Control
 var hud_panel: PanelContainer
 var hud: VBoxContainer
 var quickbar_panel: PanelContainer
@@ -51,6 +52,12 @@ func _ready() -> void:
 	subtitle=Label.new();UI_THEME.apply_text_role(subtitle,UI_THEME.ROLE_CAPTION);subtitle.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;column.add_child(subtitle)
 	body=VBoxContainer.new();body.add_theme_constant_override("separation",8);body.size_flags_vertical=Control.SIZE_EXPAND_FILL;column.add_child(body)
 	notice=Label.new();notice.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;UI_THEME.apply_text_role(notice,UI_THEME.ROLE_ERROR);column.add_child(notice)
+	title_overlay = Control.new()
+	title_overlay.name = "ApprovedTitleControls"
+	title_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	title_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	title_overlay.visible = false
+	add_child(title_overlay)
 	hud_panel=PanelContainer.new()
 	hud_panel.anchor_left=1.0;hud_panel.anchor_right=1.0;hud_panel.anchor_top=0.0;hud_panel.anchor_bottom=0.0
 	hud_panel.offset_left=-222;hud_panel.offset_right=-8;hud_panel.offset_top=8;hud_panel.offset_bottom=8
@@ -79,7 +86,7 @@ func _ready() -> void:
 	file_dialog.theme=self.theme;add_child(file_dialog)
 	file_dialog.file_selected.connect(func(path:String):emit_action("preview_import",{"path":path}))
 
-func _set_approved_menu_art(page: String) -> void:
+func _set_approved_menu_art(page: String) -> bool:
 	var path: String = ""
 	match page:
 		"title":
@@ -89,10 +96,10 @@ func _set_approved_menu_art(page: String) -> void:
 		"load":
 			path = "res://assets/approved/ui_load.png"
 	if path.is_empty() or not ResourceLoader.exists(path, "Texture2D"):
-		return
+		return false
 	var texture := load(path) as Texture2D
 	if texture == null:
-		return
+		return false
 	approved_art_backdrop.texture = texture
 	approved_art_backdrop.visible = true
 	# Approved title art has an original logo. Keep our accessible text node but
@@ -100,6 +107,91 @@ func _set_approved_menu_art(page: String) -> void:
 	if page == "title":
 		title.visible = false
 		subtitle.visible = false
+		center.visible = false
+		title_overlay.visible = true
+		get_node("Backdrop").visible = false
+		return true
+	return false
+
+func _title_hotspot_style(state: String) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color("e5bd75") if state == "pressed" else (Color("c9dd8e") if state == "hover" else Color("eed6ab"))
+	style.border_color = UI_THEME.COLOR_FOCUS if state == "focus" else Color(0, 0, 0, 0)
+	style.set_border_width_all(3 if state == "focus" else 2)
+	style.set_corner_radius_all(5)
+	style.set_content_margin_all(2.0)
+	return style
+
+func _approved_title_hotspot(action: String, visible_text: String, accessible_name: String, left: float, top: float, right: float, bottom: float, enabled := true) -> Button:
+	var node := Button.new()
+	node.name = "TitleMenu_" + action
+	node.text = visible_text
+	node.anchor_left = left
+	node.anchor_top = top
+	node.anchor_right = right
+	node.anchor_bottom = bottom
+	node.focus_mode = Control.FOCUS_ALL
+	node.disabled = not enabled
+	node.tooltip_text = accessible_name
+	node.accessibility_name = accessible_name
+	node.add_theme_font_size_override("font_size", 12)
+	for state in ["normal", "hover", "focus", "pressed"]:
+		node.add_theme_stylebox_override(state, _title_hotspot_style(state))
+	var disabled_style := _title_hotspot_style("normal")
+	disabled_style.bg_color = Color("d2c5ac")
+	node.add_theme_stylebox_override("disabled", disabled_style)
+	node.add_theme_color_override("font_disabled_color", UI_THEME.COLOR_MUTED)
+	node.pressed.connect(func(): emit_action(action))
+	node.mouse_entered.connect(func(): notice.text = accessible_name)
+	node.focus_entered.connect(func(): notice.text = accessible_name)
+	title_overlay.add_child(node)
+	buttons[action] = node
+	if _first_button == null and enabled:
+		_first_button = node
+	return node
+
+func _show_approved_title_controls(context: Dictionary) -> void:
+	# These normalized rectangles follow the four printed button faces in ui_title.png.
+	# Solid live controls cover their baked labels so menu text has one source.
+	_approved_title_hotspot("new_game", "开始游戏", "开始新的生活", 0.416, 0.397, 0.584, 0.471, true)
+	_approved_title_hotspot("continue", "继续游戏", "继续最近的有效存档", 0.416, 0.481, 0.584, 0.559, context.has("recent_id"))
+	_approved_title_hotspot("settings", "设置", "调整声音与显示", 0.416, 0.565, 0.584, 0.643, true)
+	_approved_title_hotspot("quit", "退出", "退出游戏", 0.416, 0.651, 0.584, 0.725, true)
+	var load_button := Button.new()
+	load_button.name = "Menu_load"
+	load_button.text = "选择存档"
+	load_button.anchor_left = 0.403
+	load_button.anchor_top = 0.889
+	load_button.anchor_right = 0.597
+	load_button.anchor_bottom = 0.939
+	load_button.tooltip_text = "读取或导入存档"
+	load_button.accessibility_name = load_button.tooltip_text
+	load_button.add_theme_font_size_override("font_size", 9)
+	for state in ["normal", "hover", "focus", "pressed"]:
+		var style := StyleBoxFlat.new()
+		style.bg_color = Color("243923") if state == "pressed" else Color("35482b")
+		style.border_color = UI_THEME.COLOR_FOCUS if state in ["hover", "focus"] else Color("6d8555")
+		style.set_border_width_all(2 if state == "focus" else 1)
+		style.set_corner_radius_all(4)
+		style.set_content_margin_all(1.0)
+		load_button.add_theme_stylebox_override(state, style)
+	load_button.add_theme_color_override("font_color", UI_THEME.COLOR_HUD_TEXT)
+	load_button.add_theme_color_override("font_focus_color", UI_THEME.COLOR_HUD_TEXT)
+	load_button.add_theme_color_override("font_hover_color", UI_THEME.COLOR_HUD_TEXT)
+	load_button.add_theme_color_override("font_pressed_color", UI_THEME.COLOR_HUD_TEXT)
+	load_button.pressed.connect(func(): emit_action("load"))
+	load_button.mouse_entered.connect(func(): notice.text = load_button.tooltip_text)
+	load_button.focus_entered.connect(func(): notice.text = load_button.tooltip_text)
+	title_overlay.add_child(load_button)
+	buttons["load"] = load_button
+	var focus_order: Array[String] = ["new_game", "continue", "settings", "quit", "load"]
+	for index in range(focus_order.size()):
+		var current := buttons[focus_order[index]] as Button
+		var previous := buttons[focus_order[(index - 1 + focus_order.size()) % focus_order.size()]] as Button
+		var following := buttons[focus_order[(index + 1) % focus_order.size()]] as Button
+		current.focus_neighbor_top = current.get_path_to(previous)
+		current.focus_neighbor_bottom = current.get_path_to(following)
+	_first_button = buttons["continue"] if context.has("recent_id") else buttons["new_game"]
 
 func _menu_button(parent: Node, action: String, name: String, hint: String, enabled: bool = true, is_primary: bool = false) -> Button:
 	var node := Button.new()
@@ -129,6 +221,8 @@ func emit_action(name: String, payload: Dictionary = {}) -> void:
 
 func clear_page() -> void:
 	panel.custom_minimum_size=UI_THEME.PAGE_MINIMUM_SIZE
+	center.visible=true
+	title_overlay.visible=false
 	title.horizontal_alignment=HORIZONTAL_ALIGNMENT_LEFT
 	subtitle.horizontal_alignment=HORIZONTAL_ALIGNMENT_LEFT
 	title.visible=true
@@ -136,6 +230,7 @@ func clear_page() -> void:
 	approved_art_backdrop.texture=null
 	approved_art_backdrop.visible=false
 	for child in body.get_children(): body.remove_child(child);child.queue_free()
+	for child in title_overlay.get_children(): title_overlay.remove_child(child);child.queue_free()
 	for child in hud.get_children(): hud.remove_child(child);child.queue_free()
 	hud_panel.visible=false
 	guide_panel.visible=false
@@ -352,32 +447,33 @@ func _entry_goal_hint(gameplay: Dictionary) -> String:
 
 func show_page(page: String, context: Dictionary) -> void:
 	clear_page()
-	_set_approved_menu_art(page)
+	var approved_title_art := _set_approved_menu_art(page)
 	match page:
 		"title":
 			title.text="晴风谷";title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 			subtitle.text="QINGFENG VALLEY  ·  一段新的乡居生活";subtitle.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-			panel.custom_minimum_size=Vector2(356,316)
-			var menu_panel:=PanelContainer.new()
-			menu_panel.name="TitleMenu"
-			menu_panel.add_theme_stylebox_override("panel",UI_THEME.section_style())
-			body.add_child(menu_panel)
-			var actions:=VBoxContainer.new()
-			actions.name="TitleActions"
-			actions.alignment=BoxContainer.ALIGNMENT_CENTER
-			actions.add_theme_constant_override("separation",5)
-			menu_panel.add_child(actions)
-			# The approved mockups contain placeholder text. Only live Buttons
-			# create saves or navigate; no screenshot pixel can capture input.
-			_menu_button(actions,"new_game","开始游戏","开始新的生活",true,true)
-			_menu_button(actions,"continue","继续游戏","继续最近的有效存档",context.has("recent_id"))
-			_menu_button(actions,"load","选择存档","读取或导入存档")
-			_menu_button(actions,"settings","设置","调整声音与显示")
-			_menu_button(actions,"quit","退出","退出游戏")
-			_first_button = buttons["continue"] if context.has("recent_id") else buttons["new_game"]
-			var note:=label("在微风与田野之间，开始新的生活。",body)
-			note.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-			UI_THEME.apply_text_role(note,UI_THEME.ROLE_CAPTION)
+			if approved_title_art:
+				_show_approved_title_controls(context)
+			else:
+				panel.custom_minimum_size=Vector2(356,316)
+				var menu_panel:=PanelContainer.new()
+				menu_panel.name="TitleMenu"
+				menu_panel.add_theme_stylebox_override("panel",UI_THEME.section_style())
+				body.add_child(menu_panel)
+				var actions:=VBoxContainer.new()
+				actions.name="TitleActions"
+				actions.alignment=BoxContainer.ALIGNMENT_CENTER
+				actions.add_theme_constant_override("separation",5)
+				menu_panel.add_child(actions)
+				_menu_button(actions,"new_game","开始游戏","开始新的生活",true,true)
+				_menu_button(actions,"continue","继续游戏","继续最近的有效存档",context.has("recent_id"))
+				_menu_button(actions,"load","选择存档","读取或导入存档")
+				_menu_button(actions,"settings","设置","调整声音与显示")
+				_menu_button(actions,"quit","退出","退出游戏")
+				_first_button = buttons["continue"] if context.has("recent_id") else buttons["new_game"]
+				var note:=label("在微风与田野之间，开始新的生活。",body)
+				note.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+				UI_THEME.apply_text_role(note,UI_THEME.ROLE_CAPTION)
 
 		"new_game":
 			title.text="开始新的生活";subtitle.text="为你和同行的小狗取个名字"
