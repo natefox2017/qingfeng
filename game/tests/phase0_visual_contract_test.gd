@@ -29,7 +29,8 @@ func run() -> void:
 	var ground := farm.get_node("TerrainGround") as TileMapLayer
 	var details := farm.get_node("GroundDetails") as TileMapLayer
 	var plot_tiles := farm.get_node("PlotStates") as TileMapLayer
-	check(ground != null and ground.tile_set != null and ground.get_used_cells().size()==920,"editable 40x23 ground tiles import")
+	check(ground != null and ground.tile_set != null and ground.get_used_cells().size()==6144,"editable 96x64 ground tiles import")
+	check(ground.get_used_rect()==Rect2i(0,0,96,64) and farm.get_world_bounds()==Rect2i(0,0,1536,1024),"authorable world geometry exceeds one viewport")
 	check(details != null and details.tile_set == ground.tile_set and details.get_used_cells().size()>0,"ground detail tiles use shared TileSet")
 	check(plot_tiles != null and plot_tiles.get_used_cells().is_empty(),"field layer starts empty and waits for gameplay projection")
 	check(ground.texture_filter == CanvasItem.TEXTURE_FILTER_NEAREST and details.texture_filter == CanvasItem.TEXTURE_FILTER_NEAREST,"tile texture filtering remains pixel-sharp")
