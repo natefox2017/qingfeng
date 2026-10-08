@@ -58,7 +58,7 @@ func projection(current_day: int) -> Dictionary:
 			"item_id":String(kind.item_id),
 			"quantity":int(kind.quantity),
 			"last_collected_day":int(state.last_collected_day),
-			"is_available":current_day > int(state.last_collected_day)
+			"is_available":current_day-int(state.last_collected_day) >= int(kind.respawn_days)
 		})
 	return {"revision":revision,"spots":rows}
 
@@ -73,11 +73,11 @@ func candidate_collect(spot_id: String, current_day: int) -> Dictionary:
 	for index in range(candidate.size()):
 		if candidate[index].spot_id != spot_id:
 			continue
-		if int(candidate[index].last_collected_day) >= current_day:
-			return {"ok":false,"error_code":"FORAGE_ALREADY_COLLECTED"}
-		candidate[index] = {"spot_id":spot_id,"last_collected_day":current_day}
 		var definition: Dictionary = _definitions[spot_id]
 		var kind: Dictionary = _types[definition.forage_id]
+		if current_day-int(candidate[index].last_collected_day) < int(kind.respawn_days):
+			return {"ok":false,"error_code":"FORAGE_ALREADY_COLLECTED"}
+		candidate[index] = {"spot_id":spot_id,"last_collected_day":current_day}
 		return {
 			"ok":true,
 			"error_code":"",
