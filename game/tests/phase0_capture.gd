@@ -2,7 +2,7 @@ extends SceneTree
 ## Phase0 actual-renderer capture: new game -> playable farm at 1280 and 1920.
 ## Does not use the legacy collision fixture or claim art approval.
 const MAIN = preload("res://app/main.tscn")
-const FARM_CELL_COUNT := 920
+const FARM_CELL_COUNT := 6144
 var output_dir := ""
 
 func _initialize() -> void:
@@ -54,7 +54,7 @@ func run() -> void:
 	var player := app.room.get_player() as CharacterBody2D
 	var sprite := player.get_node_or_null("Sprite2D") as Sprite2D
 	if ground == null or ground.tile_set == null or ground.get_used_cells().size() != FARM_CELL_COUNT:
-		_fail("missing native 920-cell TileMapLayer")
+		_fail("missing native 6144-cell authored TileMapLayer")
 		return
 	if sprite == null or sprite.texture == null or sprite.texture.get_size() != Vector2(96, 128):
 		_fail("missing four-direction player atlas")
@@ -91,6 +91,25 @@ func run() -> void:
 			_fail("cannot write screenshot " + filename)
 			return
 		print("PHASE0_CAPTURE_IMAGE " + filename + " " + str(size))
+	# A second image must prove the camera sees a different physical portion
+	# of the authored farm. The real input traversal is separately tested by
+	# res://tests/farm_exploration_test.gd, not simulated by this screenshot.
+	root.size = Vector2i(1280,720)
+	player.position = Vector2(828,668)
+	for frame in range(3):
+		await physics_frame
+	await process_frame
+	await RenderingServer.frame_post_draw
+	var camera := player.get_node("Camera2D") as Camera2D
+	if camera.get_screen_center_position().x <= 640.0 or camera.get_screen_center_position().y <= 360.0:
+		_fail("camera stayed on the original one-screen farm")
+		return
+	var expanded_image := root.get_texture().get_image()
+	if expanded_image == null or expanded_image.get_size() != Vector2i(1280,720) or expanded_image.save_png(output_dir.path_join("phase0_farm_explore_1280.png")) != OK:
+		_fail("expanded farm second-screen screenshot failed")
+		return
+	print("PHASE0_CAPTURE_IMAGE phase0_farm_explore_1280.png 1280x720")
+
 	app.queue_free()
 	await process_frame
 	print("PHASE0_CAPTURE_PASS")
