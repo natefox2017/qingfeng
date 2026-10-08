@@ -15,6 +15,7 @@ const ECONOMY = preload("res://systems/economy_coordinator.gd")
 const FORAGE = preload("res://systems/forage_domain.gd")
 const FORAGING = preload("res://systems/forage_coordinator.gd")
 const RESIDENT_SCHEDULE = preload("res://systems/resident_schedule.gd")
+const RESIDENT_RUNTIME = preload("res://systems/resident_runtime_state.gd")
 
 var configuration_error := ""
 var content: Dictionary = {}
@@ -30,6 +31,7 @@ var economy: RefCounted
 var forage: RefCounted
 var foraging: RefCounted
 var resident_schedule: RefCounted
+var resident_runtime: RefCounted
 var _plot_definitions: Array = []
 var _forage_definitions: Array = []
 var _resident_anchor_definitions: Array = []
@@ -61,7 +63,8 @@ func _init(plot_definitions: Array = [], content_override: Dictionary = {}, fora
 	forage = FORAGE.new(forage_definitions,content)
 	foraging = FORAGING.new(inventory,forage,clock)
 	resident_schedule = RESIDENT_SCHEDULE.new(resident_anchor_definitions,content)
-	if not clock.is_configured() or not inventory.is_configured() or not wallet.is_configured() or not farm.is_configured() or not farming.is_configured() or not storage.is_configured() or not storage_transfer.is_configured() or not economy.is_configured() or not forage.is_configured() or not foraging.is_configured() or not resident_schedule.is_configured():
+	resident_runtime = RESIDENT_RUNTIME.new(resident_anchor_definitions,content)
+	if not clock.is_configured() or not inventory.is_configured() or not wallet.is_configured() or not farm.is_configured() or not farming.is_configured() or not storage.is_configured() or not storage_transfer.is_configured() or not economy.is_configured() or not forage.is_configured() or not foraging.is_configured() or not resident_schedule.is_configured() or not resident_runtime.is_configured():
 		configuration_error = "GAMEPLAY_SESSION_DOMAIN_INVALID"
 
 func is_configured() -> bool:
@@ -220,6 +223,7 @@ func projection() -> Dictionary:
 		"storage":storage.projection(),
 		"forage":forage.projection(clock.current_day()),
 		"residents":resident_schedule.projection(clock.game_minute,false),
+		"resident_runtime":resident_runtime.projection(),
 		"farm":farm.projection()
 	}
 
@@ -251,6 +255,8 @@ func snapshot() -> Dictionary:
 			"revision":forage.revision,
 			"spots":forage.spots.duplicate(true)
 		}
+	if resident_runtime.has_states():
+		result["residents"] = resident_runtime.snapshot()
 	return result
 
 func restore(snapshot_value: Variant) -> bool:
@@ -260,7 +266,8 @@ func restore(snapshot_value: Variant) -> bool:
 	var has_journal: bool = snapshot_value.has("command_journal")
 	var has_storage: bool = snapshot_value.has("storage")
 	var has_forage: bool = snapshot_value.has("forage")
-	var expected_size := base_required.size() + (1 if has_journal else 0) + (1 if has_storage else 0) + (1 if has_forage else 0)
+	var has_residents: bool = snapshot_value.has("residents")
+	var expected_size := base_required.size() + (1 if has_journal else 0) + (1 if has_storage else 0) + (1 if has_forage else 0) + (1 if has_residents else 0)
 	if snapshot_value.size() != expected_size:
 		return false
 	for key: String in base_required:
@@ -276,7 +283,8 @@ func restore(snapshot_value: Variant) -> bool:
 	var next_forage: RefCounted = FORAGE.new(_forage_definitions,content)
 	var next_journal: RefCounted = JOURNAL.new()
 	var next_resident_schedule: RefCounted = RESIDENT_SCHEDULE.new(_resident_anchor_definitions,content)
-	if not next_clock.is_configured() or not next_inventory.is_configured() or not next_wallet.is_configured() or not next_farm.is_configured() or not next_storage.is_configured() or not next_forage.is_configured() or not next_resident_schedule.is_configured():
+	var next_resident_runtime: RefCounted = RESIDENT_RUNTIME.new(_resident_anchor_definitions,content)
+	if not next_clock.is_configured() or not next_inventory.is_configured() or not next_wallet.is_configured() or not next_farm.is_configured() or not next_storage.is_configured() or not next_forage.is_configured() or not next_resident_schedule.is_configured() or not next_resident_runtime.is_configured():
 		return false
 	if not next_clock.restore(snapshot_value.clock):
 		return false
@@ -289,6 +297,8 @@ func restore(snapshot_value: Variant) -> bool:
 	if has_storage and not next_storage.restore(snapshot_value.storage):
 		return false
 	if has_forage and not next_forage.restore(snapshot_value.forage,next_clock.current_day()):
+		return false
+	if has_residents and not next_resident_runtime.restore(snapshot_value.residents):
 		return false
 	if has_journal and not next_journal.restore(snapshot_value.command_journal):
 		return false
@@ -309,8 +319,12 @@ func restore(snapshot_value: Variant) -> bool:
 	forage = next_forage
 	foraging = next_foraging
 	resident_schedule = next_resident_schedule
+	resident_runtime = next_resident_runtime
 	journal = next_journal
 	return true
+
+func update_resident_runtime(value: Variant) -> bool:
+	return resident_runtime != null and resident_runtime.update_runtime(value)
 
 func clear_receipts() -> void:
 	if journal != null:
