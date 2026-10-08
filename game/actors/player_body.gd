@@ -27,7 +27,10 @@ func _physics_process(delta: float) -> void:
 			facing = &"south" if direction.y>0 else &"north"
 	velocity = direction*speed_px_per_sec
 	move_and_slide()
-	_sync_sprite(not direction.is_zero_approx(),delta)
+	# Holding a direction against a solid must face the obstacle without walking in place.
+	# Use CharacterBody2D's actual travel from this physics step, not requested velocity.
+	var actually_moved := get_position_delta().length_squared() > 0.0001
+	_sync_sprite(not direction.is_zero_approx() and actually_moved,delta)
 
 func _sync_sprite(walking: bool, delta: float) -> void:
 	if sprite==null:
