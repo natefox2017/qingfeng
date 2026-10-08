@@ -868,8 +868,8 @@ func _poll_resident_conversation() -> void:
 			return
 		return
 
-	var day := gameplay_session.clock.current_day()
-	var minute := gameplay_session.clock.minute_of_day()
+	var day: int = int(gameplay_session.clock.current_day())
+	var minute: int = int(gameplay_session.clock.minute_of_day())
 	if day==_resident_conversation_demo_day or minute<RESIDENT_CONVERSATION_START_MINUTE or minute>=RESIDENT_CONVERSATION_END_MINUTE:
 		return
 	if _resident_runtime_space(projection.resident_runtime,"resident.maker")!="space.village" or _resident_runtime_space(projection.resident_runtime,"resident.neighbor")!="space.village":
@@ -946,12 +946,12 @@ func _commit_resident_handoff(request: Variant) -> void:
 		candidate.queue_free()
 		_resident_handoff_pending = false
 		return
-	var updated := gameplay_session.update_resident_runtime({
+	var updated: bool = bool(gameplay_session.update_resident_runtime({
 		"resident_id":String(request.resident_id),
 		"space_id":String(request.target_space_id),
 		"world_position_px":{"x":arrival.x,"y":arrival.y},
 		"facing":String(request.arrival_facing)
-	})
+	}))
 	candidate.queue_free()
 	_resident_handoff_pending = false
 	if updated:
