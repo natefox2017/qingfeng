@@ -155,23 +155,23 @@ static func validate(data: Variant) -> bool:
 		var dialogue: Variant = data.dialogues.player_resident[resident_id]
 		if not _exact_keys(dialogue,["space_id","first_meeting","repeat"]):
 			return false
-		if not (dialogue.space_id is String) or not String(dialogue.space_id).begins_with("space.") or dialogue.space_id.length()>128:
+		if not (dialogue.space_id is String) or not String(dialogue.space_id).begins_with("space.") or String(dialogue.space_id).length()>128:
 			return false
 		if not _exact_keys(dialogue.first_meeting,["dialogue_id","event_id","event_kind","text"]):
 			return false
 		if not _exact_keys(dialogue.repeat,["dialogue_id","text"]):
 			return false
 		for dialogue_id: Variant in [dialogue.first_meeting.dialogue_id,dialogue.repeat.dialogue_id]:
-			if not (dialogue_id is String) or not String(dialogue_id).begins_with("dialogue.") or dialogue_id.length()>128 or dialogue_ids.has(dialogue_id):
+			if not (dialogue_id is String) or not String(dialogue_id).begins_with("dialogue.") or String(dialogue_id).length()>128 or dialogue_ids.has(dialogue_id):
 				return false
 			dialogue_ids[String(dialogue_id)]=true
-		if not (dialogue.first_meeting.event_id is String) or not String(dialogue.first_meeting.event_id).begins_with("event.") or dialogue.first_meeting.event_id.length()>128 or dialogue_event_ids.has(dialogue.first_meeting.event_id):
+		if not (dialogue.first_meeting.event_id is String) or not String(dialogue.first_meeting.event_id).begins_with("event.") or String(dialogue.first_meeting.event_id).length()>128 or dialogue_event_ids.has(dialogue.first_meeting.event_id):
 			return false
 		dialogue_event_ids[String(dialogue.first_meeting.event_id)]=true
-		if not (dialogue.first_meeting.event_kind is String) or dialogue.first_meeting.event_kind.is_empty() or dialogue.first_meeting.event_kind.length()>128:
+		if not (dialogue.first_meeting.event_kind is String) or dialogue.first_meeting.event_kind.is_empty() or String(dialogue.first_meeting.event_kind).length()>128:
 			return false
 		for text_value: Variant in [dialogue.first_meeting.text,dialogue.repeat.text]:
-			if not (text_value is String) or String(text_value).is_empty() or text_value.length()>512:
+			if not (text_value is String) or String(text_value).is_empty() or String(text_value).length()>512:
 				return false
 	if not _exact_keys(data.new_game, ["initial_items"]) or not (data.new_game.initial_items is Array):
 		return false
