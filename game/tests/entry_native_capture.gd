@@ -41,6 +41,8 @@ func capture(view: Control, page: String, size: Vector2i) -> bool:
 	return true
 
 func run() -> void:
+	root.get_node("AudioManager").shutdown_audio()
+	await process_frame
 	create_timer(35).timeout.connect(func(): printerr("ENTRY_CAPTURE_TIMEOUT");quit(1))
 	var view := VIEW.new()
 	root.add_child(view)
