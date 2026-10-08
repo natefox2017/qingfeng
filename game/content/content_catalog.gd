@@ -113,19 +113,38 @@ static func validate(data: Variant) -> bool:
 				return false
 		if resident.display_name.length()>24 or not String(resident.occupation_id).begins_with("occupation."):
 			return false
+		var anchor_by_activity := {
+			"home":String(resident.home_anchor_id),
+			"work":String(resident.work_anchor_id),
+			"social":String(resident.social_anchor_id),
+			"rain":String(resident.rain_anchor_id)
+		}
+		for activity_id: String in anchor_by_activity:
+			if not anchor_by_activity[activity_id].begins_with("anchor.resident."):
+				return false
 		for schedule_key: String in ["schedule","rain_schedule"]:
 			var schedule: Variant = resident[schedule_key]
 			if not (schedule is Array) or schedule.is_empty():
 				return false
+			if schedule[0].start_minute != data.clock.day_start_minute or schedule[-1].activity_id != "home":
+				return false
+			var required_activities: Array[String] = ["home","work","social"] if schedule_key=="schedule" else ["home","rain"]
+			var seen_activities: Dictionary = {}
 			var previous_start := -1
 			for entry: Variant in schedule:
 				if not _exact_keys(entry,["start_minute","activity_id","anchor_id"]):
 					return false
 				if not _nonnegative_int(entry.start_minute) or entry.start_minute>=data.clock.minutes_per_day or entry.start_minute<=previous_start:
 					return false
-				if entry.activity_id not in ["home","work","social","rain"] or not (entry.anchor_id is String) or entry.anchor_id.is_empty():
+				if entry.activity_id not in required_activities or not (entry.anchor_id is String) or entry.anchor_id.is_empty():
 					return false
+				if String(entry.anchor_id) != String(anchor_by_activity[entry.activity_id]):
+					return false
+				seen_activities[String(entry.activity_id)] = true
 				previous_start=entry.start_minute
+			for activity_id: String in required_activities:
+				if not seen_activities.has(activity_id):
+					return false
 	if not _exact_keys(data.new_game, ["initial_items"]) or not (data.new_game.initial_items is Array):
 		return false
 	var occupied_slots := 0
