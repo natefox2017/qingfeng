@@ -25,7 +25,7 @@ func get_anchor_position(anchor_name: String) -> Vector2:
 	return node.position if node is Marker2D else Vector2.INF
 
 func layout_contract_valid() -> bool:
-	for anchor_name: String in ["DoorArrival","DoorInteract","BedInteract"]:
+	for anchor_name: String in ["DoorArrival","DoorInteract","BedInteract","ChestInteract"]:
 		if get_anchor_position(anchor_name) == Vector2.INF:
 			return false
 	return true
@@ -35,6 +35,11 @@ func resolve_interaction_target() -> Dictionary:
 		return {
 			"kind":"bed",
 			"interaction_id":"bed.house.main"
+		}
+	if _marker_reachable($Anchors/ChestInteract):
+		return {
+			"kind":"storage",
+			"interaction_id":"storage.house.main"
 		}
 	if _marker_reachable($Anchors/DoorInteract):
 		return {
