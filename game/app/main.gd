@@ -626,7 +626,7 @@ func _rest_at_bed(target: Dictionary) -> void:
 	_update_interface()
 
 func _begin_door_transition(target: Dictionary) -> void:
-	if _transition_pending or farm_action.is_busy() or state != State.WORLD or not _valid_door_target(target):
+	if _transition_pending or _resident_handoff_pending or farm_action.is_busy() or state != State.WORLD or not _valid_door_target(target):
 		return
 	var path := _scene_path_for_space(String(target.target_space_id))
 	if path.is_empty():
@@ -1019,6 +1019,8 @@ func save_progress() -> Dictionary:
 		return CODEC.failure("SAVE_ACTION_BUSY")
 	if _transition_pending:
 		return CODEC.failure("SAVE_TRANSITION_BUSY")
+	if _resident_handoff_pending:
+		return CODEC.failure("SAVE_RESIDENT_HANDOFF_BUSY")
 	if not _capture_room_resident_runtime(room):
 		return CODEC.failure("SAVE_RESIDENT_RUNTIME_INVALID")
 	var candidate: Dictionary = active_snapshot.duplicate(true)
