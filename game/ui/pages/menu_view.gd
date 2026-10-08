@@ -2,6 +2,7 @@ extends Control
 ## Pages project intents, never open arbitrary saves or own game state.
 signal action_requested(action: String, payload: Dictionary)
 const ACTION_BUTTON = preload("res://ui/widgets/action_button.gd")
+const ITEM_SLOT_BUTTON = preload("res://ui/widgets/item_slot_button.gd")
 const UI_THEME = preload("res://ui/theme/ui_theme.gd")
 var title: Label
 var subtitle: Label
@@ -12,6 +13,9 @@ var panel: PanelContainer
 var center: CenterContainer
 var hud: HBoxContainer
 var quickbar: HBoxContainer
+var quickbar_panel: PanelContainer
+var hud_status: PanelContainer
+var hud_hint: PanelContainer
 var wallet_label: Label
 var player_name: LineEdit
 var dog_name: LineEdit
@@ -47,8 +51,11 @@ func emit_action(name: String, payload: Dictionary = {}) -> void:
 func clear_page() -> void:
 	for child in body.get_children(): body.remove_child(child);child.queue_free()
 	for child in hud.get_children(): hud.remove_child(child);child.queue_free()
-	if is_instance_valid(quickbar): remove_child(quickbar);quickbar.queue_free()
-	quickbar=null;wallet_label=null
+	for node: Control in [quickbar_panel,hud_status,hud_hint]:
+		if is_instance_valid(node):
+			remove_child(node)
+			node.queue_free()
+	quickbar=null;quickbar_panel=null;hud_status=null;hud_hint=null;wallet_label=null
 	buttons.clear();_first_button=null;player_name=null;dog_name=null;countdown=null
 	notice.text="";panel.visible=true;get_node("Backdrop").visible=true
 
@@ -73,30 +80,32 @@ func button(parent: Node, action: String, glyph: String, description: String, pa
 	return node
 
 func _slot_button(parent: Node, slot_index: int, slot: Variant, items: Dictionary, selected: bool, compact: bool) -> Button:
-	var node := Button.new()
-	var number_text := "[%d]" % (slot_index+1) if selected else "%d" % (slot_index+1)
 	var display_name := "空"
 	var quantity := 0
+	var metadata: Dictionary = {}
 	if slot != null:
-		var metadata: Dictionary = items.get(String(slot.item_id),{})
+		metadata = items.get(String(slot.item_id),{})
 		display_name = str(metadata.get("display_name",slot.item_id))
 		quantity = int(slot.quantity)
+	var node: Button
 	if compact:
-		var short_name := "空" if slot == null else display_name.left(1)
-		node.text = number_text+"\n"+short_name+("" if quantity <= 1 else str(quantity))
-		node.custom_minimum_size = Vector2(36,38)
+		node = ITEM_SLOT_BUTTON.new()
+		parent.add_child(node)
+		node.configure(slot_index,slot,metadata,selected)
 	else:
+		node = Button.new()
+		var number_text := "[%d]" % (slot_index+1) if selected else "%d" % (slot_index+1)
 		node.text = number_text+"  "+display_name+("" if quantity <= 0 else "  ×"+str(quantity))
 		node.custom_minimum_size = Vector2(104,46)
-	node.toggle_mode = true
-	node.button_pressed = selected
+		node.toggle_mode = true
+		node.button_pressed = selected
+		parent.add_child(node)
 	var description := "槽位 %d：%s" % [slot_index+1, display_name if slot == null else display_name+" ×"+str(quantity)]
 	node.tooltip_text = description
 	node.accessibility_name = description+("，已选中" if selected else "")
 	node.pressed.connect(func():emit_action("select_slot",{"slot_index":slot_index}))
 	node.mouse_entered.connect(func():notice.text=description)
 	node.focus_entered.connect(func():notice.text=description)
-	parent.add_child(node)
 	return node
 
 func _storage_slot_button(parent: Node, source_container_id: String, slot_index: int, slot: Variant, items: Dictionary, direction_label: String) -> Button:
@@ -157,10 +166,14 @@ func _clock_text(clock: Dictionary) -> String:
 func _build_quickbar(gameplay: Dictionary) -> void:
 	var inventory: Dictionary = gameplay.inventory
 	var items: Dictionary = gameplay.items
+	quickbar_panel = PanelContainer.new()
+	quickbar_panel.position = Vector2(65,304)
+	quickbar_panel.custom_minimum_size = Vector2(510,50)
+	quickbar_panel.add_theme_stylebox_override("panel",UI_THEME.quickbar_panel_style())
+	add_child(quickbar_panel)
 	quickbar = HBoxContainer.new()
-	quickbar.position = Vector2(93,310)
 	quickbar.add_theme_constant_override("separation",2)
-	add_child(quickbar)
+	quickbar_panel.add_child(quickbar)
 	for index in range(inventory.slots.size()):
 		_slot_button(quickbar,index,inventory.slots[index],items,index==inventory.selected_slot_index,true)
 
@@ -298,33 +311,67 @@ func show_page(page: String, context: Dictionary) -> void:
 			button(row(),"close_trade","back","关闭交易 / Esc")
 		"world":
 			panel.hide();get_node("Backdrop").hide()
-			button(hud,"pause","pause","暂停 / Esc")
+			var actions_panel:=PanelContainer.new()
+			actions_panel.add_theme_stylebox_override("panel",UI_THEME.hud_panel_style())
+			hud.add_child(actions_panel)
+			var actions_row:=HBoxContainer.new();actions_row.add_theme_constant_override("separation",3);actions_panel.add_child(actions_row)
+			button(actions_row,"pause","pause","暂停 / Esc")
 			if context.get("has_gameplay",false):
-				button(hud,"inventory","inventory","背包 / B")
-			var text:=Label.new();text.text=context.get("player_name","")+"  ·  "+str(context.get("world_label","世界"));text.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT);hud.add_child(text)
+				button(actions_row,"inventory","inventory","背包 / B")
+			var place:=Label.new()
+			place.text=str(context.get("world_label","世界"))
+			place.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT)
+			place.add_theme_font_size_override("font_size",UI_THEME.FONT_CAPTION)
+			actions_row.add_child(place)
+
 			var gameplay: Dictionary = context.get("gameplay",{})
 			if gameplay.get("ok",false):
-				wallet_label=Label.new();wallet_label.text=_clock_text(gameplay.clock)+" · "+str(gameplay.wallet.money)+"币";wallet_label.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT);hud.add_child(wallet_label)
-				var action_state: Dictionary = context.get("farm_action",{})
+				hud_status=PanelContainer.new()
+				hud_status.position=Vector2(480,8)
+				hud_status.custom_minimum_size=Vector2(150,58)
+				hud_status.add_theme_stylebox_override("panel",UI_THEME.hud_panel_style())
+				add_child(hud_status)
+				var status_column:=VBoxContainer.new();status_column.add_theme_constant_override("separation",1);hud_status.add_child(status_column)
+				wallet_label=Label.new()
+				wallet_label.text=_clock_text(gameplay.clock)
+				wallet_label.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT)
+				wallet_label.add_theme_font_size_override("font_size",UI_THEME.FONT_BODY)
+				status_column.add_child(wallet_label)
+				var money:=Label.new()
+				money.text=str(gameplay.wallet.money)+" 币"
+				money.add_theme_color_override("font_color",UI_THEME.COLOR_SELECTION_MARK)
+				money.add_theme_font_size_override("font_size",UI_THEME.FONT_BODY)
+				status_column.add_child(money)
+
+				hud_hint=PanelContainer.new()
+				hud_hint.position=Vector2(150,270)
+				hud_hint.custom_minimum_size=Vector2(340,28)
+				hud_hint.add_theme_stylebox_override("panel",UI_THEME.hud_panel_style())
+				add_child(hud_hint)
 				var hint:=Label.new()
+				hint.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+				hint.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+				var action_state: Dictionary = context.get("farm_action",{})
 				if action_state.get("is_busy",false):
 					hint.text=String(action_state.get("label","操作"))+(" · 准备中，Esc取消" if action_state.get("phase","")=="prepare" else " · 已提交，收势中")
 				else:
 					if context.get("space_id","")=="space.house":
-						hint.text="E 与门 / 床 / 箱子交互 · B 背包"
+						hint.text="E 门 / 床 / 木箱  ·  B 背包"
 					elif context.get("space_id","")=="space.shop":
-						hint.text="E 与柜台 / 门交互 · B 背包"
+						hint.text="E 柜台 / 门  ·  B 背包"
 					elif context.get("space_id","")=="space.village":
-						hint.text="E 采集 / 商店门 / 工坊门 / 农庄出口 · B 背包"
+						hint.text="E 采集 / 门 / 出口  ·  B 背包"
 					elif context.get("space_id","")=="space.workshop":
-						hint.text="E 与工坊门交互 · B 背包"
+						hint.text="E 工坊门  ·  B 背包"
 					else:
 						var selected: Variant=gameplay.inventory.slots[gameplay.inventory.selected_slot_index]
 						var selected_name:="空手"
 						if selected!=null:
 							selected_name=str(gameplay.items.get(String(selected.item_id),{}).get("display_name",selected.item_id))
-						hint.text="E 使用 "+selected_name+" · B 背包"
-				hint.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT);hud.add_child(hint)
+						hint.text="E 使用 "+selected_name+"  ·  B 背包"
+				hint.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT)
+				hint.add_theme_font_size_override("font_size",UI_THEME.FONT_TOOLTIP)
+				hud_hint.add_child(hint)
 				_build_quickbar(gameplay)
 	if not context.get("error","").is_empty():notice.text=context.error
 	var preferred_action := str(context.get("focus_action",""))
