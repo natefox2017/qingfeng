@@ -6,6 +6,8 @@ const SPACE_ID := "space.village"
 const INTERACT_RANGE_PX := 28.0
 const INTERACT_LATERAL_PX := 10.0
 
+var _forage_states: Dictionary = {}
+
 @onready var player: CharacterBody2D = $FootSorted/Player
 
 func set_input_enabled(enabled: bool) -> void:
@@ -28,9 +30,61 @@ func layout_contract_valid() -> bool:
 	for anchor_name: String in ["FarmArrival","FarmExitInteract","ShopDoorInteract","ShopDoorArrival"]:
 		if get_anchor_position(anchor_name) == Vector2.INF:
 			return false
+	var definitions := get_forage_definitions()
+	if definitions.size() != $ForageSpots.get_child_count() or definitions.is_empty():
+		return false
+	var ids: Dictionary = {}
+	for definition: Dictionary in definitions:
+		if ids.has(definition.spot_id):
+			return false
+		ids[definition.spot_id]=true
 	return true
 
+func get_forage_definitions() -> Array:
+	var definitions: Array = []
+	for child: Node in $ForageSpots.get_children():
+		if not (child is Marker2D) or not child.has_meta("spot_id") or not child.has_meta("forage_id"):
+			continue
+		definitions.append({
+			"spot_id":String(child.get_meta("spot_id")),
+			"space_id":SPACE_ID,
+			"forage_id":String(child.get_meta("forage_id"))
+		})
+	definitions.sort_custom(func(a:Dictionary,b:Dictionary): return a.spot_id < b.spot_id)
+	return definitions
+
+func apply_forage_projection(value: Variant) -> bool:
+	if not (value is Dictionary) or not value.has("spots") or not (value.spots is Array):
+		return false
+	var next: Dictionary = {}
+	for spot: Variant in value.spots:
+		if not (spot is Dictionary) or not spot.has("spot_id") or _marker_for_spot(String(spot.spot_id)) == null:
+			return false
+		next[String(spot.spot_id)] = spot.duplicate(true)
+	_forage_states = next
+	queue_redraw()
+	return true
+
+func forage_visual_state(spot_id:String) -> Dictionary:
+	return _forage_states.get(spot_id,{}).duplicate(true)
+
+func _marker_for_spot(spot_id:String) -> Marker2D:
+	for child: Node in $ForageSpots.get_children():
+		if child is Marker2D and String(child.get_meta("spot_id","")) == spot_id:
+			return child as Marker2D
+	return null
+
 func resolve_interaction_target() -> Dictionary:
+	for child: Node in $ForageSpots.get_children():
+		if child is Marker2D:
+			var spot_id := String(child.get_meta("spot_id",""))
+			var state: Dictionary = _forage_states.get(spot_id,{})
+			if bool(state.get("is_available",false)) and _marker_reachable(child as Marker2D):
+				return {
+					"kind":"forage",
+					"interaction_id":"forage.village.pickup",
+					"spot_id":spot_id
+				}
 	if _marker_reachable($Anchors/FarmExitInteract):
 		return {
 			"kind":"door",
@@ -78,3 +132,10 @@ func _draw() -> void:
 	draw_rect(Rect2(0,0,640,360),Color("82966b"))
 	draw_rect(Rect2(16,160,608,40),Color("bba574"))
 	draw_rect(Rect2(384,128,32,72),Color("bba574"))
+	for child: Node in $ForageSpots.get_children():
+		if child is Marker2D:
+			var marker := child as Marker2D
+			var state: Dictionary = _forage_states.get(String(marker.get_meta("spot_id","")),{})
+			if bool(state.get("is_available",false)):
+				draw_circle(marker.position,5.0,Color("486b3d"))
+				draw_circle(marker.position+Vector2(3,-2),3.0,Color("6f914e"))
