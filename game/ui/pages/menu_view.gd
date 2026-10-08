@@ -121,7 +121,7 @@ func _slot_button(parent: Node, slot_index: int, slot: Variant, items: Dictionar
 
 func _storage_slot_button(parent: Node, source_container_id: String, slot_index: int, slot: Variant, items: Dictionary, direction_label: String) -> Button:
 	var node := Button.new()
-	node.custom_minimum_size = Vector2(64,40)
+	node.custom_minimum_size = Vector2(50,34)
 	var display_name := "空"
 	var quantity := 0
 	if slot != null:
@@ -130,6 +130,11 @@ func _storage_slot_button(parent: Node, source_container_id: String, slot_index:
 		quantity = int(slot.quantity)
 	node.text = "%d\n%s" % [slot_index+1, "空" if slot == null else display_name.left(2)+("×"+str(quantity) if quantity > 1 else "")]
 	node.disabled = slot == null
+	node.add_theme_stylebox_override("normal",UI_THEME.slot_style(false))
+	node.add_theme_stylebox_override("hover",UI_THEME.slot_style(false,true))
+	node.add_theme_stylebox_override("focus",UI_THEME.slot_style(false,true))
+	node.add_theme_stylebox_override("pressed",UI_THEME.slot_style(true,true))
+	node.add_theme_stylebox_override("disabled",UI_THEME.slot_style(false))
 	var description := "槽位 %d：%s" % [slot_index+1, display_name if slot == null else display_name+" ×"+str(quantity)]
 	if slot != null:
 		description += "；"+direction_label
@@ -147,6 +152,13 @@ func _storage_slot_button(parent: Node, source_container_id: String, slot_index:
 		_first_button = node
 	parent.add_child(node)
 	return node
+
+func _used_slot_count(slots: Array) -> int:
+	var count := 0
+	for slot: Variant in slots:
+		if slot != null:
+			count += 1
+	return count
 
 func _minute_text(value: int) -> String:
 	return "%02d:%02d" % [value/60,value%60]
@@ -293,21 +305,29 @@ func show_page(page: String, context: Dictionary) -> void:
 				label("当前存档没有玩法背包状态。")
 			button(row(),"close_inventory","back","关闭背包 / B / Esc")
 		"storage":
-			title.text="家中木箱";subtitle.text="点击非空槽整组存入 / 取出；Esc 关闭。"
+			title.text="家中木箱";subtitle.text="整理随身物品 · 点击非空槽整组移动 · Esc 关闭"
+			panel.custom_minimum_size=Vector2(610,292)
 			var gameplay: Dictionary = context.get("gameplay",{})
 			if gameplay.get("ok",false) and gameplay.has("storage"):
-				label("背包 %d格  ↔  木箱 %d格" % [int(gameplay.inventory.capacity),int(gameplay.storage.capacity)])
-				var scroll:=ScrollContainer.new();scroll.custom_minimum_size=Vector2(450,180);body.add_child(scroll)
-				var sections:=VBoxContainer.new();sections.size_flags_horizontal=Control.SIZE_EXPAND_FILL;scroll.add_child(sections)
-				label("背包 · 点击存入",sections)
-				var bag_grid:=GridContainer.new();bag_grid.columns=6;bag_grid.add_theme_constant_override("h_separation",4);bag_grid.add_theme_constant_override("v_separation",4);sections.add_child(bag_grid)
+				var capacity_row:=row()
+				var bag_capacity:=label("背包  %d / %d格" % [_used_slot_count(gameplay.inventory.slots),int(gameplay.inventory.capacity)],capacity_row);bag_capacity.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+				var chest_capacity:=label("木箱  %d / %d格" % [_used_slot_count(gameplay.storage.slots),int(gameplay.storage.capacity)],capacity_row);chest_capacity.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT
+
+				var sections:=HBoxContainer.new();sections.add_theme_constant_override("separation",8);body.add_child(sections)
+				var bag_panel:=PanelContainer.new();bag_panel.name="StorageBagSection";bag_panel.custom_minimum_size=Vector2(218,165);bag_panel.add_theme_stylebox_override("panel",UI_THEME.section_style());sections.add_child(bag_panel)
+				var bag_column:=VBoxContainer.new();bag_column.add_theme_constant_override("separation",4);bag_panel.add_child(bag_column)
+				var bag_title:=label("随身背包  →  木箱",bag_column);UI_THEME.apply_text_role(bag_title,UI_THEME.ROLE_CAPTION)
+				var bag_grid:=GridContainer.new();bag_grid.name="StorageBagGrid";bag_grid.columns=4;bag_grid.add_theme_constant_override("h_separation",3);bag_grid.add_theme_constant_override("v_separation",3);bag_column.add_child(bag_grid)
 				for index in range(gameplay.inventory.slots.size()):
 					_storage_slot_button(bag_grid,String(gameplay.inventory.container_id),index,gameplay.inventory.slots[index],gameplay.items,"存入木箱")
-				label("木箱 · 点击取出",sections)
-				var chest_grid:=GridContainer.new();chest_grid.columns=6;chest_grid.add_theme_constant_override("h_separation",4);chest_grid.add_theme_constant_override("v_separation",4);sections.add_child(chest_grid)
+
+				var chest_panel:=PanelContainer.new();chest_panel.name="StorageChestSection";chest_panel.custom_minimum_size=Vector2(318,165);chest_panel.add_theme_stylebox_override("panel",UI_THEME.section_style());sections.add_child(chest_panel)
+				var chest_column:=VBoxContainer.new();chest_column.add_theme_constant_override("separation",4);chest_panel.add_child(chest_column)
+				var chest_title:=label("家中木箱  →  背包",chest_column);UI_THEME.apply_text_role(chest_title,UI_THEME.ROLE_CAPTION)
+				var chest_grid:=GridContainer.new();chest_grid.name="StorageChestGrid";chest_grid.columns=6;chest_grid.add_theme_constant_override("h_separation",3);chest_grid.add_theme_constant_override("v_separation",3);chest_column.add_child(chest_grid)
 				for index in range(gameplay.storage.slots.size()):
 					_storage_slot_button(chest_grid,String(gameplay.storage.container_id),index,gameplay.storage.slots[index],gameplay.items,"取回背包")
-				label("转移使用 storage.transfer；容量或 revision 校验失败时两边都不变。",sections)
+				var rule:=label("整组移动；容量不足或状态已变化时不会扣走任何物品。");UI_THEME.apply_text_role(rule,UI_THEME.ROLE_TOOLTIP)
 			else:
 				label("当前存档没有可用的家庭箱子状态。")
 			button(row(),"close_storage","storage","关闭木箱 / Esc")
