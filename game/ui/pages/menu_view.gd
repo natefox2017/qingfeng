@@ -264,12 +264,33 @@ func show_page(page: String, context: Dictionary) -> void:
 			label("请稍候…")
 			button(row(),"cancel_load","back","取消加载，返回标题")
 		"pause":
-			title.text="暂歇一下";subtitle.text="暂停中 · 游戏输入与游戏时钟已锁定"
+			title.text="暂歇一下";subtitle.text="世界已暂停 · Esc 返回游戏"
+			panel.custom_minimum_size=Vector2(520,280)
+			var summary_panel:=PanelContainer.new();summary_panel.name="PauseSummary";summary_panel.add_theme_stylebox_override("panel",UI_THEME.section_style());body.add_child(summary_panel)
+			var summary_column:=VBoxContainer.new();summary_column.add_theme_constant_override("separation",4);summary_panel.add_child(summary_column)
 			if context.get("has_gameplay",false):
-				label("保存会记录位置、时间、背包、钱物和田地状态。\n当前画面仍是工程美术；狗、村庄和最终素材尚未接入。")
+				var gameplay: Dictionary=context.get("gameplay",{})
+				var place:=label(String(context.get("world_label","当前区域")),summary_column);UI_THEME.apply_text_role(place,UI_THEME.ROLE_HEADING)
+				var state_row:=row(summary_column)
+				var time_text:=label(_clock_text(gameplay.clock),state_row);time_text.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+				var money_text:=label(str(gameplay.wallet.money)+" 币",state_row);UI_THEME.apply_text_role(money_text,UI_THEME.ROLE_QUANTITY)
+				var save_note:=label("保存会写入当前位置、时间、钱物、背包、田地与居民运行状态；每次保存生成新的本地文件。",summary_column);UI_THEME.apply_text_role(save_note,UI_THEME.ROLE_CAPTION)
 			else:
-				label("这是旧入口碰撞测试存档；只保存身份和测试场位置。")
-			var actions:=row();button(actions,"resume","resume","继续游戏");button(actions,"save","save","保存到新的独立文件",{},context.get("can_save",false));button(actions,"settings","settings","设置");button(actions,"save_return","back","保存并返回标题",{},context.get("can_save",false))
+				var legacy_note:=label("旧入口碰撞测试存档 · 只保存身份与测试场位置",summary_column);UI_THEME.apply_text_role(legacy_note,UI_THEME.ROLE_CAPTION)
+
+			var actions:=HBoxContainer.new();actions.alignment=BoxContainer.ALIGNMENT_CENTER;actions.add_theme_constant_override("separation",12);body.add_child(actions)
+			for entry: Array in [
+				["resume","resume","继续","继续游戏"],
+				["save","save","保存","保存到新的独立文件"],
+				["settings","settings","设置","设置"],
+				["save_return","back","返回","保存并返回标题"]
+			]:
+				var cell:=VBoxContainer.new();cell.custom_minimum_size=Vector2(78,58);actions.add_child(cell)
+				var enabled:=true
+				if entry[0] in ["save","save_return"]:
+					enabled=bool(context.get("can_save",false))
+				button(cell,String(entry[0]),String(entry[1]),String(entry[3]),{},enabled)
+				var caption:=label(String(entry[2]),cell);caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;UI_THEME.apply_text_role(caption,UI_THEME.ROLE_CAPTION)
 		"inventory":
 			title.text="背包";subtitle.text="选择随身物品 · B / Esc 关闭"
 			panel.custom_minimum_size=Vector2(600,286)
