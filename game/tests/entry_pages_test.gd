@@ -115,9 +115,9 @@ func run() -> void:
 	check(await wait_world(),"title new form loads farm world")
 	if app.state!=app.State.WORLD:printerr(app.last_error);finish();return
 	check(app.gameplay_session != null and app.room.has_method("get_plot_definitions") and app.active_snapshot.space_id=="space.farm","new game publishes one gameplay session on farm world")
-	check(app.active_snapshot.has("gameplay") and app.store.list_saves().size()==1,"new game commits schema-v2 snapshot once after world validation")
+	check(app.active_snapshot.has("gameplay") and app.store.list_saves().size()==1,"new game commits gameplay snapshot once after world validation")
 	var initial_save:Dictionary=app.store.read_save(app.active_save_id)
-	check(initial_save.ok and int(initial_save.envelope.schema_version)==3 and initial_save.envelope.snapshot.gameplay.inventory.slots.size()==12,"new game persists current full gameplay schema")
+	check(initial_save.ok and int(initial_save.envelope.schema_version)==4 and initial_save.envelope.snapshot.gameplay.inventory.slots.size()==12,"new game persists current full gameplay schema")
 	check(app.gameplay_session.inventory.quantity_of("item.radish_seed")==4 and app.gameplay_session.wallet.money==200,"new game uses authoritative content-version inventory and wallet")
 	check(app.view.quickbar != null and app.view.quickbar.get_child_count()==12 and app.view.buttons.has("inventory"),"world HUD renders twelve live quick slots and backpack action")
 	check(app.view.wallet_label != null and app.view.wallet_label.text.contains("200"),"world HUD projects authoritative wallet value")
@@ -146,7 +146,7 @@ func run() -> void:
 	app.set_pause_menu(true)
 	check(app.gameplay_session.clock.is_paused(),"pause menu pauses authoritative gameplay clock")
 	var saved:Dictionary=app.save_progress()
-	check(saved.ok and app.store.list_saves().size()==2,"pause saves fresh schema-v2 file without overwriting previous save")
+	check(saved.ok and app.store.list_saves().size()==2,"pause saves fresh gameplay file without overwriting previous save")
 	app.return_to_title()
 	app._on_action("read_save",{"save_id":saved.save_id})
 	check(await wait_world(),"current gameplay save reloads through farm world")
@@ -186,10 +186,10 @@ func run() -> void:
 	mismatched_identity.world_position_px={"x":144.0,"y":176.0}
 	var v2_snapshot: Dictionary = CODEC.compose_gameplay_snapshot(mismatched_identity,mismatched_session.snapshot())
 	var v2_saved: Dictionary = app.store.write_new(v2_snapshot)
-	check(v2_saved.ok,"schema-v2 save can share the same bounded store")
+	check(v2_saved.ok,"gameplay save can share the same bounded store")
 	if v2_saved.ok:
 		app._on_action("read_save",{"save_id":v2_saved.save_id})
-		check(not await wait_world() and app.room==null and app.gameplay_session==null and app.last_error.contains("不兼容"),"layout-mismatched schema-v2 restore fails atomically")
+		check(not await wait_world() and app.room==null and app.gameplay_session==null and app.last_error.contains("不兼容"),"layout-mismatched gameplay restore fails atomically")
 	var blocked_snapshot:=snapshot.duplicate(true);blocked_snapshot.world_position_px={"x":176,"y":140}
 	var blocked_file:Dictionary=store.write_new(blocked_snapshot)
 	app._entry_snapshot=store.read_save(blocked_file.save_id).envelope.snapshot

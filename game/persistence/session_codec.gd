@@ -1,7 +1,7 @@
 extends RefCounted
 ## Versioned Qingfeng save envelope.
 ## Schema 1 preserves the explicit entry/collision fixture used by the current UI.
-## Schema 2 stores the first-playable identity/world fields plus the authoritative
+## Gameplay schemas store first-playable identity/world fields plus the authoritative
 ## GameplaySession snapshot. Runtime world/layout still performs final restore validation.
 
 const CONTENT = preload("res://content/content_catalog.gd")
@@ -109,6 +109,20 @@ static func _valid_inventory(value: Variant, content: Dictionary) -> bool:
 			return false
 	return true
 
+static func _valid_storage(value: Variant, content: Dictionary) -> bool:
+	if not keys(value,["revision","container_id","capacity","slots"]):
+		return false
+	if value.container_id != "container.home_chest" or value.capacity != content.storage.chest_capacity:
+		return false
+	if not (value.revision is int) or value.revision < 0:
+		return false
+	if not (value.slots is Array) or value.slots.size() != value.capacity:
+		return false
+	for slot: Variant in value.slots:
+		if not _valid_slot(slot,content.items):
+			return false
+	return true
+
 static func _valid_wallet(value: Variant) -> bool:
 	if not keys(value,["revision","owner_id","money"]):
 		return false
@@ -167,18 +181,22 @@ static func _valid_gameplay_common(value: Variant) -> bool:
 	if not (value is Dictionary):
 		return false
 	var required := ["content_version","clock","inventory","wallet","farm"]
-	if value.size() != required.size() and value.size() != required.size() + 1:
-		return false
 	for key: String in required:
 		if not value.has(key):
 			return false
-	if value.size() == required.size() + 1:
-		if not value.has("command_journal") or not _valid_command_journal(value.command_journal):
+	for key: Variant in value.keys():
+		if key not in ["content_version","clock","inventory","wallet","farm","command_journal","storage"]:
 			return false
+	if value.has("storage") and not value.has("command_journal"):
+		return false
+	if value.has("command_journal") and not _valid_command_journal(value.command_journal):
+		return false
 	if value.content_version != GAMEPLAY_CONTENT_VERSION:
 		return false
 	var content := _current_content()
 	if content.is_empty() or content.content_version != value.content_version:
+		return false
+	if value.has("storage") and not _valid_storage(value.storage,content):
 		return false
 	if not keys(value.clock,["game_minute"]) or not (value.clock.game_minute is int) or value.clock.game_minute < 0:
 		return false
@@ -186,10 +204,13 @@ static func _valid_gameplay_common(value: Variant) -> bool:
 	return _valid_inventory(value.inventory,content) and _valid_wallet(value.wallet) and _valid_farm(value.farm,content,current_day)
 
 static func _valid_gameplay_v2(value: Variant) -> bool:
-	return value is Dictionary and value.size() == 5 and not value.has("command_journal") and _valid_gameplay_common(value)
+	return value is Dictionary and value.size() == 5 and not value.has("command_journal") and not value.has("storage") and _valid_gameplay_common(value)
 
 static func _valid_gameplay_v3(value: Variant) -> bool:
-	return value is Dictionary and value.size() == 6 and value.has("command_journal") and _valid_gameplay_common(value)
+	return value is Dictionary and value.size() == 6 and value.has("command_journal") and not value.has("storage") and _valid_gameplay_common(value)
+
+static func _valid_gameplay_v4(value: Variant) -> bool:
+	return value is Dictionary and value.size() == 7 and value.has("command_journal") and value.has("storage") and _valid_gameplay_common(value)
 
 static func validate_gameplay_snapshot(value: Variant) -> bool:
 	if not (value is Dictionary):
@@ -251,6 +272,8 @@ static func normalized_numbers(value: Variant) -> Variant:
 static func _schema_for_snapshot(snapshot: Dictionary) -> int:
 	if not snapshot.has("gameplay"):
 		return 1
+	if snapshot.gameplay.has("storage"):
+		return 4
 	return 3 if snapshot.gameplay.has("command_journal") else 2
 
 static func _content_for_snapshot(snapshot: Dictionary) -> String:
@@ -289,7 +312,7 @@ static func decode(text: String) -> Dictionary:
 	var envelope: Variant = normalized_numbers(parser.data)
 	if not keys(envelope,["save_format","schema_version","content_version","save_id","saved_at_utc","snapshot","checksum"]):
 		return failure("SAVE_FIELDS")
-	if envelope.save_format != "qingfeng" or not integer(envelope.schema_version,1,3):
+	if envelope.save_format != "qingfeng" or not integer(envelope.schema_version,1,4):
 		return failure("SAVE_VERSION_UNSUPPORTED")
 	var schema_version := int(envelope.schema_version)
 	if schema_version == 1:
@@ -304,6 +327,11 @@ static func decode(text: String) -> Dictionary:
 		if envelope.content_version != GAMEPLAY_CONTENT_VERSION:
 			return failure("SAVE_CONTENT_UNSUPPORTED")
 		if not validate_gameplay_snapshot(envelope.snapshot) or not _valid_gameplay_v3(envelope.snapshot.gameplay) or envelope.snapshot.gameplay.content_version != envelope.content_version:
+			return failure("SAVE_SNAPSHOT_INVALID")
+	elif schema_version == 4:
+		if envelope.content_version != GAMEPLAY_CONTENT_VERSION:
+			return failure("SAVE_CONTENT_UNSUPPORTED")
+		if not validate_gameplay_snapshot(envelope.snapshot) or not _valid_gameplay_v4(envelope.snapshot.gameplay) or envelope.snapshot.gameplay.content_version != envelope.content_version:
 			return failure("SAVE_SNAPSHOT_INVALID")
 	else:
 		return failure("SAVE_VERSION_UNSUPPORTED")
