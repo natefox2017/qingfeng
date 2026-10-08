@@ -44,7 +44,7 @@
 | PlotState | plot_id/space_id:string，cell_position:{x:int,y:int}，state:untilled/tilled/growing/mature，crop_id:string或null，growth_days:int>=0，is_watered:bool，last_settled_day:int>=0；由农耕写 |
 | ForageState | revision:int>=0；spots:[{spot_id:string,last_collected_day:int>=0}]；spot几何/forage_id由WORLD Marker定义，状态只记录采集日；由Forage写 |
 | QuestState | quest_id:string，status:active/completed，objective_progress:按objective_id的非负int，is_reward_claimed:bool；由任务写 |
-| ResidentState | ActorState加occupation_id/activity_id/home_anchor_id:string，known_event_ids:string[]，relationship_points:int；由居民写 |
+| ResidentState | resident_id/space_id:string；world_position_px:{x:number,y:number}；facing:north/south/east/west；relationship_points:int；known_event_ids:string[]；由居民运行状态写。occupation/activity/home 等静态/派生字段来自 content_version 与 schedule，不在快照复制 |
 | FactEvent | event_id:string，source_command_id:string或null（系统事件须另标source_system），kind/space_id:string，game_minute:int，participant_ids:string[]，严格payload；提交后创建 |
 | MemorySummary | resident_id:string，source_event_ids:string[]，summary_text:string，updated_at_game_minute:int；主观摘要，不替代事实 |
 
