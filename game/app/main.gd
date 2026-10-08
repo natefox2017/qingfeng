@@ -21,8 +21,8 @@ const DEFAULT_ROOM := LEGACY_ROOM
 const MOVEMENT_ACTIONS := [&"move_left", &"move_right", &"move_up", &"move_down"]
 const GAMEPLAY_PAUSE_OWNERS := [&"pause_menu", &"inventory", &"storage", &"trade", &"focus"]
 const QUICK_SLOT_ACTIONS := [&"select_slot_1",&"select_slot_2",&"select_slot_3",&"select_slot_4",&"select_slot_5",&"select_slot_6",&"select_slot_7",&"select_slot_8",&"select_slot_9",&"select_slot_0"]
-const RESIDENT_SOCIAL_START_MINUTE := 1020
-const RESIDENT_SOCIAL_END_MINUTE := 1200
+const RESIDENT_CONVERSATION_START_MINUTE := 480
+const RESIDENT_CONVERSATION_END_MINUTE := 540
 const RESIDENT_CONVERSATION_DURATION_MINUTES := 10
 
 enum State { TITLE, LOADING, WORLD }
@@ -869,15 +869,15 @@ func _poll_resident_conversation() -> void:
 
 	var day := gameplay_session.clock.current_day()
 	var minute := gameplay_session.clock.minute_of_day()
-	if day==_resident_social_demo_day or minute<RESIDENT_SOCIAL_START_MINUTE or minute>=RESIDENT_SOCIAL_END_MINUTE:
+	if day==_resident_social_demo_day or minute<RESIDENT_CONVERSATION_START_MINUTE or minute>=RESIDENT_CONVERSATION_END_MINUTE:
 		return
-	if _resident_runtime_space(projection.resident_runtime,"resident.grocer")!="space.village" or _resident_runtime_space(projection.resident_runtime,"resident.maker")!="space.village":
+	if _resident_runtime_space(projection.resident_runtime,"resident.maker")!="space.village" or _resident_runtime_space(projection.resident_runtime,"resident.neighbor")!="space.village":
 		return
-	var conversation_id := "conversation.village.social.day.%d" % day
+	var conversation_id := "conversation.village.morning.day.%d" % day
 	var invited: Dictionary = gameplay_session.invite_resident_conversation(
 		conversation_id,
-		"resident.grocer",
 		"resident.maker",
+		"resident.neighbor",
 		"space.village"
 	)
 	if not invited.ok:
