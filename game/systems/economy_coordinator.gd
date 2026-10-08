@@ -47,7 +47,7 @@ func projection() -> Dictionary:
 func is_shop_open() -> bool:
 	if not is_configured():
 		return false
-	var minute := clock.minute_of_day()
+	var minute: int = clock.minute_of_day()
 	return minute >= int(_content.shop.open_minute) and minute < int(_content.shop.close_minute)
 
 func handle(command: Dictionary) -> Dictionary:
@@ -108,8 +108,8 @@ func _sell(command_id: String, payload: Dictionary) -> Dictionary:
 func _commit_both(command_id: String, next_slots: Array, next_money: int) -> Dictionary:
 	var inventory_before: Dictionary = inventory.projection()
 	var wallet_before: Dictionary = wallet.projection()
-	var expected_inventory := inventory.revision
-	var expected_wallet := wallet.revision
+	var expected_inventory: int = inventory.revision
+	var expected_wallet: int = wallet.revision
 	if not inventory.commit_slots(next_slots,expected_inventory):
 		return _result(command_id,false,"INVENTORY_REVISION_CONFLICT",true,false)
 	if not wallet.commit_money(next_money,expected_wallet):
