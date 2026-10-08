@@ -59,6 +59,15 @@ static func panel_style() -> StyleBoxFlat:
 	style.set_content_margin_all(PAGE_MARGIN)
 	return style
 
+static func section_style() -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = COLOR_SLOT_SURFACE
+	style.border_color = COLOR_BORDER
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(CONTROL_RADIUS)
+	style.set_content_margin_all(7.0)
+	return style
+
 static func hud_panel_style() -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
 	style.bg_color = COLOR_HUD_SURFACE
