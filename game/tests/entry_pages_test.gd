@@ -95,6 +95,7 @@ func run() -> void:
 	check(app.view.notice.get_theme_color("font_color") == UI_THEME.COLOR_ERROR,"error token drives notice color")
 	check(app.view.buttons["new_game"].tooltip_text == app.view.buttons["new_game"].accessibility_name and not app.view.buttons["new_game"].tooltip_text.is_empty(),"icon action has tooltip and accessible name")
 	check(app.view.buttons["continue"].disabled,"title disables continue without saves")
+	check(app.DEFAULT_ROOM == app.FARM_ROOM and app.DEFAULT_ROOM != app.LEGACY_ROOM,"unqualified world default points to the farm, legacy fixture is explicit")
 	app._on_action("new_game",{});app._on_action("back",{})
 	check(app.view.buttons["new_game"].has_focus(),"closing new-game form restores its title trigger")
 	app._on_action("load",{});app._on_action("back",{})
@@ -193,7 +194,7 @@ func run() -> void:
 	var blocked_snapshot:=snapshot.duplicate(true);blocked_snapshot.world_position_px={"x":176,"y":140}
 	var blocked_file:Dictionary=store.write_new(blocked_snapshot)
 	app._entry_snapshot=store.read_save(blocked_file.save_id).envelope.snapshot
-	app.start_world()
+	app.start_world(app.LEGACY_ROOM)
 	check(not await wait_world() and app.room==null,"wall-embedded legacy save rejected without teleport fallback")
 	finish()
 

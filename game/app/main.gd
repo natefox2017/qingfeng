@@ -17,7 +17,7 @@ const HOUSE_ROOM := "res://world/house_interior.tscn"
 const VILLAGE_ROOM := "res://world/village_first_screen.tscn"
 const SHOP_ROOM := "res://world/shop_interior.tscn"
 const WORKSHOP_ROOM := "res://world/workshop_interior.tscn"
-const DEFAULT_ROOM := LEGACY_ROOM
+const DEFAULT_ROOM := FARM_ROOM
 const MOVEMENT_ACTIONS := [&"move_left", &"move_right", &"move_up", &"move_down"]
 const GAMEPLAY_PAUSE_OWNERS := [&"pause_menu", &"inventory", &"storage", &"trade", &"dialogue", &"focus"]
 const QUICK_SLOT_ACTIONS := [&"select_slot_1",&"select_slot_2",&"select_slot_3",&"select_slot_4",&"select_slot_5",&"select_slot_6",&"select_slot_7",&"select_slot_8",&"select_slot_9",&"select_slot_0"]
@@ -1202,7 +1202,7 @@ func _update_interface() -> void:
 	if page in ["title","load"]:
 		context["saves"] = store.list_saves()
 		for entry: Dictionary in context.saves:
-			if entry.ok:
+			if entry.ok and entry.envelope.snapshot.has("gameplay"):
 				context["recent_id"] = entry.save_id
 				break
 	view.show_page(page,context)
@@ -1286,10 +1286,10 @@ func _on_action(action: String, payload: Dictionary) -> void:
 				start_world(FARM_ROOM)
 		"continue":
 			for entry: Dictionary in store.list_saves():
-				if entry.ok:
+				if entry.ok and entry.envelope.snapshot.has("gameplay"):
 					_on_action("read_save",{"save_id":entry.save_id})
 					return
-			last_error = "没有有效存档，可以新建或导入。"
+			last_error = "没有正式游戏进度，请新建游戏或从存档页选择。"
 		"read_save":
 			var result: Dictionary = store.read_save(str(payload.get("save_id","")))
 			if result.ok:

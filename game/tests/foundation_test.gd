@@ -66,7 +66,7 @@ func run() -> void:
 	for tick in range(20): await process_frame
 	check(app.state == app.State.TITLE and app.room == null, "invalid world contract never becomes active")
 	var delayed := DelayedRequest.new()
-	check(app.start_world(app.DEFAULT_ROOM, delayed), "delayed request accepted")
+	check(app.start_world(app.LEGACY_ROOM, delayed), "delayed request accepted")
 	check(not app.start_world(), "double start rejected")
 	app.return_to_title()
 	delayed.is_ready = true
@@ -75,12 +75,12 @@ func run() -> void:
 	# Simulate completion queued on the main thread immediately before cancellation.
 	var old_generation: int = app.generation
 	app.return_to_title()
-	app.start_world(app.DEFAULT_ROOM, DelayedRequest.new())
+	app.start_world(app.LEGACY_ROOM, DelayedRequest.new())
 	app._activate_room(ROOM, old_generation)
 	check(app.room == null and app.state == app.State.LOADING, "old generation cannot replace a newer loading request")
 	app.return_to_title()
 	Input.action_press("move_right")
-	app.start_world()
+	app.start_world(app.LEGACY_ROOM)
 	if not await wait_world():
 		check(false, "native room initialized")
 		finish(); return
@@ -160,7 +160,7 @@ func run() -> void:
 	app.return_to_title()
 	check(app.room == null and app.state == app.State.TITLE, "return removes world and resets route")
 	for cycle in range(100):
-		check(app.start_world(), "repeat start %d" % cycle)
+		check(app.start_world(app.LEGACY_ROOM), "repeat start %d" % cycle)
 		if not await wait_world():
 			check(false, "repeat world ready %d" % cycle); break
 		app.return_to_title()
