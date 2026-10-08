@@ -51,6 +51,7 @@ var _import_envelope: Dictionary = {}
 var _transition_pending: bool = false
 var _transition_generation: int = 0
 var _transition_candidate: Node2D
+var _transition_stage: SubViewport
 var _resident_handoff_pending := false
 var _resident_conversation_demo_day := 0
 var _resident_conversation_end_game_minute := -1
@@ -357,6 +358,9 @@ func return_to_title() -> void:
 	if is_instance_valid(_transition_candidate):
 		_transition_candidate.queue_free()
 	_transition_candidate = null
+	if is_instance_valid(_transition_stage):
+		_transition_stage.queue_free()
+	_transition_stage = null
 	farm_action = FARM_ACTION.new()
 	locks.set_locked(&"farm_action", false)
 	locks.set_locked(&"transition", false)
@@ -764,6 +768,20 @@ func _rest_at_bed(target: Dictionary) -> void:
 	_refresh_farm_world()
 	_update_interface()
 
+func _stage_world_candidate(candidate: Node2D) -> SubViewport:
+	# An unseen target room must not collide with the still-active source room.
+	# A separate SubViewport supplies an independent World2D for physics QA.
+	var sandbox := SubViewport.new()
+	sandbox.name = "StagedWorld"
+	sandbox.size = Vector2i(640,360)
+	sandbox.disable_3d = true
+	add_child(sandbox)
+	candidate.visible = false
+	sandbox.add_child(candidate)
+	candidate.set_input_enabled(false)
+	_set_room_camera_enabled(candidate,false)
+	return sandbox
+
 func _begin_door_transition(target: Dictionary) -> void:
 	if _transition_pending or _resident_handoff_pending or farm_action.is_busy() or state != State.WORLD or not _valid_door_target(target):
 		return
@@ -786,17 +804,16 @@ func _begin_door_transition(target: Dictionary) -> void:
 	_transition_generation += 1
 	var token := _transition_generation
 	_transition_candidate = candidate
-	candidate.visible = false
-	add_child(candidate)
-	move_child(candidate,0)
-	candidate.set_input_enabled(false)
-	_set_room_camera_enabled(candidate,false)
+	_transition_stage = _stage_world_candidate(candidate)
 	locks.set_locked(&"transition",true)
 	last_error = "正在通过门进入目标区域……Esc 可在提交前取消。"
 	_update_interface()
 	await get_tree().physics_frame
 	if token != _transition_generation or not _transition_pending or state != State.WORLD:
-		if is_instance_valid(candidate):
+		if is_instance_valid(_transition_stage):
+			_transition_stage.queue_free()
+		_transition_stage = null
+		if is_instance_valid(candidate) and not candidate.is_queued_for_deletion():
 			candidate.queue_free()
 		return
 	if not _world_contract_valid(candidate) or String(candidate.get_space_id()) != String(target.target_space_id):
@@ -817,6 +834,12 @@ func _begin_door_transition(target: Dictionary) -> void:
 	gameplay_session.release_resident_conversations_for_space(String(room.get_space_id()))
 	_resident_conversation_end_game_minute = -1
 	var old_room := room
+	# Move the validated target into the active Viewport only at commit.
+	_transition_stage.remove_child(candidate)
+	add_child(candidate)
+	move_child(candidate,0)
+	_transition_stage.queue_free()
+	_transition_stage = null
 	room = candidate
 	_transition_candidate = null
 	_transition_pending = false
@@ -850,6 +873,9 @@ func _valid_door_target(target: Dictionary) -> bool:
 func _fail_transition(candidate: Node2D, message: String) -> void:
 	if is_instance_valid(candidate):
 		candidate.queue_free()
+	if is_instance_valid(_transition_stage):
+		_transition_stage.queue_free()
+	_transition_stage = null
 	_transition_candidate = null
 	_transition_pending = false
 	_transition_generation += 1
@@ -865,6 +891,9 @@ func _cancel_transition(message: String) -> bool:
 	_transition_pending = false
 	if is_instance_valid(_transition_candidate):
 		_transition_candidate.queue_free()
+	if is_instance_valid(_transition_stage):
+		_transition_stage.queue_free()
+	_transition_stage = null
 	_transition_candidate = null
 	locks.set_locked(&"transition",false)
 	last_error = message
@@ -1056,23 +1085,19 @@ func _commit_resident_handoff(request: Variant) -> void:
 	if candidate == null:
 		_resident_handoff_pending = false
 		return
-	candidate.visible=false
-	add_child(candidate)
-	move_child(candidate,0)
-	candidate.set_input_enabled(false)
-	_set_room_camera_enabled(candidate,false)
+	var sandbox := _stage_world_candidate(candidate)
 	await get_tree().physics_frame
 	if state != State.WORLD or not is_instance_valid(room) or String(room.get_space_id()) != String(request.source_space_id):
-		candidate.queue_free()
+		sandbox.queue_free()
 		_resident_handoff_pending = false
 		return
 	if not _world_contract_valid(candidate) or String(candidate.get_space_id()) != String(request.target_space_id):
-		candidate.queue_free()
+		sandbox.queue_free()
 		_resident_handoff_pending = false
 		return
 	var arrival: Vector2 = candidate.get_anchor_position(String(request.arrival_anchor_id))
 	if arrival == Vector2.INF or _position_is_blocked_in(candidate,arrival):
-		candidate.queue_free()
+		sandbox.queue_free()
 		_resident_handoff_pending = false
 		return
 	var updated: bool = bool(gameplay_session.update_resident_runtime({
@@ -1081,7 +1106,7 @@ func _commit_resident_handoff(request: Variant) -> void:
 		"world_position_px":{"x":arrival.x,"y":arrival.y},
 		"facing":String(request.arrival_facing)
 	}))
-	candidate.queue_free()
+	sandbox.queue_free()
 	_resident_handoff_pending = false
 	if updated:
 		_refresh_farm_world()
