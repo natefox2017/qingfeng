@@ -99,10 +99,10 @@ func run() -> void:
 	check(house_save.ok, "house gameplay save succeeds")
 	if house_save.ok:
 		var envelope: Dictionary = app.store.read_save(house_save.save_id).envelope
-		check(envelope.snapshot.space_id == "space.house" and int(envelope.schema_version) == 6, "house save records current space in schema six")
+		check(envelope.snapshot.space_id == "space.house" and int(envelope.schema_version) == 7, "house save records current space in schema seven")
 		app.return_to_title()
 		app._on_action("read_save",{"save_id":house_save.save_id})
-		check(await wait_world() and app.room.get_space_id() == "space.house", "schema-six save restarts directly inside house")
+		check(await wait_world() and app.room.get_space_id() == "space.house", "schema-seven save restarts directly inside house")
 		check(app.gameplay_session.inventory.selected_slot_index == selected_before, "house load restores gameplay from authoritative farm plot layout")
 
 	# House -> farm and a repeated player-only transition loop exercise lifecycle.
