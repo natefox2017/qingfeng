@@ -90,6 +90,18 @@ func run() -> void:
 	check(String(village.maker_resident.projection().anchor_id)=="anchor.resident.maker.home","maker resumes its pre-work home target")
 	check(String(village.neighbor_resident.projection().anchor_id)=="anchor.resident.neighbor.work","neighbor resumes its work target")
 
+	var cancel_invite: Dictionary = conversations.invite(
+		"conversation.test.cancel",
+		"resident.maker",
+		"resident.neighbor",
+		"space.village"
+	)
+	check(cancel_invite.ok and conversations.mark_approaching("conversation.test.cancel").ok,"released residents can start another approach")
+	check(village.apply_conversation_projection(conversations.projection()),"cancel test approach reaches WORLD")
+	check(conversations.cancel("conversation.test.cancel").ok,"cancel releases approaching conversation")
+	check(village.apply_resident_projection(schedule.projection(480,false),runtime.projection()),"cancel restores current schedule targets")
+	check(village.apply_conversation_projection(conversations.projection()) and not village.conversation_visual_state().is_visible,"cancel leaves no stale conversation visual")
+
 	village.queue_free()
 	await process_frame
 	finish()
