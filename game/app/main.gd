@@ -856,6 +856,7 @@ func _poll_resident_conversation() -> void:
 		if conversation_state=="approaching" and room.conversation_participants_arrived(conversation_id):
 			var participating: Dictionary = gameplay_session.begin_resident_conversation(conversation_id)
 			if participating.ok:
+				_resident_conversation_demo_day = gameplay_session.clock.current_day()
 				_resident_conversation_end_game_minute = gameplay_session.clock.game_minute+RESIDENT_CONVERSATION_DURATION_MINUTES
 				_refresh_farm_world()
 			return
@@ -882,7 +883,6 @@ func _poll_resident_conversation() -> void:
 	)
 	if not invited.ok:
 		return
-	_resident_conversation_demo_day = day
 	var approaching: Dictionary = gameplay_session.approach_resident_conversation(conversation_id)
 	if approaching.ok:
 		_refresh_farm_world()
