@@ -16,6 +16,7 @@ const FORAGE = preload("res://systems/forage_domain.gd")
 const FORAGING = preload("res://systems/forage_coordinator.gd")
 const RESIDENT_SCHEDULE = preload("res://systems/resident_schedule.gd")
 const RESIDENT_RUNTIME = preload("res://systems/resident_runtime_state.gd")
+const RESIDENT_CONVERSATIONS = preload("res://systems/resident_conversation_state.gd")
 
 var configuration_error := ""
 var content: Dictionary = {}
@@ -32,6 +33,7 @@ var forage: RefCounted
 var foraging: RefCounted
 var resident_schedule: RefCounted
 var resident_runtime: RefCounted
+var resident_conversations: RefCounted
 var _plot_definitions: Array = []
 var _forage_definitions: Array = []
 var _resident_anchor_definitions: Array = []
@@ -64,7 +66,8 @@ func _init(plot_definitions: Array = [], content_override: Dictionary = {}, fora
 	foraging = FORAGING.new(inventory,forage,clock)
 	resident_schedule = RESIDENT_SCHEDULE.new(resident_anchor_definitions,content)
 	resident_runtime = RESIDENT_RUNTIME.new(resident_anchor_definitions,content)
-	if not clock.is_configured() or not inventory.is_configured() or not wallet.is_configured() or not farm.is_configured() or not farming.is_configured() or not storage.is_configured() or not storage_transfer.is_configured() or not economy.is_configured() or not forage.is_configured() or not foraging.is_configured() or not resident_schedule.is_configured() or not resident_runtime.is_configured():
+	resident_conversations = RESIDENT_CONVERSATIONS.new(content)
+	if not clock.is_configured() or not inventory.is_configured() or not wallet.is_configured() or not farm.is_configured() or not farming.is_configured() or not storage.is_configured() or not storage_transfer.is_configured() or not economy.is_configured() or not forage.is_configured() or not foraging.is_configured() or not resident_schedule.is_configured() or not resident_runtime.is_configured() or not resident_conversations.is_configured():
 		configuration_error = "GAMEPLAY_SESSION_DOMAIN_INVALID"
 
 func is_configured() -> bool:
@@ -224,6 +227,7 @@ func projection() -> Dictionary:
 		"forage":forage.projection(clock.current_day()),
 		"residents":resident_schedule.projection(clock.game_minute,false),
 		"resident_runtime":resident_runtime.projection(),
+		"conversations":resident_conversations.projection(),
 		"farm":farm.projection()
 	}
 
@@ -284,7 +288,8 @@ func restore(snapshot_value: Variant) -> bool:
 	var next_journal: RefCounted = JOURNAL.new()
 	var next_resident_schedule: RefCounted = RESIDENT_SCHEDULE.new(_resident_anchor_definitions,content)
 	var next_resident_runtime: RefCounted = RESIDENT_RUNTIME.new(_resident_anchor_definitions,content)
-	if not next_clock.is_configured() or not next_inventory.is_configured() or not next_wallet.is_configured() or not next_farm.is_configured() or not next_storage.is_configured() or not next_forage.is_configured() or not next_resident_schedule.is_configured() or not next_resident_runtime.is_configured():
+	var next_resident_conversations: RefCounted = RESIDENT_CONVERSATIONS.new(content)
+	if not next_clock.is_configured() or not next_inventory.is_configured() or not next_wallet.is_configured() or not next_farm.is_configured() or not next_storage.is_configured() or not next_forage.is_configured() or not next_resident_schedule.is_configured() or not next_resident_runtime.is_configured() or not next_resident_conversations.is_configured():
 		return false
 	if not next_clock.restore(snapshot_value.clock):
 		return false
@@ -320,11 +325,33 @@ func restore(snapshot_value: Variant) -> bool:
 	foraging = next_foraging
 	resident_schedule = next_resident_schedule
 	resident_runtime = next_resident_runtime
+	resident_conversations = next_resident_conversations
 	journal = next_journal
 	return true
 
 func update_resident_runtime(value: Variant) -> bool:
 	return resident_runtime != null and resident_runtime.update_runtime(value)
+
+func invite_resident_conversation(conversation_id: String, inviter_id: String, invitee_id: String, space_id: String) -> Dictionary:
+	return resident_conversations.invite(conversation_id,inviter_id,invitee_id,space_id)
+
+func approach_resident_conversation(conversation_id: String) -> Dictionary:
+	return resident_conversations.mark_approaching(conversation_id)
+
+func begin_resident_conversation(conversation_id: String) -> Dictionary:
+	return resident_conversations.begin_participation(conversation_id)
+
+func end_resident_conversation(conversation_id: String) -> Dictionary:
+	return resident_conversations.end(conversation_id)
+
+func cancel_resident_conversation(conversation_id: String) -> Dictionary:
+	return resident_conversations.cancel(conversation_id)
+
+func release_resident_conversations_for_space(space_id: String) -> Array:
+	return resident_conversations.release_space(space_id)
+
+func clear_resident_conversations() -> int:
+	return resident_conversations.clear_all()
 
 func clear_receipts() -> void:
 	if journal != null:
