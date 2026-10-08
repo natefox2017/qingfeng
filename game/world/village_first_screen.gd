@@ -332,8 +332,8 @@ func resolve_interaction_target() -> Dictionary:
 			"kind":"door",
 			"interaction_id":"door.village.farm",
 			"target_space_id":"space.farm",
-			"arrival_anchor_id":"BridgeEast",
-			"arrival_facing":"west"
+			"arrival_anchor_id":"VillagePathArrival",
+			"arrival_facing":"south"
 		}
 	if _marker_reachable($Anchors/ShopDoorInteract):
 		return {

@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/chapter1/objects/chicken_coop_body.png" id="coop_body"]
+[ext_resource type="Texture2D" path="res://assets/chapter1/objects/chicken_coop_roof.png" id="coop_roof"]
+
+[sub_resource type="RectangleShape2D" id="CoopShape"]
+size = Vector2(44, 24)
+
+[node name="ChickenCoop" type="Node2D"]
+
+[node name="Footprint" type="StaticBody2D" parent="."]
+position = Vector2(0, -12)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Footprint"]
+shape = SubResource("CoopShape")
+
+[node name="Body" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("coop_body")
+offset = Vector2(-36, -86)
+
+[node name="Roof" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("coop_roof")
+offset = Vector2(-36, -86)
+z_index = 1

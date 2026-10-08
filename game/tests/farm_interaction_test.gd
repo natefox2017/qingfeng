@@ -53,7 +53,7 @@ func run() -> void:
 		return
 
 	var player: CharacterBody2D = app.room.get_player()
-	player.position = Vector2(272,144)
+	player.position = app.room.get_node("FarmPlots/Plot004").position + Vector2(0,16)
 	player.facing = &"north"
 	check(app.room.resolve_plot_target() == "plot.farm.004", "world resolves nearest reachable plot in facing direction")
 	check(app.gameplay_session.inventory.selected_slot_index == 0, "hoe starts selected")

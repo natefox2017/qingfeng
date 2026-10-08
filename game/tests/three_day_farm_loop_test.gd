@@ -44,7 +44,7 @@ func use_plot() -> void:
 	finish_farm_action()
 
 func enter_house() -> bool:
-	app.room.get_player().position = Vector2(144,160)
+	app.room.get_player().position = app.room.get_anchor_position("HouseDoorArrival")
 	app.room.get_player().facing = &"north"
 	app._unhandled_key_input(key(KEY_E))
 	return await wait_space("space.house")
@@ -81,7 +81,7 @@ func run() -> void:
 		return
 
 	# Day 1: till, sow and water one player-owned plot through the real E path.
-	app.room.get_player().position = Vector2(272,144)
+	app.room.get_player().position = app.room.get_node("FarmPlots/Plot004").position + Vector2(0,16)
 	app.room.get_player().facing = &"north"
 	use_plot()
 	check(app.gameplay_session.farm.get_plot("plot.farm.004").state == "tilled", "day one E tills plot")
@@ -104,7 +104,7 @@ func run() -> void:
 	# Return to farm, water on day 2, then sleep again.
 	check(await return_farm(), "day two returns to farm through house door")
 	check(app.room.farm_visual_state("plot.farm.004").growth_days == 1, "farm visual refreshes settled state after interior rest")
-	app.room.get_player().position = Vector2(272,144)
+	app.room.get_player().position = app.room.get_node("FarmPlots/Plot004").position + Vector2(0,16)
 	app.room.get_player().facing = &"north"
 	use_plot()
 	check(app.gameplay_session.farm.get_plot("plot.farm.004").is_watered, "day two E waters growing crop")
@@ -116,7 +116,7 @@ func run() -> void:
 	# Day 3 harvest, save, kill world route and reload full schema-seven state.
 	check(await return_farm(), "day three returns to farm")
 	check(app.room.farm_visual_state("plot.farm.004").state == "mature", "mature state projects into farm world")
-	app.room.get_player().position = Vector2(272,144)
+	app.room.get_player().position = app.room.get_node("FarmPlots/Plot004").position + Vector2(0,16)
 	app.room.get_player().facing = &"north"
 	var radish_before: int = app.gameplay_session.inventory.quantity_of("item.radish")
 	use_plot()

@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/chapter1/objects/doghouse.png" id="doghouse"]
+
+[sub_resource type="RectangleShape2D" id="DoghouseShape"]
+size = Vector2(28, 18)
+
+[node name="YardDoghouse" type="Node2D"]
+
+[node name="Footprint" type="StaticBody2D" parent="."]
+position = Vector2(0, -9)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Footprint"]
+shape = SubResource("DoghouseShape")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("doghouse")
+offset = Vector2(-32, -78)

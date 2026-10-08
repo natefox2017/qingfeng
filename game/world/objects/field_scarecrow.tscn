@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/chapter1/objects/scarecrow.png" id="scarecrow"]
+
+[sub_resource type="RectangleShape2D" id="ScarecrowShape"]
+size = Vector2(10, 8)
+
+[node name="FieldScarecrow" type="Node2D"]
+
+[node name="Footprint" type="StaticBody2D" parent="."]
+position = Vector2(0, -4)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Footprint"]
+shape = SubResource("ScarecrowShape")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("scarecrow")
+offset = Vector2(-24, -62)

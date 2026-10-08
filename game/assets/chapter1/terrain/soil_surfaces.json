@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "review_status": "proposed",
+  "source_path": "game/assets/chapter1/terrain/soil_surfaces_16.png",
+  "source_png": "art/sources/chapter1/terrain/soil_surfaces_16.png",
+  "source_sha256": "bb61c7e91ec2ad9345b1bd61e73a803f1ccc6dcb4180d77a6a94e412ea55e5e2",
+  "editable_source": "art/sources/chapter1/terrain/soil_surfaces_16.pxo",
+  "size_px": [
+    64,
+    16
+  ],
+  "tile_size_px": [
+    16,
+    16
+  ],
+  "margin_px": [
+    0,
+    0
+  ],
+  "separation_px": [
+    0,
+    0
+  ],
+  "atlas_source_id": 1,
+  "terrain_mode": "explicit_state_tiles_no_peering",
+  "collision": "none; walkable ground or decoration only",
+  "regions": [
+    {
+      "region_id": "dirt_full",
+      "asset_id": "asset.terrain.chapter1.dirt_path",
+      "rect_px": [
+        0,
+        0,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "source_png": "art/sources/chapter1/terrain/dirt_full_16.png",
+      "source_sha256": "b564bc64670589a4b16ba2cc2ef6a4675b962502c1c90a162be4f829b95eb1d2",
+      "content_bounds_px": [
+        0,
+        0,
+        16,
+        16
+      ]
+    },
+    {
+      "region_id": "soil_untilled",
+      "asset_id": "asset.terrain.chapter1.soil",
+      "rect_px": [
+        16,
+        0,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "source_png": "art/sources/chapter1/terrain/soil_untilled_16.png",
+      "source_sha256": "36e43720758302eab443200b67a72376c559314e570c89e193d5269d90b4c96d",
+      "content_bounds_px": [
+        0,
+        0,
+        16,
+        16
+      ]
+    },
+    {
+      "region_id": "soil_tilled",
+      "asset_id": "asset.terrain.chapter1.soil",
+      "rect_px": [
+        32,
+        0,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "source_png": "art/sources/chapter1/terrain/soil_tilled_16.png",
+      "source_sha256": "a9a5d02546546f7a905ed4d8a8f326764d89086422c44e0d79717851d3f2233f",
+      "content_bounds_px": [
+        0,
+        0,
+        16,
+        16
+      ]
+    },
+    {
+      "region_id": "soil_wet",
+      "asset_id": "asset.terrain.chapter1.soil",
+      "rect_px": [
+        48,
+        0,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "source_png": "art/sources/chapter1/terrain/soil_wet_16.png",
+      "source_sha256": "1ba04b289a1ec7536373dd5842c8a3a40872c63dbdd4d049342236d68668d938",
+      "content_bounds_px": [
+        0,
+        0,
+        16,
+        16
+      ]
+    }
+  ],
+  "animations": [],
+  "provenance": {
+    "tool": "Pixelorama native pixel editor",
+    "reference_path": "art/approved/refs/world_chapter1_map.png",
+    "reference_sha256": "ba35eef32eb0a49a5e50ad8ec4498148845c8f4065d3695b315c4ea1286bddd7",
+    "method": "Native sparse dirt material recolor with authored furrows; broad PixelLab blotches replaced; same source1/regions.",
+    "reused_source": "art/sources/chapter1/terrain/dirt_base_16.png"
+  }
+}

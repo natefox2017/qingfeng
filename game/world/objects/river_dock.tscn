@@ -1,0 +1,114 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/chapter1/river/dock_deck.png" id="dock_deck"]
+
+[node name="RiverDock" type="Node2D"]
+
+[node name="Footprint" type="StaticBody2D" parent="."]
+collision_layer = 0
+collision_mask = 0
+
+[node name="Deck00" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("dock_deck")
+position = Vector2(-48, -16)
+
+[node name="Deck01" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("dock_deck")
+position = Vector2(-32, -16)
+
+[node name="Deck02" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("dock_deck")
+position = Vector2(-16, -16)
+
+[node name="Deck03" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("dock_deck")
+position = Vector2(0, -16)
+
+[node name="Deck04" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("dock_deck")
+position = Vector2(16, -16)
+
+[node name="Deck05" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("dock_deck")
+position = Vector2(32, -16)
+
+[node name="Deck06" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("dock_deck")
+position = Vector2(48, -16)
+
+[node name="Deck10" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("dock_deck")
+position = Vector2(-48, 0)
+
+[node name="Deck11" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("dock_deck")
+position = Vector2(-32, 0)
+
+[node name="Deck12" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("dock_deck")
+position = Vector2(-16, 0)
+
+[node name="Deck13" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("dock_deck")
+position = Vector2(0, 0)
+
+[node name="Deck14" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("dock_deck")
+position = Vector2(16, 0)
+
+[node name="Deck15" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("dock_deck")
+position = Vector2(32, 0)
+
+[node name="Deck16" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("dock_deck")
+position = Vector2(48, 0)
+
+[node name="Deck20" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("dock_deck")
+position = Vector2(-48, 16)
+
+[node name="Deck21" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("dock_deck")
+position = Vector2(-32, 16)
+
+[node name="Deck22" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("dock_deck")
+position = Vector2(-16, 16)
+
+[node name="Deck23" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("dock_deck")
+position = Vector2(0, 16)
+
+[node name="Deck24" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("dock_deck")
+position = Vector2(16, 16)
+
+[node name="Deck25" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("dock_deck")
+position = Vector2(32, 16)
+
+[node name="Deck26" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("dock_deck")
+position = Vector2(48, 16)

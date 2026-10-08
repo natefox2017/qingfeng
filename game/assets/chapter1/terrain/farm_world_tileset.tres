@@ -1,11 +1,12 @@
-[gd_resource type="TileSet" load_steps=7 format=3]
+[gd_resource type="TileSet" load_steps=9 format=3]
 
-[ext_resource type="Texture2D" path="res://assets/chapter1/terrain/grass_dirt_atlas_16.png" id="grass_dirt"]
+[ext_resource type="Texture2D" path="res://assets/chapter1/terrain/grass_dirt_atlas_16.png" id="1_b6fcr"]
+[ext_resource type="Texture2D" path="res://assets/chapter1/terrain/soil_surfaces_16.png" id="2_6oypt"]
+[ext_resource type="Texture2D" path="res://assets/chapter1/terrain/ground_decor_16.png" id="3_m8mrs"]
 [ext_resource type="Texture2D" path="res://assets/phase0/farm_terrain_16.png" id="phase0"]
-[ext_resource type="Texture2D" path="res://assets/chapter1/terrain/dirt_base_16.png" id="dirt_base"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3tpl6"]
-texture = ExtResource("grass_dirt")
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3ayjt"]
+texture = ExtResource("1_b6fcr")
 0:0/0 = 0
 0:0/0/terrain_set = 0
 0:0/0/terrain = 0
@@ -140,6 +141,20 @@ texture = ExtResource("grass_dirt")
 2:4/0/terrains_peering_bit/left_side = 1
 2:4/0/terrains_peering_bit/top_side = 1
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_w08py"]
+texture = ExtResource("2_6oypt")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_eshvq"]
+texture = ExtResource("3_m8mrs")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+
 [sub_resource type="TileSetAtlasSource" id="Phase0Atlas"]
 texture = ExtResource("phase0")
 texture_region_size = Vector2i(16, 16)
@@ -176,19 +191,13 @@ texture_region_size = Vector2i(16, 16)
 6:3/0 = 0
 7:3/0 = 0
 
-
-[sub_resource type="TileSetAtlasSource" id="DirtBaseAtlas"]
-texture = ExtResource("dirt_base")
-texture_region_size = Vector2i(16, 16)
-0:0/0 = 0
-
 [resource]
-tile_size = Vector2i(16, 16)
-sources/0 = SubResource("Phase0Atlas")
 terrain_set_0/mode = 2
 terrain_set_0/terrain_0/name = "Spring grass"
 terrain_set_0/terrain_0/color = Color(0.5, 0.34375, 0.25, 1)
 terrain_set_0/terrain_1/name = "Dirt path"
 terrain_set_0/terrain_1/color = Color(0.5, 0.4375, 0.25, 1)
-sources/1 = SubResource("TileSetAtlasSource_3tpl6")
-sources/2 = SubResource("DirtBaseAtlas")
+sources/0 = SubResource("TileSetAtlasSource_3ayjt")
+sources/1 = SubResource("TileSetAtlasSource_w08py")
+sources/2 = SubResource("TileSetAtlasSource_eshvq")
+sources/3 = SubResource("Phase0Atlas")

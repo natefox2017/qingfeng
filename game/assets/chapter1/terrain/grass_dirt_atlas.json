@@ -2,7 +2,7 @@
   "schema_version": 1,
   "review_status": "proposed",
   "source_path": "game/assets/chapter1/terrain/grass_dirt_atlas_16.png",
-  "source_sha256": "e98c0d3ef92a66d386a35822f4938f088de56e0c0bf5691d842818af92a79682",
+  "source_sha256": "c95926e8b0e07162b1961c8be81e5901c76ae6d2449a58219fd8bb3f6609eb68",
   "size_px": [
     64,
     80
@@ -55,7 +55,7 @@
         "left": 0
       },
       "source_png": "art/sources/chapter1/terrain/grass_base_16.png",
-      "source_sha256": "5675855d822d258b1f46a88982e80c708085194bc1b58c9ddc2f1afdfd5cfddf"
+      "source_sha256": "913dc85d901e6fd100ce935c6c9f5d448c25678db7fb47e9c6c9163ea1169471"
     },
     {
       "region_id": "grass_light",
@@ -79,7 +79,7 @@
         "left": 0
       },
       "source_png": "art/sources/chapter1/terrain/grass_light_16.png",
-      "source_sha256": "c4efdeb76e811cf4d670c92fa9aeeaa0fb7e2ee3f455ab4bc28c28c4a08f158a"
+      "source_sha256": "62a5e98417bd07ac6b29468e17f8ac58a3ddb8b5c1fe2dacc857cdd08f8dbf3f"
     },
     {
       "region_id": "grass_dark",
@@ -103,7 +103,7 @@
         "left": 0
       },
       "source_png": "art/sources/chapter1/terrain/grass_dark_16.png",
-      "source_sha256": "23952f929f72aa30cab411ea38548b06f3518092f33ddcb5cf31918b646ac833"
+      "source_sha256": "22f5f3ce07c9037442aeb59c57fe593ee2176507503d174ba1968f5a86b87b92"
     },
     {
       "region_id": "dirt_mask_00",
@@ -127,7 +127,7 @@
         "left": 0
       },
       "source_png": "art/sources/chapter1/terrain/dirt_mask_00_16.png",
-      "source_sha256": "b60cf70d5b2c5dfb3fad168d00673ef60cd42cf0fccb10982c446cd5c943f488"
+      "source_sha256": "70e862b2ccb4a83642c5120069488ecf524e70d106d6bd3a3cbae5485351b49d"
     },
     {
       "region_id": "dirt_mask_01",
@@ -151,7 +151,7 @@
         "left": 0
       },
       "source_png": "art/sources/chapter1/terrain/dirt_mask_01_16.png",
-      "source_sha256": "ab0e58b260a2ae89a291abb1b80d398e8236550df2c1e1654a668d1c8ea2f540"
+      "source_sha256": "3a1d960e836154cac015613658065c9bd26ba84eb2163c6146cd53cfc6d8ba29"
     },
     {
       "region_id": "dirt_mask_02",
@@ -175,7 +175,7 @@
         "left": 0
       },
       "source_png": "art/sources/chapter1/terrain/dirt_mask_02_16.png",
-      "source_sha256": "67e2324ed406594d65b8fb2113cb242ca78ce5bc339dbfc1294ff2c9eb54652b"
+      "source_sha256": "ebbcf275f142dc8b85c63a553ba3d097c606d1d7f4852e9f5ab6e235ce7e29bf"
     },
     {
       "region_id": "dirt_mask_03",
@@ -199,7 +199,7 @@
         "left": 0
       },
       "source_png": "art/sources/chapter1/terrain/dirt_mask_03_16.png",
-      "source_sha256": "75d6d66668108923391a67e002e593d92ed2f3757e97b546c949da3b60b9e3bd"
+      "source_sha256": "3dd898ee8da0431105d428611cd21fa13909e48b52ba13cad31e8c82a8665697"
     },
     {
       "region_id": "dirt_mask_04",
@@ -223,7 +223,7 @@
         "left": 0
       },
       "source_png": "art/sources/chapter1/terrain/dirt_mask_04_16.png",
-      "source_sha256": "fb4e6ea1edbabe5700c31564f5f925fa9cd54313d3af901ebd7bdfce75a89b08"
+      "source_sha256": "582ae515ffa0e42d10f324ba328e51b60a7c155260509a5fb7526c15660c235e"
     },
     {
       "region_id": "dirt_mask_05",
@@ -247,7 +247,7 @@
         "left": 0
       },
       "source_png": "art/sources/chapter1/terrain/dirt_mask_05_16.png",
-      "source_sha256": "e8f718f17f95bc4090f8f92a7b03fa6c4ee8c4a9f1c11f16577fc9309c9960b2"
+      "source_sha256": "3ff0294882d6bc38700a6022c1d272d56ffd26754d385cd687d8009387c3efb4"
     },
     {
       "region_id": "dirt_mask_06",
@@ -271,7 +271,7 @@
         "left": 0
       },
       "source_png": "art/sources/chapter1/terrain/dirt_mask_06_16.png",
-      "source_sha256": "88ea65dd14b8e2bf3ee63535bd7251958b2431bf4f314c4a51c5bd00f0d6996c"
+      "source_sha256": "2511fcb0e0776be11e69b8222296c76f6bd5b9c44b76e4f3b81242bfc453c499"
     },
     {
       "region_id": "dirt_mask_07",
@@ -295,7 +295,7 @@
         "left": 0
       },
       "source_png": "art/sources/chapter1/terrain/dirt_mask_07_16.png",
-      "source_sha256": "1e521055b7b1caf92b25391e3244b94fbec15d027a22e41d4b27771dad4dd777"
+      "source_sha256": "8f93bffb11d4f48119b3bf6267611da94e381700e4ddfb667936d1bee0566211"
     },
     {
       "region_id": "dirt_mask_08",
@@ -319,7 +319,7 @@
         "left": 1
       },
       "source_png": "art/sources/chapter1/terrain/dirt_mask_08_16.png",
-      "source_sha256": "00a79ad1e4433fa7542dd18f7fc8655e93dfb8d466926815eb892fcb39d2c2b1"
+      "source_sha256": "6fbe73ce470a22f6e049e38d60e27764593643a85734cafca2fc6652d8dee09a"
     },
     {
       "region_id": "dirt_mask_09",
@@ -343,7 +343,7 @@
         "left": 1
       },
       "source_png": "art/sources/chapter1/terrain/dirt_mask_09_16.png",
-      "source_sha256": "3a647e67d8185e392442dab3aab3e731df2199a356f2e958ad6ab53ea4bf8201"
+      "source_sha256": "1493fc448d70ed466001c3cb86ebef38af27e17ae2ba59553d20c2b5187c6903"
     },
     {
       "region_id": "dirt_mask_10",
@@ -367,7 +367,7 @@
         "left": 1
       },
       "source_png": "art/sources/chapter1/terrain/dirt_mask_10_16.png",
-      "source_sha256": "d13fd2430b1f3addd7e7d971ac37cf9f441d7b0ce10665c9de1a600d8acfd633"
+      "source_sha256": "188810514f111ae397a444dc6c8aa4d01b2f6846533d91c4e9a3f2ff6e07ab3d"
     },
     {
       "region_id": "dirt_mask_11",
@@ -391,7 +391,7 @@
         "left": 1
       },
       "source_png": "art/sources/chapter1/terrain/dirt_mask_11_16.png",
-      "source_sha256": "27d0e3cd04f07bfce8731d442e5aa9fb7b8f968bd0e625daf542460785174c45"
+      "source_sha256": "9c1d4d353a25ac688b3fb14cbfe1fe0693488c8aa9d7cbb189db011628c42f71"
     },
     {
       "region_id": "dirt_mask_12",
@@ -415,7 +415,7 @@
         "left": 1
       },
       "source_png": "art/sources/chapter1/terrain/dirt_mask_12_16.png",
-      "source_sha256": "d5b003227f3cc85390e24345336287dea8bf0ac2a63923a3f2bf65c0d3d4707e"
+      "source_sha256": "3eea9b27e997d7aee5f4a7ade0e529259d261f93cbe46abb31f02685956a08fa"
     },
     {
       "region_id": "dirt_mask_13",
@@ -439,7 +439,7 @@
         "left": 1
       },
       "source_png": "art/sources/chapter1/terrain/dirt_mask_13_16.png",
-      "source_sha256": "aabcf01d7e63daca4fb7aa28822a309359d212b113c9b41675581b2dec0ada33"
+      "source_sha256": "f9d33a085ca5d1be93c5b9793724ef5e6503ebb7098f70824617a58948133d28"
     },
     {
       "region_id": "dirt_mask_14",
@@ -463,7 +463,7 @@
         "left": 1
       },
       "source_png": "art/sources/chapter1/terrain/dirt_mask_14_16.png",
-      "source_sha256": "d4b22ca87d2b2a85af5e573e5085a604a1ba7b5c0882bb82fbaf17258be7d2e6"
+      "source_sha256": "c7f029440b6fbdff26ec4ef60eab6b0336f21ca9bbebfa7dd022183ecf13de9e"
     },
     {
       "region_id": "dirt_mask_15",
@@ -487,7 +487,7 @@
         "left": 1
       },
       "source_png": "art/sources/chapter1/terrain/dirt_mask_15_16.png",
-      "source_sha256": "0be04e330b5f5acfbfa61d1efa638ca17b7f73d3e73a5bfcc10ab1b816c9e459"
+      "source_sha256": "8e2ffefa6df0aa16903dfc7f77aa2473d76a36d3f5a770ea9d8798d479634551"
     }
   ],
   "animations": [],
@@ -513,7 +513,7 @@
         16
       ]
     ],
-    "changes": "Native32 grass/dirt generated with actual approved-map crop forced palette. Grass reduced179->6 colors; dirt57->5 warm colors; exact16px crops, native border repair, existing19-region NESW path geometry retained. No downscaling.",
+    "changes": "Native32 grass/dirt generated with actual approved-map crop forced palette. Grass reduced179->6 colors; dirt57->5 warm colors; exact16px crops, native border repair, existing19-region NESW path geometry retained. No downscaling. Final native grass contrast compressed; shared border blade pixels replace uniform frame after seeing strong grid in real render. Sparse native redraw: actual approved-map sampled3 grass/3 dirt colors,84% grass base coverage; 4px paired leaf clusters, sparse small chips; no generated large spots retained.",
     "visual_reference": "art/approved/refs/world_chapter1_map.png",
     "reference_sha256": "ba35eef32eb0a49a5e50ad8ec4498148845c8f4065d3695b315c4ea1286bddd7",
     "rights": "Project-original phase0 source and approved project reference; see art/PHASE0_SOURCE.md and art/approved/ART_RIGHTS.md",
@@ -554,7 +554,7 @@
     ]
   },
   "remaining": "User visual review pending; proposed resources may be used for playable development per latest user instruction. Wide roads/stone paths/corners mode not covered.",
-  "palette_size": 11,
+  "palette_size": 7,
   "standalone_surfaces": [
     {
       "asset_id": "asset.terrain.chapter1.dirt_path",
@@ -571,7 +571,7 @@
         8,
         8
       ],
-      "source_sha256": "792da878520faca8920ed706b3a2cfde19a64d1f2076e833d6dba148bed3323c",
+      "source_sha256": "24d107b957d108da63a687ea3b3190d94745382dd30b4ba71ba654d8152ec210",
       "role": "full cell surface for multi-cell wide paths, no corners peering implied"
     }
   ]

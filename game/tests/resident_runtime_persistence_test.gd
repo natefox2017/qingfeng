@@ -37,14 +37,14 @@ func wait_space(space_id:String) -> bool:
 	return false
 
 func farm_to_village() -> bool:
-	app.room.get_player().position=Vector2(584,208)
-	app.room.get_player().facing=&"east"
+	app.room.get_player().position=app.room.get_anchor_position("VillagePathArrival")
+	app.room.get_player().facing=&"north"
 	app._unhandled_key_input(key(KEY_E))
 	return await wait_space("space.village")
 
 func village_to_farm() -> bool:
-	app.room.get_player().position=Vector2(48,180)
-	app.room.get_player().facing=&"west"
+	app.room.get_player().position=app.room.get_spawn_position()
+	app.room.get_player().facing=&"north"
 	app._unhandled_key_input(key(KEY_E))
 	return await wait_space("space.farm")
 

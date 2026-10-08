@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/chapter1/river/bank_cliff.png" id="cliff"]
+
+[node name="RiverBankCliff" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("cliff")
+offset = Vector2(-16, -32)

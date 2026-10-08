@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/chapter1/objects/fence_rails_v.png" id="rails"]
+[ext_resource type="Texture2D" path="res://assets/chapter1/objects/fence_post.png" id="post"]
+
+[sub_resource type="RectangleShape2D" id="VerticalFenceShape"]
+size = Vector2(8, 48)
+
+[node name="YardFenceVertical" type="Node2D"]
+
+[node name="Footprint" type="StaticBody2D" parent="."]
+position = Vector2(0, -22)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Footprint"]
+shape = SubResource("VerticalFenceShape")
+
+[node name="Rail" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("rails")
+
+[node name="PostTop" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("post")
+position = Vector2(0, -22)
+
+[node name="PostBottom" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("post")
+position = Vector2(0, 22)

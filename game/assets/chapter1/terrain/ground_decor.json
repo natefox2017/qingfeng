@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "review_status": "proposed",
+  "source_path": "game/assets/chapter1/terrain/ground_decor_16.png",
+  "source_png": "art/sources/chapter1/terrain/ground_decor_16.png",
+  "source_sha256": "bf802d003539b1b7cda92e5082da22b0d54aeb0778417a0256dba0fbb4919000",
+  "editable_source": "art/sources/chapter1/terrain/ground_decor_16.pxo",
+  "size_px": [
+    64,
+    16
+  ],
+  "tile_size_px": [
+    16,
+    16
+  ],
+  "margin_px": [
+    0,
+    0
+  ],
+  "separation_px": [
+    0,
+    0
+  ],
+  "atlas_source_id": 2,
+  "terrain_mode": "explicit_state_tiles_no_peering",
+  "collision": "none; walkable ground or decoration only",
+  "regions": [
+    {
+      "region_id": "grass_tuft",
+      "asset_id": "asset.terrain.chapter1.decor",
+      "rect_px": [
+        0,
+        0,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        14
+      ],
+      "source_png": "art/sources/chapter1/terrain/grass_tuft_16.png",
+      "source_sha256": "54bd1e454c5844dfa0f1251c382989dc6e328fc44fa9fbd18022edb2082c5704",
+      "content_bounds_px": [
+        5,
+        6,
+        12,
+        14
+      ]
+    },
+    {
+      "region_id": "white_flowers",
+      "asset_id": "asset.terrain.chapter1.decor",
+      "rect_px": [
+        16,
+        0,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        14
+      ],
+      "source_png": "art/sources/chapter1/terrain/white_flowers_16.png",
+      "source_sha256": "b2b5fea36346ce95cdc5cce1b90701d2321722e3fd4035f0f90254e39b9d65f6",
+      "content_bounds_px": [
+        4,
+        4,
+        13,
+        14
+      ]
+    },
+    {
+      "region_id": "yellow_flowers",
+      "asset_id": "asset.terrain.chapter1.decor",
+      "rect_px": [
+        32,
+        0,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        14
+      ],
+      "source_png": "art/sources/chapter1/terrain/yellow_flowers_16.png",
+      "source_sha256": "fec005d4cd107fbdd7ad5fba4f7fa7c35d893a2cff18ec418c3df17321ac559c",
+      "content_bounds_px": [
+        4,
+        4,
+        13,
+        14
+      ]
+    },
+    {
+      "region_id": "pebbles",
+      "asset_id": "asset.terrain.chapter1.decor",
+      "rect_px": [
+        48,
+        0,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        14
+      ],
+      "source_png": "art/sources/chapter1/terrain/pebbles_16.png",
+      "source_sha256": "161c42abe8a701341e4f4f1f11f7eab08ce35fb52207f0d403b9c6994ec86dd3",
+      "content_bounds_px": [
+        3,
+        8,
+        13,
+        14
+      ]
+    }
+  ],
+  "animations": [],
+  "provenance": {
+    "tool": "Pixelorama native pixel editor",
+    "reference_path": "art/approved/refs/world_chapter1_map.png",
+    "reference_sha256": "ba35eef32eb0a49a5e50ad8ec4498148845c8f4065d3695b315c4ea1286bddd7",
+    "method": "Hand-authored native16 transparent plant/flower/pebble clusters from approved-map appearance; no AI generation claimed",
+    "reused_source": null
+  }
+}

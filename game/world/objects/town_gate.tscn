@@ -1,0 +1,41 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/chapter1/town/stone_gate.png" id="gate"]
+
+[sub_resource type="RectangleShape2D" id="GatePostShape"]
+size = Vector2(12, 32)
+
+[sub_resource type="RectangleShape2D" id="GateTopShape"]
+size = Vector2(64, 10)
+
+[node name="TownGate" type="Node2D"]
+
+[node name="LeftPost" type="StaticBody2D" parent="."]
+position = Vector2(-24, -20)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftPost"]
+shape = SubResource("GatePostShape")
+
+[node name="RightPost" type="StaticBody2D" parent="."]
+position = Vector2(24, -20)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RightPost"]
+shape = SubResource("GatePostShape")
+
+[node name="Lintel" type="StaticBody2D" parent="."]
+position = Vector2(0, -54)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Lintel"]
+shape = SubResource("GateTopShape")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("gate")
+offset = Vector2(-32, -60)
+z_index = 0

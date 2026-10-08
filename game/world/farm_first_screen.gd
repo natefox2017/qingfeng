@@ -161,16 +161,19 @@ func apply_farm_projection(value: Variant) -> bool:
 		var marker: Marker2D = _marker_for_plot(plot_id)
 		var row: Dictionary = _farm_states[plot_id]
 		var state: String = String(row.get("state","untilled"))
-		var atlas := Vector2i(0,2)
+		var source_id := 1
+		var atlas := Vector2i(1,0)
 		match state:
 			"tilled":
-				atlas = Vector2i(2,2) if bool(row.get("is_watered",false)) else Vector2i(1,2)
+				atlas = Vector2i(3,0) if bool(row.get("is_watered",false)) else Vector2i(2,0)
 			"growing":
+				source_id = 3
 				atlas = Vector2i(3,2)
 			"mature":
+				source_id = 3
 				atlas = Vector2i(4,2)
 		var cell := Vector2i(int(round(marker.position.x/TILE_SIZE)),int(round(marker.position.y/TILE_SIZE)))
-		plot_tiles.set_cell(cell,0,atlas,0)
+		plot_tiles.set_cell(cell,source_id,atlas,0)
 	return true
 
 func farm_visual_state(plot_id: String) -> Dictionary:

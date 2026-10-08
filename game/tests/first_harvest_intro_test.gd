@@ -60,7 +60,7 @@ func run() -> void:
 	var source_save_id: String = app.active_save_id
 	check(not source_save_id.is_empty(),"intro crop is included in the initial saved snapshot")
 
-	app.room.get_player().position = Vector2(304,128)
+	app.room.get_player().position = app.room.get_node("FarmPlots/Plot003").position + Vector2(0,16)
 	app.room.get_player().facing = &"north"
 	app._unhandled_key_input(key(KEY_E))
 	check(app.farm_action.is_before_contact(),"harvest uses normal E contact action")
@@ -78,7 +78,7 @@ func run() -> void:
 		check(await wait_world() and app.room.get_space_id() == "space.farm","save reload returns to authored farm")
 		check(app.gameplay_session.farm.get_plot("plot.farm.003").state == "tilled" and app.gameplay_session.inventory.quantity_of("item.radish") == 1,"restore does not respawn or re-award tutorial radish")
 
-	app.room.get_player().position = Vector2(272,144)
+	app.room.get_player().position = app.room.get_node("FarmPlots/Plot004").position + Vector2(0,16)
 	app.room.get_player().facing = &"north"
 	app._unhandled_key_input(key(KEY_E))
 	finish_action()

@@ -59,16 +59,16 @@ func run() -> void:
 	var selected_before: int = app.gameplay_session.inventory.selected_slot_index
 
 	# Begin a valid transition then cancel it before the staged target can commit.
-	app.room.get_player().position = Vector2(144,160)
+	app.room.get_player().position = app.room.get_anchor_position("HouseDoorArrival")
 	app.room.get_player().facing = &"north"
 	app._unhandled_key_input(key(KEY_E))
 	check(app._transition_pending and app.locks.has_owner(&"transition"), "door E stages target and locks source input")
-	check(app.room.get_space_id() == "space.farm" and app.room.get_player().position == Vector2(144,160), "source world remains authoritative before commit")
+	check(app.room.get_space_id() == "space.farm" and app.room.get_player().position == app.room.get_anchor_position("HouseDoorArrival"), "source world remains authoritative before commit")
 	check(app.save_progress().error_code == "SAVE_TRANSITION_BUSY", "save rejects a half-staged door transition")
 	app._unhandled_key_input(key(KEY_ESCAPE))
 	await physics_frame
 	check(not app._transition_pending and app.room.get_space_id() == "space.farm", "Esc cancels staged door transition")
-	check(app.room.get_player().position == Vector2(144,160), "cancel leaves player at source position")
+	check(app.room.get_player().position == app.room.get_anchor_position("HouseDoorArrival"), "cancel leaves player at source position")
 
 	# Commit farm -> house.
 	app.room.get_player().facing = &"north"
@@ -110,10 +110,10 @@ func run() -> void:
 	app.room.get_player().facing = &"south"
 	app._unhandled_key_input(key(KEY_E))
 	check(await wait_space("space.farm"), "house door returns to farm")
-	check(app.room.get_player().position == Vector2(144,160) and app.room.get_player().facing == &"south", "farm arrival uses farm-owned safe anchor")
+	check(app.room.get_player().position == app.room.get_anchor_position("HouseDoorArrival") and app.room.get_player().facing == &"south", "farm arrival uses farm-owned safe anchor")
 
 	for cycle in range(20):
-		app.room.get_player().position = Vector2(144,160)
+		app.room.get_player().position = app.room.get_anchor_position("HouseDoorArrival")
 		app.room.get_player().facing = &"north"
 		app._unhandled_key_input(key(KEY_E))
 		if not await wait_space("space.house"):
