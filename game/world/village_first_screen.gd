@@ -9,6 +9,7 @@ const INTERACT_LATERAL_PX := 10.0
 var _forage_states: Dictionary = {}
 
 @onready var player: CharacterBody2D = $FootSorted/Player
+@onready var neighbor_resident: CharacterBody2D = $FootSorted/NeighborResident
 
 func set_input_enabled(enabled: bool) -> void:
 	player.set_input_enabled(enabled)
@@ -33,6 +34,8 @@ func layout_contract_valid() -> bool:
 	var resident_anchors := get_resident_anchor_definitions()
 	if resident_anchors.size() != $ResidentAnchors.get_child_count() or resident_anchors.is_empty():
 		return false
+	if not is_instance_valid(neighbor_resident) or not neighbor_resident.has_method("set_schedule_target") or String(neighbor_resident.resident_id)!="resident.neighbor":
+		return false
 	var resident_ids: Dictionary = {}
 	for definition: Dictionary in resident_anchors:
 		if resident_ids.has(definition.anchor_id):
@@ -55,6 +58,38 @@ func get_resident_anchor_definitions() -> Array:
 			definitions.append({"anchor_id":String(child.get_meta("anchor_id")),"space_id":SPACE_ID})
 	definitions.sort_custom(func(a:Dictionary,b:Dictionary): return a.anchor_id < b.anchor_id)
 	return definitions
+
+func apply_resident_projection(value: Variant) -> bool:
+	if not (value is Dictionary) or not value.has("residents") or not (value.residents is Array):
+		return false
+	for resident: Variant in value.residents:
+		if not (resident is Dictionary) or not resident.get("ok",false):
+			continue
+		if String(resident.get("resident_id",""))!="resident.neighbor":
+			continue
+		if String(resident.get("space_id",""))!=SPACE_ID:
+			neighbor_resident.clear_schedule_target()
+			neighbor_resident.visible=false
+			return true
+		var marker := _marker_for_resident_anchor(String(resident.get("anchor_id","")))
+		if marker==null:
+			return false
+		neighbor_resident.visible=true
+		return neighbor_resident.set_schedule_target(
+			String(resident.anchor_id),
+			marker.position,
+			String(resident.activity_id)
+		)
+	return false
+
+func resident_visual_state() -> Dictionary:
+	return neighbor_resident.projection() if is_instance_valid(neighbor_resident) else {}
+
+func _marker_for_resident_anchor(anchor_id:String) -> Marker2D:
+	for child: Node in $ResidentAnchors.get_children():
+		if child is Marker2D and String(child.get_meta("anchor_id",""))==anchor_id:
+			return child as Marker2D
+	return null
 
 func get_forage_definitions() -> Array:
 	var definitions: Array = []
