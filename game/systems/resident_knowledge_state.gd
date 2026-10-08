@@ -23,10 +23,11 @@ func is_configured() -> bool:
 func learn_from_fact(resident_id: String, fact: Variant, acquisition: String) -> Dictionary:
 	if not is_configured():
 		return _failure("RESIDENT_KNOWLEDGE_NOT_CONFIGURED")
-	var valid := _validate_fact_for(resident_id,fact,acquisition)
+	var valid: Dictionary = _validate_fact_for(resident_id,fact,acquisition)
 	if not valid.ok:
 		return valid
-	return _runtime.add_known_events(resident_id,[String(fact.event_id)])
+	var learned: Dictionary = _runtime.add_known_events(resident_id,[String(fact.event_id)])
+	return learned
 
 func learn_from_command_result(resident_id: String, result: Variant, facts_by_id: Variant, acquisition: String) -> Dictionary:
 	if not is_configured():
@@ -39,16 +40,17 @@ func learn_from_command_result(resident_id: String, result: Variant, facts_by_id
 		return _failure("RESIDENT_KNOWLEDGE_SOURCE_NOT_SUCCESSFUL")
 	if result.event_ids.is_empty() or not (facts_by_id is Dictionary):
 		return _failure("RESIDENT_KNOWLEDGE_SOURCE_EMPTY")
-	var ids: Array = []
+	var ids: Array[String] = []
 	for event_id: Variant in result.event_ids:
 		if not (event_id is String) or not facts_by_id.has(event_id):
 			return _failure("RESIDENT_KNOWLEDGE_FACT_MISSING")
 		var fact: Variant = facts_by_id[event_id]
-		var valid := _validate_fact_for(resident_id,fact,acquisition)
+		var valid: Dictionary = _validate_fact_for(resident_id,fact,acquisition)
 		if not valid.ok or String(fact.event_id)!=String(event_id):
 			return valid if not valid.ok else _failure("RESIDENT_KNOWLEDGE_FACT_MISMATCH")
 		ids.append(String(event_id))
-	return _runtime.add_known_events(resident_id,ids)
+	var learned: Dictionary = _runtime.add_known_events(resident_id,ids)
+	return learned
 
 func tell_event(teller_id: String, receiver_id: String, event_id: String) -> Dictionary:
 	if not is_configured():
@@ -57,7 +59,8 @@ func tell_event(teller_id: String, receiver_id: String, event_id: String) -> Dic
 		return _failure("RESIDENT_KNOWLEDGE_TELL_INVALID")
 	if not _runtime.knows_event(teller_id,event_id):
 		return _failure("RESIDENT_KNOWLEDGE_TELLER_UNKNOWN")
-	return _runtime.add_known_events(receiver_id,[event_id])
+	var learned: Dictionary = _runtime.add_known_events(receiver_id,[event_id])
+	return learned
 
 func record_summary(resident_id: String, summary_id: String, summary_text: String, source_event_ids: Array, updated_at_game_minute: int) -> Dictionary:
 	if not is_configured():
@@ -76,14 +79,14 @@ func record_summary(resident_id: String, summary_id: String, summary_text: Strin
 	var rows: Dictionary = _summaries.get(resident_id,{})
 	if not rows.has(summary_id) and rows.size()>=MAX_SUMMARIES_PER_RESIDENT:
 		return _failure("RESIDENT_SUMMARY_FULL")
-	var row := {
+	var row: Dictionary = {
 		"resident_id":resident_id,
 		"summary_id":summary_id,
 		"summary_text":summary_text,
 		"source_event_ids":source_event_ids.duplicate(),
 		"updated_at_game_minute":updated_at_game_minute
 	}
-	var changed := not rows.has(summary_id) or rows[summary_id]!=row
+	var changed: bool = not rows.has(summary_id) or rows[summary_id]!=row
 	rows[summary_id]=row
 	_summaries[resident_id]=rows
 	return {"ok":true,"error_code":"","has_changes":changed,"summary":row.duplicate(true)}
@@ -108,13 +111,14 @@ func _validate_fact_for(resident_id: String, fact: Variant, acquisition: String)
 	if acquisition==ACQUISITION_EXPERIENCED and resident_id not in fact.participant_ids:
 		return _failure("RESIDENT_KNOWLEDGE_NOT_PARTICIPANT")
 	if acquisition==ACQUISITION_OBSERVED:
-		var runtime_row := _runtime_row(resident_id)
+		var runtime_row: Dictionary = _runtime_row(resident_id)
 		if runtime_row.is_empty() or String(runtime_row.space_id)!=String(fact.space_id):
 			return _failure("RESIDENT_KNOWLEDGE_NOT_OBSERVER")
 	return {"ok":true,"error_code":"","has_changes":false}
 
 func _runtime_row(resident_id: String) -> Dictionary:
-	for row: Variant in _runtime.projection().residents:
+	var projection: Dictionary = _runtime.projection()
+	for row: Variant in projection.residents:
 		if row is Dictionary and String(row.get("resident_id",""))==resident_id:
 			return row
 	return {}
@@ -140,9 +144,13 @@ func _valid_fact(value: Variant) -> bool:
 		if not (actor_id is String) or actor_id.is_empty() or participants.has(actor_id):
 			return false
 		participants[actor_id]=true
-	var command_source_ok := value.has("source_command_id") and (value.source_command_id==null or (value.source_command_id is String and not value.source_command_id.is_empty()))
-	var system_source_ok := value.has("source_system") and value.source_system is String and not value.source_system.is_empty()
-	return command_source_ok or system_source_ok
+	if not value.has("source_command_id"):
+		return false
+	var command_source_ok: bool = value.source_command_id is String and not value.source_command_id.is_empty()
+	var system_source_ok: bool = value.has("source_system") and value.source_system is String and not value.source_system.is_empty()
+	if value.source_command_id==null:
+		return system_source_ok
+	return command_source_ok
 
 func _failure(code: String) -> Dictionary:
 	return {"ok":false,"error_code":code,"has_changes":false}
