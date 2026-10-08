@@ -152,6 +152,37 @@ func run() -> void:
 		check(app.gameplay_session.fact_events.has_event("event.resident.neighbor.greeting.day.2.1"),"next day creates a new bounded greeting fact")
 		check(app.gameplay_session.resident_runtime.relationship_points_for("resident.neighbor")==relationship_before+2,"next day greeting can grant the configured relationship point again")
 
+		open_neighbor_dialogue()
+		await process_frame
+		check(app.view.buttons.has("gift_resident") and (app.view.buttons["gift_resident"] as Button).disabled,"non-giftable selected tool disables dialogue gift button")
+		app._on_action("close_dialogue",{})
+
+		check(app.gameplay_session.inventory.add("item.wild_herb",2).ok,"player obtains two giftable forage items")
+		var gift_slot_index := -1
+		for index in range(app.gameplay_session.inventory.slots.size()):
+			var slot: Variant = app.gameplay_session.inventory.slots[index]
+			if slot!=null and String(slot.item_id)=="item.wild_herb":
+				gift_slot_index=index
+		check(gift_slot_index>=0,"forage occupies one authoritative backpack slot")
+		if gift_slot_index>=0:
+			app._select_inventory_slot(gift_slot_index)
+			open_neighbor_dialogue()
+			await process_frame
+			check(app.view.buttons.has("gift_resident") and not (app.view.buttons["gift_resident"] as Button).disabled,"selected wild herb enables dialogue gift action")
+			var before_gift_quantity: int = int(app.gameplay_session.inventory.quantity_of("item.wild_herb"))
+			var before_gift_relationship: int = int(app.gameplay_session.resident_runtime.relationship_points_for("resident.neighbor"))
+			app._on_action("gift_resident",{})
+			await process_frame
+			check(app.locks.has_owner(&"dialogue") and app.gameplay_session.clock.is_paused(),"gift keeps the resident conversation and world pause active")
+			check(app.gameplay_session.inventory.quantity_of("item.wild_herb")==before_gift_quantity-1,"gift consumes exactly one selected wild herb")
+			check(app.gameplay_session.resident_runtime.relationship_points_for("resident.neighbor")==before_gift_relationship+2,"gift adds configured relationship points")
+			check(app.gameplay_session.fact_events.has_event("event.resident.neighbor.gift.day.2.1"),"gift commits one command-sourced CORE FactEvent")
+			check(app.view.buttons.has("gift_resident") and (app.view.buttons["gift_resident"] as Button).disabled,"same-day gift quota disables another gift")
+			var feedback := app.view.dialogue_panel.find_child("DialogueGiftHint",true,false) as Label
+			check(feedback!=null and feedback.text.contains("已送出野菜"),"dialogue shows successful item-transfer feedback")
+			app._on_action("close_dialogue",{})
+			check(not app.locks.has_owner(&"dialogue"),"dialogue closes normally after gifting")
+
 	var told: Dictionary = app.gameplay_session.resident_tell_event("resident.neighbor","resident.grocer",FIRST_EVENT)
 	check(told.ok and app.gameplay_session.resident_runtime.knows_event("resident.grocer",FIRST_EVENT),"explicit telling can teach the logged fact after the teller knows it")
 

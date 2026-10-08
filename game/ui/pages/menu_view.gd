@@ -512,9 +512,9 @@ func show_page(page: String, context: Dictionary) -> void:
 			dialogue_panel.anchor_bottom=1.0
 			dialogue_panel.offset_left=-270
 			dialogue_panel.offset_right=270
-			dialogue_panel.offset_top=-132
-			dialogue_panel.offset_bottom=-12
-			dialogue_panel.add_theme_stylebox_override("panel",UI_THEME.panel_style())
+			dialogue_panel.offset_top=-176
+			dialogue_panel.offset_bottom=-8
+			dialogue_panel.add_theme_stylebox_override("panel",UI_THEME.section_style())
 			add_child(dialogue_panel)
 			var dialogue_column:=VBoxContainer.new();dialogue_column.add_theme_constant_override("separation",5);dialogue_panel.add_child(dialogue_column)
 			var speaker:=Label.new();speaker.name="DialogueSpeaker";speaker.text=String(dialogue.get("display_name",""));UI_THEME.apply_text_role(speaker,UI_THEME.ROLE_HEADING);dialogue_column.add_child(speaker)
@@ -523,7 +523,27 @@ func show_page(page: String, context: Dictionary) -> void:
 			var line:=Label.new();line.name="DialogueText";line.text=String(dialogue.get("text",""));line.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;line.size_flags_vertical=Control.SIZE_EXPAND_FILL;UI_THEME.apply_text_role(line,UI_THEME.ROLE_BODY);dialogue_column.add_child(line)
 			if not String(context.get("error","")).is_empty():
 				var dialogue_error:=Label.new();dialogue_error.text=String(context.error);dialogue_error.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;UI_THEME.apply_text_role(dialogue_error,UI_THEME.ROLE_ERROR);dialogue_column.add_child(dialogue_error)
+			var offer: Dictionary = context.get("gift_offer",{})
+			var gift_hint_text := ""
+			match String(offer.get("reason","")):
+				"RESIDENT_GIFT_FIRST_MEETING_REQUIRED":
+					gift_hint_text="初次相识后才能送礼"
+				"RESIDENT_GIFT_DAILY_LIMIT":
+					gift_hint_text="今天已经送过礼 · 明天再来"
+				"RESIDENT_GIFT_ITEM_NOT_ALLOWED":
+					gift_hint_text="请选择萝卜或野菜再交谈"
+				"RESIDENT_GIFT_SELECTED_EMPTY":
+					gift_hint_text="快捷栏没有选中物品"
+				_:
+					gift_hint_text="赠送当前快捷栏物品"
+			if not String(context.get("dialogue_feedback","")).is_empty():
+				gift_hint_text=String(context.dialogue_feedback)
+			var gift_hint:=label(gift_hint_text,dialogue_column);gift_hint.name="DialogueGiftHint";UI_THEME.apply_text_role(gift_hint,UI_THEME.ROLE_CAPTION)
 			var dialogue_actions:=HBoxContainer.new();dialogue_actions.alignment=BoxContainer.ALIGNMENT_END;dialogue_column.add_child(dialogue_actions)
+			var can_gift: bool = bool(offer.get("can_gift",false))
+			var gift_description := "送出一份%s · 关系 +%d" % [String(offer.get("item_name","物品")),int(offer.get("relationship_points",0))] if can_gift else gift_hint_text
+			button(dialogue_actions,"gift_resident","gift",gift_description,{},can_gift)
+			var gift_caption:=label("赠礼",dialogue_actions);gift_caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;UI_THEME.apply_text_role(gift_caption,UI_THEME.ROLE_CAPTION)
 			button(dialogue_actions,"close_dialogue","accept","结束交谈 / Esc")
 			var close_caption:=label("结束",dialogue_actions);UI_THEME.apply_text_role(close_caption,UI_THEME.ROLE_CAPTION)
 		"world":

@@ -57,6 +57,7 @@ var _resident_conversation_end_game_minute := -1
 var _player_dialogue_conversation_id := ""
 var _player_dialogue_resident_id := ""
 var _dialogue_context: Dictionary = {}
+var _dialogue_feedback := ""
 
 @onready var view: Control = $Interface/Screen
 
@@ -367,6 +368,7 @@ func return_to_title() -> void:
 	_player_dialogue_conversation_id = ""
 	_player_dialogue_resident_id = ""
 	_dialogue_context.clear()
+	_dialogue_feedback = ""
 	_clear_movement()
 	_update_interface()
 
@@ -511,11 +513,58 @@ func _begin_player_resident_dialogue(target: Dictionary) -> void:
 	_player_dialogue_conversation_id = conversation_id
 	_player_dialogue_resident_id = resident_id
 	_dialogue_context = context.duplicate(true)
+	_dialogue_feedback = ""
 	locks.set_locked(&"dialogue",true)
 	_page = "dialogue"
 	last_error = ""
 	_refresh_farm_world()
 	_update_interface()
+
+func _gift_selected_to_resident() -> void:
+	if state!=State.WORLD or gameplay_session==null or not locks.has_owner(&"dialogue") or _player_dialogue_resident_id.is_empty():
+		return
+	var offer: Dictionary = gameplay_session.resident_gift_offer(_player_dialogue_resident_id)
+	if not bool(offer.get("can_gift",false)):
+		last_error = "现在不能赠礼：" + _resident_gift_error_text(String(offer.get("reason","")))
+		_update_interface()
+		return
+	var command := {
+		"protocol_version":1,
+		"command_id":_new_command_id("resident.gift"),
+		"session_id":String(active_snapshot.get("session_id","")),
+		"actor_id":"actor.player",
+		"action":"resident.gift",
+		"expected_revision":int(gameplay_session.inventory.revision),
+		"payload":{
+			"resident_id":_player_dialogue_resident_id,
+			"item_id":String(offer.item_id),
+			"quantity":1
+		}
+	}
+	var result: Dictionary = gameplay_session.execute(command)
+	if result.ok:
+		_dialogue_feedback = "已送出%s，关系 +%d。今日赠礼已完成。" % [String(offer.item_name),int(offer.relationship_points)]
+		last_error = ""
+	else:
+		last_error = "赠礼未完成：" + _resident_gift_error_text(String(result.error_code))
+	_update_interface()
+
+func _resident_gift_error_text(code: String) -> String:
+	match code:
+		"RESIDENT_GIFT_FIRST_MEETING_REQUIRED":
+			return "先认识对方，下次交谈再送礼。"
+		"RESIDENT_GIFT_DAILY_LIMIT":
+			return "今天已经送过礼了，明天再来。"
+		"RESIDENT_GIFT_ITEM_NOT_ALLOWED":
+			return "当前物品不能赠送；请选择萝卜或野菜。"
+		"RESIDENT_GIFT_SELECTED_EMPTY":
+			return "当前快捷槽没有物品。"
+		"STALE_REVISION":
+			return "背包状态已变化，请重新尝试。"
+		"INVENTORY_INSUFFICIENT_ITEM":
+			return "背包里没有足够的物品。"
+		_:
+			return code
 
 func _finish_player_resident_dialogue() -> void:
 	if not locks.has_owner(&"dialogue") or gameplay_session == null or _player_dialogue_conversation_id.is_empty():
@@ -534,6 +583,7 @@ func _finish_player_resident_dialogue() -> void:
 	_player_dialogue_conversation_id = ""
 	_player_dialogue_resident_id = ""
 	_dialogue_context.clear()
+	_dialogue_feedback = ""
 	locks.set_locked(&"dialogue",false)
 	_page = "title"
 	last_error = ""
@@ -1143,6 +1193,8 @@ func _update_interface() -> void:
 		context["gameplay"] = gameplay_session.projection()
 	if locks.has_owner(&"dialogue"):
 		context["dialogue"] = _dialogue_context.duplicate(true)
+		context["gift_offer"] = gameplay_session.resident_gift_offer(_player_dialogue_resident_id)
+		context["dialogue_feedback"] = _dialogue_feedback
 	if state == State.WORLD:
 		context.player_name = active_snapshot.get("player_name","")
 	if page in ["title","load"]:
@@ -1209,7 +1261,7 @@ func _on_action(action: String, payload: Dictionary) -> void:
 		return
 	if action in ["confirm_settings","revert_settings"] and _page != "display_confirm":
 		return
-	if action in ["pause","resume","save","save_return","inventory","close_inventory","select_slot","close_storage","transfer_storage","close_trade","trade_buy","trade_sell","close_dialogue"] and state != State.WORLD:
+	if action in ["pause","resume","save","save_return","inventory","close_inventory","select_slot","close_storage","transfer_storage","close_trade","trade_buy","trade_sell","close_dialogue","gift_resident"] and state != State.WORLD:
 		return
 	if state == State.LOADING and action not in ["cancel_load","quit"]:
 		return
@@ -1321,6 +1373,8 @@ func _on_action(action: String, payload: Dictionary) -> void:
 					_focus_action = "load"
 		"close_dialogue":
 			_finish_player_resident_dialogue()
+		"gift_resident":
+			_gift_selected_to_resident()
 		"cancel_load":
 			return_to_title()
 		"inventory":

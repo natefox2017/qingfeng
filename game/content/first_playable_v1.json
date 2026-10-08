@@ -229,7 +229,12 @@
         ]
       }
     },
-    "greeting_relationship_points": 1
+    "greeting_relationship_points": 1,
+    "gift_relationship_points": 2,
+    "gift_item_ids": [
+      "item.radish",
+      "item.wild_herb"
+    ]
   },
   "dialogues": {
     "player_resident": {

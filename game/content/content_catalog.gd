@@ -96,10 +96,17 @@ static func validate(data: Variant) -> bool:
 			return false
 		if not forage.item_id in data.items or not _positive_int(forage.quantity) or not _positive_int(forage.respawn_days):
 			return false
-	if not _exact_keys(data.residents,["daily_greeting_limit","greeting_relationship_points","daily_gift_limit","definitions"]):
+	if not _exact_keys(data.residents,["daily_greeting_limit","greeting_relationship_points","daily_gift_limit","gift_relationship_points","gift_item_ids","definitions"]):
 		return false
-	if not _positive_int(data.residents.daily_greeting_limit) or not _positive_int(data.residents.greeting_relationship_points) or data.residents.greeting_relationship_points>1000 or not _positive_int(data.residents.daily_gift_limit):
+	if not _positive_int(data.residents.daily_greeting_limit) or not _positive_int(data.residents.greeting_relationship_points) or data.residents.greeting_relationship_points>1000 or not _positive_int(data.residents.daily_gift_limit) or not _positive_int(data.residents.gift_relationship_points) or data.residents.gift_relationship_points>1000:
 		return false
+	if not (data.residents.gift_item_ids is Array) or data.residents.gift_item_ids.is_empty() or data.residents.gift_item_ids.size()>16:
+		return false
+	var gift_item_ids: Dictionary = {}
+	for gift_item_id: Variant in data.residents.gift_item_ids:
+		if not (gift_item_id is String) or not data.items.has(gift_item_id) or gift_item_ids.has(gift_item_id):
+			return false
+		gift_item_ids[String(gift_item_id)]=true
 	if not (data.residents.definitions is Dictionary) or data.residents.definitions.size()!=3:
 		return false
 	for resident_id: Variant in data.residents.definitions:
