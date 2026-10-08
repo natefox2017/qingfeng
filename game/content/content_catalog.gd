@@ -40,7 +40,7 @@ static func _positive_number(value: Variant) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and float(value) > 0.0
 
 static func validate(data: Variant) -> bool:
-	if not _exact_keys(data, ["content_version","clock","inventory","storage","economy","shop","items","crops","forage","residents","new_game"]):
+	if not _exact_keys(data, ["content_version","clock","inventory","storage","economy","shop","items","crops","forage","residents","dialogues","new_game"]):
 		return false
 	if data.content_version != "first_playable_v1":
 		return false
@@ -145,6 +145,34 @@ static func validate(data: Variant) -> bool:
 			for activity_id: String in required_activities:
 				if not seen_activities.has(activity_id):
 					return false
+	if not _exact_keys(data.dialogues,["player_resident"]) or not (data.dialogues.player_resident is Dictionary) or data.dialogues.player_resident.is_empty():
+		return false
+	var dialogue_ids: Dictionary = {}
+	var dialogue_event_ids: Dictionary = {}
+	for resident_id: Variant in data.dialogues.player_resident:
+		if not (resident_id is String) or not data.residents.definitions.has(resident_id):
+			return false
+		var dialogue: Variant = data.dialogues.player_resident[resident_id]
+		if not _exact_keys(dialogue,["space_id","first_meeting","repeat"]):
+			return false
+		if not (dialogue.space_id is String) or not String(dialogue.space_id).begins_with("space.") or String(dialogue.space_id).length()>128:
+			return false
+		if not _exact_keys(dialogue.first_meeting,["dialogue_id","event_id","event_kind","text"]):
+			return false
+		if not _exact_keys(dialogue.repeat,["dialogue_id","text"]):
+			return false
+		for dialogue_id: Variant in [dialogue.first_meeting.dialogue_id,dialogue.repeat.dialogue_id]:
+			if not (dialogue_id is String) or not String(dialogue_id).begins_with("dialogue.") or String(dialogue_id).length()>128 or dialogue_ids.has(dialogue_id):
+				return false
+			dialogue_ids[String(dialogue_id)]=true
+		if not (dialogue.first_meeting.event_id is String) or not String(dialogue.first_meeting.event_id).begins_with("event.") or String(dialogue.first_meeting.event_id).length()>128 or dialogue_event_ids.has(dialogue.first_meeting.event_id):
+			return false
+		dialogue_event_ids[String(dialogue.first_meeting.event_id)]=true
+		if not (dialogue.first_meeting.event_kind is String) or dialogue.first_meeting.event_kind.is_empty() or String(dialogue.first_meeting.event_kind).length()>128:
+			return false
+		for text_value: Variant in [dialogue.first_meeting.text,dialogue.repeat.text]:
+			if not (text_value is String) or String(text_value).is_empty() or String(text_value).length()>512:
+				return false
 	if not _exact_keys(data.new_game, ["initial_items"]) or not (data.new_game.initial_items is Array):
 		return false
 	var occupied_slots := 0

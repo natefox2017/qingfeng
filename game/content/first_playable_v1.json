@@ -229,5 +229,22 @@
         ]
       }
     }
+  },
+  "dialogues": {
+    "player_resident": {
+      "resident.neighbor": {
+        "space_id": "space.village",
+        "first_meeting": {
+          "dialogue_id": "dialogue.neighbor.first_meeting",
+          "event_id": "event.resident.neighbor.met_player",
+          "event_kind": "resident.met_player",
+          "text": "刚搬来吧？我是住在村里的邻居。农庄那边风大，早晚记得添件衣服。以后在村里见到我，打声招呼就好。"
+        },
+        "repeat": {
+          "dialogue_id": "dialogue.neighbor.greeting",
+          "text": "今天也来村里转转？田里的事慢慢来，别把一天都赶得太紧。"
+        }
+      }
+    }
   }
 }
