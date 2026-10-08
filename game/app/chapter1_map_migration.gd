@@ -3,7 +3,7 @@ extends RefCounted
 ## Do not infer that arbitrary mismatched layouts are compatible.
 ## Original signed saves remain untouched; a new save writes the migrated layout.
 
-const LEGACY_PLOTS := {
+const LEGACY_PLOTS = {
 	"plot.farm.001": Vector2i(17, 7),
 	"plot.farm.002": Vector2i(18, 7),
 	"plot.farm.003": Vector2i(19, 7),
