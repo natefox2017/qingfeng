@@ -42,7 +42,7 @@ var _plot_definitions: Array = []
 var _forage_definitions: Array = []
 var _resident_anchor_definitions: Array = []
 
-func _init(plot_definitions: Array = [], content_override: Dictionary = {}, forage_definitions: Array = [], resident_anchor_definitions: Array = []) -> void:
+func _init(plot_definitions: Array = [], content_override: Dictionary = {}, forage_definitions: Array = [], resident_anchor_definitions: Array = [], initialize_intro: bool = false) -> void:
 	var source := content_override
 	if source.is_empty():
 		var result: Dictionary = CONTENT.load_current()
@@ -75,6 +75,10 @@ func _init(plot_definitions: Array = [], content_override: Dictionary = {}, fora
 	resident_knowledge = RESIDENT_KNOWLEDGE.new(resident_runtime,fact_events)
 	if not fact_events.is_configured() or not clock.is_configured() or not inventory.is_configured() or not wallet.is_configured() or not farm.is_configured() or not farming.is_configured() or not storage.is_configured() or not storage_transfer.is_configured() or not economy.is_configured() or not forage.is_configured() or not foraging.is_configured() or not resident_schedule.is_configured() or not resident_runtime.is_configured() or not resident_conversations.is_configured() or not resident_knowledge.is_configured():
 		configuration_error = "GAMEPLAY_SESSION_DOMAIN_INVALID"
+	elif initialize_intro:
+		var intro: Dictionary = content.new_game.intro
+		if not farm.initialize_intro_mature_plot(String(intro.mature_plot_id),String(intro.crop_id)):
+			configuration_error = "GAMEPLAY_SESSION_INTRO_INVALID"
 
 func is_configured() -> bool:
 	return configuration_error.is_empty() and journal != null
@@ -238,7 +242,8 @@ func projection() -> Dictionary:
 		"resident_knowledge":resident_knowledge.projection(),
 		"fact_events":fact_events.projection(),
 		"conversations":resident_conversations.projection(),
-		"farm":farm.projection()
+		"farm":farm.projection(),
+		"entry_guidance":content.new_game.intro.duplicate(true)
 	}
 
 func _item_projection() -> Dictionary:

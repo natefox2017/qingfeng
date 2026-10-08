@@ -155,7 +155,8 @@ func _activate_room(scene: PackedScene, requested_generation: int) -> void:
 			last_error = "无法读取权威居民日程锚点，未创建或恢复会话。"
 			return_to_title()
 			return
-		next_gameplay = GAMEPLAY.new(plot_definitions,{},forage_definitions,resident_anchor_definitions)
+		var seed_intro: bool = _entry_creates_save and not _entry_snapshot.has("gameplay")
+		next_gameplay = GAMEPLAY.new(plot_definitions,{},forage_definitions,resident_anchor_definitions,seed_intro)
 		if not next_gameplay.is_configured():
 			last_error = "玩法会话无法从权威农庄布局初始化。"
 			return_to_title()

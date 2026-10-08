@@ -69,7 +69,12 @@
         "item_id": "item.radish_seed",
         "quantity": 4
       }
-    ]
+    ],
+    "intro": {
+      "mature_plot_id": "plot.farm.003",
+      "practice_plot_id": "plot.farm.004",
+      "crop_id": "crop.radish"
+    }
   },
   "storage": {
     "chest_capacity": 24

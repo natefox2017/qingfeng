@@ -105,6 +105,25 @@ func _candidate(plot_id: Variant) -> Dictionary:
 		return {"ok":false,"error_code":"FARM_PLOT_UNKNOWN"}
 	return {"ok":true,"error_code":"","plot":plots[plot_id].duplicate(true)}
 
+func initialize_intro_mature_plot(plot_id: String, crop_id: String) -> bool:
+	# Only fresh session construction may seed the tutorial crop. Restore never calls this.
+	if not is_configured() or revision != 0 or not plots.has(plot_id) or not _crops.has(crop_id):
+		return false
+	var source: Dictionary = plots[plot_id]
+	if source.state != "untilled":
+		return false
+	var mature: Dictionary = source.duplicate(true)
+	mature.state = "mature"
+	mature.crop_id = crop_id
+	mature.growth_days = int(_crops[crop_id].growth_days)
+	mature.is_watered = false
+	mature.last_settled_day = 1
+	if not _valid_plot_state(mature):
+		return false
+	plots[plot_id] = mature
+	revision += 1
+	return true
+
 func candidate_till(plot_id: Variant) -> Dictionary:
 	var result := _candidate(plot_id)
 	if not result.ok:
