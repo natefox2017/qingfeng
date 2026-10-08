@@ -82,7 +82,7 @@ tile_set = ExtResource("2_5c08n")
 
 [node name="GroundDetails" type="TileMapLayer" parent="." unique_id=1161655833]
 texture_filter = 1
-tile_map_data = PackedByteArray("AAAFAAEA//////////8kAAEA//////////8KAAIA//////////8PAAMA//////////8UAAQA//////////8ZAAUA//////////8eAAYA//////////8EAAcA//////////8jAAcA//////////8JAAgA//////////8OAAkA//////////8TAAoA//////////8YAAsA//////////8dAAwA//////////8DAA0A//////////8iAA0A//////////8IAA4A//////////8NAA8A//////////8SABAA//////////8XABEA//////////8cABIA//////////8CABMA//////////8hABMA//////////8HABQA//////////8mABQA//////////8MABUA//////////8=")
+tile_map_data = PackedByteArray("AAAFAAEA//////////8kAAEA//////////8KAAIA//////////8PAAMA//////////8UAAQA//////////8ZAAUA//////////8eAAYA//////////8EAAcA//////////8jAAcA//////////8JAAgA//////////8OAAkA//////////8TAAoA//////////8YAAsA//////////8dAAwA//////////8DAA0A//////////8iAA0A//////////8IAA4A//////////8NAA8A//////////8SABAA//////////8XABEA//////////8cABIA//////////8CABMA//////////8hABMA//////////8HABQA//////////8mABQA//////////8MABUA//////////8DAAUAAgAAAAAAAAAEAAUAAgABAAAAAAADAAYAAgACAAAAAAAJABgAAgABAAAAAAAKABgAAgACAAAAAAAKABkAAgAAAAAAAAAEACIAAgACAAAAAAAEACMAAgADAAAAAAAFACMAAgAAAAAAAAASAB0AAgADAAAAAAASAB4AAgABAAAAAAATAB4AAgACAAAAAAAXAAQAAgAAAAAAAAAXAAUAAgACAAAAAAA5AAUAAgABAAAAAAA6AAUAAgACAAAAAAA7AAUAAgADAAAAAAA6AAYAAgAAAAAAAABJABgAAgADAAAAAABKABgAAgAAAAAAAABJABkAAgABAAAAAABKABkAAgACAAAAAABCACEAAgAAAAAAAABCACIAAgACAAAAAAA2AB0AAgABAAAAAAA3AB0AAgACAAAAAAA4AB0AAgADAAAAAAA3AB4AAgAAAAAAAAAWACMAAgADAAAAAAAXACMAAgAAAAAAAAAWACQAAgABAAAAAAAXACQAAgACAAAAAAA=")
 tile_set = ExtResource("2_5c08n")
 
 [node name="Solids" type="Node2D" parent="." unique_id=1771861396]
@@ -302,6 +302,12 @@ position = Vector2(220, 336)
 [node name="MarketStall01" type="Node2D" parent="FootSorted" unique_id=757887903 instance=ExtResource("9_mwjli")]
 position = Vector2(420, 336)
 
+[node name="MarketStallCenterWest" type="Node2D" parent="FootSorted" instance=ExtResource("9_mwjli")]
+position = Vector2(560, 336)
+
+[node name="MarketStallCenterEast" type="Node2D" parent="FootSorted" instance=ExtResource("9_mwjli")]
+position = Vector2(720, 336)
+
 [node name="MarketStall02" type="Node2D" parent="FootSorted" unique_id=1629453996 instance=ExtResource("9_mwjli")]
 position = Vector2(860, 336)
 
@@ -313,6 +319,12 @@ position = Vector2(160, 160)
 
 [node name="NorthTownHouseEast" type="Node2D" parent="FootSorted" unique_id=1646032172 instance=ExtResource("10_2igm1")]
 position = Vector2(1120, 160)
+
+[node name="SouthTownHouseWest" type="Node2D" parent="FootSorted" instance=ExtResource("10_2igm1")]
+position = Vector2(160, 480)
+
+[node name="SouthTownHouseEast" type="Node2D" parent="FootSorted" instance=ExtResource("10_2igm1")]
+position = Vector2(1120, 480)
 
 [node name="MarketLampWest" type="Node2D" parent="FootSorted" unique_id=1693557971]
 position = Vector2(552, 256)

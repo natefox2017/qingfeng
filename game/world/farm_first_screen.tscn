@@ -37,6 +37,9 @@
 [ext_resource type="PackedScene" path="res://world/objects/market_stall.tscn" id="35_d8ue5"]
 [ext_resource type="Texture2D" path="res://assets/chapter1/town/street_lamp.png" id="36_m84j0"]
 [ext_resource type="Texture2D" path="res://assets/chapter1/town/stone_wall.png" id="37_80qn4"]
+[ext_resource type="Texture2D" path="res://assets/chapter1/objects/apple_tree.png" id="38_meadow_apple"]
+[ext_resource type="Texture2D" path="res://assets/chapter1/objects/cherry_tree.png" id="39_meadow_cherry"]
+[ext_resource type="Texture2D" path="res://assets/chapter1/objects/bush.png" id="40_meadow_bush"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1ir5o"]
 texture = ExtResource("3_ofrai")
@@ -117,7 +120,7 @@ tile_set = ExtResource("2_c0242")
 [node name="GroundDetails" type="TileMapLayer" parent="." unique_id=956416998]
 z_index = -7
 texture_filter = 1
-tile_map_data = PackedByteArray("AAACAAIA//////////8PAAIA//////////8SAAIA//////////8ZAAIA//////////8CAAMA//////////8NAAMA//////////8HAAQA//////////8QAAQA//////////8WAAUA//////////8YAAUA//////////8bAAUA//////////8XAAYA//////////8bAAYA//////////8XAAcA//////////8DAAgA//////////8ZAAkA//////////8FAAwA//////////8FAA0A//////////8RAA0A//////////8TAA0A//////////8DAA4A//////////8HAA4A//////////8IAA4A//////////8NAA4A//////////8TAA4A//////////8ZAA4A//////////8aAA4A//////////8lAA4A//////////8IAA8A//////////8lAA8A//////////8HABAA//////////8QABAA//////////8CABEA//////////8lABEA//////////8EABIA//////////8UABIA//////////8aABIA//////////8bABIA//////////8LABMA//////////8PABMA//////////8YABMA//////////8EABQA//////////8HABQA//////////8IABQA//////////8RABQA//////////8XABQA//////////8dABQA//////////8eAAsA//////////8eAA4A//////////8fAAsA//////////8fAA4A//////////8gAAsA//////////8gAA4A//////////8hAAsA//////////8hAA4A//////////8iAAsA//////////8iAA4A//////////8jAAsA//////////8jAA4A//////////9XAAMA//////////9MAAQA//////////8+AAUA//////////9OAAYA//////////8pAAcA//////////9VAAcA//////////9AAAgA//////////80AAoA//////////9XAAoA//////////83ABAA//////////89ABAA//////////9aABIA//////////83ABMA//////////8uABUA//////////9CABUA//////////81ABYA//////////82ABYA//////////8UABcA//////////9VABcA//////////9dABcA//////////8SABgA//////////8pABgA//////////9bABgA//////////8oABkA//////////8tABkA//////////8RABoA//////////9aABoA//////////8/ABsA//////////9CABsA//////////88ABwA//////////9WABwA//////////8qAB0A//////////88AB0A//////////9IAB4A//////////9UAB4A//////////8lAB8A//////////9FAB8A//////////8rACAA//////////9EACEA//////////9GACEA//////////8sACIA//////////9HACIA//////////9FACMA//////////89ACQA//////////9SACQA//////////85ACUA//////////8UACYA//////////8wACYA//////////9dACYA//////////8yACcA//////////8CACkA//////////8DACsA//////////8zAC0A//////////9JAC0A//////////8TAC4A//////////9RAC4A//////////9cAC4A//////////8SAC8A//////////9bAC8A//////////9BADAA//////////8tADEA//////////8cADIA//////////84ADIA//////////8TADMA//////////8rADMA//////////9cADMA//////////9DADQA//////////9YADQA//////////8yADUA//////////9QADUA//////////9RADcA//////////8vADgA//////////8HADkA//////////8nADkA//////////9QADkA//////////8EADoA//////////9BADoA//////////9NADoA//////////8QADsA//////////9ZADsA//////////8QADwA//////////8/ADwA//////////9ZADwA//////////8KAD0A//////////8NAD0A//////////9TAD0A//////////9WAD0A//////////8eACgA//////////8eACsA//////////8fACgA//////////8fACsA//////////8gACgA//////////8gACsA//////////8hACgA//////////8hACsA//////////8iACgA//////////8iACsA//////////8jACgA//////////8jACsA//////////8MAAgAAgAAAAAAAABnAAwAAgADAAAAAAAIADEAAgABAAAAAABlADoAAgADAAAAAABUADoAAgACAAAAAAAYADgAAgAAAAAAAAA=")
+tile_map_data = PackedByteArray("AAACAAIA//////////8PAAIA//////////8SAAIA//////////8ZAAIA//////////8CAAMA//////////8NAAMA//////////8HAAQA//////////8QAAQA//////////8WAAUA//////////8YAAUA//////////8bAAUA//////////8XAAYA//////////8bAAYA//////////8XAAcA//////////8DAAgA//////////8ZAAkA//////////8FAAwA//////////8FAA0A//////////8RAA0A//////////8TAA0A//////////8DAA4A//////////8HAA4A//////////8IAA4A//////////8NAA4A//////////8TAA4A//////////8ZAA4A//////////8aAA4A//////////8lAA4A//////////8IAA8A//////////8lAA8A//////////8HABAA//////////8QABAA//////////8CABEA//////////8lABEA//////////8EABIA//////////8UABIA//////////8aABIA//////////8bABIA//////////8LABMA//////////8PABMA//////////8YABMA//////////8EABQA//////////8HABQA//////////8IABQA//////////8RABQA//////////8XABQA//////////8dABQA//////////8eAAsA//////////8eAA4A//////////8fAAsA//////////8fAA4A//////////8gAAsA//////////8gAA4A//////////8hAAsA//////////8hAA4A//////////8iAAsA//////////8iAA4A//////////8jAAsA//////////8jAA4A//////////9XAAMA//////////9MAAQA//////////8+AAUA//////////9OAAYA//////////8pAAcA//////////9VAAcA//////////9AAAgA//////////80AAoA//////////9XAAoA//////////83ABAA//////////89ABAA//////////9aABIA//////////83ABMA//////////8uABUA//////////9CABUA//////////81ABYA//////////82ABYA//////////8UABcA//////////9VABcA//////////9dABcA//////////8SABgA//////////8pABgA//////////9bABgA//////////8oABkA//////////8tABkA//////////8RABoA//////////9aABoA//////////8/ABsA//////////9CABsA//////////88ABwA//////////9WABwA//////////8qAB0A//////////88AB0A//////////9IAB4A//////////9UAB4A//////////8lAB8A//////////9FAB8A//////////8rACAA//////////9EACEA//////////9GACEA//////////8sACIA//////////9HACIA//////////9FACMA//////////89ACQA//////////9SACQA//////////85ACUA//////////8UACYA//////////8wACYA//////////9dACYA//////////8yACcA//////////8CACkA//////////8DACsA//////////8zAC0A//////////9JAC0A//////////8TAC4A//////////9RAC4A//////////9cAC4A//////////8SAC8A//////////9bAC8A//////////9BADAA//////////8tADEA//////////8cADIA//////////84ADIA//////////8TADMA//////////8rADMA//////////9cADMA//////////9DADQA//////////9YADQA//////////8yADUA//////////9QADUA//////////9RADcA//////////8vADgA//////////8HADkA//////////8nADkA//////////9QADkA//////////8EADoA//////////9BADoA//////////9NADoA//////////8QADsA//////////9ZADsA//////////8QADwA//////////8/ADwA//////////9ZADwA//////////8KAD0A//////////8NAD0A//////////9TAD0A//////////9WAD0A//////////8eACgA//////////8eACsA//////////8fACgA//////////8fACsA//////////8gACgA//////////8gACsA//////////8hACgA//////////8hACsA//////////8iACgA//////////8iACsA//////////8jACgA//////////8jACsA//////////8MAAgAAgAAAAAAAABnAAwAAgADAAAAAAAIADEAAgABAAAAAABlADoAAgADAAAAAABUADoAAgACAAAAAAAYADgAAgAAAAAAAAAWAAwAAgAAAAAAAAAXAAwAAgABAAAAAAAWAA0AAgACAAAAAAAiABMAAgABAAAAAAAjABMAAgACAAAAAAAkABMAAgADAAAAAAAjABQAAgAAAAAAAABTAA4AAgACAAAAAABTAA8AAgADAAAAAABUAA8AAgAAAAAAAABiABwAAgADAAAAAABjABwAAgAAAAAAAABiAB0AAgABAAAAAABjAB0AAgACAAAAAAA0ADUAAgABAAAAAAA1ADUAAgACAAAAAAA2ADUAAgADAAAAAAA1ADYAAgAAAAAAAABSADQAAgACAAAAAABSADUAAgADAAAAAABTADUAAgAAAAAAAAAZADgAAgAAAAAAAAAYADkAAgABAAAAAAAZADkAAgACAAAAAAAKACMAAgAAAAAAAAALACMAAgABAAAAAAAKACQAAgACAAAAAAAfACAAAgABAAAAAAAgACAAAgACAAAAAAAhACAAAgADAAAAAAAgACEAAgAAAAAAAABBACsAAgACAAAAAABBACwAAgADAAAAAABCACwAAgAAAAAAAABkAC8AAgAAAAAAAABjADAAAgABAAAAAABkADAAAgACAAAAAAA=")
 tile_set = ExtResource("2_c0242")
 
 [node name="PlotStates" type="TileMapLayer" parent="." unique_id=229655522]
@@ -299,6 +302,7 @@ hframes = 4
 vframes = 4
 
 [node name="Camera2D" type="Camera2D" parent="FootSorted/Player" unique_id=942445080]
+offset = Vector2(0, -120)
 limit_left = 0
 limit_top = 0
 limit_right = 1792
@@ -1473,3 +1477,53 @@ collision_mask = 2
 
 [node name="@CollisionShape2D@121" type="CollisionShape2D" parent="FootSorted/FarmTownWallEast/@StaticBody2D@120" unique_id=1473388446]
 shape = SubResource("RectangleShape2D_04o6f")
+
+# Non-blocking scenery reused from the authored object kit. These clusters fill
+# the southern field margins and river approach without changing walkable routes.
+[node name="MeadowAppleSouthWest" type="Sprite2D" parent="FootSorted"]
+position = Vector2(640, 1008)
+texture_filter = 1
+texture = ExtResource("38_meadow_apple")
+offset = Vector2(-48, -126)
+
+[node name="MeadowCherrySouthCenterWest" type="Sprite2D" parent="FootSorted"]
+position = Vector2(816, 976)
+texture_filter = 1
+texture = ExtResource("39_meadow_cherry")
+offset = Vector2(-56, -110)
+
+[node name="MeadowCherrySouthCenter" type="Sprite2D" parent="FootSorted"]
+position = Vector2(944, 1008)
+texture_filter = 1
+texture = ExtResource("39_meadow_cherry")
+offset = Vector2(-56, -110)
+
+[node name="MeadowAppleSouthEast" type="Sprite2D" parent="FootSorted"]
+position = Vector2(1120, 976)
+texture_filter = 1
+texture = ExtResource("38_meadow_apple")
+offset = Vector2(-48, -126)
+
+[node name="MeadowBushSouthCenterEast" type="Sprite2D" parent="FootSorted"]
+position = Vector2(1264, 1008)
+texture_filter = 1
+texture = ExtResource("40_meadow_bush")
+offset = Vector2(-32, -62)
+
+[node name="MeadowBushSouthEast" type="Sprite2D" parent="FootSorted"]
+position = Vector2(1360, 944)
+texture_filter = 1
+texture = ExtResource("40_meadow_bush")
+offset = Vector2(-32, -62)
+
+[node name="MeadowBushRiverNorth" type="Sprite2D" parent="FootSorted"]
+position = Vector2(1296, 352)
+texture_filter = 1
+texture = ExtResource("40_meadow_bush")
+offset = Vector2(-32, -62)
+
+[node name="MeadowBushRiverSouth" type="Sprite2D" parent="FootSorted"]
+position = Vector2(1296, 640)
+texture_filter = 1
+texture = ExtResource("40_meadow_bush")
+offset = Vector2(-32, -62)
