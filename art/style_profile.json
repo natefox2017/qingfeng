@@ -10,7 +10,7 @@
   "reference_asset_ids": [],
   "palette_asset_id": null,
   "character_content_height_px": null,
-  "notes": "仅冻结 #84/#87 明确的技术尺寸；palette、人物内容高度、最终物件画布/占格、门宽、脚锚与镜头视觉比例均 TBD，等待实测和用户签收。Phase0 的 30px 人物高度不是批准标尺。#88 fb8a2f5 是隔离 A01/A02 真像素候选，母版局部输入证据和用户签收仍缺，不把该候选自动指定为正式 palette。",
+  "notes": "技术尺寸及现有 Space/Door/Spawn/Plot 兼容接口已冻结；具体工程几何唯一归 WORLD Godot 场景。palette、人物高度和最终视觉比例继续 proposed/TBD；按最新用户授权，可采用 proposed 素材开发接图、选整数工程尺寸与脚锚，不等待人工签收启动。工程使用不代表 accepted，现有存档 schema/Space 不变。",
   "item_action_size_px": {
     "width": 24,
     "height": 24
@@ -48,5 +48,7 @@
   ],
   "reference_source_ids": [
     "world_chapter1_map"
-  ]
+  ],
+  "engineering_contract_status": "frozen_for_world_development",
+  "proposed_runtime_use_allowed": true
 }

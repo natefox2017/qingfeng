@@ -1,6 +1,6 @@
 # 第一章总地图布局、坐标与分层合同
 
-合同版本：`chapter1.map.layout.v1`；所有者：#87；消费者：#88–#97、#104/#106/#107/#109/#111。技术尺寸已明确，区域编号的跨任务同步与视觉比例仍未验收。
+合同版本：`chapter1.map.layout.v1`；所有者：#87；消费者：#88–#97、#104/#106/#107/#109/#111。最小工程合同已冻结，供 WORLD 串行实现；视觉状态仍 proposed，不宣称 accepted。按用户最新授权，proposed 素材可开发接图，人工审图不阻塞工程启动。
 
 唯一空间母版：[`world_chapter1_map`](../../art/approved/refs/world_chapter1_map.png)，1672×941，SHA-256 `ba35eef32eb0a49a5e50ad8ec4498148845c8f4065d3695b315c4ea1286bddd7`。来源与去重映射见 [`chapter1_asset_source_index.json`](../../art/requests/chapter1_asset_source_index.json)。
 
@@ -9,9 +9,9 @@
 ## 坐标合同
 
 - 已明确的技术规格：世界地形格 `16×16 px`、item/action 独立 RGBA 图符 `24×24 px`、HUD 独立 RGBA 图符 `16×16 px`、逻辑视口 `640×360 px`。后者与当前 `game/project.godot` 一致。1280×720/1920×1080 是整数放大验证尺寸，不改变世界坐标或原生像素密度。
-- 正式 palette、人物内容高度、屋门占格、脚锚、物件最终画布及镜头视觉比例继续 **TBD / proposed**；`art/style_profile.json` 的空值表示未签收，不能把旧 Phase0 的 30px 内容高度或候选色板当成正式标准。#88 隔离样板 `[8,8]` 格中心只是其 atlas 锚点，不是角色/房屋脚锚合同。
+- 正式 palette、人物内容高度、屋门占格、脚锚、物件最终画布及镜头视觉比例继续 **TBD / proposed**；空值只表示未签收，不阻塞 WORLD 选择可执行的整数尺寸/脚锚并在场景记录工程决定。#88 隔离样板 `[8,8]` 格中心不是角色/房屋脚锚合同。
 - 参考图坐标系：左上原点，`x` 向东、`y` 向南，范围为参考图像素 `1672×941`。它只用于描述图中区域方位，不是可编辑地图坐标；不从概念图像素比例换算世界格。
-- 世界格：地形逻辑格为 `16×16 px`。世界格原点、各 `space_id` 的格边界、R01–R09 的世界格矩形、出口 Marker 格坐标及新增对象尺寸均为 **TBD**，必须由可编辑布局和同镜头核对确定。
+- 世界格：地形逻辑格为 `16×16 px`。各 Space 左上原点；格边界、R 区矩形及新增对象落位由 WORLD 按母版选择工程坐标，保存到 Godot 场景。文档中的 TBD 是未宣称视觉批准，不是禁止铺图。
 - 世界格使用整数 `(x, y)`；每个已冻结 `space_id` 在其场景内采用左上原点、向东/向南递增。禁止以图像缩放、窗口分辨率或美术裁切推导世界坐标。
 - `space.farm` 当前 96×64 格仅是现有起始范围，不代表第一章完整边界。当前稳定 Space ID 为 `space.farm`、`space.village`、`space.house`、`space.shop`、`space.workshop`。本合同不将 R 区擅自映射到新 Space，也不创建额外 Space。
 - 精确坐标仍由对应 Godot 场景中的 Marker、碰撞体和 TileMapLayer 持有。文档只定义稳定区域 ID 和关系，不复制第二份数字坐标表。
@@ -20,23 +20,25 @@
 
 | 区域 | 母版中的固定位置与内容 | 必须保留的关系 | 游戏坐标 / Space |
 | --- | --- | --- | --- |
-| R01 果园 | 左上；果树、樱花、围栏与园内步道 | 位于农舍西北；步道向农庄内部连通 | 格边界 TBD；Space 归属 TBD |
+| R01 果园 | 左上；果树、樱花、围栏与园内步道 | 位于农舍西北；步道向农庄内部连通 | 工程边界由 WORLD 场景持有；space.farm |
 | R02 农舍与院落 | 左侧中部；蓝瓦农舍、前院、井、狗窝/鸡舍及围栏 | 农舍在中央田地以西；院门接入贯通农庄的道路 | 门/脚锚/格边界 TBD；复用现有 `space.farm` 门合同前核对现有 Marker |
 | R03 中央田地与道路 | 地图中央；多组田畦由南北/东西土路串接 | 农舍东侧；主路向北接小镇，向东接桥西侧，向南接山间小道方向 | 每块田格与道路格 TBD；保留 `plot.farm.001..006`，其中 `.003` 教程成熟田、`.004` 空田 |
-| R04 小镇、石门与集市 | 上方中部；城门、建筑和市场 | 通过中央主路与农庄相接；保持在河流以西 | 出入口格、Marker、Space 边界 TBD；不新造 Door 字段 |
+| R04 小镇、石门与集市 | 上方中部；城门、建筑和市场 | 通过中央主路与农庄相接；保持在河流以西 | 工程边界由 WORLD 场景持有；space.village；不新造 Door 字段 |
 | R05 河流与瀑布 | 右侧纵向水系；瀑布位于北端并向南流 | 河流在桥处被跨越，沿地图右侧继续向南至下游瀑布/画面边缘 | 河岸/水格/碰撞 TBD；不得把水面或岸壁作为可走桥面 |
 | R06 横向木桥 | 中右部横跨河道 | 桥面西端接中央道路，东端接东岸通路；桥板可走，栏杆/桥墩阻挡 | 两端 Marker、桥面与栏杆碰撞格 TBD |
 | R07 下游码头 | 右下河段；木质码头、船与钓鱼位置 | 位于桥以南；接岸边步道，码头不改变河道方向 | 可走面、交互 Marker 与碰撞 TBD |
-| R08 森林方向 | 右上/东侧；林地与向东出口标识 | 位于河道东岸方向，不移动至小镇、农舍或田地之间 | 出口边界及目标 Space TBD |
-| R09 山间小道 | 左下；山体、岩壁与向南出口标识 | 从农庄南侧道路接出；不得替换成东侧河岸通路 | 出口边界及目标 Space TBD |
+| R08 森林方向 | 右上/东侧；林地与向东出口标识 | 位于河道东岸方向，不移动至小镇、农舍或田地之间 | space.farm 内方向边界；无新增目标 Space |
+| R09 山间小道 | 左下；山体、岩壁与向南出口标识 | 从农庄南侧道路接出；不得替换成东侧河岸通路 | space.farm 内方向边界；无新增目标 Space |
 
-道路拓扑的最小不变量：`R01 ↔ R02 ↔ R03 ↔ R04`；`R03 ↔ R06 ↔ R08`；`R05` 在图右侧纵向延伸并被 `R06` 横跨；`R07` 位于桥南的下游河岸；`R03 ↔ R09` 由农庄南侧道路连接。实际分叉、门点和每段格坐标均 TBD，布局实现必须逐段对照 01，不能以这组关系推导未画出的捷径或新 Door。
+道路拓扑的最小不变量：`R01 ↔ R02 ↔ R03 ↔ R04`；`R03 ↔ R06 ↔ R08`；`R05` 在图右侧纵向延伸并被 `R06` 横跨；`R07` 位于桥南的下游河岸；`R03 ↔ R09` 由农庄南侧道路连接。新增分叉及格坐标由 WORLD 作工程决定，既有门/到达点保留，布局实现必须逐段对照 01，不能以这组关系推导未画出的捷径或新 Door。
 
-### 跨任务编号同步阻塞
+### WORLD 可执行边界与兼容接口
 
-2026-10-08 实时复核 [#104 正文](https://github.com/natefox2017/qingfeng/issues/104)（`updatedAt=2026-10-08T13:32:11Z`）仍写旧编号：R01 农舍、R02 中央田、R03 果林、R04 河上下游、R05 村镇通路、R06 村广场、R07 店与工坊、R08 家内、R09 林地/山道。[PR #114 Conversation](https://github.com/natefox2017/qingfeng/pull/114#issuecomment-6060582959) 的一致性阻塞因此仍有效；#87 的协调评论不能替代 #104 正文修正。本任务只记录实际状态，不越界改写 WORLD 任务合同。
+R01/R02/R03/R05/R06/R07/R08/R09 由现有 `space.farm` 表达；R04 小镇由现有 `space.village` 表达，城镇道路、广场、商铺/工坊外观为其子区。R08/R09 是 farm 内方向/边界区域，不创建林地/山道 Space。室内继续 `space.house`、`space.shop`、`space.workshop`。#104 正文同步采用上表唯一 R 编号；旧编号废止，任务 checkbox 不因此完成。
 
-需由协调/WORLD 所有者将 #104 正文逐项同步为上表，再实时核对才能解除编号依赖。城镇道路、广场、商铺/工坊外观均是 **R04 子区**；室内复用 `space.house`、`space.shop`、`space.workshop`，不是 R08 新户外区。现有 `space.farm`、`space.village` 同样保留，不把区域编号变成新的 Space ID。即使编号同步完成，精确坐标、门点与人工视觉签收仍是独立未验项。
+现有 Door 字典严格保持 `kind/interaction_id/target_space_id/arrival_anchor_id/arrival_facing` 五个非空 String；kind=`door`，facing 为 north/south/east/west。沿用代码中的八个 Door ID：`door.farm.house`、`door.house.farm`、`door.farm.village`、`door.village.farm`、`door.village.shop`、`door.shop.village`、`door.village.workshop`、`door.workshop.village`。目标到达 Marker 分别保持：house/shop/workshop 的 `DoorArrival`；farm 的 `HouseDoorArrival`、`BridgeEast`；village 的 `FarmArrival`、`ShopDoorArrival`、`WorkshopDoorArrival`。WORLD 不重命名这些接口。
+
+保留当前 scene 中门/到达点、farm `PlayerSpawn` 与 `plot.farm.001..006` 的既有坐标作为兼容基线；`.003` 成熟萝卜、`.004` 空田沿用现有内容。新增路径/区域/对象可工程调整，具体坐标唯一存在于场景，不在本合同另存表。存档仍使用现有 schema 与 `space_id/world_position_px/facing`，保留居民 ID、`storage.house.main` 交互 ID 和 `container.home_chest`；不得创建新 Space 或存档 schema。旧存档实际落点与门回程由 WORLD 回归核验，不从文档推断通过。
 
 ## 分层与空间所有权
 
@@ -64,6 +66,6 @@
 
 #88 本地提交 `fb8a2f54d517b70015ed590979923d4def8ff2ec` 已索引为 **local-only / proposed**：64×80 RGBA 图集、19 个 16×16 源格及 rect/mask、可编辑 PXO、4×/8× nearest 预览和三尺寸 Godot 截图。它不在本分支或 main，不能假称已集成。源与 runtime atlas SHA 均为 `44b1d5600d4217b3a729b13f3a7184470b2af69dc8c727f712f7c71d4079f7f4`；完整证据逐文件 SHA 在索引中。格中心 `[8,8]`、NESW mask 和 Match Sides 只覆盖窄路样板，不包含宽路/石路/角点 peering 或正式地图通路。
 
-本任务复核文件/hash/rect、nearest 放大和截图尺寸；Godot 4.7.2 执行记录来自 #88 所有者，本任务没有重跑 Godot，也不能仅凭 PNG 独立证明其捕获过程。该固定提交未记录批准母版局部裁图的输入路径/rect/SHA；#88 正在补此证据，后续提交须重新核实，不静默混入当前索引。草叶重复频率、palette、同镜头人物尺度及用户签收均待验，A03/A07 扩产和正式地图接图仍等待样板签收。
+本任务复核文件/hash/rect、nearest 放大和截图尺寸；Godot 4.7.2 执行记录来自 #88 所有者，本任务没有重跑 Godot，也不能仅凭 PNG 独立证明其捕获过程。该固定提交未记录批准母版局部裁图的输入路径/rect/SHA；#88 正在补此证据，后续提交须重新核实，不静默混入当前索引。草叶重复频率、palette、同镜头人物尺度及用户签收均待验；按最新用户授权，proposed 可用于开发接图与工程扩产，不能将开发使用写成 accepted。
 
 本次只完成静态合同和来源映射。尚无 Godot 地图布局、R 区世界格坐标、资产逐件 runtime 验收或人工同镜头视觉签收；不得据此勾选这些完成项。
