@@ -71,6 +71,40 @@ func update_runtime(value: Variant) -> bool:
 	_states[resident_id] = next
 	return true
 
+func knows_event(resident_id: String, event_id: String) -> bool:
+	if not _states.has(resident_id) or event_id.is_empty():
+		return false
+	return event_id in _states[resident_id].known_event_ids
+
+func known_events_for(resident_id: String) -> Array:
+	if not _states.has(resident_id):
+		return []
+	return _states[resident_id].known_event_ids.duplicate()
+
+func add_known_events(resident_id: String, event_ids: Array) -> Dictionary:
+	if not is_configured() or not _states.has(resident_id):
+		return {"ok":false,"error_code":"RESIDENT_RUNTIME_UNKNOWN_RESIDENT","has_changes":false}
+	if event_ids.is_empty():
+		return {"ok":false,"error_code":"RESIDENT_RUNTIME_EVENT_IDS_EMPTY","has_changes":false}
+	var seen: Dictionary = {}
+	var additions: Array[String] = []
+	var current: Array = _states[resident_id].known_event_ids
+	for event_id: Variant in event_ids:
+		if not (event_id is String) or event_id.is_empty() or event_id.length()>128 or seen.has(event_id):
+			return {"ok":false,"error_code":"RESIDENT_RUNTIME_EVENT_ID_INVALID","has_changes":false}
+		seen[event_id]=true
+		if event_id not in current:
+			additions.append(event_id)
+	if current.size()+additions.size()>MAX_KNOWN_EVENTS:
+		return {"ok":false,"error_code":"RESIDENT_RUNTIME_KNOWN_EVENTS_FULL","has_changes":false}
+	if additions.is_empty():
+		return {"ok":true,"error_code":"","has_changes":false}
+	var next: Dictionary = _states[resident_id].duplicate(true)
+	for event_id: String in additions:
+		next.known_event_ids.append(event_id)
+	_states[resident_id]=next
+	return {"ok":true,"error_code":"","has_changes":true}
+
 func restore(value: Variant) -> bool:
 	if not is_configured() or not has_states() or not (value is Dictionary) or value.size()!=1 or not value.has("residents") or not (value.residents is Array):
 		return false
