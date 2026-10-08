@@ -165,7 +165,13 @@ func _minute_text(value: int) -> String:
 
 func _trade_button(parent: Node, action: String, item_id: String, quantity: int, display_name: String, unit_price: int, enabled: bool, closed_reason: String) -> Button:
 	var node := Button.new()
-	node.custom_minimum_size = Vector2(200,34)
+	node.custom_minimum_size = Vector2(245,38)
+	node.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	node.add_theme_stylebox_override("normal",UI_THEME.slot_style(false))
+	node.add_theme_stylebox_override("hover",UI_THEME.slot_style(false,true))
+	node.add_theme_stylebox_override("focus",UI_THEME.slot_style(false,true))
+	node.add_theme_stylebox_override("pressed",UI_THEME.slot_style(true,true))
+	node.add_theme_stylebox_override("disabled",UI_THEME.slot_style(false))
 	var verb := "买" if action == "trade_buy" else "卖"
 	node.text = "%s %d · %s · %d币" % [verb,quantity,display_name,unit_price*quantity]
 	var description := node.text
@@ -332,18 +338,24 @@ func show_page(page: String, context: Dictionary) -> void:
 				label("当前存档没有可用的家庭箱子状态。")
 			button(row(),"close_storage","storage","关闭木箱 / Esc")
 		"trade":
-			title.text="杂货铺柜台";subtitle.text="买卖直接提交权威钱物事务；Esc 关闭。"
+			title.text="杂货铺柜台";subtitle.text="购买种子与出售收成 · Esc 关闭"
+			panel.custom_minimum_size=Vector2(600,292)
 			var gameplay: Dictionary = context.get("gameplay",{})
 			if gameplay.get("ok",false) and gameplay.has("shop"):
 				var shop: Dictionary = gameplay.shop
 				var is_open: bool = bool(shop.get("is_open",false))
 				var hours := _minute_text(int(shop.open_minute))+"–"+_minute_text(int(shop.close_minute))
-				label(_clock_text(gameplay.clock)+"  ·  营业 "+hours+"  ·  "+("营业中" if is_open else "已打烊"))
-				label("金币 "+str(gameplay.wallet.money))
-				var scroll:=ScrollContainer.new();scroll.custom_minimum_size=Vector2(450,180);body.add_child(scroll)
-				var sections:=VBoxContainer.new();sections.size_flags_horizontal=Control.SIZE_EXPAND_FILL;scroll.add_child(sections)
-				label("购买",sections)
-				var buy_rows:=VBoxContainer.new();buy_rows.add_theme_constant_override("separation",4);sections.add_child(buy_rows)
+				var summary:=row()
+				var status:=label(_clock_text(gameplay.clock)+"  ·  "+("营业中" if is_open else "已打烊")+"  "+hours,summary);status.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+				if not is_open: UI_THEME.apply_text_role(status,UI_THEME.ROLE_CAPTION)
+				var money:=label(str(gameplay.wallet.money)+" 币",summary);UI_THEME.apply_text_role(money,UI_THEME.ROLE_QUANTITY)
+
+				var sections:=HBoxContainer.new();sections.add_theme_constant_override("separation",8);body.add_child(sections)
+				var buy_panel:=PanelContainer.new();buy_panel.name="TradeBuySection";buy_panel.custom_minimum_size=Vector2(260,155);buy_panel.add_theme_stylebox_override("panel",UI_THEME.section_style());sections.add_child(buy_panel)
+				var buy_column:=VBoxContainer.new();buy_column.add_theme_constant_override("separation",5);buy_panel.add_child(buy_column)
+				var buy_title:=label("购买",buy_column);UI_THEME.apply_text_role(buy_title,UI_THEME.ROLE_HEADING)
+				var buy_hint:=label("价格来自当前内容版本",buy_column);UI_THEME.apply_text_role(buy_hint,UI_THEME.ROLE_CAPTION)
+				var buy_rows:=VBoxContainer.new();buy_rows.name="TradeBuyRows";buy_rows.add_theme_constant_override("separation",4);buy_column.add_child(buy_rows)
 				var buy_count := 0
 				for item_id: Variant in gameplay.items:
 					var metadata: Dictionary = gameplay.items[item_id]
@@ -354,8 +366,12 @@ func show_page(page: String, context: Dictionary) -> void:
 					_trade_button(buy_rows,"trade_buy",String(item_id),1,String(metadata.get("display_name",item_id)),buy_price,is_open,"商店已打烊")
 				if buy_count == 0:
 					label("当前没有可购买商品。",buy_rows)
-				label("出售",sections)
-				var sell_rows:=VBoxContainer.new();sell_rows.add_theme_constant_override("separation",4);sections.add_child(sell_rows)
+
+				var sell_panel:=PanelContainer.new();sell_panel.name="TradeSellSection";sell_panel.custom_minimum_size=Vector2(260,155);sell_panel.add_theme_stylebox_override("panel",UI_THEME.section_style());sections.add_child(sell_panel)
+				var sell_column:=VBoxContainer.new();sell_column.add_theme_constant_override("separation",5);sell_panel.add_child(sell_column)
+				var sell_title:=label("出售",sell_column);UI_THEME.apply_text_role(sell_title,UI_THEME.ROLE_HEADING)
+				var sell_hint:=label("只列出背包中可出售的物品",sell_column);UI_THEME.apply_text_role(sell_hint,UI_THEME.ROLE_CAPTION)
+				var sell_rows:=VBoxContainer.new();sell_rows.name="TradeSellRows";sell_rows.add_theme_constant_override("separation",3);sell_column.add_child(sell_rows)
 				var quantities: Dictionary = {}
 				for slot: Variant in gameplay.inventory.slots:
 					if slot != null:
@@ -368,10 +384,10 @@ func show_page(page: String, context: Dictionary) -> void:
 						continue
 					sell_count += 1
 					_trade_button(sell_rows,"trade_sell",String(item_id),1,String(metadata.get("display_name",item_id)),sell_price,is_open,"商店已打烊")
-					label("持有 ×"+str(quantities[item_id]),sell_rows)
+					var held:=label("持有 ×"+str(quantities[item_id]),sell_rows);UI_THEME.apply_text_role(held,UI_THEME.ROLE_CAPTION)
 				if sell_count == 0:
 					label("背包里没有可出售物品。",sell_rows)
-				label("余额、容量、物品数量与 revision 由 economy 命令再次权威校验。",sections)
+				var rule:=label("余额、容量、物品数量与价格会在提交时再次校验。");UI_THEME.apply_text_role(rule,UI_THEME.ROLE_TOOLTIP)
 			else:
 				label("当前存档没有可用的交易状态。")
 			button(row(),"close_trade","back","关闭交易 / Esc")
