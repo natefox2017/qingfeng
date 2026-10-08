@@ -1,0 +1,52 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+VILLAGE_FRONTAGE_CHECK false authored world extent unchanged
+VILLAGE_FRONTAGE_CHECK true stable doorway ShopDoorInteract
+VILLAGE_FRONTAGE_CHECK true doorway remains clear ShopDoorInteract
+VILLAGE_FRONTAGE_CHECK true stable doorway ShopDoorArrival
+VILLAGE_FRONTAGE_CHECK true doorway remains clear ShopDoorArrival
+VILLAGE_FRONTAGE_CHECK true stable doorway WorkshopDoorInteract
+VILLAGE_FRONTAGE_CHECK true doorway remains clear WorkshopDoorInteract
+VILLAGE_FRONTAGE_CHECK true stable doorway WorkshopDoorArrival
+VILLAGE_FRONTAGE_CHECK true doorway remains clear WorkshopDoorArrival
+VILLAGE_FRONTAGE_CHECK true stable doorway FarmExitInteract
+VILLAGE_FRONTAGE_CHECK true doorway remains clear FarmExitInteract
+VILLAGE_FRONTAGE_CHECK true stable doorway FarmArrival
+VILLAGE_FRONTAGE_CHECK true doorway remains clear FarmArrival
+VILLAGE_FRONTAGE_CHECK true central lane clear y=128
+VILLAGE_FRONTAGE_CHECK true central lane clear y=144
+VILLAGE_FRONTAGE_CHECK true central lane clear y=160
+VILLAGE_FRONTAGE_CHECK true central lane clear y=176
+VILLAGE_FRONTAGE_CHECK true central lane clear y=192
+VILLAGE_FRONTAGE_CHECK true central lane clear y=208
+VILLAGE_FRONTAGE_CHECK true central lane clear y=224
+VILLAGE_FRONTAGE_CHECK true central lane clear y=240
+VILLAGE_FRONTAGE_CHECK true central lane clear y=256
+VILLAGE_FRONTAGE_CHECK true central lane clear y=272
+VILLAGE_FRONTAGE_CHECK true central lane clear y=288
+VILLAGE_FRONTAGE_CHECK true central lane clear y=304
+VILLAGE_FRONTAGE_CHECK true central lane clear y=320
+VILLAGE_FRONTAGE_CHECK true central lane clear y=336
+VILLAGE_FRONTAGE_CHECK true central lane clear y=352
+VILLAGE_FRONTAGE_CHECK true central lane clear y=368
+VILLAGE_FRONTAGE_CHECK true central lane clear y=384
+VILLAGE_FRONTAGE_CHECK true central lane clear y=400
+VILLAGE_FRONTAGE_CHECK true central lane clear y=416
+VILLAGE_FRONTAGE_CHECK true central lane clear y=432
+VILLAGE_FRONTAGE_CHECK true central lane clear y=448
+VILLAGE_FRONTAGE_CHECK true central lane clear y=464
+VILLAGE_FRONTAGE_CHECK true central lane clear y=480
+VILLAGE_FRONTAGE_CHECK true central lane clear y=496
+VILLAGE_FRONTAGE_CHECK true central lane clear y=512
+VILLAGE_FRONTAGE_CHECK true central lane clear y=528
+VILLAGE_FRONTAGE_CHECK true central lane clear y=544
+VILLAGE_FRONTAGE_CHECK true central lane clear y=560
+VILLAGE_FRONTAGE_CHECK true central lane clear y=576
+VILLAGE_FRONTAGE_CHECK true visible native pixels cover existing solid ShopFootprint
+VILLAGE_FRONTAGE_CHECK true native facade scale/anchor ShopFacade
+VILLAGE_FRONTAGE_CHECK true visible native pixels cover existing solid WorkshopFootprint
+VILLAGE_FRONTAGE_CHECK true native facade scale/anchor WorkshopCourt
+VILLAGE_FRONTAGE_CHECK true north-side courtyard entry keeps south-facing interaction
+VILLAGE_FRONTAGE_CHECK true south shop facade keeps north-facing interaction
+VILLAGE_FRONTAGE_CHECK true courtyard landmark stays off central lane
+VILLAGE_FRONTAGE_RESULT checks=49 failures=1

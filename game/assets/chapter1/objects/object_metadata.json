@@ -717,6 +717,46 @@
       "license_note": "Project-original native LibreSprite pixel strokes; no new PixelLab call. Existing bush canvas used only for dimensions.",
       "processing": "Two intentional stepped pencil colors; no noise, filtering, resampling or gradients",
       "usage": "ground_contact_shadow"
+    },
+    {
+      "asset_id": "asset.object.chapter1.workshop_north_court",
+      "runtime_path": "game/assets/chapter1/objects/workshop_north_court.png",
+      "source_path": "art/sources/chapter1/objects/workshop_north_court.aseprite",
+      "rebuild_script": "art/sources/chapter1/objects/workshop_north_court.js",
+      "sha256": "56707da8055997efd5687292fa1a2cff89d9c51fbdc64143987e1528989f2513",
+      "canvas_px": [
+        192,
+        152
+      ],
+      "anchor_px": [
+        96,
+        149
+      ],
+      "world_scale": 1,
+      "review_status": "proposed",
+      "reviewer": null,
+      "license_note": "Project-original native LibreSprite courtyard strokes plus existing project tool_bench donor at 1:1; no new PixelLab job.",
+      "processing": "Native pixel assembly. North threshold at global (520,216), existing 144x96 solid footprint begins y232. No image resampling."
+    },
+    {
+      "asset_id": "asset.object.chapter1.courtyard_basin",
+      "runtime_path": "game/assets/chapter1/objects/courtyard_basin.png",
+      "source_path": "art/sources/chapter1/objects/courtyard_basin.aseprite",
+      "rebuild_script": "art/sources/chapter1/objects/courtyard_basin.js",
+      "sha256": "b009a6c250a647088e37d11865e628d0083d04056765686aa7ce69f38f5532e3",
+      "canvas_px": [
+        80,
+        96
+      ],
+      "anchor_px": [
+        40,
+        94
+      ],
+      "world_scale": 1,
+      "review_status": "proposed",
+      "reviewer": null,
+      "license_note": "Existing project PixelLab well stone ring/water reused 1:1, roof removed and rim repaired in native LibreSprite; original unchanged, no new job.",
+      "processing": "Native pixel edit, no resampling. Low open basin; same radius-16 footprint."
     }
   ],
   "crop_status_mapping": {
