@@ -34,7 +34,8 @@ func layout_contract_valid() -> bool:
 	var resident_anchors := get_resident_anchor_definitions()
 	if resident_anchors.size() != $ResidentAnchors.get_child_count() or resident_anchors.is_empty():
 		return false
-	if not is_instance_valid(neighbor_resident) or not neighbor_resident.has_method("set_schedule_target") or String(neighbor_resident.resident_id)!="resident.neighbor":
+	var neighbor := get_node_or_null("FootSorted/NeighborResident")
+	if neighbor==null or not neighbor.has_method("set_schedule_target") or String(neighbor.resident_id)!="resident.neighbor":
 		return false
 	var resident_ids: Dictionary = {}
 	for definition: Dictionary in resident_anchors:
