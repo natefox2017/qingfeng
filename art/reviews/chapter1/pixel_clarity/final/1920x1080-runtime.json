@@ -1,0 +1,1222 @@
+{
+	"camera_smoothing_enabled": false,
+	"camera_x_range": 0.0,
+	"camera_y_range": 0.0,
+	"camera_zoom": [
+		1.0,
+		1.0
+	],
+	"content_scale_aspect": 1,
+	"content_scale_factor": 1.0,
+	"content_scale_mode": 1,
+	"content_scale_size": [
+		640,
+		360
+	],
+	"default_texture_filter": 0,
+	"duration_seconds": 20.202,
+	"engine": {
+		"build": "official",
+		"hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+		"hex": 263938,
+		"major": 4,
+		"minor": 7,
+		"patch": 2,
+		"status": "stable",
+		"string": "4.7.2-stable (official)",
+		"timestamp": 0
+	},
+	"motion_required": false,
+	"player_texture_filter": 1,
+	"player_x_range": 0.0,
+	"player_y_range": 0.0,
+	"root_viewport_size": [
+		1920,
+		1080
+	],
+	"sample_count": 78,
+	"samples": [
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 0.0
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 0.19
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 0.44
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 0.7
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 0.96
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 1.21
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 1.48
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 1.74
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 1.99
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 2.25
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 2.51
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 2.77
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 3.03
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 3.29
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 3.54
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 3.78
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 4.04
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 4.3
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 4.65
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 4.89
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 5.15
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 5.4
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 5.66
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 5.91
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 6.17
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 6.44
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 6.69
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 6.95
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 7.2
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 7.47
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 7.76
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 8.02
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 8.28
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 8.54
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 8.79
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 9.05
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 9.31
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 9.57
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 9.83
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 10.08
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 10.34
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 10.6
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 10.85
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 11.11
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 11.37
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 11.63
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 11.88
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 12.14
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 12.4
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 12.66
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 12.92
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 13.17
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 13.44
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 13.69
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 13.95
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 14.21
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 14.47
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 14.8
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 15.04
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 15.3
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 15.56
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 15.82
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 16.08
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 16.34
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 16.59
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 16.85
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 17.11
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 17.37
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 17.63
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 17.89
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 18.15
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 18.39
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 18.66
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 18.91
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 19.17
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 19.42
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 19.68
+		},
+		{
+			"camera_center": [
+				320.0,
+				560.0
+			],
+			"camera_offset": [
+				0.0,
+				0.0
+			],
+			"player_global": [
+				320.0,
+				560.0
+			],
+			"t_seconds": 19.94
+		}
+	],
+	"snap_2d_transforms_to_pixel": true,
+	"snap_2d_vertices_to_pixel": false,
+	"stretch_aspect": "keep",
+	"stretch_mode": "canvas_items",
+	"stretch_scale_mode": "integer",
+	"terrain_texture_filter": 1,
+	"texture_filter_linear_enum": 2,
+	"texture_filter_nearest_enum": 1,
+	"window_size": [
+		1920,
+		1080
+	]
+}

@@ -5,6 +5,13 @@
 以 16×16 原生地形格开始制作。可见格数、角色内容高度、门宽、镜头范围要从同尺寸参考/实现截图测量并记录；角色生成画布不等于角色实际像素高度。PixelLab 的 view 是生成提示，不是 Godot Camera2D 角度。low top-down 仅是待对照的初始候选，所有工具显式传 view，不混用默认值。
 展示采用最近邻和整数像素倍率策略，物理位置保留精度；相机/缩放策略在 1280×720、1920×1080 及非整数窗口验证。具体世界视口尺寸由样板锁定，不能为了适应错误素材随意缩放单个物件。
 
+### Chapter 1 像素清晰度实机记录（2026-10-09）
+Godot 4.7.2 原生窗口 A/B/C 对照后，项目采用 `canvas_items + keep + integer`，并开启 2D transform 像素吸附、关闭 vertex 像素吸附。基础内容仍为 640×360；1280×720 和 1920×1080 分别按 2×、3×整数倍率显示，1366×768 按 2×显示并在四周留边。`canvas_items` 保留 Control UI 的目标窗口分辨率；1280×720、1920×1080、1366×768 均实际点击进入新档和返回，输入区域可用。地形和玩家 Sprite 的实际 `texture_filter` 均为 `TEXTURE_FILTER_NEAREST`（枚举值 1），项目默认 CanvasItem filter 是 0；不得只凭项目默认值推断节点采样方式。
+
+对照中，原 `canvas_items + keep + fractional` 在非整数窗口不能保证纹理整数倍率；`viewport + keep + integer` 会让中文 UI 一起在 640×360 基础视口绘制，1366×768 实机截图中文字明显更低清晰度；最终配置保留清晰 UI 并采用统一整数像素倍率。证据截图和原始运行采样见 [`art/reviews/chapter1/pixel_clarity/`](../art/reviews/chapter1/pixel_clarity/README.md)。60 秒实际键盘走路采样每 0.25 秒记录一次位置：1366×768 下玩家范围 X=822.39、Y=491，Camera2D 中心范围 X=822.39、Y=331；另存有滚动过程原生截图。采样证明角色移动和相机滚动发生，但不是帧级抖动分析，也不代表性能/FPS 验收。无相机平滑，镜头倍率 1.0；保留物理位置精度，不在游戏逻辑中取整坐标。
+
+原生运行结果是清晰度和缩放策略的开发验收证据，不替代 N01–N03 视觉审查、地图/美术验收或 N11 导出验收。
+
 ## Phase0 原创菜园首屏（可运行候选，非已验收最终美术）
 首批真实像素PNG与地图资源在 `game/assets/phase0/`：16×16地形图集、192×152农舍、80×96橡树、24×32主角四向 idle/walk 帧。640×360 农庄画面改由原生 `TileMapLayer` (`TerrainGround`、`GroundDetails`、按PlotState更新的`PlotStates`) 和可复用 `Sprite2D` 呈现；六块田地Marker、房门/村庄路口、树根/房屋/河道碰撞与保存坐标均不改动。全区域玩家使用同一套四向贴图，现有居民及其他区域地形仍可能为诊断美术。地图和人物资源在 `art/manifest.json` 记录 sha256，`review_status=proposed`，没有用户原设计图同屏对照、PixelLab验收或Godot原生实机截图，不能称为最终素材。原始制作说明见 `art/PHASE0_SOURCE.md`。
 正式设计验收仍需 N01–N03 用户视觉审查及 N05 的原生走路/碰撞/绘制回归；当前`GameClock`、田地、门和背包功能不依赖 PixelLab 在线接口。
