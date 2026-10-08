@@ -15,6 +15,7 @@ var hud: VBoxContainer
 var quickbar_panel: PanelContainer
 var quickbar: HBoxContainer
 var wallet_label: Label
+var dialogue_panel: PanelContainer
 var player_name: LineEdit
 var dog_name: LineEdit
 var volume: HSlider
@@ -56,6 +57,8 @@ func clear_page() -> void:
 	hud_panel.visible=false
 	if is_instance_valid(quickbar_panel): remove_child(quickbar_panel);quickbar_panel.queue_free()
 	quickbar_panel=null;quickbar=null;wallet_label=null
+	if is_instance_valid(dialogue_panel): remove_child(dialogue_panel);dialogue_panel.queue_free()
+	dialogue_panel=null
 	buttons.clear();_first_button=null;player_name=null;dog_name=null;countdown=null
 	notice.text="";panel.visible=true;get_node("Backdrop").visible=true
 
@@ -498,6 +501,29 @@ func show_page(page: String, context: Dictionary) -> void:
 			else:
 				label("当前存档没有可用的交易状态。")
 			button(row(),"close_trade","back","关闭交易 / Esc")
+		"dialogue":
+			panel.hide();get_node("Backdrop").hide()
+			var dialogue: Dictionary = context.get("dialogue",{})
+			dialogue_panel=PanelContainer.new()
+			dialogue_panel.name="DialoguePanel"
+			dialogue_panel.anchor_left=0.5
+			dialogue_panel.anchor_right=0.5
+			dialogue_panel.anchor_top=1.0
+			dialogue_panel.anchor_bottom=1.0
+			dialogue_panel.offset_left=-270
+			dialogue_panel.offset_right=270
+			dialogue_panel.offset_top=-132
+			dialogue_panel.offset_bottom=-12
+			dialogue_panel.add_theme_stylebox_override("panel",UI_THEME.panel_style())
+			add_child(dialogue_panel)
+			var dialogue_column:=VBoxContainer.new();dialogue_column.add_theme_constant_override("separation",5);dialogue_panel.add_child(dialogue_column)
+			var speaker:=Label.new();speaker.name="DialogueSpeaker";speaker.text=String(dialogue.get("display_name",""));UI_THEME.apply_text_role(speaker,UI_THEME.ROLE_HEADING);dialogue_column.add_child(speaker)
+			if bool(dialogue.get("is_first_meeting",false)):
+				var first_caption:=label("第一次交谈",dialogue_column);UI_THEME.apply_text_role(first_caption,UI_THEME.ROLE_CAPTION)
+			var line:=Label.new();line.name="DialogueText";line.text=String(dialogue.get("text",""));line.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;line.size_flags_vertical=Control.SIZE_EXPAND_FILL;UI_THEME.apply_text_role(line,UI_THEME.ROLE_BODY);dialogue_column.add_child(line)
+			var dialogue_actions:=HBoxContainer.new();dialogue_actions.alignment=BoxContainer.ALIGNMENT_END;dialogue_column.add_child(dialogue_actions)
+			button(dialogue_actions,"close_dialogue","accept","结束交谈 / Esc")
+			var close_caption:=label("结束",dialogue_actions);UI_THEME.apply_text_role(close_caption,UI_THEME.ROLE_CAPTION)
 		"world":
 			panel.hide();get_node("Backdrop").hide();hud_panel.visible=true
 			var status:=row(hud)
@@ -519,7 +545,7 @@ func show_page(page: String, context: Dictionary) -> void:
 					elif context.get("space_id","")=="space.shop":
 						hint.text="E 与柜台 / 门交互 · B 背包"
 					elif context.get("space_id","")=="space.village":
-						hint.text="E 采集 / 商店门 / 工坊门 / 农庄出口 · B 背包"
+						hint.text="E 交谈 / 采集 / 门 / 出口 · B 背包"
 					elif context.get("space_id","")=="space.workshop":
 						hint.text="E 与工坊门交互 · B 背包"
 					else:
