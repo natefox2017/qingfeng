@@ -12,7 +12,7 @@
 | 导入 | 文件选择→有界JSON校验→元信息预览→确认新副本 | 取消不写盘；输入文件不变；外来save_id不作本地路径 | 已接通；仅支持当前新格式 |
 | 设置 | 主音量、全屏、VSync→预览→10秒内确认落盘 | Esc/失焦/超时恢复；保存失败恢复且提示 | 已接通；无正式音频素材、未做重映射 |
 | 加载 | 原生后台资源请求→主线程实例化→物理落点检查→新档提交→世界 | generation拒绝旧结果；缺场景/错误契约/墙内落点留在标题且不覆盖档 | 已接通 |
-| 世界HUD | 玩家名、当前世界说明、暂停入口 | 菜单/失焦锁独立，释放一个不能解开另一个 | 已接通；schema2 会话已有真实玩法 projection，但背包/快捷栏 UI 下一切片接入 |
+| 世界HUD | 玩家名、当前世界、日时、金币、12格快捷栏、背包入口 | 背包/箱子/暂停/失焦各自持有输入与时钟token | 已接通；第一屏农事、房屋、床和家庭箱子均投影真实 GameplaySession |
 | 暂停 | 继续、保存新副本、设置、保存并返回 | 保存失败留在会话；关窗提示先保存，不悄悄退出 | 已接通 |
 
 状态由game/app/main.gd管理，menu_view只投影界面并发意图。普通标题按钮保留必要短标签；按钮内部是native line icon，tooltip和无障碍名齐备，不烘焙文字到图。新建、读取等表单保留内容文字，不能为了“全图标”丢失信息。
@@ -21,7 +21,7 @@
 
 ## 新存档协议的具体边界
 
-`session_codec.gd`现在认识三代明确格式：schema 1 / `entry_fixture_v1` 兼容旧碰撞入口；schema 2 / `first_playable_v1` 保存 Clock、Inventory、Wallet、Farm；当前新写入的 schema 3 还保存当前会话的命令幂等回执，机器合同见 `schemas/save_v3.schema.json`。schema 2 仍可读取，下一次正常保存会生成带回执边界的 schema 3；同一 `session_store.gd` 继续走临时写→读回校验→rename 路径。
+`session_codec.gd`现在认识四代明确格式：schema 1 / `entry_fixture_v1` 兼容旧碰撞入口；schema 2 保存 Clock/Inventory/Wallet/Farm；schema 3 加入命令幂等回执；当前新写入的 schema 4 再加入24格家庭箱子 Storage，机器合同见 `schemas/save_v4.schema.json`。schema 1–3 仍可读取；schema 3 恢复时显式得到空的新箱子，下一次正常保存升级为 schema 4。
 
 `main.gd` 现在按 schema 明确分流：新档与 schema 2 读档进入 `space.farm`；场景实例化和物理同步后，从 WORLD 的 Marker 导出 plot definitions，创建临时 `GameplaySession`，完整 restore 成功后才发布会话。schema 1 旧入口档继续进入碰撞夹具且没有 GameplaySession。schema 2 与当前 WORLD 的 Space/plot 几何不一致时整笔拒绝，不会只恢复名字/坐标或把存档中的 plot 坐标当地图来源。
 
@@ -31,7 +31,7 @@ SHA256用于损坏检测，**不是防作弊签名/信任认证**。通过校验
 
 `session_store.gd`写入user://qingfeng/saves：临时文件→flush/关闭→读回验证→新随机ID文件rename。采取最多128份的追加式保存，不覆盖已有文件；每次导入是新本地save_id和新session_id。schema 3 导入时会清空源会话 command receipts，因为回执指纹绑定原 session_id，不能复制成新会话的幂等历史。没有自动删除或按大小淘汰，达到上限会明确失败。列表按写入时间排序；导入重新写本机时间，原文件保留。
 
-新游戏在农庄场景、WORLD layout、GameplaySession 和出生点全部验证后才写第一份 schema 2 档；写盘失败不进入会话。加载原档不自动重写。schema 2 暂停保存会同时更新位置/朝向以及 Clock、Inventory、Wallet、Farm 快照；schema 1 兼容档仍只保存原身份/测试场位置。导入预览保存已验证的内容副本，确认时再次验证，不重读可能已被外部修改的源路径。
+新游戏在农庄场景、WORLD layout、GameplaySession 和出生点全部验证后才写第一份当前 gameplay 档；写盘失败不进入会话。加载原档不自动重写。当前 schema 4 保存会同时更新位置/朝向以及 Clock、Inventory、Storage、Wallet、Farm 和 CommandJournal；schema 1 兼容档仍只保存原身份/测试场位置。导入预览保存已验证的内容副本，确认时再次验证，不重读可能已被外部修改的源路径。
 
 ## 设置语义
 
