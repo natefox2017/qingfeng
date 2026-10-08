@@ -1,6 +1,6 @@
 # 首版具体玩法与接入合同
 
-这是**新项目首版玩法的细化规格与当前接入边界**，不是旧项目已有功能清单。当前 Clock、背包/钱包、PlotState、首作物农耕闭环、schema4 存档、第一屏农事输入、农庄↔房屋门、床休息、家庭箱子转移和商店买卖领域已经有实现；WORLD 现已有可编辑 `space.farm`、`space.house`、`space.village`、`space.shop` 路线。交易柜台 UI、狗、居民与任务仍须后续 N06–N09 完成。不得把工程色块或新档狗名输入当最终美术/真实伙伴系统。
+这是**新项目首版玩法的细化规格与当前接入边界**，不是旧项目已有功能清单。当前 Clock、背包/钱包、PlotState、首作物农耕闭环、schema4 存档、第一屏农事输入、农庄↔房屋门、床休息、家庭箱子转移和商店买卖领域已经有实现；WORLD 现已有可编辑 `space.farm`、`space.house`、`space.village`、`space.shop` 路线。商店柜台交易页也已直接绑定 `economy.buy` / `economy.sell`；狗、居民、任务与无钱无种子的可再生采集恢复来源仍须后续 N06–N09 完成。不得把工程色块或新档狗名输入当最终美术/真实伙伴系统。
 
 ## 第一屏与三天目标
 
@@ -35,7 +35,7 @@ Move仅移动；Interact优先当前可达的门/床/箱子/NPC/柜台；UseSele
 ## 背包、箱子与买卖
 
 槽位拥有实际item_id/quantity；空槽null。家庭箱子是 `container.home_chest`，容量来自 content_version。首个切片先实现按 item_id/quantity 的玩家↔箱子整组/定量转移：先同时验证双方 revision、源量、目标堆叠/容量，再一次提交；失败两边都不变。同 command_id 重放原结果，不会重复搬运。先交付选择、使用和整组转移，不为首版引入拖拽复杂度；增加拖拽后仍调用相同命令。
-买种子走真实柜台，出售走明确界面；NPC闲聊不能让服务永久不可用。当前领域层已经提供 `economy.buy` / `economy.sell`：用唯一 Inventory、Wallet、GameClock 和 content_version 在同一无 await 临界段校验营业时间、双方 revision、余额/物品/容量与价格，再原子提交；同 command_id 重放不会重复扣钱或付款。柜台 WORLD/UI 在下一独立切片接入，不把领域通过误写成“商店已经可玩”。没有种子/钱的玩家仍需后续加入可再生采集物来源，避免首日软锁。
+买种子走真实柜台，出售走明确界面；NPC闲聊不能让服务永久不可用。当前领域层提供 `economy.buy` / `economy.sell`：用唯一 Inventory、Wallet、GameClock 和 content_version 在同一无 await 临界段校验营业时间、双方 revision、余额/物品/容量与价格，再原子提交；同 command_id 重放不会重复扣钱或付款。`space.shop` 的稳定 CounterInteract 现用 E 打开真实交易页，页面只投影价格/数量/营业状态并发 buy/sell intent，trade token 独立暂停时钟且 E/B/数字键不穿透；柜台服务不依赖未来 NPC/AI 是否在线。没有种子/钱的玩家仍需后续加入可再生采集物来源，避免首日软锁。
 
 家庭箱子页面在 `space.house` 通过真实可达 Marker 用 E 打开；背包和24格箱子都来自 GameplaySession projection，点击非空槽整组存入/取出并发送 `storage.transfer`，空槽禁用。页面持有独立 `storage` 暂停/输入 token，Esc 只关闭箱子，E/数字键/B 不会穿透到世界。页面使用同套图标，保留数量、售价、名字与物品说明；空包、满包、目标满、余额不足都有确定提示，关闭窗口不能吞物。
 

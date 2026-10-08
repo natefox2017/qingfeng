@@ -128,6 +128,28 @@ func _storage_slot_button(parent: Node, source_container_id: String, slot_index:
 	parent.add_child(node)
 	return node
 
+func _minute_text(value: int) -> String:
+	return "%02d:%02d" % [value/60,value%60]
+
+func _trade_button(parent: Node, action: String, item_id: String, quantity: int, display_name: String, unit_price: int, enabled: bool, closed_reason: String) -> Button:
+	var node := Button.new()
+	node.custom_minimum_size = Vector2(200,34)
+	var verb := "买" if action == "trade_buy" else "卖"
+	node.text = "%s %d · %s · %d币" % [verb,quantity,display_name,unit_price*quantity]
+	var description := node.text
+	if not enabled and not closed_reason.is_empty():
+		description += "；"+closed_reason
+	node.tooltip_text = description
+	node.accessibility_name = description
+	node.disabled = not enabled
+	node.pressed.connect(func():emit_action(action,{"item_id":item_id,"quantity":quantity}))
+	node.mouse_entered.connect(func():notice.text=description)
+	node.focus_entered.connect(func():notice.text=description)
+	parent.add_child(node)
+	if _first_button == null and enabled:
+		_first_button = node
+	return node
+
 func _clock_text(clock: Dictionary) -> String:
 	var minute_of_day := int(clock.get("minute_of_day",0))
 	return "第%d天  %02d:%02d" % [int(clock.get("day",1)),minute_of_day/60,minute_of_day%60]
@@ -230,6 +252,50 @@ func show_page(page: String, context: Dictionary) -> void:
 			else:
 				label("当前存档没有可用的家庭箱子状态。")
 			button(row(),"close_storage","storage","关闭木箱 / Esc")
+		"trade":
+			title.text="杂货铺柜台";subtitle.text="买卖直接提交权威钱物事务；Esc 关闭。"
+			var gameplay: Dictionary = context.get("gameplay",{})
+			if gameplay.get("ok",false) and gameplay.has("shop"):
+				var shop: Dictionary = gameplay.shop
+				var is_open: bool = bool(shop.get("is_open",false))
+				var hours := _minute_text(int(shop.open_minute))+"–"+_minute_text(int(shop.close_minute))
+				label(_clock_text(gameplay.clock)+"  ·  营业 "+hours+"  ·  "+("营业中" if is_open else "已打烊"))
+				label("金币 "+str(gameplay.wallet.money))
+				var scroll:=ScrollContainer.new();scroll.custom_minimum_size=Vector2(450,180);body.add_child(scroll)
+				var sections:=VBoxContainer.new();sections.size_flags_horizontal=Control.SIZE_EXPAND_FILL;scroll.add_child(sections)
+				label("购买",sections)
+				var buy_rows:=VBoxContainer.new();buy_rows.add_theme_constant_override("separation",4);sections.add_child(buy_rows)
+				var buy_count := 0
+				for item_id: Variant in gameplay.items:
+					var metadata: Dictionary = gameplay.items[item_id]
+					var buy_price := int(metadata.get("buy_price",0))
+					if buy_price <= 0:
+						continue
+					buy_count += 1
+					_trade_button(buy_rows,"trade_buy",String(item_id),1,String(metadata.get("display_name",item_id)),buy_price,is_open,"商店已打烊")
+				if buy_count == 0:
+					label("当前没有可购买商品。",buy_rows)
+				label("出售",sections)
+				var sell_rows:=VBoxContainer.new();sell_rows.add_theme_constant_override("separation",4);sections.add_child(sell_rows)
+				var quantities: Dictionary = {}
+				for slot: Variant in gameplay.inventory.slots:
+					if slot != null:
+						quantities[String(slot.item_id)] = int(quantities.get(String(slot.item_id),0))+int(slot.quantity)
+				var sell_count := 0
+				for item_id: Variant in quantities:
+					var metadata: Dictionary = gameplay.items.get(item_id,{})
+					var sell_price := int(metadata.get("sell_price",0))
+					if sell_price <= 0:
+						continue
+					sell_count += 1
+					_trade_button(sell_rows,"trade_sell",String(item_id),1,String(metadata.get("display_name",item_id)),sell_price,is_open,"商店已打烊")
+					label("持有 ×"+str(quantities[item_id]),sell_rows)
+				if sell_count == 0:
+					label("背包里没有可出售物品。",sell_rows)
+				label("余额、容量、物品数量与 revision 由 economy 命令再次权威校验。",sections)
+			else:
+				label("当前存档没有可用的交易状态。")
+			button(row(),"close_trade","back","关闭交易 / Esc")
 		"world":
 			panel.hide();get_node("Backdrop").hide()
 			button(hud,"pause","pause","暂停 / Esc")
@@ -246,6 +312,10 @@ func show_page(page: String, context: Dictionary) -> void:
 				else:
 					if context.get("space_id","")=="space.house":
 						hint.text="E 与门 / 床 / 箱子交互 · B 背包"
+					elif context.get("space_id","")=="space.shop":
+						hint.text="E 与柜台 / 门交互 · B 背包"
+					elif context.get("space_id","")=="space.village":
+						hint.text="E 与商店门 / 农庄出口交互 · B 背包"
 					else:
 						var selected: Variant=gameplay.inventory.slots[gameplay.inventory.selected_slot_index]
 						var selected_name:="空手"

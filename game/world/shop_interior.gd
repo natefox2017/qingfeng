@@ -31,6 +31,11 @@ func layout_contract_valid() -> bool:
 	return true
 
 func resolve_interaction_target() -> Dictionary:
+	if _marker_reachable($Anchors/CounterInteract):
+		return {
+			"kind":"trade",
+			"interaction_id":"trade.shop.counter"
+		}
 	if _marker_reachable($Anchors/DoorInteract):
 		return {
 			"kind":"door",
