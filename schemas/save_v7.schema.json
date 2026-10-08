@@ -577,6 +577,10 @@
           "maxProperties": 32,
           "additionalProperties": {
             "$ref": "#/$defs/fact_payload_value"
+          },
+          "propertyNames": {
+            "minLength": 1,
+            "maxLength": 128
           }
         }
       ]
@@ -643,6 +647,10 @@
           "maxProperties": 32,
           "additionalProperties": {
             "$ref": "#/$defs/fact_payload_value"
+          },
+          "propertyNames": {
+            "minLength": 1,
+            "maxLength": 128
           }
         }
       },
@@ -683,7 +691,8 @@
       "properties": {
         "revision": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 0,
+          "maximum": 512
         },
         "events": {
           "type": "array",
