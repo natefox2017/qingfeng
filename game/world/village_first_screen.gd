@@ -27,7 +27,7 @@ func get_anchor_position(anchor_name: String) -> Vector2:
 	return node.position if node is Marker2D else Vector2.INF
 
 func layout_contract_valid() -> bool:
-	for anchor_name: String in ["FarmArrival","FarmExitInteract","ShopDoorInteract","ShopDoorArrival"]:
+	for anchor_name: String in ["FarmArrival","FarmExitInteract","ShopDoorInteract","ShopDoorArrival","WorkshopDoorInteract","WorkshopDoorArrival"]:
 		if get_anchor_position(anchor_name) == Vector2.INF:
 			return false
 	var definitions := get_forage_definitions()
@@ -101,6 +101,14 @@ func resolve_interaction_target() -> Dictionary:
 			"arrival_anchor_id":"DoorArrival",
 			"arrival_facing":"north"
 		}
+	if _marker_reachable($Anchors/WorkshopDoorInteract):
+		return {
+			"kind":"door",
+			"interaction_id":"door.village.workshop",
+			"target_space_id":"space.workshop",
+			"arrival_anchor_id":"DoorArrival",
+			"arrival_facing":"north"
+		}
 	return {}
 
 func _marker_reachable(marker: Marker2D) -> bool:
@@ -132,6 +140,7 @@ func _draw() -> void:
 	draw_rect(Rect2(0,0,640,360),Color("82966b"))
 	draw_rect(Rect2(16,160,608,40),Color("bba574"))
 	draw_rect(Rect2(384,128,32,72),Color("bba574"))
+	draw_rect(Rect2(496,160,48,56),Color("bba574"))
 	for child: Node in $ForageSpots.get_children():
 		if child is Marker2D:
 			var marker := child as Marker2D

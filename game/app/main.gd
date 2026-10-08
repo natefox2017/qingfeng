@@ -16,6 +16,7 @@ const FARM_ROOM := "res://world/farm_first_screen.tscn"
 const HOUSE_ROOM := "res://world/house_interior.tscn"
 const VILLAGE_ROOM := "res://world/village_first_screen.tscn"
 const SHOP_ROOM := "res://world/shop_interior.tscn"
+const WORKSHOP_ROOM := "res://world/workshop_interior.tscn"
 const DEFAULT_ROOM := LEGACY_ROOM
 const MOVEMENT_ACTIONS := [&"move_left", &"move_right", &"move_up", &"move_down"]
 const GAMEPLAY_PAUSE_OWNERS := [&"pause_menu", &"inventory", &"storage", &"trade", &"focus"]
@@ -265,6 +266,8 @@ func _scene_path_for_space(space_id: String) -> String:
 			return VILLAGE_ROOM
 		"space.shop":
 			return SHOP_ROOM
+		"space.workshop":
+			return WORKSHOP_ROOM
 	return ""
 
 func _position_is_blocked(position: Vector2) -> bool:
@@ -887,6 +890,8 @@ func _world_label(has_gameplay: bool) -> String:
 			return "村庄第一屏 · 工程美术"
 		"space.shop":
 			return "商店内部 · 工程美术"
+		"space.workshop":
+			return "工坊内部 · 工程美术"
 	return "农庄第一屏 · 工程美术"
 
 func save_progress() -> Dictionary:
