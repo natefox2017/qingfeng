@@ -53,42 +53,42 @@ func run() -> void:
 	var village := VILLAGE.instantiate()
 	root.add_child(village)
 	await physics_frame
-	village.grocer_resident.speed_px_per_sec=180.0
 	village.maker_resident.speed_px_per_sec=180.0
+	village.neighbor_resident.speed_px_per_sec=180.0
 	check(village.apply_resident_runtime(runtime.projection()),"village restores resident runtime")
-	check(village.apply_resident_projection(schedule.projection(1020,false),runtime.projection()),"17:00 applies public schedule targets")
+	check(village.apply_resident_projection(schedule.projection(480,false),runtime.projection()),"08:00 applies current schedule targets before the morning chat")
 
 	var invitation: Dictionary = conversations.invite(
-		"conversation.test.grocer-maker",
-		"resident.grocer",
+		"conversation.test.maker-neighbor",
 		"resident.maker",
+		"resident.neighbor",
 		"space.village"
 	)
-	check(invitation.ok,"grocer and maker occupy one resident conversation")
-	check(conversations.mark_approaching("conversation.test.grocer-maker").ok,"conversation enters approaching")
+	check(invitation.ok,"maker and neighbor occupy one resident conversation")
+	check(conversations.mark_approaching("conversation.test.maker-neighbor").ok,"conversation enters approaching")
 	check(village.apply_conversation_projection(conversations.projection()),"conversation projection overrides schedule with meeting positions")
 
-	var grocer_before: Vector2 = village.grocer_resident.position
 	var maker_before: Vector2 = village.maker_resident.position
+	var neighbor_before: Vector2 = village.neighbor_resident.position
 	await physics_frame
 	await physics_frame
-	check(village.grocer_resident.position!=grocer_before and village.maker_resident.position!=maker_before,"both residents physically approach rather than teleport")
-	check(await wait_ready(village,"conversation.test.grocer-maker"),"both residents reach distinct conversation stands")
-	check(village.grocer_resident.position.distance_to(village.get_node("ConversationAnchors/Left").position)<=2.0,"grocer arrives at left conversation stand")
-	check(village.maker_resident.position.distance_to(village.get_node("ConversationAnchors/Right").position)<=2.0,"maker arrives at right conversation stand")
+	check(village.maker_resident.position!=maker_before and village.neighbor_resident.position!=neighbor_before,"both residents physically approach rather than teleport")
+	check(await wait_ready(village,"conversation.test.maker-neighbor"),"both residents reach distinct conversation stands")
+	check(village.maker_resident.position.distance_to(village.get_node("ConversationAnchors/Left").position)<=2.0,"maker arrives at left conversation stand")
+	check(village.neighbor_resident.position.distance_to(village.get_node("ConversationAnchors/Right").position)<=2.0,"neighbor arrives at right conversation stand")
 
-	check(conversations.begin_participation("conversation.test.grocer-maker").ok,"conversation begins only after approach")
+	check(conversations.begin_participation("conversation.test.maker-neighbor").ok,"conversation begins only after approach")
 	check(village.apply_conversation_projection(conversations.projection()),"participating state is projected into WORLD")
 	var visual: Dictionary = village.conversation_visual_state()
 	check(visual.is_visible and visual.state=="participating","resident-resident exchange is visibly active")
-	check(village.grocer_resident.facing==&"east" and village.maker_resident.facing==&"west","participants face each other while talking")
+	check(village.maker_resident.facing==&"east" and village.neighbor_resident.facing==&"west","participants face each other while talking")
 
-	check(conversations.end("conversation.test.grocer-maker").ok,"conversation ends and releases occupancy")
-	check(village.apply_resident_projection(schedule.projection(1020,false),runtime.projection()),"schedule target is restored after conversation")
+	check(conversations.end("conversation.test.maker-neighbor").ok,"conversation ends and releases occupancy")
+	check(village.apply_resident_projection(schedule.projection(480,false),runtime.projection()),"schedule target is restored after conversation")
 	check(village.apply_conversation_projection(conversations.projection()),"empty conversation projection clears visible exchange")
 	check(not village.conversation_visual_state().is_visible,"conversation indicator disappears after end")
-	check(String(village.grocer_resident.projection().anchor_id)=="anchor.resident.grocer.social","grocer resumes social schedule target")
-	check(String(village.maker_resident.projection().anchor_id)=="anchor.resident.maker.social","maker resumes social schedule target")
+	check(String(village.maker_resident.projection().anchor_id)=="anchor.resident.maker.home","maker resumes its pre-work home target")
+	check(String(village.neighbor_resident.projection().anchor_id)=="anchor.resident.neighbor.work","neighbor resumes its work target")
 
 	village.queue_free()
 	await process_frame
