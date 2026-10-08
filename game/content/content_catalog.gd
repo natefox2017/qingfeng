@@ -128,7 +128,7 @@ static func validate(data: Variant) -> bool:
 				return false
 			if schedule[0].start_minute != data.clock.day_start_minute or schedule[-1].activity_id != "home":
 				return false
-			var required_activities: Array[String] = ["home","work","social"] if schedule_key=="schedule" else ["home","rain"]
+			var required_activities: Array = ["home","work","social"] if schedule_key=="schedule" else ["home","rain"]
 			var seen_activities: Dictionary = {}
 			var previous_start := -1
 			for entry: Variant in schedule:
