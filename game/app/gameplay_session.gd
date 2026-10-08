@@ -91,6 +91,8 @@ func execute(command: Dictionary) -> Dictionary:
 		return journal.execute(command,economy.handle)
 	if action == "forage.collect":
 		return journal.execute(command,foraging.handle)
+	if action == "resident.gift":
+		return journal.execute(command,Callable(self,"_handle_resident_gift"))
 	if action.begins_with("farm."):
 		return journal.execute(command,farming.handle)
 	return journal.execute(command,Callable(self,"_unsupported_command"))
@@ -459,6 +461,112 @@ func _settle_daily_greeting(resident_id: String, context: Dictionary) -> Diction
 		"error_code":"",
 		"has_changes":true,
 		"event_ids":[event_id]
+	}
+
+func resident_gift_offer(resident_id: String) -> Dictionary:
+	var offer := {"can_gift":false,"reason":"","item_id":"","item_name":"","quantity":0,"relationship_points":0}
+	if not is_configured() or not content.residents.definitions.has(resident_id):
+		offer.reason = "RESIDENT_GIFT_RESIDENT_INVALID"
+		return offer
+	var conversation: Dictionary = resident_conversations.conversation_for_actor("actor.player")
+	if conversation.is_empty() or String(conversation.get("state",""))!="participating" or resident_id not in conversation.get("participants",[]):
+		offer.reason = "RESIDENT_GIFT_CONVERSATION_REQUIRED"
+		return offer
+	var dialogue: Dictionary = player_resident_dialogue_context(resident_id)
+	if not dialogue.get("ok",false) or bool(dialogue.is_first_meeting):
+		offer.reason = "RESIDENT_GIFT_FIRST_MEETING_REQUIRED"
+		return offer
+	if String(conversation.space_id)!=String(dialogue.space_id):
+		offer.reason = "RESIDENT_GIFT_SPACE_INVALID"
+		return offer
+	if _daily_resident_fact_count("resident.gift",resident_id,int(clock.current_day()))>=int(content.residents.daily_gift_limit):
+		offer.reason = "RESIDENT_GIFT_DAILY_LIMIT"
+		return offer
+	var selected_index: int = int(inventory.selected_slot_index)
+	var slot: Variant = inventory.slots[selected_index]
+	if slot==null:
+		offer.reason = "RESIDENT_GIFT_SELECTED_EMPTY"
+		return offer
+	var item_id := String(slot.item_id)
+	offer.item_id=item_id
+	offer.item_name=String(content.items[item_id].display_name)
+	offer.quantity=int(slot.quantity)
+	if item_id not in content.residents.gift_item_ids:
+		offer.reason = "RESIDENT_GIFT_ITEM_NOT_ALLOWED"
+		return offer
+	offer.can_gift=true
+	offer.relationship_points=int(content.residents.gift_relationship_points)
+	return offer
+
+func _handle_resident_gift(command: Dictionary) -> Dictionary:
+	var command_id := String(command.get("command_id",""))
+	if String(command.get("actor_id",""))!="actor.player":
+		return _gift_result(command_id,false,"RESIDENT_GIFT_ACTOR_INVALID",false)
+	if command.get("expected_revision")!=inventory.revision:
+		return _gift_result(command_id,false,"STALE_REVISION",true)
+	var payload: Variant = command.get("payload")
+	if not (payload is Dictionary) or payload.size()!=3 or not payload.has("resident_id") or not payload.has("item_id") or not payload.has("quantity"):
+		return _gift_result(command_id,false,"RESIDENT_GIFT_PAYLOAD_INVALID",false)
+	if not (payload.resident_id is String) or not (payload.item_id is String) or not (payload.quantity is int) or int(payload.quantity)!=1:
+		return _gift_result(command_id,false,"RESIDENT_GIFT_PAYLOAD_INVALID",false)
+	var resident_id := String(payload.resident_id)
+	var item_id := String(payload.item_id)
+	var offer: Dictionary = resident_gift_offer(resident_id)
+	if not bool(offer.can_gift):
+		return _gift_result(command_id,false,String(offer.reason),false)
+	if String(offer.item_id)!=item_id:
+		return _gift_result(command_id,false,"RESIDENT_GIFT_SELECTED_MISMATCH",false)
+	var candidate: Dictionary = inventory.candidate_after_remove(item_id,1)
+	if not candidate.ok:
+		return _gift_result(command_id,false,String(candidate.error_code),false)
+
+	var before_inventory: Dictionary = inventory.projection()
+	var before_runtime: Dictionary = resident_runtime.snapshot()
+	var before_events: Dictionary = fact_events.snapshot()
+	var day: int = int(clock.current_day())
+	var sequence: int = _daily_resident_fact_count("resident.gift",resident_id,day)+1
+	var event_id := "event.%s.gift.day.%d.%d" % [resident_id,day,sequence]
+	var fact := {
+		"event_id":event_id,
+		"source_command_id":command_id,
+		"source_system":null,
+		"kind":"resident.gift",
+		"space_id":String(resident_conversations.conversation_for_actor("actor.player").space_id),
+		"game_minute":int(clock.game_minute),
+		"participant_ids":["actor.player",resident_id],
+		"payload":{"item_id":item_id,"quantity":1,"relationship_delta":int(offer.relationship_points)}
+	}
+	if not inventory.commit_slots(candidate.slots,int(command.expected_revision)):
+		return _gift_result(command_id,false,"STALE_REVISION",true)
+	var relationship: Dictionary = resident_runtime.adjust_relationship(resident_id,int(offer.relationship_points))
+	if not relationship.ok:
+		_rollback_resident_gift(before_inventory,before_runtime,before_events)
+		return _gift_result(command_id,false,String(relationship.error_code),false)
+	var appended: Dictionary = fact_events.append(fact)
+	if not appended.ok:
+		_rollback_resident_gift(before_inventory,before_runtime,before_events)
+		return _gift_result(command_id,false,String(appended.error_code),false)
+	var learned: Dictionary = resident_knowledge.learn_event(resident_id,event_id,"experienced")
+	if not learned.ok:
+		_rollback_resident_gift(before_inventory,before_runtime,before_events)
+		return _gift_result(command_id,false,String(learned.error_code),false)
+	return _gift_result(command_id,true,"",false,[event_id])
+
+func _rollback_resident_gift(inventory_before: Dictionary, runtime_before: Dictionary, events_before: Dictionary) -> void:
+	inventory.restore(inventory_before)
+	resident_runtime.restore(runtime_before)
+	fact_events.restore(events_before)
+
+func _gift_result(command_id: String, ok: bool, error_code: String, retryable: bool, event_ids: Array = []) -> Dictionary:
+	return {
+		"protocol_version":1,
+		"command_id":command_id,
+		"ok":ok,
+		"error_code":error_code,
+		"is_retryable":retryable,
+		"has_changes":ok,
+		"revision":int(inventory.revision),
+		"event_ids":event_ids
 	}
 
 func _daily_resident_fact_count(kind: String, resident_id: String, day: int) -> int:
