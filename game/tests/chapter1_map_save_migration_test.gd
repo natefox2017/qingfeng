@@ -6,7 +6,7 @@ const MAIN = preload("res://app/main.tscn")
 const CODEC = preload("res://persistence/session_codec.gd")
 const MIGRATION = preload("res://app/chapter1_map_migration.gd")
 
-const OLD_PLOTS := {
+const OLD_PLOTS = {
 	"plot.farm.001":Vector2i(17,7),
 	"plot.farm.002":Vector2i(18,7),
 	"plot.farm.003":Vector2i(19,7),
