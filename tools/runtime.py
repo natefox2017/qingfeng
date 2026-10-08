@@ -239,6 +239,7 @@ def run_phase0_tests(engine: str, reports: Path, timeout: float) -> int:
         ("phase0_visual_contract", "PHASE0_VISUAL_PASS"),
         ("farm_interaction", "FARM_INTERACTION_PASS"),
         ("door_transition", "DOOR_PASS"),
+        ("village_shop_route", "VILLAGE_SHOP_PASS"),
         ("new_game_ui", "NEW_GAME_UI_PASS"),
     ]
     summary = {"import_passed": False, "passed": False, "tests": {}}
