@@ -129,7 +129,8 @@ func run() -> void:
 	var conflict: Dictionary = session.execute(command("gift.day1",revision,"item.radish"))
 	check(not conflict.ok and conflict.error_code=="COMMAND_ID_CONFLICT","same id and a different gift conflicts")
 	var same_day: Dictionary = session.execute(command("gift.again",session.inventory.revision,"item.wild_herb"))
-	check(not same_day.ok and same_day.error_code=="RESIDENT_GIFT_DAILY_LIMIT" and session.snapshot()==after_gift,"same-day new command cannot farm items or relationship")
+	check(not same_day.ok and same_day.error_code=="RESIDENT_GIFT_DAILY_LIMIT","same-day new command reaches the daily cap")
+	check(session.inventory.projection()==after_gift.inventory and session.resident_runtime.snapshot()==after_gift.residents and session.fact_events.snapshot()==after_gift.fact_events,"same-day rejection leaves inventory, relationship and facts unchanged")
 
 	var identity: Dictionary = CODEC.new_snapshot("小禾","阿豆")
 	identity.space_id="space.village"
