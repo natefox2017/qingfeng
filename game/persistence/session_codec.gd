@@ -123,6 +123,24 @@ static func _valid_storage(value: Variant, content: Dictionary) -> bool:
 			return false
 	return true
 
+static func _valid_forage(value: Variant, current_day: int) -> bool:
+	if not keys(value,["revision","spots"]):
+		return false
+	if not (value.revision is int) or value.revision < 0:
+		return false
+	if not (value.spots is Array) or value.spots.is_empty() or value.spots.size() > 128:
+		return false
+	var ids: Dictionary = {}
+	for spot: Variant in value.spots:
+		if not keys(spot,["spot_id","last_collected_day"]):
+			return false
+		if not (spot.spot_id is String) or spot.spot_id.is_empty() or ids.has(spot.spot_id):
+			return false
+		if not (spot.last_collected_day is int) or spot.last_collected_day < 0 or spot.last_collected_day > current_day:
+			return false
+		ids[spot.spot_id]=true
+	return true
+
 static func _valid_wallet(value: Variant) -> bool:
 	if not keys(value,["revision","owner_id","money"]):
 		return false
@@ -185,7 +203,7 @@ static func _valid_gameplay_common(value: Variant) -> bool:
 		if not value.has(key):
 			return false
 	for key: Variant in value.keys():
-		if key not in ["content_version","clock","inventory","wallet","farm","command_journal","storage"]:
+		if key not in ["content_version","clock","inventory","wallet","farm","command_journal","storage","forage"]:
 			return false
 	if value.has("storage") and not value.has("command_journal"):
 		return false
@@ -201,6 +219,8 @@ static func _valid_gameplay_common(value: Variant) -> bool:
 	if not keys(value.clock,["game_minute"]) or not (value.clock.game_minute is int) or value.clock.game_minute < 0:
 		return false
 	var current_day := floori(float(value.clock.game_minute) / float(content.clock.minutes_per_day)) + 1
+	if value.has("forage") and not _valid_forage(value.forage,current_day):
+		return false
 	return _valid_inventory(value.inventory,content) and _valid_wallet(value.wallet) and _valid_farm(value.farm,content,current_day)
 
 static func _valid_gameplay_v2(value: Variant) -> bool:
@@ -210,7 +230,10 @@ static func _valid_gameplay_v3(value: Variant) -> bool:
 	return value is Dictionary and value.size() == 6 and value.has("command_journal") and not value.has("storage") and _valid_gameplay_common(value)
 
 static func _valid_gameplay_v4(value: Variant) -> bool:
-	return value is Dictionary and value.size() == 7 and value.has("command_journal") and value.has("storage") and _valid_gameplay_common(value)
+	return value is Dictionary and value.size() == 7 and value.has("command_journal") and value.has("storage") and not value.has("forage") and _valid_gameplay_common(value)
+
+static func _valid_gameplay_v5(value: Variant) -> bool:
+	return value is Dictionary and value.size() == 8 and value.has("command_journal") and value.has("storage") and value.has("forage") and _valid_gameplay_common(value)
 
 static func validate_gameplay_snapshot(value: Variant) -> bool:
 	if not (value is Dictionary):
@@ -272,6 +295,8 @@ static func normalized_numbers(value: Variant) -> Variant:
 static func _schema_for_snapshot(snapshot: Dictionary) -> int:
 	if not snapshot.has("gameplay"):
 		return 1
+	if snapshot.gameplay.has("forage"):
+		return 5
 	if snapshot.gameplay.has("storage"):
 		return 4
 	return 3 if snapshot.gameplay.has("command_journal") else 2
@@ -312,7 +337,7 @@ static func decode(text: String) -> Dictionary:
 	var envelope: Variant = normalized_numbers(parser.data)
 	if not keys(envelope,["save_format","schema_version","content_version","save_id","saved_at_utc","snapshot","checksum"]):
 		return failure("SAVE_FIELDS")
-	if envelope.save_format != "qingfeng" or not integer(envelope.schema_version,1,4):
+	if envelope.save_format != "qingfeng" or not integer(envelope.schema_version,1,5):
 		return failure("SAVE_VERSION_UNSUPPORTED")
 	var schema_version := int(envelope.schema_version)
 	if schema_version == 1:
@@ -332,6 +357,11 @@ static func decode(text: String) -> Dictionary:
 		if envelope.content_version != GAMEPLAY_CONTENT_VERSION:
 			return failure("SAVE_CONTENT_UNSUPPORTED")
 		if not validate_gameplay_snapshot(envelope.snapshot) or not _valid_gameplay_v4(envelope.snapshot.gameplay) or envelope.snapshot.gameplay.content_version != envelope.content_version:
+			return failure("SAVE_SNAPSHOT_INVALID")
+	elif schema_version == 5:
+		if envelope.content_version != GAMEPLAY_CONTENT_VERSION:
+			return failure("SAVE_CONTENT_UNSUPPORTED")
+		if not validate_gameplay_snapshot(envelope.snapshot) or not _valid_gameplay_v5(envelope.snapshot.gameplay) or envelope.snapshot.gameplay.content_version != envelope.content_version:
 			return failure("SAVE_SNAPSHOT_INVALID")
 	else:
 		return failure("SAVE_VERSION_UNSUPPORTED")
