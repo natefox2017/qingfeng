@@ -1,5 +1,5 @@
 extends Node2D
-## Editable first-screen farm layout. This is engineering presentation, not final art.
+## Editable Phase0 farm scene with authored TileMapLayer terrain and object art.
 ## Plot coordinates are exported from Marker2D nodes in this scene; gameplay never
 ## owns a second copy of map geometry.
 
@@ -11,6 +11,7 @@ const FARM_ACTION_LATERAL_PX := 9.0
 var _farm_states: Dictionary = {}
 
 @onready var player: CharacterBody2D = $FootSorted/Player
+@onready var plot_tiles: TileMapLayer = $PlotStates
 
 func set_input_enabled(enabled: bool) -> void:
 	player.set_input_enabled(enabled)
@@ -104,7 +105,21 @@ func apply_farm_projection(value: Variant) -> bool:
 			return false
 		next[String(plot.plot_id)] = plot.duplicate(true)
 	_farm_states = next
-	queue_redraw()
+	plot_tiles.clear()
+	for plot_id: String in _farm_states:
+		var marker: Marker2D = _marker_for_plot(plot_id)
+		var row: Dictionary = _farm_states[plot_id]
+		var state: String = String(row.get("state","untilled"))
+		var atlas := Vector2i(0,2)
+		match state:
+			"tilled":
+				atlas = Vector2i(2,2) if bool(row.get("is_watered",false)) else Vector2i(1,2)
+			"growing":
+				atlas = Vector2i(3,2)
+			"mature":
+				atlas = Vector2i(4,2)
+		var cell := Vector2i(int(round(marker.position.x/TILE_SIZE)),int(round(marker.position.y/TILE_SIZE)))
+		plot_tiles.set_cell(cell,0,atlas,0)
 	return true
 
 func farm_visual_state(plot_id: String) -> Dictionary:
@@ -129,6 +144,8 @@ func get_plot_definitions() -> Array:
 
 func layout_contract_valid() -> bool:
 	var definitions := get_plot_definitions()
+	if $TerrainGround.tile_set == null or $PlotStates.tile_set == null or $TerrainGround.get_used_cells().size() != 920:
+		return false
 	for anchor_name: String in ["PlayerSpawn","FieldApproach","BridgeWest","BridgeEast","HouseDoorInteract","HouseDoorArrival","VillagePathInteract"]:
 		if get_anchor_position(anchor_name) == Vector2.INF:
 			return false
@@ -152,25 +169,3 @@ func _marker_for_plot(plot_id: String) -> Marker2D:
 			return child as Marker2D
 	return null
 
-func _draw() -> void:
-	# Diagnostic skin only. Accepted terrain/object art will replace these fills
-	# without changing anchors, plot ids or collision nodes.
-	draw_rect(Rect2(0,0,640,360),Color("7c9565"))
-	draw_rect(Rect2(96,144,392,48),Color("b9a36c"))
-	draw_rect(Rect2(456,192,152,32),Color("b9a36c"))
-	draw_rect(Rect2(488,192,80,32),Color("9d7648"))
-	for child: Node in $FarmPlots.get_children():
-		if child is Marker2D:
-			var marker := child as Marker2D
-			var plot_id := String(marker.get_meta("plot_id",""))
-			var state: Dictionary = _farm_states.get(plot_id,{})
-			var plot_state := String(state.get("state","untilled"))
-			var soil_color := Color("7f6542") if plot_state == "untilled" else Color("5f4935")
-			draw_rect(Rect2(marker.position-Vector2(7,7),Vector2(14,14)),soil_color)
-			if bool(state.get("is_watered",false)):
-				draw_rect(Rect2(marker.position-Vector2(6,6),Vector2(12,12)),Color("5f7890"),false,2)
-			if plot_state == "growing":
-				draw_circle(marker.position,3.0,Color("4e7b47"))
-			elif plot_state == "mature":
-				draw_circle(marker.position,5.0,Color("8da44d"))
-				draw_circle(marker.position,2.0,Color("d8c95b"))
