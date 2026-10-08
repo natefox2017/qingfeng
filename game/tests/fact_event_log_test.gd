@@ -138,7 +138,7 @@ func run() -> void:
 	var dangling_full: Dictionary = identity()
 	dangling_full["gameplay"]=dangling_gameplay
 	var dangling_encoded := CODEC.encode(dangling_full,"ffeeddccbbaa99887766554433221100")
-	check(not dangling_encoded.is_empty() and not CODEC.decode(dangling_encoded).ok,"legacy schema six rejects dangling known_event_ids on decode")
+	check(dangling_encoded.is_empty() and not CODEC.validate_snapshot(dangling_full),"legacy schema six rejects dangling known_event_ids before encoding")
 
 	var broken_v7: Dictionary = session.snapshot()
 	broken_v7.residents.residents[0].known_event_ids.append("event.not.in.log")
