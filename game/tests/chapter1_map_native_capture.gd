@@ -15,6 +15,8 @@ func _initialize() -> void:
 	run.call_deferred()
 
 func run() -> void:
+	root.get_node("AudioManager").shutdown_audio()
+	await process_frame
 	create_timer(30).timeout.connect(func(): printerr("MAP_NATIVE_CAPTURE_TIMEOUT"); quit(1))
 	for resource: PackedScene in [FARM,VILLAGE]:
 		var scene: Node2D = resource.instantiate()
@@ -35,5 +37,7 @@ func run() -> void:
 			print("MAP_NATIVE_CAPTURE_IMAGE ",name)
 		scene.queue_free()
 		await process_frame
+	root.get_node("AudioManager").shutdown_audio()
+	await process_frame
 	print("MAP_NATIVE_CAPTURE_RESULT rendered_only=true")
 	quit(0)

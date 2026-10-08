@@ -19,6 +19,11 @@ func walk(target: Vector2) -> bool:
 		if not action.is_empty(): Input.action_release(action)
 		await physics_frame
 	var reached := player.position.distance_to(target) <= 4.0
+	if not reached:
+		print("MAP_WALK_DIAGNOSTIC enabled=", player.is_input_enabled, " focus_locked=", app.locks.has_owner(&"focus"), " velocity=", player.velocity, " slide_count=", player.get_slide_collision_count(), " input_right=", Input.is_action_pressed("move_right"), " locks=", app.locks._owners)
+		for index in range(player.get_slide_collision_count()):
+			var hit := player.get_slide_collision(index)
+			print("MAP_WALK_COLLIDER ", hit.get_collider(), " point=", hit.get_position())
 	check(reached, "physics walk %s reached %s" % [target, player.position])
 	return reached
 
@@ -124,5 +129,7 @@ func finish() -> void:
 	if is_instance_valid(app):
 		app.queue_free()
 		await process_frame
+	root.get_node("AudioManager").shutdown_audio()
+	await process_frame
 	print("MAP_PLAYABILITY_RESULT checks=%d failures=%d" % [checks, failures])
 	quit(0 if failures == 0 else 1)
