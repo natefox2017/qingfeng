@@ -1,6 +1,6 @@
 extends RefCounted
 ## Shared UI theme and semantic text/color tokens.
-## Font fallback remains development-only until N07 ships a verified bundled CJK font.
+## Use the pinned, bundled SIL OFL CJK font. No system-font dependency at runtime.
 
 const ROLE_BODY := &"body"
 const ROLE_CAPTION := &"caption"
@@ -40,7 +40,7 @@ const PAGE_RADIUS := 8
 const CONTROL_RADIUS := 3
 const HUD_RADIUS := 5
 const HUD_MARGIN := 6.0
-const QUICKBAR_SLOT_SIZE := Vector2(38,42)
+const QUICKBAR_SLOT_SIZE := Vector2(32,34)
 
 static func _control_style(state: String) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
@@ -88,9 +88,11 @@ static func slot_style(selected: bool, emphasized := false) -> StyleBoxFlat:
 
 static func build() -> Theme:
 	var theme := Theme.new()
-	var font := SystemFont.new()
-	font.font_names = PackedStringArray(["Noto Sans CJK SC", "Microsoft YaHei", "PingFang SC", "sans-serif"])
-	theme.default_font = font
+	var font := load("res://assets/fonts/NotoSansCJKsc-Regular.otf") as FontFile
+	if font == null:
+		push_error("Bundled Noto Sans CJK SC font missing; UI cannot be rendered reliably.")
+	else:
+		theme.default_font = font
 	theme.default_font_size = FONT_BODY
 	for kind: String in ["Label", "Button", "CheckBox", "LineEdit"]:
 		theme.set_color("font_color", kind, COLOR_INK)

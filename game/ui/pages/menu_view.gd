@@ -39,7 +39,11 @@ func _ready() -> void:
 	subtitle=Label.new();UI_THEME.apply_text_role(subtitle,UI_THEME.ROLE_CAPTION);subtitle.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;column.add_child(subtitle)
 	body=VBoxContainer.new();body.add_theme_constant_override("separation",8);body.size_flags_vertical=Control.SIZE_EXPAND_FILL;column.add_child(body)
 	notice=Label.new();notice.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;UI_THEME.apply_text_role(notice,UI_THEME.ROLE_ERROR);column.add_child(notice)
-	hud_panel=PanelContainer.new();hud_panel.position=Vector2(8,8);hud_panel.custom_minimum_size=Vector2(624,0);hud_panel.add_theme_stylebox_override("panel",UI_THEME.hud_panel_style());hud_panel.visible=false;add_child(hud_panel)
+	hud_panel=PanelContainer.new()
+	hud_panel.anchor_left=1.0;hud_panel.anchor_right=1.0;hud_panel.anchor_top=0.0;hud_panel.anchor_bottom=0.0
+	hud_panel.offset_left=-222;hud_panel.offset_right=-8;hud_panel.offset_top=8;hud_panel.offset_bottom=8
+	hud_panel.custom_minimum_size=Vector2(214,0)
+	hud_panel.add_theme_stylebox_override("panel",UI_THEME.hud_panel_style());hud_panel.visible=false;add_child(hud_panel)
 	hud=VBoxContainer.new();hud.add_theme_constant_override("separation",2);hud_panel.add_child(hud)
 	file_dialog=FileDialog.new();file_dialog.file_mode=FileDialog.FILE_MODE_OPEN_FILE;file_dialog.access=FileDialog.ACCESS_FILESYSTEM;file_dialog.filters=PackedStringArray(["*.qfsave ; 晴风谷存档"]);file_dialog.title="选择要导入的存档";file_dialog.size=Vector2i(560,300)
 	file_dialog.theme=self.theme;add_child(file_dialog)
@@ -97,9 +101,11 @@ func _slot_button(parent: Node, slot_index: int, slot: Variant, items: Dictionar
 		display_name = str(metadata.get("display_name",slot.item_id))
 		quantity = int(slot.quantity)
 	if compact:
-		var short_name := "空" if slot == null else display_name.left(2)
-		node.text = number_text+"\n"+short_name+("" if quantity <= 1 else " ×"+str(quantity))
+		var short_name := display_name.left(2)
+		node.text = number_text if slot == null else number_text+"\n"+short_name+("" if quantity <= 1 else " ×"+str(quantity))
 		node.custom_minimum_size = UI_THEME.QUICKBAR_SLOT_SIZE
+		if slot == null:
+			node.add_theme_color_override("font_color",UI_THEME.COLOR_MUTED)
 	else:
 		node.text = number_text+"  "+display_name+("" if quantity <= 0 else "  ×"+str(quantity))
 		node.custom_minimum_size = Vector2(90,42)
@@ -219,9 +225,9 @@ func _build_quickbar(gameplay: Dictionary) -> void:
 	quickbar_panel.anchor_right=0.5
 	quickbar_panel.anchor_top=1.0
 	quickbar_panel.anchor_bottom=1.0
-	quickbar_panel.offset_left=-248
-	quickbar_panel.offset_right=248
-	quickbar_panel.offset_top=-58
+	quickbar_panel.offset_left=-216
+	quickbar_panel.offset_right=216
+	quickbar_panel.offset_top=-48
 	quickbar_panel.offset_bottom=-6
 	quickbar_panel.add_theme_stylebox_override("panel",UI_THEME.hud_panel_style())
 	add_child(quickbar_panel)
@@ -554,11 +560,12 @@ func show_page(page: String, context: Dictionary) -> void:
 			button(status,"pause","pause","暂停 / Esc")
 			if context.get("has_gameplay",false):
 				button(status,"inventory","inventory","背包 / B")
-			var text:=Label.new();text.text=context.get("player_name","")+"  ·  "+str(context.get("world_label","世界"));text.size_flags_horizontal=Control.SIZE_EXPAND_FILL;text.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT);status.add_child(text)
+			var area:=Label.new();area.text=_space_display_name(String(context.get("space_id","")));area.size_flags_horizontal=Control.SIZE_EXPAND_FILL;area.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT);status.add_child(area)
 			var gameplay: Dictionary = context.get("gameplay",{})
 			if gameplay.get("ok",false):
-				var clock_label:=Label.new();clock_label.text=_clock_text(gameplay.clock);clock_label.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT);status.add_child(clock_label)
-				wallet_label=Label.new();wallet_label.text="金币 "+str(gameplay.wallet.money);wallet_label.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT);status.add_child(wallet_label)
+				var stats:=row(hud)
+				var clock_label:=Label.new();clock_label.text=_clock_text(gameplay.clock);clock_label.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT);stats.add_child(clock_label)
+				wallet_label=Label.new();wallet_label.text="金币 "+str(gameplay.wallet.money);wallet_label.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT);stats.add_child(wallet_label)
 				var action_state: Dictionary = context.get("farm_action",{})
 				var hint:=Label.new()
 				if action_state.get("is_busy",false):
@@ -577,7 +584,7 @@ func show_page(page: String, context: Dictionary) -> void:
 						var selected_name:="空手"
 						if selected!=null:
 							selected_name=str(gameplay.items.get(String(selected.item_id),{}).get("display_name",selected.item_id))
-						hint.text="E 使用 "+selected_name+" · B 背包"
+						hint.text="E 使用 "+selected_name
 				hint.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT);hud.add_child(hint)
 				_build_quickbar(gameplay)
 	if not context.get("error","").is_empty():notice.text=context.error

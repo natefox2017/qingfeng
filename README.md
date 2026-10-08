@@ -7,7 +7,7 @@
 ## 当前状态
 `foundation`：**正式新档已进入 `space.farm` 门前菜园**，使用 Godot 4.7.2 可编辑的 16px TileMapLayer、农舍/树木 PNG、玩家四向 idle/walk 像素精灵，并有真实六块田格、种植/浇水/采收、村庄与室内门、背包/箱子/交易、日时与 schema7 保存。旧 schema1 碰撞测试档**只从读档列表显式进入**，不会被「继续游戏」当成正式存档。
 
-这些是 **Phase0 原创可玩美术候选**，不是已验收的第一章设计稿或 PixelLab 正式成品。第一章总地图、正式人犬动画、最终 TileSet 美术、中文随包字体、对照权威设计稿的人工审查仍未完成。当前 Phase0 已有固定 Godot 4.7.2 的原生冷导入/农庄碰撞/田格/门转场自动回归；**脚本验证与最终视觉验收不可混称**。进度以 [总任务 Phase0 验收清单](https://github.com/natefox2017/qingfeng/issues/1) 为准；入口细节见 [入口合同](docs/entry_pages.md)。
+这些是 **Phase0 原创可玩美术候选**，不是已验收的第一章设计稿或 PixelLab 正式成品。第一章总地图、正式人犬动画、最终 TileSet 美术、正式物品图标及对照权威设计稿的人工审查仍未完成。开源 Noto Sans CJK SC 字体已经按官方固定版本下载、校验和随源码登记；原生 HUD 中文截图已可读，仍需导出包复核。当前 Phase0 已有固定 Godot 4.7.2 的原生冷导入/农庄碰撞/田格/门转场自动回归；**脚本验证与最终视觉验收不可混称**。进度以 [总任务 Phase0 验收清单](https://github.com/natefox2017/qingfeng/issues/1) 为准；入口细节见 [入口合同](docs/entry_pages.md)。
 
 ## 入口
 - [Notion 唯一人类入口](https://app.notion.com/p/3eee1df1f5a78150879fe4bc1c3151db)
@@ -50,6 +50,6 @@ app、actors、ui、persistence与tests已有入口切片，其他领域仍按Is
 
 在最新 `main` 运行 `./run_game.sh`，选「**新建游戏**」并创建新档，应在 **农庄 · 门前菜园** 看到地形、水岸、农舍、树木、六块田，以及完整像素人物（不是黄色方块）。用 WASD/方向键四向走动；验证农舍前行走、田格 E 互动、树干碰撞和从桥通往村庄。读档列表中带「旧版碰撞测试档」标识的文件是旧兼容夹具，不代表正式农庄存档。
 
-需要留存**实际引擎画面**时，在带图形显示的桌面环境运行 `./run_game.sh --capture ./captures`。该命令通过与正常启动相同的 Godot 版本检查与资源导入，先创建真实新档、验证 `space.farm` 地图/四向精灵并用按键走路，然后输出 `phase0_farm_1280.png` / `phase0_farm_1920.png`。**无图形桌面会明确失败**，不会把 headless 或测试场当成实机截图。正式截图需要审美术构图、遮挡与中文 UI；中文仍为系统字体后备，最终字体、原设计图还原与完整人物/狗动画待 N01/N02/N03/N05 验收。
+需要留存**实际引擎画面**时，在带图形显示的桌面环境运行 `./run_game.sh --capture ./captures`。该命令通过与正常启动相同的 Godot 版本检查与资源导入，先创建真实新档、验证 `space.farm` 地图/四向精灵并用按键走路，然后输出 `phase0_farm_1280.png` / `phase0_farm_1920.png`。**无图形桌面会明确失败**，不会把 headless 或测试场当成实机截图。正式截图需要审美术构图、遮挡与中文 UI；当前 UI 固定使用随包 Noto Sans CJK SC（SIL OFL-1.1），无需玩家预装中文字体；正式图标、设计图还原和完整人物/狗动画仍未完成。详见 [P0-UX 阻断 #74](https://github.com/natefox2017/qingfeng/issues/74)。
 
 [切图细则](docs/asset_slicing.md) · [具体玩法](docs/gameplay_details.md) · [旧项目问题复盘](docs/legacy_lessons.md)。
