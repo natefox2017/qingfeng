@@ -352,6 +352,72 @@ func restore(snapshot_value: Variant) -> bool:
 func update_resident_runtime(value: Variant) -> bool:
 	return resident_runtime != null and resident_runtime.update_runtime(value)
 
+func player_resident_dialogue_context(resident_id: String) -> Dictionary:
+	if not is_configured() or not content.has("dialogues") or not content.dialogues.player_resident.has(resident_id):
+		return {"ok":false,"error_code":"DIALOGUE_RESIDENT_UNAVAILABLE"}
+	var definition: Dictionary = content.dialogues.player_resident[resident_id]
+	var runtime_row: Dictionary = {}
+	for row: Variant in resident_runtime.projection().residents:
+		if row is Dictionary and String(row.get("resident_id",""))==resident_id:
+			runtime_row=row
+			break
+	if runtime_row.is_empty() or String(runtime_row.space_id)!=String(definition.space_id):
+		return {"ok":false,"error_code":"DIALOGUE_RESIDENT_NOT_HERE"}
+	var first: Dictionary = definition.first_meeting
+	var first_event_id := String(first.event_id)
+	var knows_first := resident_runtime.knows_event(resident_id,first_event_id)
+	var fact_exists := fact_events.has_event(first_event_id)
+	if fact_exists and not knows_first:
+		return {"ok":false,"error_code":"DIALOGUE_KNOWLEDGE_INCONSISTENT"}
+	var chosen: Dictionary = definition.repeat if knows_first else first
+	return {
+		"ok":true,
+		"error_code":"",
+		"resident_id":resident_id,
+		"display_name":String(content.residents.definitions[resident_id].display_name),
+		"space_id":String(definition.space_id),
+		"dialogue_id":String(chosen.dialogue_id),
+		"text":String(chosen.text),
+		"is_first_meeting":not knows_first,
+		"event_id":first_event_id if not knows_first else "",
+		"event_kind":String(first.event_kind) if not knows_first else ""
+	}
+
+func complete_player_resident_dialogue(resident_id: String, dialogue_id: String) -> Dictionary:
+	var context: Dictionary = player_resident_dialogue_context(resident_id)
+	if not context.ok:
+		return {"ok":false,"error_code":String(context.error_code),"has_changes":false,"event_ids":[]}
+	if String(context.dialogue_id)!=dialogue_id:
+		return {"ok":false,"error_code":"DIALOGUE_CONTEXT_STALE","has_changes":false,"event_ids":[]}
+	if not bool(context.is_first_meeting):
+		return {"ok":true,"error_code":"","has_changes":false,"event_ids":[]}
+	var before_facts: Dictionary = fact_events.snapshot()
+	var before_runtime: Dictionary = resident_runtime.snapshot()
+	var fact := {
+		"event_id":String(context.event_id),
+		"source_command_id":null,
+		"source_system":"dialogue.authored",
+		"kind":String(context.event_kind),
+		"space_id":String(context.space_id),
+		"game_minute":int(clock.game_minute),
+		"participant_ids":["actor.player",resident_id],
+		"payload":{"dialogue_id":dialogue_id}
+	}
+	var appended: Dictionary = fact_events.append(fact)
+	if not appended.ok:
+		return {"ok":false,"error_code":String(appended.error_code),"has_changes":false,"event_ids":[]}
+	var learned: Dictionary = resident_knowledge.learn_event(resident_id,String(context.event_id),"experienced")
+	if not learned.ok:
+		fact_events.restore(before_facts)
+		resident_runtime.restore(before_runtime)
+		return {"ok":false,"error_code":String(learned.error_code),"has_changes":false,"event_ids":[]}
+	return {
+		"ok":true,
+		"error_code":"",
+		"has_changes":bool(appended.has_changes) or bool(learned.has_changes),
+		"event_ids":[String(context.event_id)]
+	}
+
 func invite_resident_conversation(conversation_id: String, inviter_id: String, invitee_id: String, space_id: String) -> Dictionary:
 	return resident_conversations.invite(conversation_id,inviter_id,invitee_id,space_id)
 
