@@ -100,10 +100,15 @@ func _entry_for_minute(schedule: Array, minute_of_day: int) -> Dictionary:
 	return chosen.duplicate(true)
 
 func _valid_anchor_definition(value: Variant) -> bool:
-	if not (value is Dictionary) or value.size()!=2:
+	if not (value is Dictionary) or value.size()!=3:
 		return false
-	if not value.has("anchor_id") or not value.has("space_id"):
+	if not value.has("anchor_id") or not value.has("space_id") or not value.has("world_position_px"):
 		return false
+	if not (value.world_position_px is Dictionary) or value.world_position_px.size()!=2 or not value.world_position_px.has("x") or not value.world_position_px.has("y"):
+		return false
+	for axis: String in ["x","y"]:
+		if not (value.world_position_px[axis] is int or value.world_position_px[axis] is float) or not is_finite(float(value.world_position_px[axis])):
+			return false
 	return (
 		value.anchor_id is String
 		and not value.anchor_id.is_empty()
