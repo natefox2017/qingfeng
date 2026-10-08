@@ -11,7 +11,7 @@
 | 存档列表 | 列出本机.qfsave，可读/坏档分开；选中读取 | 坏档显示错误，不按原路径创建新档覆盖 | 已接通；最多128份，暂不提供删除 |
 | 导入 | 文件选择→有界JSON校验→元信息预览→确认新副本 | 取消不写盘；输入文件不变；外来save_id不作本地路径 | 已接通；仅支持当前新格式 |
 | 设置 | 主音量、全屏、VSync→预览→10秒内确认落盘 | Esc/失焦/超时恢复；保存失败恢复且提示 | 已接通；无正式音频素材、未做重映射 |
-| 加载 | 原生后台资源请求→主线程实例化→物理落点检查→新档提交→世界 | generation拒绝旧结果；缺场景/错误契约/墙内落点留在标题且不覆盖档 | 已接通；玩法档可从 farm/house/village/shop 当前区域恢复 |
+| 加载 | 原生后台资源请求→主线程实例化→物理落点检查→新档提交→世界 | generation拒绝旧结果；缺场景/错误契约/墙内落点留在标题且不覆盖档 | 已接通；玩法档可从 farm/house/village/shop/workshop 当前区域恢复 |
 | 世界HUD | 玩家名、当前世界、日时、金币、12格快捷栏、背包入口 | 背包/箱子/交易/暂停/失焦各自持有输入与时钟token | 已接通；农庄、家、村庄、商店均复用同一 GameplaySession，柜台交易页也走真实钱物命令 |
 | 暂停 | 继续、保存新副本、设置、保存并返回 | 保存失败留在会话；关窗提示先保存，不悄悄退出 | 已接通 |
 | 交易 | 商店柜台 E 打开；显示营业时段、金币、可买商品与背包可售物；买/卖1件 | 打烊按钮禁用并说明；领域仍重验余额/容量/数量/revision；Esc只关交易页 | 已接通工程版；不依赖NPC/AI，最终图标与商店美术未完成 |
@@ -24,7 +24,7 @@
 
 `session_codec.gd`现在认识五代明确格式：schema 1 / `entry_fixture_v1` 兼容旧碰撞入口；schema 2 保存 Clock/Inventory/Wallet/Farm；schema 3 加入命令幂等回执；schema 4 加入24格家庭箱子 Storage；当前新写入的 schema 5 再加入村庄 Forage 采集状态，机器合同见 `schemas/save_v5.schema.json`。schema 1–3 仍可读取；schema 3 恢复时显式得到空的新箱子，下一次正常保存升级为 schema 4。
 
-`main.gd` 现在按存档 `space_id` 明确分流：`space.farm`、`space.house`、`space.village`、`space.shop` 各自加载唯一可编辑 Godot 场景；场景实例化和物理同步后，GameplaySession 始终使用 farm WORLD 的稳定 plot definitions，完整 restore 成功后才发布会话。schema 1 旧入口档继续进入碰撞夹具且没有 GameplaySession。schema 2 与当前 WORLD 的 Space/plot 几何不一致时整笔拒绝，不会只恢复名字/坐标或把存档中的 plot 坐标当地图来源。
+`main.gd` 现在按存档 `space_id` 明确分流：`space.farm`、`space.house`、`space.village`、`space.shop`、`space.workshop` 各自加载唯一可编辑 Godot 场景；场景实例化和物理同步后，GameplaySession 始终使用 farm WORLD 的稳定 plot definitions，完整 restore 成功后才发布会话。schema 1 旧入口档继续进入碰撞夹具且没有 GameplaySession。schema 2 与当前 WORLD 的 Space/plot 几何不一致时整笔拒绝，不会只恢复名字/坐标或把存档中的 plot 坐标当地图来源。
 
 .qfsave为纯UTF-8 JSON，不调用ResourceLoader、str_to_var、load/save Resource或对象反序列化。最大256 KiB，嵌套最多12层，容器成员有界；拒绝重复key（包括Unicode转义同名）、未知字段/版本、错误类型、bool坐标、非有限坐标、非UTF-8和无效标记。校验JSON数字时规范化整数值，解决Godot解码为float后1/1.0校验码不一致的问题。
 
