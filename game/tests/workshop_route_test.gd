@@ -95,10 +95,10 @@ func run() -> void:
 	check(saved.ok,"workshop gameplay position saves")
 	if saved.ok:
 		var envelope: Dictionary = app.store.read_save(saved.save_id).envelope
-		check(envelope.snapshot.space_id=="space.workshop" and int(envelope.schema_version)==5,"workshop save records current space in schema five")
+		check(envelope.snapshot.space_id=="space.workshop" and int(envelope.schema_version)==6,"workshop save records current space in schema six")
 		app.return_to_title()
 		app._on_action("read_save",{"save_id":saved.save_id})
-		check(await wait_world() and app.room.get_space_id()=="space.workshop","schema-five save restarts directly inside workshop")
+		check(await wait_world() and app.room.get_space_id()=="space.workshop","schema-six save restarts directly inside workshop")
 		check(app.gameplay_session==session_identity or app.gameplay_session!=null,"workshop restart publishes one restored gameplay session")
 
 	check(await workshop_to_village(),"workshop door returns to village")
