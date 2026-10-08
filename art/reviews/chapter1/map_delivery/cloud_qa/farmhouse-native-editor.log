@@ -1,0 +1,9 @@
+Loading file "/workspace/shared/qingfeng-tools/editor-home/.config/libresprite/palettes/./default.ase" (ase)
+Using loader for format ase,aseprite
+Invalid default: stdout
+Reading file art/sources/chapter1/objects/farmhouse_pixel_refine.js
+Loading file "game/assets/chapter1/objects/well.png" (png)
+Using loader for format png
+Loading file "art/sources/chapter1/objects/farmhouse_original.png" (png)
+Using loader for format png
+FARMHOUSE_NATIVE_DETAIL_DONE

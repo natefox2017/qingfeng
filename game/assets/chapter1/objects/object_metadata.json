@@ -530,8 +530,8 @@
       "asset_id": "asset.object.chapter1.farmhouse_blue",
       "runtime_path": "game/assets/chapter1/objects/farmhouse_blue.png",
       "source_path": "art/sources/chapter1/objects/farmhouse_blue.png",
-      "source_sha256": "99d6c2c2aee4c345e2064d7935aea69127d6a4737e70e498f2ad3e6ecb5fa35a",
-      "sha256": "2679297abc2a3b43b2ac6ffa60dc96dac05cb2a7d2e1424086d520994e0ee874",
+      "source_sha256": "5585e5e397131b1ab3184fe68cbefcce006a7740a91b19fc10a646094dff42f9",
+      "sha256": "5585e5e397131b1ab3184fe68cbefcce006a7740a91b19fc10a646094dff42f9",
       "size_px": [
         192,
         152
@@ -549,13 +549,26 @@
       "world_scale": 1,
       "license_note": "Derived project original/PixelLab source; exact native free pixelart_workbench edits",
       "drive_url": null,
-      "processing": "blue roof palette mapping only within y0..84",
-      "validation": "all pixels y85..151 and full alpha exactly unchanged from Phase0",
+      "processing": "LibreSprite 1.3 native putPixel edits: reuse existing well blue roof pixels 1:1 on compound gable/wing planes; native facade trim, sash, planters and chimney. No resampling, noise or generated whole map.",
+      "validation": "192x152, original anchor[96,149], binary alpha, body+roof exact recomposition; original prior source preserved",
       "layers": {
         "body": "game/assets/chapter1/objects/farmhouse_blue_body.png",
         "roof": "game/assets/chapter1/objects/farmhouse_blue_roof.png"
       },
-      "layer_split_y_px": 85
+      "layer_split_y_px": 104,
+      "editable_source_path": "art/sources/chapter1/objects/farmhouse_pixel_refine.aseprite",
+      "rebuild_script": "art/sources/chapter1/objects/farmhouse_pixel_refine.js",
+      "source_components": [
+        {
+          "path": "art/sources/chapter1/objects/farmhouse_original.png",
+          "sha256": "b08cc7e0c6db1de3e33a3d263383f1823d8e260c2c2e61cc8b09c807de17e725"
+        },
+        {
+          "path": "game/assets/chapter1/objects/well.png",
+          "sha256": "77f995bdfd205318df1c05977bda2e3fc62f7259d9a4eb4aaf8b2a49c57f2510",
+          "source_asset_id": "asset.object.chapter1.well"
+        }
+      ]
     },
     {
       "asset_id": "asset.object.chapter1.chicken_coop",
