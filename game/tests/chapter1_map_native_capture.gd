@@ -50,7 +50,7 @@ func run() -> void:
 		scene.set_input_enabled(false)
 		var camera := scene.get_node("FootSorted/Player/Camera2D") as Camera2D
 		camera.position_smoothing_enabled = false
-		var arrival_position: Vector2 = (scene.get_node("FootSorted/Player") as CharacterBody2D).global_position
+		var arrival_position: Vector2 = camera.global_position
 		var focus_position: Vector2 = Vector2(960, 624) if scene.get_space_id() == "space.farm" else Vector2(640, 328)
 		for size in [Vector2i(1280,720),Vector2i(1920,1080),Vector2i(1366,768)]:
 			root.size = size

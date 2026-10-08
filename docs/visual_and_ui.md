@@ -8,7 +8,7 @@
 ### Chapter 1 像素清晰度实机记录（2026-10-09）
 Godot 4.7.2 原生窗口 A/B/C 对照后，项目采用 `canvas_items + keep + integer`，并开启 2D transform 像素吸附、关闭 vertex 像素吸附。基础内容仍为 640×360；1280×720 和 1920×1080 分别按 2×、3×整数倍率显示，1366×768 按 2×显示并在四周留边。`canvas_items` 保留 Control UI 的目标窗口分辨率；1280×720、1920×1080、1366×768 均实际点击进入新档和返回，输入区域可用。地形和玩家 Sprite 的实际 `texture_filter` 均为 `TEXTURE_FILTER_NEAREST`（枚举值 1），项目默认 CanvasItem filter 是 0；不得只凭项目默认值推断节点采样方式。
 
-对照中，原 `canvas_items + keep + fractional` 在非整数窗口不能保证纹理整数倍率；`viewport + keep + integer` 会让中文 UI 一起在 640×360 基础视口绘制，1366×768 实机截图中文字明显更低清晰度；最终配置保留清晰 UI 并采用统一整数像素倍率。证据截图和原始运行采样见 [`art/reviews/chapter1/pixel_clarity/`](../art/reviews/chapter1/pixel_clarity/README.md)。60 秒实际键盘走路采样每 0.25 秒记录一次位置：1366×768 下玩家范围 X=822.39、Y=491，Camera2D 中心范围 X=822.39、Y=331；另存有滚动过程原生截图。采样证明角色移动和相机滚动发生，但不是帧级抖动分析，也不代表性能/FPS 验收。无相机平滑，镜头倍率 1.0；保留物理位置精度，不在游戏逻辑中取整坐标。
+对照中，原 `canvas_items + keep + fractional` 在非整数窗口不能保证纹理整数倍率；`viewport + keep + integer` 会让中文 UI 一起在 640×360 基础视口绘制，1366×768 实机截图中文字明显更低清晰度；最终配置保留清晰 UI 并采用统一整数像素倍率。证据截图和原始运行采样见 [`art/reviews/chapter1/pixel_clarity/`](../art/reviews/chapter1/pixel_clarity/README.md)。60 秒实际键盘走路采样每 0.25 秒记录一次位置：1366×768 下玩家范围 X=822.39、Y=491，Camera2D 中心范围 X=822.39、Y=331；另存有滚动过程原生截图。采样证明角色移动和相机滚动发生，但不是帧级抖动分析，也不代表性能/FPS 验收。无相机平滑，镜头倍率 1.0；保留物理位置精度，不在游戏逻辑中取整坐标。 农庄的 (0,-120) 前瞻现在由 Camera2D 子节点 position 实现，offset 保持零，让原生相机限制同时约束前瞻；真实北门旧存档与四角逆变换回归已排除越界灰边，详见 art/reviews/chapter1/map_delivery/cloud_qa/camera/。
 
 原生运行结果是清晰度和缩放策略的开发验收证据，不替代 N01–N03 视觉审查、地图/美术验收或 N11 导出验收。
 

@@ -1,0 +1,15 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+CAMERA_BOUNDS_FAIL farm_first_screen (1280, 720) point1 screen corner maps inside ground: (0.0, -120.0)
+CAMERA_BOUNDS_FAIL farm_first_screen (1280, 720) point1 screen corner maps inside ground: (640.0, -120.0)
+CAMERA_BOUNDS_FAIL farm_first_screen (1280, 720) point3 screen corner maps inside ground: (1152.0, -120.0)
+CAMERA_BOUNDS_FAIL farm_first_screen (1280, 720) point3 screen corner maps inside ground: (1792.0, -120.0)
+CAMERA_BOUNDS_FAIL farm_first_screen (1920, 1080) point1 screen corner maps inside ground: (0.0, -120.0)
+CAMERA_BOUNDS_FAIL farm_first_screen (1920, 1080) point1 screen corner maps inside ground: (640.0, -120.0)
+CAMERA_BOUNDS_FAIL farm_first_screen (1920, 1080) point3 screen corner maps inside ground: (1152.0, -120.0)
+CAMERA_BOUNDS_FAIL farm_first_screen (1920, 1080) point3 screen corner maps inside ground: (1792.0, -120.0)
+CAMERA_BOUNDS_FAIL farm_first_screen (1366, 768) point1 screen corner maps inside ground: (0.0, -120.0)
+CAMERA_BOUNDS_FAIL farm_first_screen (1366, 768) point1 screen corner maps inside ground: (640.0, -120.0)
+CAMERA_BOUNDS_FAIL farm_first_screen (1366, 768) point3 screen corner maps inside ground: (1152.0, -120.0)
+CAMERA_BOUNDS_FAIL farm_first_screen (1366, 768) point3 screen corner maps inside ground: (1792.0, -120.0)
+CAMERA_BOUNDS_RESULT checks=234 failures=12

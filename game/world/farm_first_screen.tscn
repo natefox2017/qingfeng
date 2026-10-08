@@ -306,7 +306,7 @@ hframes = 4
 vframes = 4
 
 [node name="Camera2D" type="Camera2D" parent="FootSorted/Player" unique_id=942445080]
-offset = Vector2(0, -120)
+position = Vector2(0, -120)
 limit_left = 0
 limit_top = 0
 limit_right = 1792
