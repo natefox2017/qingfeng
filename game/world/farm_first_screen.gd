@@ -4,6 +4,8 @@ extends Node2D
 ## owns a second copy of map geometry.
 
 const TILE_SIZE := 16
+const WORLD_CELLS := Vector2i(96, 64)
+const WORLD_BOUNDS_PX := Vector2i(1536, 1024)
 const SPACE_ID := "space.farm"
 const FARM_ACTION_RANGE_PX := 28.0
 const FARM_ACTION_LATERAL_PX := 9.0
@@ -21,6 +23,9 @@ func get_player() -> CharacterBody2D:
 
 func get_space_id() -> String:
 	return SPACE_ID
+
+func get_world_bounds() -> Rect2i:
+	return Rect2i(Vector2i.ZERO,WORLD_BOUNDS_PX)
 
 func get_spawn_position() -> Vector2:
 	return $Anchors/PlayerSpawn.position
@@ -144,7 +149,12 @@ func get_plot_definitions() -> Array:
 
 func layout_contract_valid() -> bool:
 	var definitions := get_plot_definitions()
-	if $TerrainGround.tile_set == null or $PlotStates.tile_set == null or $TerrainGround.get_used_cells().size() != 920:
+	if $TerrainGround.tile_set == null or $PlotStates.tile_set == null or $TerrainGround.get_used_cells().size() != WORLD_CELLS.x*WORLD_CELLS.y:
+		return false
+	if $TerrainGround.get_used_rect() != Rect2i(Vector2i.ZERO,WORLD_CELLS):
+		return false
+	var camera := player.get_node_or_null("Camera2D") as Camera2D
+	if camera == null or camera.limit_right != WORLD_BOUNDS_PX.x or camera.limit_bottom != WORLD_BOUNDS_PX.y:
 		return false
 	for anchor_name: String in ["PlayerSpawn","FieldApproach","BridgeWest","BridgeEast","HouseDoorInteract","HouseDoorArrival","VillagePathInteract"]:
 		if get_anchor_position(anchor_name) == Vector2.INF:
