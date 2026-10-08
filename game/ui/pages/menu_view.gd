@@ -569,7 +569,7 @@ func show_page(page: String, context: Dictionary) -> void:
 					elif context.get("space_id","")=="space.village":
 						hint.text="E 交谈 / 采集 / 门 / 出口 · B 背包"
 					elif context.get("space_id","")=="space.workshop":
-						hint.text="E 与工坊门交互 · B 背包"
+						hint.text="E 与工匠 / 工坊门交互 · B 背包"
 					else:
 						var selected: Variant=gameplay.inventory.slots[gameplay.inventory.selected_slot_index]
 						var selected_name:="空手"
