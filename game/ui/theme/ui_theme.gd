@@ -133,6 +133,8 @@ static func apply_text_role(control: Control, role: StringName) -> void:
 			control.add_theme_font_size_override("font_size", FONT_CAPTION)
 			control.add_theme_color_override("font_color", COLOR_MUTED)
 		ROLE_QUANTITY:
+			if control is Label:
+				control.autowrap_mode = TextServer.AUTOWRAP_OFF
 			control.add_theme_font_size_override("font_size", FONT_QUANTITY)
 			control.add_theme_color_override("font_color", COLOR_INK)
 		ROLE_TOOLTIP:
