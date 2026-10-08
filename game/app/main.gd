@@ -841,8 +841,14 @@ func _commit_resident_handoff(request: Variant) -> void:
 		_resident_handoff_pending = false
 		return
 	var path := _scene_path_for_space(String(request.target_space_id))
-	var packed := load(path) as PackedScene if not path.is_empty() else null
-	var candidate := packed.instantiate() as Node2D if packed != null else null
+	if path.is_empty():
+		_resident_handoff_pending = false
+		return
+	var packed := load(path) as PackedScene
+	if packed == null:
+		_resident_handoff_pending = false
+		return
+	var candidate := packed.instantiate() as Node2D
 	if candidate == null:
 		_resident_handoff_pending = false
 		return
