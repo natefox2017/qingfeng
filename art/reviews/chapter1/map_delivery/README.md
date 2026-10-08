@@ -1,40 +1,89 @@
-# PR #117 修复交接（2026-10-09，优先于下方历史暂停记录）
+# PR #117 最终修复与视觉验收准备（2026-10-09）
 
-用户现已要求继续处理 PR #117 问题。**当前修复代码已提交到原 PR 分支，但未在本地 Mac 上做 Godot 4.7.2 验证，不可标记通过或合并。**
+## 当前状态
 
-已提交的修复：
-- `game/app/chapter1_map_migration.gd`：仅识别 PR #117 之前主线的六个农田坐标指纹 (17–19,7–8)，恢复到当前地图权威 Marker；保留作物状态、钱、物、关系和事件；旧户外玩家重锚到当前场景安全 spawn，老村庄居民重锚到其新版 social marker；其他未知坐标布局**严格不自动迁移**，原签名存档只读不覆盖。
-- `game/app/main.gd`：在正式 restore 前对已知旧布局执行非破坏性迁移，并再次校验 schema；存档不兼容时拒绝，不绕过 Domain 验证。
-- `game/world/farm_first_screen.gd`、`game/world/village_first_screen.gd`：世界边界仅由 `TerrainGround` 的实际图块矩形决定；水、装饰、广场和动态 `PlotStates` 不再扩大相机和外墙。
-- `game/tests/chapter1_map_save_migration_test.gd`：从真实 signed save 构造准确旧布局，检查读档及新存档、完整状态、原旧档不被修改，并包含村庄与室内迁移路径、未知布局拒绝规则。
-- `game/tests/chapter1_map_editability_test.gd`：增加农庄和村庄在地图外放装饰 tile 时世界边界/相机不变的回归断言。
+- Issue #84 仍为 OPEN；PR #117 仍为 OPEN / Draft，head 分支 `codex/chapter1-map-delivery`。不得合并或关闭 Issue；最终视觉签收留给用户。
+- 本地最终代码 HEAD：`4d4b23639377c80bfe72e9c761cfad11a0383baa`。此前分项提交：`28fcd11` 旧存档迁移/地图边界/路线回归，`c9c3cff` 清理村庄空匿名层，`a5eadae` 清晰度证据，`4d4b236` 地图细节和多分辨率截图。
+- 工作树 `/Users/apple/.codex/worktrees/chapter1-map-delivery/qingfeng`；远端仅为 `natefox2017/qingfeng`。主 checkout 未改。Godot 生成的 `.uid` / `.import` 与 `.tmp/` 为本地未跟踪文件，没有加入提交。
+- 最终检查：PR 当前 `repository-policy` 为 `SKIPPED`；没有通过中的 CI 检查。PR Review Threads 当前为空；一条旧 COMMENTED review 针对历史 head `7d3df0a`，不是最终验收。
 
-**下一位本地 AI 必须在 PR 当前最新 HEAD 而不是原暂停提交 `7d3df0a` 上执行**：
+## 实际修改
+
+- 存档：仅迁移识别出的旧六块田坐标签名；旧签名存档保留作物、背包、金币、关系、事件等状态，并安全重锚户外玩家与村民；未知坐标布局拒绝自动迁移，旧源存档不覆盖。测试使用依据旧签名格式构造的旧版本存档夹具；未使用用户个人存档文件。
+- 地图：农庄和村庄世界边界、相机限制、外围碰撞由 `TerrainGround` 决定；测试覆盖移动对象、扩图和越界装饰 tile。村庄 `@TileMapLayer@2/3` 确认为空、无重叠冗余层并移除。复用现有 `ground_decor_16.png` 为农庄/村庄 `GroundDetails` 分别增加 43/32 个无碰撞地面装饰 tile，未生成整图或新美术；保留农庄出生点 `(320,560)`，相机 offset 为 `(0,-120)`。
+- 显示/UI：保留 `canvas_items + keep + integer`，启用 2D transform pixel snap、Nearest 纹理；1366×768 下游戏内容为整数倍的 1280×720 并留边。`action_button.gd` 不再在文字按钮上叠画中心图标，避免遮挡中文文字。
+
+## Godot 4.7.2 冷导入与回归
+
+引擎：`/Applications/Godot.app/Contents/MacOS/Godot`，`4.7.2.stable.official.ed1daf0bf`（Apple M4 Pro / Metal OpenGL Compatibility）。冷导入及整套回归在隔离项目副本完成：
 
 ```sh
-git fetch origin
-git switch codex/chapter1-map-delivery
-git pull --ff-only
-python3 tools/check_scaffold.py
-python3 -m unittest discover -s tools/tests -v
-./run_game.sh --test
-./run_game.sh --test-all
-/Applications/Godot.app/Contents/MacOS/Godot --headless --path game --editor --import --quit
+GODOT_BIN=/Applications/Godot.app/Contents/MacOS/Godot ./run_game.sh --test-all --timeout 180 --report-dir .tmp/map-pr117-final/full-suite-final3
+```
+
+结果：退出码 **0**；冷导入通过；46 个测试日志均通过，`summary.json` 全部为 true。证据：`.tmp/map-pr117-final/full-suite-final3/summary.json`，单测日志同目录。
+
+最终 HEAD 又单独运行以下六项，全部退出码 0：
+
+| 测试 | 结果 | 本地完整日志 |
+| --- | --- | --- |
+| `chapter1_map_save_migration_test.gd` | 33 checks / 0 failures | `.tmp/map-pr117-final/direct-final/chapter1_map_save_migration_test.log` |
+| `chapter1_map_editability_test.gd` | 56 / 0 | `.tmp/map-pr117-final/direct-final/chapter1_map_editability_test.log` |
+| `chapter1_map_playability_test.gd` | 431 / 0 | `.tmp/map-pr117-final/direct-final/chapter1_map_playability_test.log` |
+| `world_layout_test.gd` | 35 / 0 | `.tmp/map-pr117-final/direct-final/world_layout_test.log` |
+| `full_economy_loop_test.gd` | 35 / 0 | `.tmp/map-pr117-final/direct-final/full_economy_loop_test.log` |
+| `door_transition_test.gd` | 20 / 0 | `.tmp/map-pr117-final/direct-final/door_transition_test.log` |
+| `village_tile_layer_audit_test.gd` | 14 / 0 | `.tmp/map-pr117-final/direct-final/village_tile_layer_audit_test.log` |
+
+单项测试命令（以上各项均退出码 0）：
+
+```sh
 /Applications/Godot.app/Contents/MacOS/Godot --headless --path game --script res://tests/chapter1_map_save_migration_test.gd
 /Applications/Godot.app/Contents/MacOS/Godot --headless --path game --script res://tests/chapter1_map_editability_test.gd
 /Applications/Godot.app/Contents/MacOS/Godot --headless --path game --script res://tests/chapter1_map_playability_test.gd
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path game --script res://tests/world_layout_test.gd
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path game --script res://tests/full_economy_loop_test.gd
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path game --script res://tests/door_transition_test.gd
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path game --script res://tests/village_tile_layer_audit_test.gd
 ```
 
-这组测试是**必须执行的待验命令，不是测试已通过的记录**。如果 Godot 路径不同，请使用本地实际 Godot 4.7.2 可执行路径，不能自行跳过测试。优先修复新测试的实际报错；保留失败完整日志，不删断言、不降低通过门槛。
+上述 playability 用例通过 Godot `Input.action_press` 和物理帧验证萝卜收获、六块田的翻土/播种/浇水、果园、河桥双向、村庄商店和工坊、交易/箱子及存档写入读取。它是自动化路线测试，不等同于人工桌面全路线试玩。迁移测试覆盖旧版签名格式夹具里的六田状态、背包金币、居民安全落点、新档读写和旧档不覆盖；真实用户私有存档未提供，因此未实测该文件。图层审计首次复跑因旧断言要求新加的 `GroundDetails` 仍为空而退出码 1；按当前场景语义改为检查其装饰 tile 位于地面范围内、来源为装饰 atlas 且 TileSet 无碰撞层后，重跑 14/0、退出码 0。没有删除断言或弱化世界边界检查。
 
-待补：
-1. 在最终 HEAD 验证迁移能读真实旧档（农庄/村庄/室内）以及新档、六田和居民安全落点；需要时由CORE owner做显式安全迁移，不静默清理玩家进度。
-2. 核验真实玩家走通：收/播/浇、桥两向、村庄各门、经济/箱子、保存退出重读；独立 QA 曾对较早提交失败，这不是新 HEAD 的结论。
-3. P1 清晰度：`project.godot` 仍使用 `canvas_items`，按父 #84 P1-2 对比 Nearest/整数 2×3×、1366×768 非整数窗口、相机移动30秒及中文UI，提供真实原生截图；根据数据决定改渲染方案，勿盲改。
-4. 审核村庄匿名 `@TileMapLayer@2/3` 的数据归属、是否重叠，确认后安全命名/移除并重新测试；不得猜测后直接删除。
-5. 对照四张定版设计图特别是01总图，农庄/小镇大面积空草地、整齐阵列田、细节密度不足，当前视觉均 `proposed`；局部用 PixelLab/像素编辑器补件并运行对照截图，用户签收前不标 `accepted`。
+## 原生画面与相机滚动证据
 
-**合并门**：上述最新 HEAD 的真实运行/编辑/存档兼容性、画面清晰度和用户首屏视觉评审均通过后，再将 Draft 标 ready。旧“暂停”段落保留作为历史源证据，不作为当前停止修复的指令。
+截图保存在 `art/reviews/chapter1/map_delivery/native/`，共 18 张 PNG + `manifest.json`：农庄/村庄到达与地图焦点各在 1280×720、1920×1080、1366×768；新建/读档中文 UI 各在三种窗口尺寸。Godot 原生命令均退出码 0：
+
+```sh
+Godot --path game --script res://tests/chapter1_map_native_capture.gd -- <output-dir>
+Godot --path game --script res://tests/entry_native_capture.gd -- <output-dir>
+```
+
+本地日志分别为 `.tmp/map-pr117-final/native-map-clean.log` 和 `.tmp/map-pr117-final/native-entry-final2.log`。截图是 Godot root texture 的渲染内容，不是 OS 全窗口截图。1366×768 PNG 内容为 1280×720 整数缩放画面；该尺寸 PNG 与 1280×720 内容相同，完整窗口留边比较另见 `art/reviews/chapter1/pixel_clarity/final/1366x768-world-scroll.png`。入口截图退出时 Godot 报告 2 个 ObjectDB instance 和 1 个 resource 泄漏告警；脚本报告 `ENTRY_NATIVE_CAPTURE_PASS` 且退出码 0，告警未隐藏。
+
+最终配置下的相机运动在 1366×768 原生 Godot 窗口定向键盘输入 45.132 秒：
+
+```sh
+Godot --path game --resolution 1366x768 --script res://tests/chapter1_pixel_clarity_test.gd -- .tmp/map-pr117-final/scroll-1366-posttopid 45
+```
+
+结果退出码 0，`PIXEL_CLARITY_PASS duration_s=45.13 samples=175`；玩家 X/Y 位移范围各 291.2 px，相机 X/Y 范围 291.2 / 288.8 px。报告在 `.tmp/map-pr117-final/scroll-1366-posttopid/runtime.json`。此处通过向 Godot 进程定向投递真实方向键完成运动；早期未把按键送达窗口的尝试曾失败，未计作通过。
+
+## 对照定版图与剩余验收
+
+已将上述原生截图与 `art/approved/refs/world_chapter1_map.png` 的农庄、村庄对应区域对照。Nearest、整数倍率、三尺寸内容和移动画面已有运行证据；截图仍显示大面积空草地、规则孤立田格、村庄空旷石广场和市场重复，密度/比例/画风与批准总图仍有明显差距。此次只复用现有装饰组件，没有 PixelLab 新生成素材或重新生成整张地图。所有新截图状态均为 `proposed`，`accepted` 仍为 false，等待用户视觉确认。
+
+尚未完成：人工从农舍门口完整操作到保存退出并重新打开的桌面试玩；用用户提供的私有旧档验证；用 Aseprite/PixelLab 增补并集成缺失的可复用像素组件；用户对视觉截图的最终确认。编辑器里拖动并保存扩建的人工操作也未做，当前扩图/碰撞覆盖由运行回归测试验证。以上不影响已通过的自动化测试结果，但不能被描述成已完成人工/美术验收。
+
+## 视觉检查入口
+
+- 农庄到达：[native/space_farm_arrival_1280x720.png](native/space_farm_arrival_1280x720.png)
+- 农庄地图焦点：[native/space_farm_focus_1920x1080.png](native/space_farm_focus_1920x1080.png)
+- 村庄到达：[native/space_village_arrival_1280x720.png](native/space_village_arrival_1280x720.png)
+- 村庄地图焦点：[native/space_village_focus_1920x1080.png](native/space_village_focus_1920x1080.png)
+- 中文新建 UI：[native/new_game_1280x720.png](native/new_game_1280x720.png)
+- 中文读档 UI：[native/load_1280x720.png](native/load_1280x720.png)
+
+视觉结论待用户审定；PR 继续 Draft。
 
 ---
 

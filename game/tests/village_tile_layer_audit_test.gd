@@ -36,7 +36,13 @@ func run() -> void:
 	check(ground.tile_set != null and not ground.get_used_cells().is_empty(), "TerrainGround remains the authored world extent")
 	check(paths.tile_set == ground.tile_set and not paths.get_used_cells().is_empty(), "GroundPaths remains an editable path overlay")
 	check(plaza.tile_set != null and not plaza.get_used_cells().is_empty(), "PlazaStone retains town plaza tiles")
-	check(not town_details.get_used_cells().is_empty() and details.get_used_cells().is_empty(), "TownDetails stays distinct from the currently empty GroundDetails layer")
+	var details_cells := details.get_used_cells()
+	var ground_details_are_authored := details.tile_set == ground.tile_set and not details_cells.is_empty()
+	for cell: Vector2i in details_cells:
+		ground_details_are_authored = ground_details_are_authored and ground.get_used_rect().has_point(cell) and details.get_cell_source_id(cell) == 2
+	check(ground_details_are_authored, "GroundDetails uses in-bounds ground decoration tiles")
+	check(details.tile_set.get_physics_layers_count() == 0, "GroundDetails tileset adds no tile collision")
+	check(not town_details.get_used_cells().is_empty() and details.name != town_details.name, "TownDetails and GroundDetails retain separate semantic layers")
 
 	var bounds: Rect2i = scene.get_world_bounds()
 	var expected_bounds := Rect2i(ground.get_used_rect().position * scene.TILE_SIZE, ground.get_used_rect().size * scene.TILE_SIZE)

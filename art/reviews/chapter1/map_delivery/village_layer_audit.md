@@ -45,3 +45,17 @@ Godot binary: `/Applications/Godot.app/Contents/MacOS/Godot`, version `4.7.2.sta
 The new test checks explicit layer semantics, retention of all authored content planes, bounds ownership, camera limits, and all perimeter collision dimensions. Renderer screenshots are evidence of rendering only, not interactive or visual acceptance.
 
 PR #117 remains Draft and open. At audit time GitHub had zero review threads, Discussions were disabled, and `repository-policy` was `SKIPPED`; none is treated as acceptance. This audit does not cover full playable-route QA, pixel scaling/movement, or human comparison against the approved map reference.
+
+
+## Final-head addendum (2026-10-09, after `4d4b236`)
+
+The cell inventory above is the original audit snapshot from base `cd713905`; its statement that `GroundDetails` had zero cells is historical and was superseded by the map-dressing change. Current `GroundDetails` contains 32 static decoration cells, all using atlas source 2 from `farm_world_tileset.tres`, inside the unchanged `TerrainGround` 80×40 extent. The shared TileSet has zero physics layers, so these tiles add no tile collision. `TownDetails` remains a separate named layer. No anonymous TileMapLayer nodes have returned, and bounds/camera/perimeter collision remain sourced only from `TerrainGround`.
+
+The first audit-test rerun after dressing exited 1 because an earlier assertion required `GroundDetails` to stay empty. The test was updated to require authored in-bounds decoration tiles, no TileSet collision layer, and distinct `GroundDetails` / `TownDetails` semantics. This preserves and expands the audit contract rather than dropping the check.
+
+| Command | Exit | Result / local log |
+| --- | ---: | --- |
+| `/Applications/Godot.app/Contents/MacOS/Godot --headless --path game --script res://tests/village_tile_layer_audit_test.gd` (first run) | 1 | stale empty-layer expectation; `.tmp/map-pr117-final/direct-final/village_tile_layer_audit_test-first-run.log` (captured console output) |
+| `/Applications/Godot.app/Contents/MacOS/Godot --headless --path game --script res://tests/village_tile_layer_audit_test.gd` (after assertion update) | 0 | 14 checks, 0 failures; `.tmp/map-pr117-final/direct-final/village_tile_layer_audit_test.log` |
+
+The failed first-run console output is retained separately; the corrected run is the saved final log. The final evidence and screenshot status remain proposed, awaiting user visual review.

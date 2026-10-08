@@ -1,0 +1,295 @@
+{
+  "captured_date": "2026-10-09",
+  "engine": "Godot 4.7.2 stable official ed1daf0bf",
+  "renderer": "macOS native OpenGL Compatibility / Metal",
+  "evidence_status": "proposed; awaiting user visual review",
+  "capture_method": "Godot SceneTree native root texture after RenderingServer.frame_post_draw; these are rendered content images, not a full OS window capture",
+  "logical_client_sizes_px": [
+    [
+      1280,
+      720
+    ],
+    [
+      1920,
+      1080
+    ],
+    [
+      1366,
+      768
+    ]
+  ],
+  "integer_scale_note": "At 1366x768, canvas_items integer scaling renders 1280x720 content with letterboxing; recorded client size is 1366x768 and PNG content size is 1280x720. Full-window comparison is in art/reviews/chapter1/pixel_clarity/final/1366x768-world-scroll.png.",
+  "commands": [
+    {
+      "command": "Godot --path game --script res://tests/chapter1_map_native_capture.gd -- <output-dir>",
+      "exit_code": 0,
+      "log": ".tmp/map-pr117-final/native-map-clean.log"
+    },
+    {
+      "command": "Godot --path game --script res://tests/entry_native_capture.gd -- <output-dir>",
+      "exit_code": 0,
+      "log": ".tmp/map-pr117-final/native-entry-final2.log"
+    }
+  ],
+  "reference": "art/approved/refs/world_chapter1_map.png",
+  "visual_review": "Screenshots show the authored gameplay scenes at arrival and map focus. Large grass fields, sparse crop-bed framing, and the village plaza still differ materially from the approved reference; user approval is pending.",
+  "images": [
+    {
+      "path": "load_1280x720.png",
+      "bytes": 441103,
+      "sha256": "0675a10ec79d0e0c3861f88f603c63c60f0d41881eb79c69e9a79ad71639e043",
+      "client_window_px": [
+        1280,
+        720
+      ],
+      "rendered_content_px": [
+        1280,
+        720
+      ]
+    },
+    {
+      "path": "load_1366x768_content_1280x720.png",
+      "bytes": 441103,
+      "sha256": "0675a10ec79d0e0c3861f88f603c63c60f0d41881eb79c69e9a79ad71639e043",
+      "client_window_px": [
+        1366,
+        768
+      ],
+      "rendered_content_px": [
+        1280,
+        720
+      ]
+    },
+    {
+      "path": "load_1920x1080.png",
+      "bytes": 778493,
+      "sha256": "a5e4baebd3eb6458b70c8c4cb827ee54b706e851b889717711db957b712b1495",
+      "client_window_px": [
+        1920,
+        1080
+      ],
+      "rendered_content_px": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "new_game_1280x720.png",
+      "bytes": 690803,
+      "sha256": "698195aa17b39529339782ec89374c2b7ccc1b3441501d79ee0ab61d80bc6d94",
+      "client_window_px": [
+        1280,
+        720
+      ],
+      "rendered_content_px": [
+        1280,
+        720
+      ]
+    },
+    {
+      "path": "new_game_1366x768_content_1280x720.png",
+      "bytes": 690823,
+      "sha256": "bc205a415620984b4b066f21d913036a38a849376e773208d1af6f7ad2c4eb32",
+      "client_window_px": [
+        1366,
+        768
+      ],
+      "rendered_content_px": [
+        1280,
+        720
+      ]
+    },
+    {
+      "path": "new_game_1920x1080.png",
+      "bytes": 1205773,
+      "sha256": "a89f9bbecd81666f68bdfda7f7f0c603939f97c4644e38279583c04094961a17",
+      "client_window_px": [
+        1920,
+        1080
+      ],
+      "rendered_content_px": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "space_farm_arrival_1280x720.png",
+      "bytes": 115384,
+      "sha256": "4c410618de0e8582e4548abfaaad74b7fb9a534dfbadcb6ede165fda48f3eef5",
+      "client_window_px": [
+        1280,
+        720
+      ],
+      "rendered_content_px": [
+        1280,
+        720
+      ]
+    },
+    {
+      "path": "space_farm_arrival_1366x768_content_1280x720.png",
+      "bytes": 115384,
+      "sha256": "4c410618de0e8582e4548abfaaad74b7fb9a534dfbadcb6ede165fda48f3eef5",
+      "client_window_px": [
+        1366,
+        768
+      ],
+      "rendered_content_px": [
+        1280,
+        720
+      ]
+    },
+    {
+      "path": "space_farm_arrival_1920x1080.png",
+      "bytes": 128749,
+      "sha256": "b428d89a1b4d457e23c1dc51171e308f76fd52363832086f4efed7510ff63341",
+      "client_window_px": [
+        1920,
+        1080
+      ],
+      "rendered_content_px": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "space_farm_focus_1280x720.png",
+      "bytes": 39582,
+      "sha256": "0e7d1c556cc9d3e89b1eeb8013c5d99b5f281cb2e6f13a7df755bbf2b867a758",
+      "client_window_px": [
+        1280,
+        720
+      ],
+      "rendered_content_px": [
+        1280,
+        720
+      ]
+    },
+    {
+      "path": "space_farm_focus_1366x768_content_1280x720.png",
+      "bytes": 39582,
+      "sha256": "0e7d1c556cc9d3e89b1eeb8013c5d99b5f281cb2e6f13a7df755bbf2b867a758",
+      "client_window_px": [
+        1366,
+        768
+      ],
+      "rendered_content_px": [
+        1280,
+        720
+      ]
+    },
+    {
+      "path": "space_farm_focus_1920x1080.png",
+      "bytes": 50079,
+      "sha256": "9ccef0831962774c1f758e5f46084414a790b933c90284ac50fdf45a29a66060",
+      "client_window_px": [
+        1920,
+        1080
+      ],
+      "rendered_content_px": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "space_village_arrival_1280x720.png",
+      "bytes": 18889,
+      "sha256": "5d0877f73314447fca6d69708d91774f9412c176ef9206d29e94caa362df48fc",
+      "client_window_px": [
+        1280,
+        720
+      ],
+      "rendered_content_px": [
+        1280,
+        720
+      ]
+    },
+    {
+      "path": "space_village_arrival_1366x768_content_1280x720.png",
+      "bytes": 18889,
+      "sha256": "5d0877f73314447fca6d69708d91774f9412c176ef9206d29e94caa362df48fc",
+      "client_window_px": [
+        1366,
+        768
+      ],
+      "rendered_content_px": [
+        1280,
+        720
+      ]
+    },
+    {
+      "path": "space_village_arrival_1920x1080.png",
+      "bytes": 27483,
+      "sha256": "c8053afc853648e3a1f790e0815e8cb0dda40de37ccc4f791c9553f632aaceaf",
+      "client_window_px": [
+        1920,
+        1080
+      ],
+      "rendered_content_px": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "space_village_focus_1280x720.png",
+      "bytes": 17683,
+      "sha256": "7ed1a0876d879b66f5a8def3b78d6351a7759dae822b375b93f8786ecae23402",
+      "client_window_px": [
+        1280,
+        720
+      ],
+      "rendered_content_px": [
+        1280,
+        720
+      ]
+    },
+    {
+      "path": "space_village_focus_1366x768_content_1280x720.png",
+      "bytes": 17683,
+      "sha256": "7ed1a0876d879b66f5a8def3b78d6351a7759dae822b375b93f8786ecae23402",
+      "client_window_px": [
+        1366,
+        768
+      ],
+      "rendered_content_px": [
+        1280,
+        720
+      ]
+    },
+    {
+      "path": "space_village_focus_1920x1080.png",
+      "bytes": 28246,
+      "sha256": "fe041b36d0c61874f4dfd9426e58fb273bc5da5ca4f8efddda6a25ade167806d",
+      "client_window_px": [
+        1920,
+        1080
+      ],
+      "rendered_content_px": [
+        1920,
+        1080
+      ]
+    }
+  ],
+  "camera_motion_test": {
+    "command": "/Applications/Godot.app/Contents/MacOS/Godot --path game --resolution 1366x768 --script res://tests/chapter1_pixel_clarity_test.gd -- /Users/apple/.codex/worktrees/chapter1-map-delivery/qingfeng/.tmp/map-pr117-final/scroll-1366-posttopid 45",
+    "exit_code": 0,
+    "duration_seconds": 45.132,
+    "sample_count": 175,
+    "player_range_px": {
+      "x": 291.2,
+      "y": 291.2
+    },
+    "camera_range_px": {
+      "x": 291.2,
+      "y": 288.8
+    },
+    "runtime_report": ".tmp/map-pr117-final/scroll-1366-posttopid/runtime.json",
+    "input_method": "CGEvent direction keys posted to the running Godot process; early attempts that did not reach the window were not counted as passing evidence"
+  },
+  "direct_regression": {
+    "command": "/Applications/Godot.app/Contents/MacOS/Godot --headless --path game --script res://tests/village_tile_layer_audit_test.gd",
+    "exit_code": 0,
+    "checks": 14,
+    "failures": 0,
+    "log": ".tmp/map-pr117-final/direct-final/village_tile_layer_audit_test.log"
+  }
+}
