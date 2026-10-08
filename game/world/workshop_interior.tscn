@@ -105,11 +105,11 @@ position = Vector2(320, 92)
 [node name="ResidentAnchors" type="Node2D" parent="."]
 
 [node name="MakerWork" type="Marker2D" parent="ResidentAnchors"]
-position = Vector2(320, 92)
+position = Vector2(150, 92)
 metadata/anchor_id = "anchor.resident.maker.work"
 
 [node name="MakerRain" type="Marker2D" parent="ResidentAnchors"]
-position = Vector2(280, 92)
+position = Vector2(490, 92)
 metadata/anchor_id = "anchor.resident.maker.rain"
 
 [node name="FootSorted" type="Node2D" parent="."]
