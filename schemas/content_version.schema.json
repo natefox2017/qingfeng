@@ -24,7 +24,8 @@
       "additionalProperties": false,
       "required": [
         "minutes_per_day",
-        "day_start_minute"
+        "day_start_minute",
+        "real_seconds_per_game_minute"
       ],
       "properties": {
         "minutes_per_day": {
@@ -34,6 +35,10 @@
         "day_start_minute": {
           "type": "integer",
           "minimum": 0
+        },
+        "real_seconds_per_game_minute": {
+          "type": "number",
+          "exclusiveMinimum": 0
         }
       }
     },
