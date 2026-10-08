@@ -1,6 +1,6 @@
 # 首版具体玩法与接入合同
 
-这是**新项目首版玩法的细化规格与当前接入边界**，不是旧项目已有功能清单。当前 Clock、背包/钱包、PlotState、首作物农耕闭环、schema4 存档、第一屏农事输入、农庄↔房屋门、床休息、家庭箱子转移和商店买卖领域已经有实现；WORLD 现已有可编辑 `space.farm`、`space.house`、`space.village`、`space.shop`、`space.workshop` 路线。商店柜台交易页也已直接绑定 `economy.buy` / `economy.sell`；村庄每日可再生采集恢复来源已接入。狗、居民与任务仍须后续 N08–N09 完成。不得把工程色块或新档狗名输入当最终美术/真实伙伴系统。
+这是**新项目首版玩法的细化规格与当前接入边界**，不是旧项目已有功能清单。当前 Clock、背包/钱包、PlotState、首作物农耕闭环、schema4 存档、第一屏农事输入、农庄↔房屋门、床休息、家庭箱子转移和商店买卖领域已经有实现；WORLD 现已有可编辑 `space.farm`、`space.house`、`space.village`、`space.shop`、`space.workshop` 路线。商店柜台交易页也已直接绑定 `economy.buy` / `economy.sell`；村庄每日可再生采集恢复来源已接入。N08 已开始居民底座：`first_playable_v1` 登记三名稳定 resident_id、职业与普通/雨天 schedule，村庄/商店/工坊提供对应 WORLD-owned home/work/social/rain Marker，纯 `ResidentSchedule` 只把游戏时间与天气解析为目标 anchor/space。**当前仍没有居民 Actor、寻路、会话、关系或记忆运行时**；狗与任务也仍须后续完成。不得把日程解析、工程色块或新档狗名输入当最终人物系统/美术。
 
 ## 第一屏与三天目标
 
