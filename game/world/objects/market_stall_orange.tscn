@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/chapter1/town/market_orange_white.png" id="stall"]
+
+[sub_resource type="RectangleShape2D" id="StallShape"]
+size = Vector2(48, 12)
+
+[node name="MarketStallOrange" type="Node2D"]
+
+[node name="Footprint" type="StaticBody2D" parent="."]
+position = Vector2(0, -6)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Footprint"]
+shape = SubResource("StallShape")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("stall")
+offset = Vector2(-32, -46)

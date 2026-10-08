@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" path="res://assets/chapter1/town/wood_bench.png" id="12_806k6"]
 [ext_resource type="Texture2D" path="res://assets/chapter1/town/blank_sign.png" id="13_mom0k"]
 [ext_resource type="Texture2D" path="res://assets/chapter1/town/stone_wall.png" id="14_011l2"]
+[ext_resource type="PackedScene" path="res://world/objects/market_stall_orange.tscn" id="15_stall_orange"]
 
 [sub_resource type="RectangleShape2D" id="BoundaryHorizontal"]
 size = Vector2(1280, 16)
@@ -299,19 +300,19 @@ position = Vector2(640, 592)
 [node name="MarketStall00" type="Node2D" parent="FootSorted" unique_id=1984326668 instance=ExtResource("9_mwjli")]
 position = Vector2(220, 336)
 
-[node name="MarketStall01" type="Node2D" parent="FootSorted" unique_id=757887903 instance=ExtResource("9_mwjli")]
+[node name="MarketStall01" type="Node2D" parent="FootSorted" unique_id=757887903 instance=ExtResource("15_stall_orange")]
 position = Vector2(420, 336)
 
 [node name="MarketStallCenterWest" type="Node2D" parent="FootSorted" instance=ExtResource("9_mwjli")]
 position = Vector2(560, 336)
 
-[node name="MarketStallCenterEast" type="Node2D" parent="FootSorted" instance=ExtResource("9_mwjli")]
+[node name="MarketStallCenterEast" type="Node2D" parent="FootSorted" instance=ExtResource("15_stall_orange")]
 position = Vector2(720, 336)
 
 [node name="MarketStall02" type="Node2D" parent="FootSorted" unique_id=1629453996 instance=ExtResource("9_mwjli")]
 position = Vector2(860, 336)
 
-[node name="MarketStall03" type="Node2D" parent="FootSorted" unique_id=842574144 instance=ExtResource("9_mwjli")]
+[node name="MarketStall03" type="Node2D" parent="FootSorted" unique_id=842574144 instance=ExtResource("15_stall_orange")]
 position = Vector2(1060, 336)
 
 [node name="NorthTownHouseWest" type="Node2D" parent="FootSorted" unique_id=2144609954 instance=ExtResource("10_2igm1")]
