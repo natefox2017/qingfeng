@@ -60,6 +60,17 @@ func run() -> void:
 	var remote_observe: Dictionary = knowledge.learn_from_fact("resident.maker",remote_fact,"observed")
 	check(not remote_observe.ok and remote_observe.error_code=="RESIDENT_KNOWLEDGE_NOT_OBSERVER" and not runtime.knows_event("resident.maker","event.shop.001"),"resident does not observe a fact from another space")
 
+	var unsourced := fact("event.unsourced",["resident.neighbor"])
+	unsourced.source_command_id=null
+	var rejected_unsourced: Dictionary = knowledge.learn_from_fact("resident.neighbor",unsourced,"experienced")
+	check(not rejected_unsourced.ok and rejected_unsourced.error_code=="RESIDENT_KNOWLEDGE_FACT_INVALID" and not runtime.knows_event("resident.neighbor","event.unsourced"),"null command source without source_system is not a fact provenance")
+
+	var system_fact := fact("event.weather.001",["resident.neighbor"])
+	system_fact.source_command_id=null
+	system_fact["source_system"]="world.weather"
+	var learned_system: Dictionary = knowledge.learn_from_fact("resident.neighbor",system_fact,"experienced")
+	check(learned_system.ok and runtime.knows_event("resident.neighbor","event.weather.001"),"system fact is valid only with explicit source_system")
+
 	var told: Dictionary = knowledge.tell_event("resident.neighbor","resident.grocer","event.harvest.001")
 	check(told.ok and runtime.knows_event("resident.grocer","event.harvest.001"),"known fact can be explicitly told to another resident")
 	var invented_tell: Dictionary = knowledge.tell_event("resident.neighbor","resident.grocer","event.unknown")
