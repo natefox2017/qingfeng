@@ -5,11 +5,40 @@ extends Node2D
 const SPACE_ID := "space.village"
 const INTERACT_RANGE_PX := 28.0
 const INTERACT_LATERAL_PX := 10.0
+const RESIDENT_ROOM = preload("res://world/components/resident_room_driver.gd")
 
 var _forage_states: Dictionary = {}
 
 @onready var player: CharacterBody2D = $FootSorted/Player
+@onready var grocer_resident: CharacterBody2D = $FootSorted/GrocerResident
+@onready var maker_resident: CharacterBody2D = $FootSorted/MakerResident
 @onready var neighbor_resident: CharacterBody2D = $FootSorted/NeighborResident
+
+var _resident_room: RefCounted
+
+func _ready() -> void:
+	_resident_room = RESIDENT_ROOM.new(
+		SPACE_ID,
+		{
+			"resident.grocer":grocer_resident,
+			"resident.maker":maker_resident,
+			"resident.neighbor":neighbor_resident
+		},
+		$ResidentAnchors,
+		{
+			"space.shop":{
+				"marker":$Anchors/ShopDoorInteract,
+				"arrival_anchor_id":"DoorArrival",
+				"arrival_facing":"north"
+			},
+			"space.workshop":{
+				"marker":$Anchors/WorkshopDoorInteract,
+				"arrival_anchor_id":"DoorArrival",
+				"arrival_facing":"north"
+			}
+		},
+		Callable(self,"_resident_position_is_safe")
+	)
 
 func set_input_enabled(enabled: bool) -> void:
 	player.set_input_enabled(enabled)
@@ -34,9 +63,15 @@ func layout_contract_valid() -> bool:
 	var resident_anchors := get_resident_anchor_definitions()
 	if resident_anchors.size() != $ResidentAnchors.get_child_count() or resident_anchors.is_empty():
 		return false
-	var neighbor := get_node_or_null("FootSorted/NeighborResident")
-	if neighbor==null or not neighbor.has_method("set_schedule_target") or String(neighbor.resident_id)!="resident.neighbor":
-		return false
+	for resident_id: String in ["resident.grocer","resident.maker","resident.neighbor"]:
+		var node_name: String = String({
+			"resident.grocer":"GrocerResident",
+			"resident.maker":"MakerResident",
+			"resident.neighbor":"NeighborResident"
+		}[resident_id])
+		var resident := get_node_or_null("FootSorted/"+node_name)
+		if resident==null or not resident.has_method("set_schedule_target") or String(resident.resident_id)!=resident_id:
+			return false
 	var resident_ids: Dictionary = {}
 	for definition: Dictionary in resident_anchors:
 		if resident_ids.has(definition.anchor_id):
@@ -60,68 +95,29 @@ func get_resident_anchor_definitions() -> Array:
 	definitions.sort_custom(func(a:Dictionary,b:Dictionary): return a.anchor_id < b.anchor_id)
 	return definitions
 
-func apply_resident_projection(value: Variant) -> bool:
-	if not (value is Dictionary) or not value.has("residents") or not (value.residents is Array):
-		return false
-	for resident: Variant in value.residents:
-		if not (resident is Dictionary) or not resident.get("ok",false):
-			continue
-		if String(resident.get("resident_id",""))!="resident.neighbor":
-			continue
-		if String(resident.get("space_id",""))!=SPACE_ID:
-			neighbor_resident.clear_schedule_target()
-			neighbor_resident.visible=false
-			return true
-		var marker := _marker_for_resident_anchor(String(resident.get("anchor_id","")))
-		if marker==null:
-			return false
-		neighbor_resident.visible=true
-		return neighbor_resident.set_schedule_target(
-			String(resident.anchor_id),
-			marker.position,
-			String(resident.activity_id)
-		)
-	return false
+func apply_resident_projection(schedule_value: Variant, runtime_value: Variant = {}) -> bool:
+	return _resident_room != null and _resident_room.apply(schedule_value,runtime_value)
 
-func resident_visual_state() -> Dictionary:
-	return neighbor_resident.projection() if is_instance_valid(neighbor_resident) else {}
+func resident_visual_state(resident_id: String = "resident.neighbor") -> Dictionary:
+	return _resident_room.visual_state(resident_id) if _resident_room != null else {}
 
 func capture_resident_runtime() -> Array:
-	if not is_instance_valid(neighbor_resident):
-		return []
-	return [neighbor_resident.runtime_snapshot(SPACE_ID)]
+	return _resident_room.capture() if _resident_room != null else []
 
 func apply_resident_runtime(value: Variant) -> bool:
-	if not (value is Dictionary) or value.size()!=1 or not value.has("residents") or not (value.residents is Array):
-		return false
-	for resident: Variant in value.residents:
-		if not (resident is Dictionary) or String(resident.get("resident_id",""))!="resident.neighbor":
-			continue
-		if String(resident.get("space_id",""))!=SPACE_ID:
-			neighbor_resident.clear_schedule_target()
-			neighbor_resident.visible=false
-			return true
-		var point: Variant = resident.get("world_position_px",{})
-		if not (point is Dictionary) or not point.has("x") or not point.has("y"):
-			return false
-		var restored_position := Vector2(float(point.x),float(point.y))
-		if _resident_position_is_blocked(restored_position):
-			return false
-		neighbor_resident.visible=true
-		return neighbor_resident.restore_runtime_position(
-			restored_position,
-			StringName(String(resident.get("facing","")))
-		)
-	return false
+	return _resident_room != null and _resident_room.apply_runtime_only(value)
 
-func _resident_position_is_blocked(local_position: Vector2) -> bool:
+func resident_handoff_requests() -> Array:
+	return _resident_room.handoff_requests() if _resident_room != null else []
+
+func _resident_position_is_safe(local_position: Vector2) -> bool:
 	var circle := CircleShape2D.new()
 	circle.radius = 4.0
 	var query := PhysicsShapeQueryParameters2D.new()
 	query.shape = circle
 	query.collision_mask = 1
 	query.transform = Transform2D(0.0,to_global(local_position))
-	return not get_world_2d().direct_space_state.intersect_shape(query,1).is_empty()
+	return get_world_2d().direct_space_state.intersect_shape(query,1).is_empty()
 
 func _marker_for_resident_anchor(anchor_id:String) -> Marker2D:
 	for child: Node in $ResidentAnchors.get_children():

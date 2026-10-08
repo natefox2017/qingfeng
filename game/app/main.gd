@@ -48,6 +48,7 @@ var _import_envelope: Dictionary = {}
 var _transition_pending: bool = false
 var _transition_generation: int = 0
 var _transition_candidate: Node2D
+var _resident_handoff_pending := false
 
 @onready var view: Control = $Interface/Screen
 
@@ -92,6 +93,7 @@ func _process(_delta: float) -> void:
 		if time_result.ok and int(time_result.advanced_minutes) > 0:
 			_refresh_farm_world()
 			_update_interface()
+		_poll_resident_handoff()
 	if state != State.LOADING or _activation_pending or _request == null:
 		return
 	var status: int = _request.status()
@@ -337,6 +339,7 @@ func return_to_title() -> void:
 	room = null
 	_transition_generation += 1
 	_transition_pending = false
+	_resident_handoff_pending = false
 	if is_instance_valid(_transition_candidate):
 		_transition_candidate.queue_free()
 	_transition_candidate = null
@@ -623,7 +626,7 @@ func _rest_at_bed(target: Dictionary) -> void:
 	_update_interface()
 
 func _begin_door_transition(target: Dictionary) -> void:
-	if _transition_pending or farm_action.is_busy() or state != State.WORLD or not _valid_door_target(target):
+	if _transition_pending or _resident_handoff_pending or farm_action.is_busy() or state != State.WORLD or not _valid_door_target(target):
 		return
 	var path := _scene_path_for_space(String(target.target_space_id))
 	if path.is_empty():
@@ -813,7 +816,71 @@ func _refresh_farm_world() -> void:
 	if room.has_method("apply_forage_projection"):
 		room.apply_forage_projection(projection.forage)
 	if room.has_method("apply_resident_projection"):
-		room.apply_resident_projection(projection.residents)
+		room.apply_resident_projection(projection.residents,projection.resident_runtime)
+
+func _poll_resident_handoff() -> void:
+	if _resident_handoff_pending or _transition_pending or state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured():
+		return
+	if not is_instance_valid(room) or not room.has_method("resident_handoff_requests"):
+		return
+	var requests: Variant = room.resident_handoff_requests()
+	if not (requests is Array) or requests.is_empty():
+		return
+	_resident_handoff_pending = true
+	_commit_resident_handoff.call_deferred(requests[0])
+
+func _commit_resident_handoff(request: Variant) -> void:
+	if not (request is Dictionary):
+		_resident_handoff_pending = false
+		return
+	for key: String in ["resident_id","source_space_id","target_space_id","arrival_anchor_id","arrival_facing"]:
+		if not request.has(key) or not (request[key] is String) or String(request[key]).is_empty():
+			_resident_handoff_pending = false
+			return
+	if state != State.WORLD or not is_instance_valid(room) or String(room.get_space_id()) != String(request.source_space_id):
+		_resident_handoff_pending = false
+		return
+	var path := _scene_path_for_space(String(request.target_space_id))
+	if path.is_empty():
+		_resident_handoff_pending = false
+		return
+	var packed := load(path) as PackedScene
+	if packed == null:
+		_resident_handoff_pending = false
+		return
+	var candidate := packed.instantiate() as Node2D
+	if candidate == null:
+		_resident_handoff_pending = false
+		return
+	candidate.visible=false
+	add_child(candidate)
+	move_child(candidate,0)
+	candidate.set_input_enabled(false)
+	_set_room_camera_enabled(candidate,false)
+	await get_tree().physics_frame
+	if state != State.WORLD or not is_instance_valid(room) or String(room.get_space_id()) != String(request.source_space_id):
+		candidate.queue_free()
+		_resident_handoff_pending = false
+		return
+	if not _world_contract_valid(candidate) or String(candidate.get_space_id()) != String(request.target_space_id):
+		candidate.queue_free()
+		_resident_handoff_pending = false
+		return
+	var arrival: Vector2 = candidate.get_anchor_position(String(request.arrival_anchor_id))
+	if arrival == Vector2.INF or _position_is_blocked_in(candidate,arrival):
+		candidate.queue_free()
+		_resident_handoff_pending = false
+		return
+	var updated := gameplay_session.update_resident_runtime({
+		"resident_id":String(request.resident_id),
+		"space_id":String(request.target_space_id),
+		"world_position_px":{"x":arrival.x,"y":arrival.y},
+		"facing":String(request.arrival_facing)
+	})
+	candidate.queue_free()
+	_resident_handoff_pending = false
+	if updated:
+		_refresh_farm_world()
 
 func _farm_action_label(action: String) -> String:
 	match action:
@@ -952,6 +1019,8 @@ func save_progress() -> Dictionary:
 		return CODEC.failure("SAVE_ACTION_BUSY")
 	if _transition_pending:
 		return CODEC.failure("SAVE_TRANSITION_BUSY")
+	if _resident_handoff_pending:
+		return CODEC.failure("SAVE_RESIDENT_HANDOFF_BUSY")
 	if not _capture_room_resident_runtime(room):
 		return CODEC.failure("SAVE_RESIDENT_RUNTIME_INVALID")
 	var candidate: Dictionary = active_snapshot.duplicate(true)
