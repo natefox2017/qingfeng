@@ -49,9 +49,11 @@ texture = ExtResource("3_ofrai")
 sources/0 = SubResource("TileSetAtlasSource_1ir5o")
 
 [sub_resource type="RectangleShape2D" id="BoundaryHorizontal"]
+resource_local_to_scene = true
 size = Vector2(1792, 16)
 
 [sub_resource type="RectangleShape2D" id="BoundaryVertical"]
+resource_local_to_scene = true
 size = Vector2(16, 1024)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_467y6"]

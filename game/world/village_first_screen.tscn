@@ -17,9 +17,11 @@
 [ext_resource type="PackedScene" path="res://world/objects/market_stall_orange.tscn" id="15_stall_orange"]
 
 [sub_resource type="RectangleShape2D" id="BoundaryHorizontal"]
+resource_local_to_scene = true
 size = Vector2(1280, 16)
 
 [sub_resource type="RectangleShape2D" id="BoundaryVertical"]
+resource_local_to_scene = true
 size = Vector2(16, 656)
 
 [sub_resource type="RectangleShape2D" id="ShopShape"]

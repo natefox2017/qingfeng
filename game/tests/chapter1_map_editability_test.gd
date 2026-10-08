@@ -103,7 +103,34 @@ func verify_village_copy() -> void:
 	reloaded.queue_free()
 	await process_frame
 
+func verify_independent_instance_bounds() -> void:
+	# An editor preview/expanded copy must not mutate another live instance's
+	# shared perimeter resources. No scene-tree entry is needed for this check.
+	for path: String in ["res://world/farm_first_screen.tscn", "res://world/village_first_screen.tscn"]:
+		var resource := load(path) as PackedScene
+		var original := resource.instantiate() as Node2D
+		var edited := resource.instantiate() as Node2D
+		original.refresh_world_layout()
+		edited.refresh_world_layout()
+		var original_bounds: Rect2i = original.get_world_bounds()
+		var original_sizes: Dictionary = {}
+		for side: String in ["North", "South", "West", "East"]:
+			original_sizes[side] = original.get_node("Solids/" + side + "/CollisionShape2D").shape.size
+		var ground := edited.get_node("TerrainGround") as TileMapLayer
+		var cell: Vector2i = ground.get_used_cells()[0]
+		ground.set_cell(ground.get_used_rect().end + Vector2i(5, 3), ground.get_cell_source_id(cell), ground.get_cell_atlas_coords(cell))
+		edited.refresh_world_layout()
+		check(edited.get_world_bounds() != original_bounds, "copy really expands " + original.get_space_id())
+		check(original.get_world_bounds() == original_bounds, "other instance ground bounds remain unchanged " + original.get_space_id())
+		for side: String in original_sizes:
+			var original_shape: Shape2D = original.get_node("Solids/" + side + "/CollisionShape2D").shape
+			var edited_shape: Shape2D = edited.get_node("Solids/" + side + "/CollisionShape2D").shape
+			check(original_shape != edited_shape and original_shape.size == original_sizes[side], "expansion cannot resize another instance perimeter " + original.get_space_id() + " " + side)
+		original.free()
+		edited.free()
+
 func run() -> void:
+	verify_independent_instance_bounds()
 	create_timer(20).timeout.connect(func(): printerr("MAP_EDITABILITY_TIMEOUT"); quit(1))
 	var scene: Node2D = FARM.instantiate()
 	root.add_child(scene)

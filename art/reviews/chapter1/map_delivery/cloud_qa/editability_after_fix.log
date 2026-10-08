@@ -1,0 +1,87 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+MAP_EDIT_CHECK true copy really expands space.farm
+MAP_EDIT_CHECK true other instance ground bounds remain unchanged space.farm
+MAP_EDIT_CHECK true expansion cannot resize another instance perimeter space.farm North
+MAP_EDIT_CHECK true expansion cannot resize another instance perimeter space.farm South
+MAP_EDIT_CHECK true expansion cannot resize another instance perimeter space.farm West
+MAP_EDIT_CHECK true expansion cannot resize another instance perimeter space.farm East
+MAP_EDIT_CHECK true copy really expands space.village
+MAP_EDIT_CHECK true other instance ground bounds remain unchanged space.village
+MAP_EDIT_CHECK true expansion cannot resize another instance perimeter space.village North
+MAP_EDIT_CHECK true expansion cannot resize another instance perimeter space.village South
+MAP_EDIT_CHECK true expansion cannot resize another instance perimeter space.village West
+MAP_EDIT_CHECK true expansion cannot resize another instance perimeter space.village East
+MAP_EDIT_CHECK true distant detail tile cannot expand playable map space.farm
+MAP_EDIT_CHECK true distant detail cannot move camera limits space.farm
+MAP_EDIT_CHECK true native ground layer
+MAP_EDIT_CHECK true separate editable detail layer
+MAP_PLOT_POINT plot.farm.001 (672.0, 432.0)
+MAP_PLOT_POINT plot.farm.002 (928.0, 432.0)
+MAP_PLOT_POINT plot.farm.003 (1184.0, 432.0)
+MAP_PLOT_POINT plot.farm.004 (672.0, 624.0)
+MAP_PLOT_POINT plot.farm.005 (928.0, 624.0)
+MAP_PLOT_POINT plot.farm.006 (1184.0, 624.0)
+MAP_EDIT_CHECK true independent object scene owns collision
+MAP_EDIT_OBJECT Farmhouse markers=2
+MAP_EDIT_MOVE_BEFORE object=/root/FarmFirstScreen/Farmhouse pos=(272.0, 480.0) shape=/root/FarmFirstScreen/Farmhouse/FootprintLeft/CollisionShape2D global=(220.0, 464.0) expected=(252.0, 480.0)
+MAP_EDIT_CHILD /root/FarmFirstScreen/Farmhouse/Sprite2D global=(272.0, 480.0) top_level=false
+MAP_EDIT_CHILD /root/FarmFirstScreen/Farmhouse/Roof global=(272.0, 480.0) top_level=false
+MAP_EDIT_CHILD /root/FarmFirstScreen/Farmhouse/FootprintLeft global=(220.0, 464.0) top_level=false
+MAP_EDIT_CHILD /root/FarmFirstScreen/Farmhouse/FootprintRight global=(324.0, 464.0) top_level=false
+MAP_EDIT_CHILD /root/FarmFirstScreen/Farmhouse/DoorThreshold global=(272.0, 452.0) top_level=false
+MAP_EDIT_CHILD /root/FarmFirstScreen/Farmhouse/HouseDoorInteract global=(272.0, 472.0) top_level=false
+MAP_EDIT_CHILD /root/FarmFirstScreen/Farmhouse/HouseDoorArrival global=(272.0, 488.0) top_level=false
+MAP_EDIT_MOVE_AFTER object_pos=(304.0, 496.0) shape_global=(252.0, 480.0)
+MAP_EDIT_CHECK true moving instance moves its collision by same offset
+MAP_EDIT_CHECK true physics collider moves and vacates old footprint edge
+MAP_EDIT_CHECK true interaction marker moves with object
+MAP_EDIT_CHECK true interaction marker moves with object
+MAP_EDIT_CHECK true pack edited copy
+MAP_EDIT_CHECK true save edited copy outside tracked world
+MAP_EDIT_CHECK true reload saved copy
+MAP_EDIT_CHECK true single-cell edit survives runtime ready
+MAP_EDIT_CHECK true 4x4 expansion survives save/reload
+MAP_EDIT_CHECK true expanded cells stay authored
+MAP_EDIT_CHECK true runtime bounds include expanded block
+MAP_EDIT_CHECK true camera follows authored expansion space.farm
+MAP_EDIT_CHECK true perimeter shape follows extent North
+MAP_EDIT_CHECK true actual perimeter collision follows extent North
+MAP_EDIT_CHECK true perimeter shape follows extent South
+MAP_EDIT_CHECK true actual perimeter collision follows extent South
+MAP_EDIT_CHECK true perimeter shape follows extent West
+MAP_EDIT_CHECK true actual perimeter collision follows extent West
+MAP_EDIT_CHECK true perimeter shape follows extent East
+MAP_EDIT_CHECK true actual perimeter collision follows extent East
+MAP_EDIT_CHECK true physics movement crosses former perimeter into new block
+MAP_EDIT_CHECK true moved object persists
+MAP_EDIT_CHECK true moved collision persists
+MAP_EDIT_CHECK true moved house marker resolves real door after reload
+MAP_EDIT_CHECK true moved interaction marker persists
+MAP_EDIT_CHECK true moved interaction marker persists
+MAP_EDIT_CHECK true distant detail tile cannot expand playable map space.village
+MAP_EDIT_CHECK true distant detail cannot move camera limits space.village
+MAP_EDIT_CHECK true village authored layer TerrainGround
+MAP_EDIT_CHECK true village authored layer GroundPaths
+MAP_EDIT_CHECK true village authored layer GroundDetails
+MAP_EDIT_CHECK true camera follows authored expansion space.village
+MAP_EDIT_CHECK true perimeter shape follows extent North
+MAP_EDIT_CHECK true actual perimeter collision follows extent North
+MAP_EDIT_CHECK true perimeter shape follows extent South
+MAP_EDIT_CHECK true actual perimeter collision follows extent South
+MAP_EDIT_CHECK true perimeter shape follows extent West
+MAP_EDIT_CHECK true actual perimeter collision follows extent West
+MAP_EDIT_CHECK true perimeter shape follows extent East
+MAP_EDIT_CHECK true actual perimeter collision follows extent East
+MAP_EDIT_CHECK true village edited copy saved
+MAP_EDIT_CHECK true village edited cell and extension survive runtime reload
+MAP_EDIT_CHECK true camera follows authored expansion space.village
+MAP_EDIT_CHECK true perimeter shape follows extent North
+MAP_EDIT_CHECK true actual perimeter collision follows extent North
+MAP_EDIT_CHECK true perimeter shape follows extent South
+MAP_EDIT_CHECK true actual perimeter collision follows extent South
+MAP_EDIT_CHECK true perimeter shape follows extent West
+MAP_EDIT_CHECK true actual perimeter collision follows extent West
+MAP_EDIT_CHECK true perimeter shape follows extent East
+MAP_EDIT_CHECK true actual perimeter collision follows extent East
+MAP_EDITABILITY_RESULT checks=68 failures=0
