@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "approved_date": "2026-10-08",
+  "visual_status": "user_approved_design_reference",
+  "binary_storage_status": "awaiting_repo_binary_transfer",
+  "source": "Images created in this Qingfeng project conversation and explicitly approved by project owner; no third-party game assets.",
+  "map_authoring_policy": "References guide authored TileMapLayer scenes and collision; do not bake illustration into game collision or duplicate geometry.",
+  "ui_policy": "All text, input, save cards and actions are native interactive controls; screenshot mockups are backdrop/reference only.",
+  "images": [
+    {
+      "id": "world_chapter1_map",
+      "sha256": "ba35eef32eb0a49a5e50ad8ec4498148845c8f4065d3695b315c4ea1286bddd7",
+      "bytes": 3616159,
+      "kind": "world_layout_reference",
+      "width": 1672,
+      "height": 941,
+      "original_path": "art/approved/world_chapter1_map.png",
+      "repo_reference_path": "art/approved/refs/world_chapter1_map.png"
+    },
+    {
+      "id": "farm_first_screen",
+      "sha256": "84226216cd0a079adf5cb40e2fbce9e2b7dd7824194b3fe2b6e9a4d49ba334f2",
+      "bytes": 3161958,
+      "kind": "farm_visual_reference",
+      "width": 1672,
+      "height": 941,
+      "original_path": "art/approved/farm_first_screen.png",
+      "repo_reference_path": "art/approved/refs/farm_first_screen.png"
+    },
+    {
+      "id": "farm_exploration_reference",
+      "sha256": "613bc17a28ba295e066add7c8764698bd78114f2de8ce9c326769dcdf2afb095",
+      "bytes": 2462275,
+      "kind": "farm_visual_reference",
+      "width": 1672,
+      "height": 941,
+      "original_path": "art/approved/farm_exploration_reference.png",
+      "repo_reference_path": "art/approved/refs/farm_exploration_reference.png"
+    },
+    {
+      "id": "riverside_reference",
+      "sha256": "64daa2b878760d5fd25a9baebe4ae2b9fd05b3ee09676f7be763f374f18bc48f",
+      "bytes": 2803497,
+      "kind": "farm_visual_reference",
+      "width": 1672,
+      "height": 941,
+      "original_path": "art/approved/riverside_reference.png",
+      "repo_reference_path": "art/approved/refs/riverside_reference.png"
+    },
+    {
+      "id": "gameplay_hud_reference",
+      "sha256": "84226216cd0a079adf5cb40e2fbce9e2b7dd7824194b3fe2b6e9a4d49ba334f2",
+      "bytes": 3161958,
+      "kind": "ui_gameplay_reference",
+      "width": 1672,
+      "height": 941,
+      "original_path": "art/approved/gameplay_hud_reference.png",
+      "repo_reference_path": "art/approved/refs/gameplay_hud_reference.png"
+    },
+    {
+      "id": "ui_title",
+      "sha256": "39efb1446e5698f5604dcccf539276e868361dc2f9c1c28b389160ca52ab85b0",
+      "bytes": 3135728,
+      "kind": "ui_title",
+      "width": 1672,
+      "height": 941,
+      "original_path": "art/approved/ui_title.png",
+      "repo_reference_path": "art/approved/refs/ui_title.png"
+    },
+    {
+      "id": "ui_new_game",
+      "sha256": "83a8d248e7f911766470be817fddd8c9d619465a3da78c5a758313136e24eff6",
+      "bytes": 2960138,
+      "kind": "ui_new_game",
+      "width": 1672,
+      "height": 941,
+      "original_path": "art/approved/ui_new_game.png",
+      "repo_reference_path": "art/approved/refs/ui_new_game.png"
+    },
+    {
+      "id": "ui_load",
+      "sha256": "bb44cc1adc116110a3e8fdd5b1190c417d5e76c3076b33513fa9c792b1a8bc15",
+      "bytes": 2790633,
+      "kind": "ui_load",
+      "width": 1672,
+      "height": 941,
+      "original_path": "art/approved/ui_load.png",
+      "repo_reference_path": "art/approved/refs/ui_load.png"
+    }
+  ]
+}
