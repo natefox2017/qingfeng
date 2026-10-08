@@ -107,7 +107,6 @@ static func validate(data: Variant) -> bool:
 		if not (gift_item_id is String) or not data.items.has(gift_item_id) or gift_item_ids.has(gift_item_id):
 			return false
 		gift_item_ids[String(gift_item_id)]=true
-		return false
 	if not (data.residents.definitions is Dictionary) or data.residents.definitions.size()!=3:
 		return false
 	for resident_id: Variant in data.residents.definitions:
