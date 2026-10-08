@@ -201,6 +201,72 @@
       "evidence_paths": [],
       "animations": [],
       "kind": "font"
+    },
+    {
+      "kind": "object",
+      "asset_id": "asset.ui.approved.ui_title",
+      "runtime_path": "game/assets/approved/ui_title.png",
+      "sha256": "39efb1446e5698f5604dcccf539276e868361dc2f9c1c28b389160ca52ab85b0",
+      "source_url": "https://github.com/natefox2017/qingfeng/blob/main/art/approved/reference_manifest.json",
+      "source_version": "39efb1446e5698f5604dcccf539276e868361dc2f9c1c28b389160ca52ab85b0",
+      "license_id": "QINGFENG-ORIGINAL",
+      "license_path": "art/approved/ART_RIGHTS.md",
+      "size_px": {
+        "width": 1672,
+        "height": 941
+      },
+      "source_anchor_px": {
+        "x": 0,
+        "y": 0
+      },
+      "review_status": "proposed",
+      "reviewer": null,
+      "evidence_paths": [],
+      "animations": []
+    },
+    {
+      "kind": "object",
+      "asset_id": "asset.ui.approved.ui_new_game",
+      "runtime_path": "game/assets/approved/ui_new_game.png",
+      "sha256": "83a8d248e7f911766470be817fddd8c9d619465a3da78c5a758313136e24eff6",
+      "source_url": "https://github.com/natefox2017/qingfeng/blob/main/art/approved/reference_manifest.json",
+      "source_version": "83a8d248e7f911766470be817fddd8c9d619465a3da78c5a758313136e24eff6",
+      "license_id": "QINGFENG-ORIGINAL",
+      "license_path": "art/approved/ART_RIGHTS.md",
+      "size_px": {
+        "width": 1672,
+        "height": 941
+      },
+      "source_anchor_px": {
+        "x": 0,
+        "y": 0
+      },
+      "review_status": "proposed",
+      "reviewer": null,
+      "evidence_paths": [],
+      "animations": []
+    },
+    {
+      "kind": "object",
+      "asset_id": "asset.ui.approved.ui_load",
+      "runtime_path": "game/assets/approved/ui_load.png",
+      "sha256": "bb44cc1adc116110a3e8fdd5b1190c417d5e76c3076b33513fa9c792b1a8bc15",
+      "source_url": "https://github.com/natefox2017/qingfeng/blob/main/art/approved/reference_manifest.json",
+      "source_version": "bb44cc1adc116110a3e8fdd5b1190c417d5e76c3076b33513fa9c792b1a8bc15",
+      "license_id": "QINGFENG-ORIGINAL",
+      "license_path": "art/approved/ART_RIGHTS.md",
+      "size_px": {
+        "width": 1672,
+        "height": 941
+      },
+      "source_anchor_px": {
+        "x": 0,
+        "y": 0
+      },
+      "review_status": "proposed",
+      "reviewer": null,
+      "evidence_paths": [],
+      "animations": []
     }
   ]
 }
