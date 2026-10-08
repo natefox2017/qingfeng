@@ -15,7 +15,8 @@
     "crops",
     "forage",
     "residents",
-    "new_game"
+    "new_game",
+    "dialogues"
   ],
   "properties": {
     "content_version": {
@@ -370,6 +371,90 @@
                         "minLength": 1,
                         "maxLength": 128
                       }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "dialogues": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "player_resident"
+      ],
+      "properties": {
+        "player_resident": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": false,
+          "patternProperties": {
+            "^resident\\.": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "space_id",
+                "first_meeting",
+                "repeat"
+              ],
+              "properties": {
+                "space_id": {
+                  "type": "string",
+                  "pattern": "^space\\.",
+                  "maxLength": 128
+                },
+                "first_meeting": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "dialogue_id",
+                    "event_id",
+                    "event_kind",
+                    "text"
+                  ],
+                  "properties": {
+                    "dialogue_id": {
+                      "type": "string",
+                      "pattern": "^dialogue\\.",
+                      "maxLength": 128
+                    },
+                    "event_id": {
+                      "type": "string",
+                      "pattern": "^event\\.",
+                      "maxLength": 128
+                    },
+                    "event_kind": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 512
+                    }
+                  }
+                },
+                "repeat": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "dialogue_id",
+                    "text"
+                  ],
+                  "properties": {
+                    "dialogue_id": {
+                      "type": "string",
+                      "pattern": "^dialogue\\.",
+                      "maxLength": 128
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 512
                     }
                   }
                 }
