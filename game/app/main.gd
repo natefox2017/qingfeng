@@ -14,6 +14,8 @@ const FARM_ACTION = preload("res://app/farm_action_runner.gd")
 const LEGACY_ROOM := "res://tests/fixtures/collision_room.tscn"
 const FARM_ROOM := "res://world/farm_first_screen.tscn"
 const HOUSE_ROOM := "res://world/house_interior.tscn"
+const VILLAGE_ROOM := "res://world/village_first_screen.tscn"
+const SHOP_ROOM := "res://world/shop_interior.tscn"
 const DEFAULT_ROOM := LEGACY_ROOM
 const MOVEMENT_ACTIONS := [&"move_left", &"move_right", &"move_up", &"move_down"]
 const GAMEPLAY_PAUSE_OWNERS := [&"pause_menu", &"inventory", &"storage", &"focus"]
@@ -228,6 +230,10 @@ func _scene_path_for_space(space_id: String) -> String:
 			return FARM_ROOM
 		"space.house":
 			return HOUSE_ROOM
+		"space.village":
+			return VILLAGE_ROOM
+		"space.shop":
+			return SHOP_ROOM
 	return ""
 
 func _position_is_blocked(position: Vector2) -> bool:
@@ -740,7 +746,14 @@ func _update_interface() -> void:
 func _world_label(has_gameplay: bool) -> String:
 	if not has_gameplay or not is_instance_valid(room) or not room.has_method("get_space_id"):
 		return "旧入口碰撞测试场"
-	return "家内部 · 工程美术" if room.get_space_id() == "space.house" else "农庄第一屏 · 工程美术"
+	match String(room.get_space_id()):
+		"space.house":
+			return "家内部 · 工程美术"
+		"space.village":
+			return "村庄第一屏 · 工程美术"
+		"space.shop":
+			return "商店内部 · 工程美术"
+	return "农庄第一屏 · 工程美术"
 
 func save_progress() -> Dictionary:
 	if state != State.WORLD or active_snapshot.is_empty():
