@@ -96,9 +96,9 @@ static func validate(data: Variant) -> bool:
 			return false
 		if not forage.item_id in data.items or not _positive_int(forage.quantity) or not _positive_int(forage.respawn_days):
 			return false
-	if not _exact_keys(data.residents,["daily_greeting_limit","daily_gift_limit","definitions"]):
+	if not _exact_keys(data.residents,["daily_greeting_limit","greeting_relationship_points","daily_gift_limit","definitions"]):
 		return false
-	if not _positive_int(data.residents.daily_greeting_limit) or not _positive_int(data.residents.daily_gift_limit):
+	if not _positive_int(data.residents.daily_greeting_limit) or not _positive_int(data.residents.greeting_relationship_points) or data.residents.greeting_relationship_points>1000 or not _positive_int(data.residents.daily_gift_limit):
 		return false
 	if not (data.residents.definitions is Dictionary) or data.residents.definitions.size()!=3:
 		return false

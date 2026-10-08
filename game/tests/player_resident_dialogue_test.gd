@@ -103,29 +103,54 @@ func run() -> void:
 	check(int(event.game_minute)==minute_before and String(event.payload.dialogue_id)=="dialogue.neighbor.first_meeting","fact records original game minute and dialogue id")
 
 	var facts_after_first := app.gameplay_session.fact_events.projection().events.size()
+	var relationship_before := app.gameplay_session.resident_runtime.relationship_points_for("resident.neighbor")
 	open_neighbor_dialogue()
 	await process_frame
 	check(app.locks.has_owner(&"dialogue") and not bool(app._dialogue_context.get("is_first_meeting",true)),"repeat interaction resolves revisit context")
 	check(String(app._dialogue_context.get("text","")).contains("今天也来村里转转"),"repeat text comes from content_version")
 	app._on_action("close_dialogue",{})
 	await process_frame
-	check(app.gameplay_session.fact_events.projection().events.size()==facts_after_first,"repeat greeting does not duplicate the first-meeting fact")
+	check(app.gameplay_session.fact_events.projection().events.size()==facts_after_first+1,"first repeat greeting of the day creates one settlement fact")
+	check(app.gameplay_session.resident_runtime.relationship_points_for("resident.neighbor")==relationship_before+1,"first daily greeting grants configured relationship points")
+	var greeting_event_id := "event.resident.neighbor.greeting.day.1.1"
+	var greeting_fact: Dictionary = app.gameplay_session.fact_event(greeting_event_id)
+	check(greeting_fact.kind=="resident.greeting" and int(greeting_fact.payload.relationship_delta)==1,"daily greeting fact records configured relationship delta")
+	check(app.gameplay_session.resident_runtime.knows_event("resident.neighbor",greeting_event_id),"resident knows their settled greeting fact")
+
+	open_neighbor_dialogue()
+	await process_frame
+	app._on_action("close_dialogue",{})
+	await process_frame
+	check(app.gameplay_session.fact_events.projection().events.size()==facts_after_first+1,"second same-day greeting does not create another fact")
+	check(app.gameplay_session.resident_runtime.relationship_points_for("resident.neighbor")==relationship_before+1,"second same-day greeting cannot farm relationship")
 
 	var saved: Dictionary = app.save_progress()
 	check(saved.ok,"dialogue knowledge can be saved after modal closes")
 	if saved.ok:
 		var envelope: Dictionary = app.store.read_save(saved.save_id).envelope
-		check(int(envelope.schema_version)==7 and envelope.snapshot.gameplay.fact_events.events.size()==1,"schema seven persists the dialogue fact log")
+		check(int(envelope.schema_version)==7 and envelope.snapshot.gameplay.fact_events.events.size()==2,"schema seven persists first-meeting and daily greeting facts")
 		app.set_process(true)
 		app.return_to_title()
 		app._on_action("read_save",{"save_id":saved.save_id})
 		check(await wait_world() and app.room.get_space_id()=="space.village","schema-seven dialogue save restarts in village")
 		app.set_process(false)
 		check(app.gameplay_session.fact_events.has_event(FIRST_EVENT) and app.gameplay_session.resident_runtime.knows_event("resident.neighbor",FIRST_EVENT),"reload restores fact and neighbor knowledge together")
+		check(app.gameplay_session.resident_runtime.relationship_points_for("resident.neighbor")==relationship_before+1,"daily greeting relationship survives schema-seven restart")
+		var restored_fact_count := app.gameplay_session.fact_events.projection().events.size()
 		open_neighbor_dialogue()
 		await process_frame
 		check(not bool(app._dialogue_context.get("is_first_meeting",true)) and String(app._dialogue_context.get("dialogue_id",""))=="dialogue.neighbor.greeting","reloaded neighbor immediately uses revisit dialogue")
 		app._on_action("close_dialogue",{})
+		check(app.gameplay_session.fact_events.projection().events.size()==restored_fact_count and app.gameplay_session.resident_runtime.relationship_points_for("resident.neighbor")==relationship_before+1,"restart does not reset the same-day greeting limit")
+
+		var advanced: Dictionary = app.gameplay_session.advance(1440)
+		check(advanced.ok and app.gameplay_session.clock.current_day()==2,"test reaches the next day using the one gameplay clock")
+		app._refresh_farm_world()
+		open_neighbor_dialogue()
+		await process_frame
+		app._on_action("close_dialogue",{})
+		check(app.gameplay_session.fact_events.has_event("event.resident.neighbor.greeting.day.2.1"),"next day creates a new bounded greeting fact")
+		check(app.gameplay_session.resident_runtime.relationship_points_for("resident.neighbor")==relationship_before+2,"next day greeting can grant the configured relationship point again")
 
 	var told: Dictionary = app.gameplay_session.resident_tell_event("resident.neighbor","resident.grocer",FIRST_EVENT)
 	check(told.ok and app.gameplay_session.resident_runtime.knows_event("resident.grocer",FIRST_EVENT),"explicit telling can teach the logged fact after the teller knows it")

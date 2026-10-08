@@ -71,6 +71,25 @@ func update_runtime(value: Variant) -> bool:
 	_states[resident_id] = next
 	return true
 
+func relationship_points_for(resident_id: String) -> int:
+	if not _states.has(resident_id):
+		return 0
+	return int(_states[resident_id].relationship_points)
+
+func adjust_relationship(resident_id: String, delta: int) -> Dictionary:
+	if not is_configured() or not _states.has(resident_id):
+		return {"ok":false,"error_code":"RESIDENT_RUNTIME_UNKNOWN_RESIDENT","has_changes":false}
+	if delta==0:
+		return {"ok":true,"error_code":"","has_changes":false}
+	var current := int(_states[resident_id].relationship_points)
+	var next_value := current+delta
+	if next_value < -1000000 or next_value > 1000000:
+		return {"ok":false,"error_code":"RESIDENT_RELATIONSHIP_RANGE","has_changes":false}
+	var next: Dictionary = _states[resident_id].duplicate(true)
+	next.relationship_points=next_value
+	_states[resident_id]=next
+	return {"ok":true,"error_code":"","has_changes":true}
+
 func knows_event(resident_id: String, event_id: String) -> bool:
 	if not _states.has(resident_id) or event_id.is_empty():
 		return false
