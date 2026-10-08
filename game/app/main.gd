@@ -373,7 +373,7 @@ func return_to_title() -> void:
 func set_pause_menu(enabled: bool) -> void:
 	if state != State.WORLD:
 		return
-	if enabled and (farm_action.is_busy() or _transition_pending):
+	if enabled and (farm_action.is_busy() or _transition_pending or locks.has_owner(&"dialogue")):
 		return
 	locks.set_locked(&"pause_menu", enabled)
 	_update_interface()
@@ -449,14 +449,14 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 
 func set_inventory_menu(enabled: bool) -> void:
-	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured() or (enabled and (farm_action.is_busy() or _transition_pending or locks.has_owner(&"storage") or locks.has_owner(&"trade"))):
+	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured() or (enabled and (farm_action.is_busy() or _transition_pending or locks.has_owner(&"storage") or locks.has_owner(&"trade") or locks.has_owner(&"dialogue"))):
 		return
 	locks.set_locked(&"inventory",enabled)
 	_page = "inventory" if enabled else "title"
 	_update_interface()
 
 func set_storage_menu(enabled: bool) -> void:
-	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured() or (enabled and (farm_action.is_busy() or _transition_pending or locks.has_owner(&"inventory") or locks.has_owner(&"trade"))):
+	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured() or (enabled and (farm_action.is_busy() or _transition_pending or locks.has_owner(&"inventory") or locks.has_owner(&"trade") or locks.has_owner(&"dialogue"))):
 		return
 	if enabled:
 		if not is_instance_valid(room) or not room.has_method("get_space_id") or room.get_space_id() != "space.house":
@@ -466,7 +466,7 @@ func set_storage_menu(enabled: bool) -> void:
 	_update_interface()
 
 func set_trade_menu(enabled: bool) -> void:
-	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured() or (enabled and (farm_action.is_busy() or _transition_pending or locks.has_owner(&"inventory") or locks.has_owner(&"storage"))):
+	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured() or (enabled and (farm_action.is_busy() or _transition_pending or locks.has_owner(&"inventory") or locks.has_owner(&"storage") or locks.has_owner(&"dialogue"))):
 		return
 	if enabled:
 		if not is_instance_valid(room) or not room.has_method("get_space_id") or room.get_space_id() != "space.shop":
