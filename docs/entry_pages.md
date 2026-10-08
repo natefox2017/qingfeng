@@ -32,7 +32,7 @@ SHA256用于损坏检测，**不是防作弊签名/信任认证**。通过校验
 
 `session_store.gd`写入user://qingfeng/saves：临时文件→flush/关闭→读回验证→新随机ID文件rename。采取最多128份的追加式保存，不覆盖已有文件；每次导入是新本地save_id和新session_id。schema 3 导入时会清空源会话 command receipts，因为回执指纹绑定原 session_id，不能复制成新会话的幂等历史。没有自动删除或按大小淘汰，达到上限会明确失败。列表按写入时间排序；导入重新写本机时间，原文件保留。
 
-新游戏在农庄场景、WORLD layout、GameplaySession 和出生点全部验证后才写第一份当前 gameplay 档；写盘失败不进入会话。加载原档不自动重写。当前 schema 5 保存会同时更新位置/朝向以及 Clock、Inventory、Storage、Wallet、Farm、Forage 和 CommandJournal；schema 1 兼容档仍只保存原身份/测试场位置。导入预览保存已验证的内容副本，确认时再次验证，不重读可能已被外部修改的源路径。
+新游戏在农庄场景、WORLD layout、GameplaySession 和出生点全部验证后才写第一份当前 gameplay 档；写盘失败不进入会话。加载原档不自动重写。当前 schema 6 保存会同时更新玩家位置/朝向以及 Clock、Inventory、Storage、Wallet、Farm、Forage、CommandJournal 和 ResidentRuntimeState；居民 schedule target 不入档。schema 1 兼容档仍只保存原身份/测试场位置。导入预览保存已验证的内容副本，确认时再次验证，不重读可能已被外部修改的源路径。
 
 ## 设置语义
 
