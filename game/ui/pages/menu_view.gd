@@ -87,9 +87,13 @@ func _set_approved_menu_art(page: String) -> void:
 			# buttons. Wait for the clean, text-free background from UI-ART #98.
 			path = "res://assets/ui/backgrounds/title_clean.png"
 		"new_game":
-			path = "res://assets/approved/ui_new_game.png"
+			# The approved reference is a complete mockup with baked labels and
+			# controls. Wait for the clean, text-free background from UI-ART #99.
+			path = "res://assets/ui/backgrounds/new_game_clean.png"
 		"load":
-			path = "res://assets/approved/ui_load.png"
+			# The approved reference contains example save cards and values; it is
+			# never a runtime backdrop. UI-ART #100 owns the clean background.
+			path = "res://assets/ui/backgrounds/load_clean.png"
 	if path.is_empty() or not ResourceLoader.exists(path, "Texture2D"):
 		return
 	var texture := load(path) as Texture2D
