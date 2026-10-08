@@ -247,6 +247,7 @@
       "additionalProperties": false,
       "required": [
         "daily_greeting_limit",
+        "greeting_relationship_points",
         "daily_gift_limit",
         "definitions"
       ],
@@ -377,6 +378,11 @@
               }
             }
           }
+        },
+        "greeting_relationship_points": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
         }
       }
     },
