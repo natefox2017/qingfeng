@@ -288,6 +288,8 @@ func show_page(page: String, context: Dictionary) -> void:
 					var meta_text:=location
 					if not dog_name_value.is_empty():
 						meta_text+="  ·  小狗 "+dog_name_value
+					if not snapshot.has("gameplay"):
+						meta_text="旧版碰撞测试档 · 仅供兼容验证"
 					var meta:=label(meta_text,details);UI_THEME.apply_text_role(meta,UI_THEME.ROLE_CAPTION)
 					var saved:=label(String(item.envelope.get("saved_at_utc","")),details);UI_THEME.apply_text_role(saved,UI_THEME.ROLE_CAPTION)
 					var content_label:=label("内容 "+String(item.envelope.get("content_version","")),details);UI_THEME.apply_text_role(content_label,UI_THEME.ROLE_TOOLTIP)
