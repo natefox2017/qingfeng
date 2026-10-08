@@ -5,6 +5,7 @@
 | 来源 | 本轮采用 | 明确不采用 |
 | --- | --- | --- |
 | [Stardew官方](https://www.stardewvalley.net/press/) | 农庄/邻里完整循环及官方画面作比例对照 | 不分发原游戏图集，不声称空架子已匹配 |
+| [Stardew日周期](https://stardewvalleywiki.com/Day_Cycle) | 单机世界时间约0.7现实秒/游戏分钟，菜单/对话等交互暂停时间；作为首版节奏与暂停语义对照 | 不复制其20小时日制、事件规则或具体实现代码；晴风谷仍由自己的content_version与单一Clock决定 |
 | [Tiled的tBIN说明](https://doc.mapeditor.org/en/latest/manual/export-tbin/) | 可编辑分层地图的数据思路；其文档说明Stardew使用tIDE | 不因此增加Tiled/tIDE导入链 |
 | [a16z架构](https://github.com/a16z-infra/ai-town/blob/main/ARCHITECTURE.md) | 玩家/agent输入、状态写入边界、会话与慢请求分开、generation失效 | 不搬Convex/PixiJS/Web栈，不给本地操作增加服务端批处理延迟 |
 | [a16z许可](https://github.com/a16z-infra/ai-town/blob/main/LICENSE) | 实际移植MIT代码须保留版权与许可证 | 不能外推为所有图片/音乐的许可 |
