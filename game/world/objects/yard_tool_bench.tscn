@@ -17,5 +17,6 @@ shape = SubResource("BenchShape")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
+centered = false
 texture = ExtResource("bench")
 offset = Vector2(-48, -78)

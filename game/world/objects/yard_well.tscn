@@ -16,5 +16,6 @@ shape = SubResource("WellShape")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
+centered = false
 texture = ExtResource("well")
 offset = Vector2(-40, -94)

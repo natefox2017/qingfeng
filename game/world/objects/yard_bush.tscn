@@ -16,5 +16,6 @@ shape = SubResource("BushShape")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
+centered = false
 texture = ExtResource("bush")
 offset = Vector2(-32, -62)

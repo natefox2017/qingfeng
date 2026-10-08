@@ -13,11 +13,13 @@ size = Vector2(36, 4)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
+centered = false
 texture = ExtResource("house_body")
 offset = Vector2(-96, -149)
 
 [node name="Roof" type="Sprite2D" parent="."]
 texture_filter = 1
+centered = false
 texture = ExtResource("house_roof")
 offset = Vector2(-96, -149)
 z_index = 1

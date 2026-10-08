@@ -1425,6 +1425,7 @@ position = Vector2(832, 256)
 
 [node name="@Sprite2D@110" type="Sprite2D" parent="FootSorted/FarmTownLampWest" unique_id=941399298]
 texture_filter = 1
+centered = false
 texture = ExtResource("36_m84j0")
 offset = Vector2(-8, -46)
 
@@ -1440,6 +1441,7 @@ position = Vector2(960, 256)
 
 [node name="@Sprite2D@113" type="Sprite2D" parent="FootSorted/FarmTownLampEast" unique_id=714394131]
 texture_filter = 1
+centered = false
 texture = ExtResource("36_m84j0")
 offset = Vector2(-8, -46)
 
@@ -1455,6 +1457,7 @@ position = Vector2(688, 112)
 
 [node name="@Sprite2D@116" type="Sprite2D" parent="FootSorted/FarmTownWallWest" unique_id=158122820]
 texture_filter = 1
+centered = false
 texture = ExtResource("37_80qn4")
 offset = Vector2(-16, -14)
 
@@ -1470,6 +1473,7 @@ position = Vector2(1104, 112)
 
 [node name="@Sprite2D@119" type="Sprite2D" parent="FootSorted/FarmTownWallEast" unique_id=636576890]
 texture_filter = 1
+centered = false
 texture = ExtResource("37_80qn4")
 offset = Vector2(-16, -14)
 
@@ -1485,47 +1489,55 @@ shape = SubResource("RectangleShape2D_04o6f")
 [node name="MeadowAppleSouthWest" type="Sprite2D" parent="FootSorted"]
 position = Vector2(640, 1008)
 texture_filter = 1
+centered = false
 texture = ExtResource("38_meadow_apple")
 offset = Vector2(-48, -126)
 
 [node name="MeadowCherrySouthCenterWest" type="Sprite2D" parent="FootSorted"]
 position = Vector2(816, 976)
 texture_filter = 1
+centered = false
 texture = ExtResource("39_meadow_cherry")
 offset = Vector2(-56, -110)
 
 [node name="MeadowCherrySouthCenter" type="Sprite2D" parent="FootSorted"]
 position = Vector2(944, 1008)
 texture_filter = 1
+centered = false
 texture = ExtResource("39_meadow_cherry")
 offset = Vector2(-56, -110)
 
 [node name="MeadowAppleSouthEast" type="Sprite2D" parent="FootSorted"]
 position = Vector2(1120, 976)
 texture_filter = 1
+centered = false
 texture = ExtResource("38_meadow_apple")
 offset = Vector2(-48, -126)
 
 [node name="MeadowBushSouthCenterEast" type="Sprite2D" parent="FootSorted"]
 position = Vector2(1264, 1008)
 texture_filter = 1
+centered = false
 texture = ExtResource("40_meadow_bush")
 offset = Vector2(-32, -62)
 
 [node name="MeadowBushSouthEast" type="Sprite2D" parent="FootSorted"]
 position = Vector2(1360, 944)
 texture_filter = 1
+centered = false
 texture = ExtResource("40_meadow_bush")
 offset = Vector2(-32, -62)
 
 [node name="MeadowBushRiverNorth" type="Sprite2D" parent="FootSorted"]
 position = Vector2(1296, 352)
 texture_filter = 1
+centered = false
 texture = ExtResource("40_meadow_bush")
 offset = Vector2(-32, -62)
 
 [node name="MeadowBushRiverSouth" type="Sprite2D" parent="FootSorted"]
 position = Vector2(1296, 640)
 texture_filter = 1
+centered = false
 texture = ExtResource("40_meadow_bush")
 offset = Vector2(-32, -62)

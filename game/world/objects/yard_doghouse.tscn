@@ -17,5 +17,6 @@ shape = SubResource("DoghouseShape")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
+centered = false
 texture = ExtResource("doghouse")
 offset = Vector2(-32, -78)

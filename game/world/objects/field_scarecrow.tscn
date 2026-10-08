@@ -17,5 +17,6 @@ shape = SubResource("ScarecrowShape")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
+centered = false
 texture = ExtResource("scarecrow")
 offset = Vector2(-24, -62)

@@ -16,5 +16,6 @@ shape = SubResource("TreeShape")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
+centered = false
 texture = ExtResource("apple_tree")
 offset = Vector2(-48, -126)

@@ -334,6 +334,7 @@ position = Vector2(552, 256)
 
 [node name="@Sprite2D@122" type="Sprite2D" parent="FootSorted/MarketLampWest" unique_id=1083668632]
 texture_filter = 1
+centered = false
 texture = ExtResource("11_vc21c")
 offset = Vector2(-8, -46)
 
@@ -349,6 +350,7 @@ position = Vector2(728, 256)
 
 [node name="@Sprite2D@125" type="Sprite2D" parent="FootSorted/MarketLampEast" unique_id=2067344964]
 texture_filter = 1
+centered = false
 texture = ExtResource("11_vc21c")
 offset = Vector2(-8, -46)
 
@@ -364,6 +366,7 @@ position = Vector2(640, 200)
 
 [node name="@Sprite2D@128" type="Sprite2D" parent="FootSorted/PlazaBench" unique_id=565852674]
 texture_filter = 1
+centered = false
 texture = ExtResource("12_806k6")
 offset = Vector2(-20, -30)
 
@@ -379,6 +382,7 @@ position = Vector2(800, 192)
 
 [node name="@Sprite2D@131" type="Sprite2D" parent="FootSorted/BlankSign" unique_id=460789543]
 texture_filter = 1
+centered = false
 texture = ExtResource("13_mom0k")
 offset = Vector2(-20, -46)
 
@@ -394,6 +398,7 @@ position = Vector2(256, 112)
 
 [node name="@Sprite2D@134" type="Sprite2D" parent="FootSorted/NorthWall_256" unique_id=2091937666]
 texture_filter = 1
+centered = false
 texture = ExtResource("14_011l2")
 offset = Vector2(-16, -14)
 
@@ -409,6 +414,7 @@ position = Vector2(288, 112)
 
 [node name="@Sprite2D@137" type="Sprite2D" parent="FootSorted/NorthWall_288" unique_id=1836782598]
 texture_filter = 1
+centered = false
 texture = ExtResource("14_011l2")
 offset = Vector2(-16, -14)
 
@@ -424,6 +430,7 @@ position = Vector2(960, 112)
 
 [node name="@Sprite2D@140" type="Sprite2D" parent="FootSorted/NorthWall_960" unique_id=633261751]
 texture_filter = 1
+centered = false
 texture = ExtResource("14_011l2")
 offset = Vector2(-16, -14)
 
@@ -439,6 +446,7 @@ position = Vector2(992, 112)
 
 [node name="@Sprite2D@143" type="Sprite2D" parent="FootSorted/NorthWall_992" unique_id=2036031686]
 texture_filter = 1
+centered = false
 texture = ExtResource("14_011l2")
 offset = Vector2(-16, -14)
 

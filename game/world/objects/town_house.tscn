@@ -17,5 +17,6 @@ shape = SubResource("HouseShape")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
+centered = false
 texture = ExtResource("house")
 offset = Vector2(-48, -94)

@@ -18,11 +18,13 @@ shape = SubResource("CoopShape")
 
 [node name="Body" type="Sprite2D" parent="."]
 texture_filter = 1
+centered = false
 texture = ExtResource("coop_body")
 offset = Vector2(-36, -86)
 
 [node name="Roof" type="Sprite2D" parent="."]
 texture_filter = 1
+centered = false
 texture = ExtResource("coop_roof")
 offset = Vector2(-36, -86)
 z_index = 1

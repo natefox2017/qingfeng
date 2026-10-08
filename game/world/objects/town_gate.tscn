@@ -36,6 +36,7 @@ shape = SubResource("GateTopShape")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
+centered = false
 texture = ExtResource("gate")
 offset = Vector2(-32, -60)
 z_index = 0
