@@ -89,7 +89,7 @@ func run() -> void:
 		app.return_to_title()
 		app._on_action("read_save",{"save_id":saved.save_id})
 		check(await wait_world() and app.room.get_space_id()=="space.shop","shop save restarts directly in shop")
-		check(app.gameplay_session==app.gameplay_session and app.gameplay_session.wallet.projection()==wallet_before,"shop restart restores gameplay while farm plot layout remains authoritative")
+		check(app.gameplay_session.wallet.projection()==wallet_before and app.gameplay_session.inventory.projection()==inventory_before,"shop restart restores gameplay while farm plot layout remains authoritative")
 
 	app.room.get_player().position = Vector2(320,320)
 	app.room.get_player().facing = &"south"
