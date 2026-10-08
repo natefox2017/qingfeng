@@ -72,8 +72,8 @@ func _init(plot_definitions: Array = [], content_override: Dictionary = {}, fora
 	resident_schedule = RESIDENT_SCHEDULE.new(resident_anchor_definitions,content)
 	resident_runtime = RESIDENT_RUNTIME.new(resident_anchor_definitions,content)
 	resident_conversations = RESIDENT_CONVERSATIONS.new(content)
-	resident_knowledge = RESIDENT_KNOWLEDGE.new(resident_runtime)
-	if fact_events == null or not clock.is_configured() or not inventory.is_configured() or not wallet.is_configured() or not farm.is_configured() or not farming.is_configured() or not storage.is_configured() or not storage_transfer.is_configured() or not economy.is_configured() or not forage.is_configured() or not foraging.is_configured() or not resident_schedule.is_configured() or not resident_runtime.is_configured() or not resident_conversations.is_configured() or not resident_knowledge.is_configured():
+	resident_knowledge = RESIDENT_KNOWLEDGE.new(resident_runtime,fact_events)
+	if not fact_events.is_configured() or not clock.is_configured() or not inventory.is_configured() or not wallet.is_configured() or not farm.is_configured() or not farming.is_configured() or not storage.is_configured() or not storage_transfer.is_configured() or not economy.is_configured() or not forage.is_configured() or not foraging.is_configured() or not resident_schedule.is_configured() or not resident_runtime.is_configured() or not resident_conversations.is_configured() or not resident_knowledge.is_configured():
 		configuration_error = "GAMEPLAY_SESSION_DOMAIN_INVALID"
 
 func is_configured() -> bool:
@@ -300,8 +300,8 @@ func restore(snapshot_value: Variant) -> bool:
 	var next_resident_schedule: RefCounted = RESIDENT_SCHEDULE.new(_resident_anchor_definitions,content)
 	var next_resident_runtime: RefCounted = RESIDENT_RUNTIME.new(_resident_anchor_definitions,content)
 	var next_resident_conversations: RefCounted = RESIDENT_CONVERSATIONS.new(content)
-	var next_resident_knowledge: RefCounted = RESIDENT_KNOWLEDGE.new(next_resident_runtime)
-	if not next_clock.is_configured() or not next_inventory.is_configured() or not next_wallet.is_configured() or not next_farm.is_configured() or not next_storage.is_configured() or not next_forage.is_configured() or not next_resident_schedule.is_configured() or not next_resident_runtime.is_configured() or not next_resident_conversations.is_configured() or not next_resident_knowledge.is_configured():
+	var next_resident_knowledge: RefCounted = RESIDENT_KNOWLEDGE.new(next_resident_runtime,next_fact_events)
+	if not next_fact_events.is_configured() or not next_clock.is_configured() or not next_inventory.is_configured() or not next_wallet.is_configured() or not next_farm.is_configured() or not next_storage.is_configured() or not next_forage.is_configured() or not next_resident_schedule.is_configured() or not next_resident_runtime.is_configured() or not next_resident_conversations.is_configured() or not next_resident_knowledge.is_configured():
 		return false
 	if not next_clock.restore(snapshot_value.clock):
 		return false
@@ -380,16 +380,10 @@ func fact_event(event_id: String) -> Dictionary:
 	return fact_events.get_event(event_id)
 
 func resident_learn_event(resident_id: String, event_id: String, acquisition: String) -> Dictionary:
-	var fact: Dictionary = fact_events.get_event(event_id)
-	if fact.is_empty():
-		return {"ok":false,"error_code":"FACT_EVENT_UNKNOWN","has_changes":false}
-	return resident_knowledge.learn_from_fact(resident_id,fact,acquisition)
+	return resident_knowledge.learn_event(resident_id,event_id,acquisition)
 
-func resident_learn_from_fact(resident_id: String, fact: Variant, acquisition: String) -> Dictionary:
-	return resident_knowledge.learn_from_fact(resident_id,fact,acquisition)
-
-func resident_learn_from_command_result(resident_id: String, result: Variant, facts_by_id: Variant, acquisition: String) -> Dictionary:
-	return resident_knowledge.learn_from_command_result(resident_id,result,facts_by_id,acquisition)
+func resident_learn_from_command_result(resident_id: String, result: Variant, acquisition: String) -> Dictionary:
+	return resident_knowledge.learn_from_command_result(resident_id,result,acquisition)
 
 func resident_tell_event(teller_id: String, receiver_id: String, event_id: String) -> Dictionary:
 	return resident_knowledge.tell_event(teller_id,receiver_id,event_id)
