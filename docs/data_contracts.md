@@ -28,6 +28,7 @@
 
 首个商店命令：`economy.buy` / `economy.sell` 的 `expected_revision` 是玩家 Inventory revision；payload 严格为 `{item_id:string, quantity:int 1..9999, wallet_revision:int>=0}`。价格和08:00–20:00营业窗口只读 `first_playable_v1`；handler 在同一同步临界段校验营业时间、商品可买/可卖、双方revision、余额/源量/目标容量，再提交 Inventory + Wallet。失败双方不变，交易页即使持有时钟暂停token也以被冻结的 game minute 判断营业状态。
 首个采集命令：`forage.collect` 的 `expected_revision` 是 Forage revision；payload 严格为 `{spot_id:string, inventory_revision:int>=0}`。当前日来自唯一 GameClock，奖励 item/quantity/respawn_days 来自 content_version，spot_id/space/几何来自 `space.village` Marker。Forage + Inventory 在同一同步临界段提交；满包、已采、stale 都不改变两边。
+居民日程内容合同：`residents.daily_greeting_limit:int>0`、`daily_gift_limit:int>0`、`definitions` 当前恰好三名稳定 `resident_id`。每名居民拥有 `display_name`、`occupation_id`、`home_anchor_id`、`work_anchor_id`、`social_anchor_id`、`rain_anchor_id` 及 `schedule` / `rain_schedule`；schedule entry 严格为 `{start_minute:int, activity_id:string, anchor_id:string}`。普通表只允许 home/work/social，雨天表只允许 home/rain；每个 activity 必须引用该居民声明的对应 anchor，首项从 day_start_minute 开始，末项回 home。WORLD 只提供 `{anchor_id, space_id}` Marker 定义；`ResidentSchedule` 只读 Clock/天气并解析目标，不写 Actor 位置、不发模型请求。
 物理移动不走持久回执。回执生命周期由CORE明确：当前会话保存；未来压缩需防重语义设计，不可悄悄按数量截断。
 
 ## 快照与内容
