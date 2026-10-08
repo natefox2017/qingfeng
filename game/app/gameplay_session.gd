@@ -12,6 +12,8 @@ const FARMING = preload("res://systems/farming_coordinator.gd")
 const STORAGE = preload("res://systems/storage_domain.gd")
 const STORAGE_TRANSFER = preload("res://systems/storage_transfer.gd")
 const ECONOMY = preload("res://systems/economy_coordinator.gd")
+const FORAGE = preload("res://systems/forage_domain.gd")
+const FORAGING = preload("res://systems/forage_coordinator.gd")
 
 var configuration_error := ""
 var content: Dictionary = {}
@@ -24,9 +26,12 @@ var farming: RefCounted
 var storage: RefCounted
 var storage_transfer: RefCounted
 var economy: RefCounted
+var forage: RefCounted
+var foraging: RefCounted
 var _plot_definitions: Array = []
+var _forage_definitions: Array = []
 
-func _init(plot_definitions: Array = [], content_override: Dictionary = {}) -> void:
+func _init(plot_definitions: Array = [], content_override: Dictionary = {}, forage_definitions: Array = []) -> void:
 	var source := content_override
 	if source.is_empty():
 		var result: Dictionary = CONTENT.load_current()
@@ -39,6 +44,7 @@ func _init(plot_definitions: Array = [], content_override: Dictionary = {}) -> v
 		return
 	content = source.duplicate(true)
 	_plot_definitions = plot_definitions.duplicate(true)
+	_forage_definitions = forage_definitions.duplicate(true)
 	journal = JOURNAL.new()
 	clock = CLOCK.new(content)
 	inventory = INVENTORY.new(content)
@@ -48,7 +54,9 @@ func _init(plot_definitions: Array = [], content_override: Dictionary = {}) -> v
 	storage = STORAGE.new(content)
 	storage_transfer = STORAGE_TRANSFER.new(inventory,storage)
 	economy = ECONOMY.new(inventory,wallet,clock,content)
-	if not clock.is_configured() or not inventory.is_configured() or not wallet.is_configured() or not farm.is_configured() or not farming.is_configured() or not storage.is_configured() or not storage_transfer.is_configured() or not economy.is_configured():
+	forage = FORAGE.new(forage_definitions,content)
+	foraging = FORAGING.new(inventory,forage,clock)
+	if not clock.is_configured() or not inventory.is_configured() or not wallet.is_configured() or not farm.is_configured() or not farming.is_configured() or not storage.is_configured() or not storage_transfer.is_configured() or not economy.is_configured() or not forage.is_configured() or not foraging.is_configured():
 		configuration_error = "GAMEPLAY_SESSION_DOMAIN_INVALID"
 
 func is_configured() -> bool:
@@ -64,6 +72,8 @@ func execute(command: Dictionary) -> Dictionary:
 		return journal.execute(command,storage_transfer.handle)
 	if action.begins_with("economy."):
 		return journal.execute(command,economy.handle)
+	if action == "forage.collect":
+		return journal.execute(command,foraging.handle)
 	if action.begins_with("farm."):
 		return journal.execute(command,farming.handle)
 	return journal.execute(command,Callable(self,"_unsupported_command"))
@@ -203,6 +213,7 @@ func projection() -> Dictionary:
 		"wallet":wallet.projection(),
 		"shop":economy.projection(),
 		"storage":storage.projection(),
+		"forage":forage.projection(clock.current_day()),
 		"farm":farm.projection()
 	}
 
@@ -220,7 +231,7 @@ func _item_projection() -> Dictionary:
 func snapshot() -> Dictionary:
 	if not is_configured():
 		return {}
-	return {
+	var result := {
 		"content_version":String(content.content_version),
 		"clock":clock.snapshot(),
 		"inventory":inventory.projection(),
@@ -229,6 +240,12 @@ func snapshot() -> Dictionary:
 		"farm":farm.projection(),
 		"command_journal":journal.snapshot()
 	}
+	if forage.has_spots():
+		result["forage"] = {
+			"revision":forage.revision,
+			"spots":forage.spots.duplicate(true)
+		}
+	return result
 
 func restore(snapshot_value: Variant) -> bool:
 	if not is_configured() or not (snapshot_value is Dictionary):
@@ -236,7 +253,8 @@ func restore(snapshot_value: Variant) -> bool:
 	var base_required := ["content_version","clock","inventory","wallet","farm"]
 	var has_journal: bool = snapshot_value.has("command_journal")
 	var has_storage: bool = snapshot_value.has("storage")
-	var expected_size := base_required.size() + (1 if has_journal else 0) + (1 if has_storage else 0)
+	var has_forage: bool = snapshot_value.has("forage")
+	var expected_size := base_required.size() + (1 if has_journal else 0) + (1 if has_storage else 0) + (1 if has_forage else 0)
 	if snapshot_value.size() != expected_size:
 		return false
 	for key: String in base_required:
@@ -249,8 +267,9 @@ func restore(snapshot_value: Variant) -> bool:
 	var next_wallet: RefCounted = WALLET.new(content)
 	var next_farm: RefCounted = FARM.new(_plot_definitions,content)
 	var next_storage: RefCounted = STORAGE.new(content)
+	var next_forage: RefCounted = FORAGE.new(_forage_definitions,content)
 	var next_journal: RefCounted = JOURNAL.new()
-	if not next_clock.is_configured() or not next_inventory.is_configured() or not next_wallet.is_configured() or not next_farm.is_configured() or not next_storage.is_configured():
+	if not next_clock.is_configured() or not next_inventory.is_configured() or not next_wallet.is_configured() or not next_farm.is_configured() or not next_storage.is_configured() or not next_forage.is_configured():
 		return false
 	if not next_clock.restore(snapshot_value.clock):
 		return false
@@ -262,12 +281,15 @@ func restore(snapshot_value: Variant) -> bool:
 		return false
 	if has_storage and not next_storage.restore(snapshot_value.storage):
 		return false
+	if has_forage and not next_forage.restore(snapshot_value.forage,next_clock.current_day()):
+		return false
 	if has_journal and not next_journal.restore(snapshot_value.command_journal):
 		return false
 	var next_farming: RefCounted = FARMING.new(next_inventory,next_farm,content)
 	var next_storage_transfer: RefCounted = STORAGE_TRANSFER.new(next_inventory,next_storage)
 	var next_economy: RefCounted = ECONOMY.new(next_inventory,next_wallet,next_clock,content)
-	if not next_farming.is_configured() or not next_storage_transfer.is_configured() or not next_economy.is_configured():
+	var next_foraging: RefCounted = FORAGING.new(next_inventory,next_forage,next_clock)
+	if not next_farming.is_configured() or not next_storage_transfer.is_configured() or not next_economy.is_configured() or not next_foraging.is_configured():
 		return false
 	clock = next_clock
 	inventory = next_inventory
@@ -277,6 +299,8 @@ func restore(snapshot_value: Variant) -> bool:
 	storage = next_storage
 	storage_transfer = next_storage_transfer
 	economy = next_economy
+	forage = next_forage
+	foraging = next_foraging
 	journal = next_journal
 	return true
 
