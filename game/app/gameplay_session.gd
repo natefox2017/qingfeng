@@ -11,6 +11,7 @@ const FARM = preload("res://systems/farm_domain.gd")
 const FARMING = preload("res://systems/farming_coordinator.gd")
 const STORAGE = preload("res://systems/storage_domain.gd")
 const STORAGE_TRANSFER = preload("res://systems/storage_transfer.gd")
+const ECONOMY = preload("res://systems/economy_coordinator.gd")
 
 var configuration_error := ""
 var content: Dictionary = {}
@@ -22,6 +23,7 @@ var farm: RefCounted
 var farming: RefCounted
 var storage: RefCounted
 var storage_transfer: RefCounted
+var economy: RefCounted
 var _plot_definitions: Array = []
 
 func _init(plot_definitions: Array = [], content_override: Dictionary = {}) -> void:
@@ -45,7 +47,8 @@ func _init(plot_definitions: Array = [], content_override: Dictionary = {}) -> v
 	farming = FARMING.new(inventory,farm,content)
 	storage = STORAGE.new(content)
 	storage_transfer = STORAGE_TRANSFER.new(inventory,storage)
-	if not clock.is_configured() or not inventory.is_configured() or not wallet.is_configured() or not farm.is_configured() or not farming.is_configured() or not storage.is_configured() or not storage_transfer.is_configured():
+	economy = ECONOMY.new(inventory,wallet,clock,content)
+	if not clock.is_configured() or not inventory.is_configured() or not wallet.is_configured() or not farm.is_configured() or not farming.is_configured() or not storage.is_configured() or not storage_transfer.is_configured() or not economy.is_configured():
 		configuration_error = "GAMEPLAY_SESSION_DOMAIN_INVALID"
 
 func is_configured() -> bool:
@@ -59,6 +62,8 @@ func execute(command: Dictionary) -> Dictionary:
 		return journal.execute(command,inventory.handle_select)
 	if action == "storage.transfer":
 		return journal.execute(command,storage_transfer.handle)
+	if action.begins_with("economy."):
+		return journal.execute(command,economy.handle)
 	if action.begins_with("farm."):
 		return journal.execute(command,farming.handle)
 	return journal.execute(command,Callable(self,"_unsupported_command"))
@@ -180,6 +185,7 @@ func projection() -> Dictionary:
 		"inventory":inventory.projection(),
 		"items":_item_projection(),
 		"wallet":wallet.projection(),
+		"shop":economy.projection(),
 		"storage":storage.projection(),
 		"farm":farm.projection()
 	}
@@ -244,7 +250,8 @@ func restore(snapshot_value: Variant) -> bool:
 		return false
 	var next_farming: RefCounted = FARMING.new(next_inventory,next_farm,content)
 	var next_storage_transfer: RefCounted = STORAGE_TRANSFER.new(next_inventory,next_storage)
-	if not next_farming.is_configured() or not next_storage_transfer.is_configured():
+	var next_economy: RefCounted = ECONOMY.new(next_inventory,next_wallet,next_clock,content)
+	if not next_farming.is_configured() or not next_storage_transfer.is_configured() or not next_economy.is_configured():
 		return false
 	clock = next_clock
 	inventory = next_inventory
@@ -253,6 +260,7 @@ func restore(snapshot_value: Variant) -> bool:
 	farming = next_farming
 	storage = next_storage
 	storage_transfer = next_storage_transfer
+	economy = next_economy
 	journal = next_journal
 	return true
 
