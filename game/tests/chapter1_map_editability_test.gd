@@ -48,11 +48,33 @@ func verify_bounds(scene: Node2D) -> void:
 			"East": expected.x = bounds.end.x - 8
 		check(body.position == expected and body_contains(scene,expected,body), "actual perimeter collision follows extent " + side)
 
+func verify_decor_does_not_resize_world(scene: Node2D) -> void:
+	var ground := scene.get_node_or_null("TerrainGround") as TileMapLayer
+	var details := scene.get_node_or_null("GroundDetails") as TileMapLayer
+	if ground == null or details == null or ground.get_used_cells().is_empty():
+		check(false, "terrain/details exist for bounds regression")
+		return
+	var before_bounds: Rect2i = scene.get_world_bounds()
+	var source_cell: Vector2i = ground.get_used_cells()[0]
+	var source_id := ground.get_cell_source_id(source_cell)
+	var atlas: Vector2i = ground.get_cell_atlas_coords(source_cell)
+	var alternative := ground.get_cell_alternative_tile(source_cell)
+	var outside := Vector2i(ground.get_used_rect().end.x + 16, ground.get_used_rect().end.y + 16)
+	details.set_cell(outside, source_id, atlas, alternative)
+	scene.refresh_world_layout()
+	await physics_frame
+	check(scene.get_world_bounds() == before_bounds, "distant detail tile cannot expand playable map " + scene.get_space_id())
+	var camera := scene.get_player().get_node("Camera2D") as Camera2D
+	check(camera.limit_right == before_bounds.end.x and camera.limit_bottom == before_bounds.end.y, "distant detail cannot move camera limits " + scene.get_space_id())
+	details.erase_cell(outside)
+	scene.refresh_world_layout()
+
 func verify_village_copy() -> void:
 	var resource := load("res://world/village_first_screen.tscn") as PackedScene
 	var village := resource.instantiate() as Node2D
 	root.add_child(village)
 	await physics_frame
+	await verify_decor_does_not_resize_world(village)
 	for layer_name: String in ["TerrainGround", "GroundPaths", "GroundDetails"]:
 		check(village.get_node_or_null(layer_name) is TileMapLayer, "village authored layer " + layer_name)
 	var ground := village.get_node("TerrainGround") as TileMapLayer
@@ -86,6 +108,7 @@ func run() -> void:
 	var scene: Node2D = FARM.instantiate()
 	root.add_child(scene)
 	await physics_frame
+	await verify_decor_does_not_resize_world(scene)
 	var ground := scene.get_node_or_null("TerrainGround") as TileMapLayer
 	check(ground != null and ground.tile_set != null, "native ground layer")
 	check(scene.get_node_or_null("GroundDetails") is TileMapLayer, "separate editable detail layer")
