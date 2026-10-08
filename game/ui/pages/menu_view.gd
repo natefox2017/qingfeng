@@ -237,12 +237,19 @@ func show_page(page: String, context: Dictionary) -> void:
 				var caption:=label(String(entry[2]),cell);caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;UI_THEME.apply_text_role(caption,UI_THEME.ROLE_CAPTION)
 
 		"new_game":
-			title.text="开始新的生活";subtitle.text="名字会写入新存档；不会覆盖已有进度。"
-			label("你的名字（1–16字）")
-			player_name=LineEdit.new();player_name.max_length=16;player_name.placeholder_text="请输入名字";player_name.text=context.get("player_name","");body.add_child(player_name)
-			label("狗的名字（可留空，伙伴系统尚未接入）")
-			dog_name=LineEdit.new();dog_name.max_length=16;dog_name.placeholder_text="可稍后确定";dog_name.text=context.get("dog_name","");body.add_child(dog_name)
-			var actions:=row();button(actions,"create","accept","创建独立存档并进入农庄第一屏");button(actions,"back","back","返回标题，不创建存档")
+			title.text="开始新的生活";subtitle.text="为你和同行的小狗取个名字"
+			panel.custom_minimum_size=Vector2(500,286)
+			var identity_panel:=PanelContainer.new();identity_panel.name="NewGameIdentity";identity_panel.add_theme_stylebox_override("panel",UI_THEME.section_style());body.add_child(identity_panel)
+			var identity:=VBoxContainer.new();identity.add_theme_constant_override("separation",5);identity_panel.add_child(identity)
+
+			var player_label:=label("你的名字",identity);UI_THEME.apply_text_role(player_label,UI_THEME.ROLE_CAPTION)
+			player_name=LineEdit.new();player_name.name="PlayerNameInput";player_name.max_length=16;player_name.placeholder_text="1–16字";player_name.text=context.get("player_name","");player_name.tooltip_text="输入玩家名字，1–16字";player_name.accessibility_name="玩家名字";identity.add_child(player_name)
+
+			var dog_label:=label("狗的名字 · 可留空",identity);UI_THEME.apply_text_role(dog_label,UI_THEME.ROLE_CAPTION)
+			dog_name=LineEdit.new();dog_name.name="DogNameInput";dog_name.max_length=16;dog_name.placeholder_text="可留空";dog_name.text=context.get("dog_name","");dog_name.tooltip_text="输入狗的名字，可留空";dog_name.accessibility_name="狗的名字，可留空";identity.add_child(dog_name)
+
+			var save_note:=label("开始后会创建一份新的独立存档，并从农庄第一天开始。已有存档不会被覆盖。");save_note.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;UI_THEME.apply_text_role(save_note,UI_THEME.ROLE_CAPTION)
+			var actions:=row();button(actions,"create","accept","创建独立存档并进入农庄");button(actions,"back","back","返回标题，不创建存档")
 			player_name.grab_focus()
 		"load":
 			title.text="存档";subtitle.text="读取本机进度，或导入经过校验的 .qfsave 文件。"
