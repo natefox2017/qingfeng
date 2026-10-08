@@ -180,7 +180,16 @@ static func validate(data: Variant) -> bool:
 		for text_value: Variant in [dialogue.first_meeting.text,dialogue.repeat.text]:
 			if not (text_value is String) or String(text_value).is_empty() or String(text_value).length()>512:
 				return false
-	if not _exact_keys(data.new_game, ["initial_items"]) or not (data.new_game.initial_items is Array):
+	if not _exact_keys(data.new_game, ["initial_items","intro"]) or not (data.new_game.initial_items is Array):
+		return false
+	if not _exact_keys(data.new_game.intro, ["mature_plot_id","practice_plot_id","crop_id"]):
+		return false
+	var intro: Dictionary = data.new_game.intro
+	if not (intro.mature_plot_id is String) or not (intro.practice_plot_id is String) or not (intro.crop_id is String):
+		return false
+	if not String(intro.mature_plot_id).begins_with("plot.farm.") or not String(intro.practice_plot_id).begins_with("plot.farm."):
+		return false
+	if intro.mature_plot_id == intro.practice_plot_id or not data.crops.has(intro.crop_id):
 		return false
 	var occupied_slots := 0
 	for entry: Variant in data.new_game.initial_items:

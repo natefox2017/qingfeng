@@ -164,7 +164,8 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "initial_items"
+        "initial_items",
+        "intro"
       ],
       "properties": {
         "initial_items": {
@@ -185,6 +186,29 @@
                 "type": "integer",
                 "minimum": 1
               }
+            }
+          }
+        },
+        "intro": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mature_plot_id",
+            "practice_plot_id",
+            "crop_id"
+          ],
+          "properties": {
+            "mature_plot_id": {
+              "type": "string",
+              "pattern": "^plot\\.farm\\."
+            },
+            "practice_plot_id": {
+              "type": "string",
+              "pattern": "^plot\\.farm\\."
+            },
+            "crop_id": {
+              "type": "string",
+              "pattern": "^crop\\."
             }
           }
         }

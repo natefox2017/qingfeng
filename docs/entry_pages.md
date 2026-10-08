@@ -1,6 +1,6 @@
 # 入口页面与存档流程
 
-本页区分**当前可运行代码**和**最终游戏目标**。基于独立新工程，不恢复qingfenggu代码。新档现在进入唯一 `space.farm` 第一屏可编辑像素候选布局并创建 `GameplaySession`；schema 1 历史入口档仍只允许从读档列表显式进入碰撞夹具，界面标明“旧版碰撞测试档”；【继续】只选择带完整 gameplay 的正式档。`start_world()` 默认指向农庄，工程碰撞回归须显式传 `LEGACY_ROOM`。农庄当前是可编辑布局与工程皮肤，不冒充最终像素美术。
+本页区分**当前可运行代码**和**最终游戏目标**。基于独立新工程，不恢复qingfenggu代码。新档现在进入唯一 `space.farm` 第一屏可编辑像素候选布局并创建 `GameplaySession`；只有正式新建时按照 `first_playable_v1.new_game.intro` 初始化一块可通过正常 E 采收的成熟萝卜田（`plot.farm.003`）和一块练习空田（`plot.farm.004`），HUD 目标从真实 Farm 投影计算，读档不会重新初始化；schema 1 历史入口档仍只允许从读档列表显式进入碰撞夹具，界面标明“旧版碰撞测试档”；【继续】只选择带完整 gameplay 的正式档。`start_world()` 默认指向农庄，工程碰撞回归须显式传 `LEGACY_ROOM`。农庄当前是可编辑布局与工程皮肤，不冒充最终像素美术。
 
 ## 页面与生命周期
 
@@ -18,7 +18,7 @@
 
 状态由game/app/main.gd管理，menu_view只投影界面并发意图。普通标题按钮保留必要短标签；按钮内部是native line icon，tooltip和无障碍名齐备，不烘焙文字到图。新建、读取等表单保留内容文字，不能为了“全图标”丢失信息。
 
-布局采用原生容器，640×360逻辑视口；1280×720与1920×1080实机分别核对。配色/图标为可替换的工程皮肤，不是已接受PixelLab美术。当前中文通过无衬线SystemFont后备链显示；字体**尚未随包发布**，N07完整字体验收仍未完成，不能把开发机Noto字体当发行资产。
+布局采用原生容器，640×360逻辑视口；1280×720与1920×1080实机分别核对。配色/图标为可替换的工程皮肤，不是已接受PixelLab美术。当前中文使用随仓库的固定来源 Noto Sans CJK SC（OFL-1.1）；Linux Godot 原生画面 CJK 验证通过，完整导出包和图标美术仍需验收。
 
 ## 新存档协议的具体边界
 
@@ -41,8 +41,9 @@ SHA256用于损坏检测，**不是防作弊签名/信任认证**。通过校验
 ## 操作与复现
 
 ```sh
-python3 tools/runtime.py run --godot /path/to/Godot_v4.7.2-stable_linux.x86_64
-python3 tools/runtime.py test --godot /path/to/Godot_v4.7.2-stable_linux.x86_64 --report-dir reports/runtime
+./run_game.sh           # 自动发现 AC 已安装的 Godot，无需设置路径
+./run_game.sh --test    # 隔离新档的 P0 收获→播种自动回归
+./run_game.sh --test-all
 ```
 
 首次从 GitHub 拉取 Phase0 像素 PNG 后，`runtime.py run` 会检测缺失或过期的 Godot `.godot/imported` 缓存；仅在必要时通过固定引擎执行一次 `--headless --editor --import` 并在成功后启动游戏。导入失败会中止启动，原因写入 `reports/runtime/asset_import.log`，不会忽略缺失贴图直接进入世界。之后缓存有效时直接启动；`runtime.py editor` 仍让 Godot 编辑器自己管理导入。请先更新到包含 Phase0 PNG 的新 `main`，从标题「新建游戏」进入农庄；旧碰撞夹具存档不代表正式游戏。

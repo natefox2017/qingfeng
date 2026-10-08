@@ -62,6 +62,12 @@ func run() -> void:
 	if player.get_node_or_null("DiagnosticGlyph") != null:
 		_fail("diagnostic square appeared in playable farm")
 		return
+	if app.gameplay_session.farm.get_plot("plot.farm.003").state != "mature":
+		_fail("fresh gameplay must contain the real tutorial radish")
+		return
+	if not app.view.guide_panel.visible or not app.view.guide_label.text.contains("收获"):
+		_fail("first harvest guidance is missing in native world")
+		return
 	# A real input-driven displacement confirms the active room, not a teleport pose.
 	var starting_position: Vector2 = player.position
 	Input.action_press("move_right")
