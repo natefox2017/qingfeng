@@ -3,7 +3,8 @@
 ## 当前状态
 
 - Issue #84 仍为 OPEN；PR #117 仍为 OPEN / Draft，head 分支 `codex/chapter1-map-delivery`。不得合并或关闭 Issue；最终视觉签收留给用户。
-- 本地最终代码 HEAD：`4d4b23639377c80bfe72e9c761cfad11a0383baa`。此前分项提交：`28fcd11` 旧存档迁移/地图边界/路线回归，`c9c3cff` 清理村庄空匿名层，`a5eadae` 清晰度证据，`4d4b236` 地图细节和多分辨率截图。
+- 本文列出的完整 QA 结果对应代码基线 `6f0bd77acd41e2edf8c5b5cf5b1a61bf05469b0f`。此前分项提交：`28fcd11` 旧存档迁移/地图边界/路线回归，`c9c3cff` 清理村庄空匿名层，`a5eadae` 清晰度证据，`4d4b236` 地图细节和多分辨率截图。
+- 后续视觉修整提交 `8e286d000f61980aae029524b9a0e5a70b99dba1` 新增可复用的橙白遮阳棚摊位，并将村庄六个摊位中的三个换为橙白版本；所有摊位坐标、碰撞足迹和入口锚点保持原样。按用户要求，此提交后未重新运行 Godot、测试或截图；下方 QA 数据与 PNG 是该提交之前的基线证据，不能视为橙白版本已运行验收。
 - 工作树 `/Users/apple/.codex/worktrees/chapter1-map-delivery/qingfeng`；远端仅为 `natefox2017/qingfeng`。主 checkout 未改。Godot 生成的 `.uid` / `.import` 与 `.tmp/` 为本地未跟踪文件，没有加入提交。
 - 最终检查：PR 当前 `repository-policy` 为 `SKIPPED`；没有通过中的 CI 检查。PR Review Threads 当前为空；一条旧 COMMENTED review 针对历史 head `7d3df0a`，不是最终验收。
 
