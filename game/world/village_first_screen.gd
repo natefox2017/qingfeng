@@ -158,16 +158,15 @@ func conversation_participants_arrived(conversation_id: String) -> bool:
 		return false
 	var left_target := "conversation.%s.left" % conversation_id
 	var right_target := "conversation.%s.right" % conversation_id
-	for actor: CharacterBody2D in [grocer_resident,maker_resident,neighbor_resident]:
-		var state: Dictionary = actor.projection()
+	var arrived_count := 0
+	for actor: Variant in [grocer_resident,maker_resident,neighbor_resident]:
+		var resident := actor as CharacterBody2D
+		var state: Dictionary = resident.projection()
 		if String(state.get("anchor_id","")) in [left_target,right_target]:
 			if String(state.get("movement_state",""))!="arrived":
 				return false
-	return (
-		String(grocer_resident.projection().get("anchor_id","")) in [left_target,right_target]
-		or String(maker_resident.projection().get("anchor_id","")) in [left_target,right_target]
-		or String(neighbor_resident.projection().get("anchor_id","")) in [left_target,right_target]
-	)
+			arrived_count += 1
+	return arrived_count==2
 
 func conversation_visual_state() -> Dictionary:
 	return {
