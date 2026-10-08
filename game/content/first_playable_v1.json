@@ -228,7 +228,8 @@
           }
         ]
       }
-    }
+    },
+    "greeting_relationship_points": 1
   },
   "dialogues": {
     "player_resident": {
