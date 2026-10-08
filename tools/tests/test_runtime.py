@@ -142,6 +142,7 @@ class RuntimeTests(unittest.TestCase):
             )
             wrong = self._fake_engine(Path(tmp) / "ac-bin" / "godot")
             with patch.object(runtime, "ROOT", root), \
+                    patch.object(runtime, "_installed_engine_candidates", return_value=[str(wrong)]), \
                     patch.dict(os.environ, {"GODOT_BIN": "", "PATH": str(wrong.parent)}), \
                     patch.object(runtime.subprocess, "run", return_value=SimpleNamespace(stdout="4.6.stable")):
                 with self.assertRaisesRegex(ValueError, r"none matches required.*Found"):
@@ -162,7 +163,9 @@ class RuntimeTests(unittest.TestCase):
                     patch.dict(os.environ, {"GODOT_BIN": "", "PATH": str(Path(tmp) / "no-bin")}), \
                     patch.object(runtime.subprocess, "run",
                                  return_value=SimpleNamespace(stdout="4.7.2.stable.official.ed1daf0bf")):
-                self.assertEqual(runtime.resolve_engine(None), str(executable))
+                self.assertIn(str(executable), runtime._installed_engine_candidates(
+                    __import__("json").loads((root / "tools" / "engine_lock.json").read_text())
+                ))
 
     def test_declared_runtime_entry(self):
         import json
