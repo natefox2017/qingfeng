@@ -22,7 +22,7 @@
 
 ## 新存档协议的具体边界
 
-`session_codec.gd`现在认识五代明确格式：schema 1 / `entry_fixture_v1` 兼容旧碰撞入口；schema 2 保存 Clock/Inventory/Wallet/Farm；schema 3 加入命令幂等回执；schema 4 加入24格家庭箱子 Storage；当前新写入的 schema 5 再加入村庄 Forage 采集状态，机器合同见 `schemas/save_v5.schema.json`。schema 1–3 仍可读取；schema 3 恢复时显式得到空的新箱子，下一次正常保存升级为 schema 4。
+`session_codec.gd`现在认识六代明确格式：schema 1 / `entry_fixture_v1` 兼容旧碰撞入口；schema 2 保存 Clock/Inventory/Wallet/Farm；schema 3 加入命令幂等回执；schema 4 加入24格家庭箱子 Storage；schema 5 加入村庄 Forage 采集状态；当前新写入的 schema 6 再加入三居民实际运行状态，机器合同见 `schemas/save_v6.schema.json`。schema 1–5 仍可读取；缺后续领域的旧版本按各自迁移规则初始化，并在下一次正常保存升级。
 
 `main.gd` 现在按存档 `space_id` 明确分流：`space.farm`、`space.house`、`space.village`、`space.shop`、`space.workshop` 各自加载唯一可编辑 Godot 场景；场景实例化和物理同步后，GameplaySession 始终使用 farm WORLD 的稳定 plot definitions，完整 restore 成功后才发布会话。schema 1 旧入口档继续进入碰撞夹具且没有 GameplaySession。schema 2 与当前 WORLD 的 Space/plot 几何不一致时整笔拒绝，不会只恢复名字/坐标或把存档中的 plot 坐标当地图来源。
 
