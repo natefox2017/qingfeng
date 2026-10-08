@@ -45,6 +45,8 @@ python3 tools/runtime.py run --godot /path/to/Godot_v4.7.2-stable_linux.x86_64
 python3 tools/runtime.py test --godot /path/to/Godot_v4.7.2-stable_linux.x86_64 --report-dir reports/runtime
 ```
 
+首次从 GitHub 拉取 Phase0 像素 PNG 后，`runtime.py run` 会检测缺失或过期的 Godot `.godot/imported` 缓存；仅在必要时通过固定引擎执行一次 `--headless --editor --import` 并在成功后启动游戏。导入失败会中止启动，原因写入 `reports/runtime/asset_import.log`，不会忽略缺失贴图直接进入世界。之后缓存有效时直接启动；`runtime.py editor` 仍让 Godot 编辑器自己管理导入。请先更新到包含 Phase0 PNG 的新 `main`，从标题「新建游戏」进入农庄；旧碰撞夹具存档不代表正式游戏。
+
 测试从隔离的user://和冷工程副本开始，旧236项物理/生命周期断言保留；新增入口存档用例另计数。实际原生捕获脚本：
 
 ```sh
