@@ -15,6 +15,8 @@ var hud: VBoxContainer
 var quickbar_panel: PanelContainer
 var quickbar: HBoxContainer
 var wallet_label: Label
+var guide_panel: PanelContainer
+var guide_label: Label
 var dialogue_panel: PanelContainer
 var player_name: LineEdit
 var dog_name: LineEdit
@@ -45,6 +47,24 @@ func _ready() -> void:
 	hud_panel.custom_minimum_size=Vector2(214,0)
 	hud_panel.add_theme_stylebox_override("panel",UI_THEME.hud_panel_style());hud_panel.visible=false;add_child(hud_panel)
 	hud=VBoxContainer.new();hud.add_theme_constant_override("separation",2);hud_panel.add_child(hud)
+	guide_panel=PanelContainer.new()
+	guide_panel.name="EntryGuide"
+	guide_panel.anchor_left=0.0;guide_panel.anchor_right=0.0
+	guide_panel.anchor_top=1.0;guide_panel.anchor_bottom=1.0
+	guide_panel.offset_left=8;guide_panel.offset_right=236
+	guide_panel.offset_top=-114;guide_panel.offset_bottom=-54
+	guide_panel.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	guide_panel.add_theme_stylebox_override("panel",UI_THEME.hud_panel_style())
+	guide_panel.visible=false;add_child(guide_panel)
+	var guide_column:=VBoxContainer.new();guide_column.add_theme_constant_override("separation",2);guide_panel.add_child(guide_column)
+	var guide_title:=Label.new();guide_title.text="门前菜园 · 今天的小目标"
+	guide_title.add_theme_font_size_override("font_size",UI_THEME.FONT_CAPTION)
+	guide_title.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT)
+	guide_title.mouse_filter=Control.MOUSE_FILTER_IGNORE;guide_column.add_child(guide_title)
+	guide_label=Label.new();guide_label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	guide_label.add_theme_font_size_override("font_size",UI_THEME.FONT_CAPTION)
+	guide_label.add_theme_color_override("font_color",UI_THEME.COLOR_HUD_TEXT)
+	guide_label.mouse_filter=Control.MOUSE_FILTER_IGNORE;guide_column.add_child(guide_label)
 	file_dialog=FileDialog.new();file_dialog.file_mode=FileDialog.FILE_MODE_OPEN_FILE;file_dialog.access=FileDialog.ACCESS_FILESYSTEM;file_dialog.filters=PackedStringArray(["*.qfsave ; 晴风谷存档"]);file_dialog.title="选择要导入的存档";file_dialog.size=Vector2i(560,300)
 	file_dialog.theme=self.theme;add_child(file_dialog)
 	file_dialog.file_selected.connect(func(path:String):emit_action("preview_import",{"path":path}))
@@ -59,6 +79,7 @@ func clear_page() -> void:
 	for child in body.get_children(): body.remove_child(child);child.queue_free()
 	for child in hud.get_children(): hud.remove_child(child);child.queue_free()
 	hud_panel.visible=false
+	guide_panel.visible=false
 	if is_instance_valid(quickbar_panel): remove_child(quickbar_panel);quickbar_panel.queue_free()
 	quickbar_panel=null;quickbar=null;wallet_label=null
 	if is_instance_valid(dialogue_panel): remove_child(dialogue_panel);dialogue_panel.queue_free()
@@ -237,6 +258,38 @@ func _build_quickbar(gameplay: Dictionary) -> void:
 	quickbar_panel.add_child(quickbar)
 	for index in range(inventory.slots.size()):
 		_slot_button(quickbar,index,inventory.slots[index],items,index==inventory.selected_slot_index,true)
+
+func _entry_goal_hint(gameplay: Dictionary) -> String:
+	# This is not quest progress: it reads the saved farm projection only.
+	var guide: Dictionary = gameplay.get("entry_guidance",{})
+	var farm_state: Dictionary = gameplay.get("farm",{})
+	if guide.is_empty() or not (farm_state.get("plots",null) is Array):
+		return ""
+	var harvest_plot: Dictionary = {}
+	var practice_plot: Dictionary = {}
+	for entry: Variant in farm_state.plots:
+		if not (entry is Dictionary):
+			continue
+		if String(entry.get("plot_id","")) == String(guide.get("mature_plot_id","")):
+			harvest_plot = entry
+		elif String(entry.get("plot_id","")) == String(guide.get("practice_plot_id","")):
+			practice_plot = entry
+	if harvest_plot.is_empty() or practice_plot.is_empty():
+		return ""
+	if String(harvest_plot.get("state","")) == "mature":
+		return "右上菜园有成熟萝卜。靠近它，面向它按 E 收获。"
+	match String(practice_plot.get("state","")):
+		"untilled":
+			return "收下第一根萝卜！按 1 选锄头，对空田按 E 翻土。"
+		"tilled":
+			return "土翻好了！按 3 选种子，对松土按 E 播种。"
+		"growing":
+			if not bool(practice_plot.get("is_watered",false)):
+				return "新种子在土里了。按 2 选浇水壶，对田地按 E。"
+			return "种子喝饱水了！明天再来看，也可以先去村庄。"
+		"mature":
+			return "亲手种的萝卜成熟啦！面向田地按 E 收获。"
+	return ""
 
 func show_page(page: String, context: Dictionary) -> void:
 	clear_page()
@@ -556,6 +609,10 @@ func show_page(page: String, context: Dictionary) -> void:
 			var close_caption:=label("结束",dialogue_actions);UI_THEME.apply_text_role(close_caption,UI_THEME.ROLE_CAPTION)
 		"world":
 			panel.hide();get_node("Backdrop").hide();hud_panel.visible=true
+			var current_gameplay: Dictionary = context.get("gameplay",{})
+			var goal: String = _entry_goal_hint(current_gameplay) if String(context.get("space_id","")) == "space.farm" else ""
+			guide_panel.visible = not goal.is_empty()
+			guide_label.text = goal
 			var status:=row(hud)
 			button(status,"pause","pause","暂停 / Esc")
 			if context.get("has_gameplay",false):
