@@ -97,7 +97,7 @@ func _slot_button(parent: Node, slot_index: int, slot: Variant, items: Dictionar
 		node.custom_minimum_size = UI_THEME.QUICKBAR_SLOT_SIZE
 	else:
 		node.text = number_text+"  "+display_name+("" if quantity <= 0 else "  ×"+str(quantity))
-		node.custom_minimum_size = Vector2(104,46)
+		node.custom_minimum_size = Vector2(90,42)
 	node.toggle_mode = true
 	node.button_pressed = selected
 	node.add_theme_stylebox_override("normal",UI_THEME.slot_style(selected))
@@ -252,7 +252,7 @@ func show_page(page: String, context: Dictionary) -> void:
 			var actions:=row();button(actions,"resume","resume","继续游戏");button(actions,"save","save","保存到新的独立文件",{},context.get("can_save",false));button(actions,"settings","settings","设置");button(actions,"save_return","back","保存并返回标题",{},context.get("can_save",false))
 		"inventory":
 			title.text="背包";subtitle.text="选择随身物品 · B / Esc 关闭"
-			panel.custom_minimum_size=Vector2(560,286)
+			panel.custom_minimum_size=Vector2(600,286)
 			var gameplay: Dictionary = context.get("gameplay",{})
 			if gameplay.get("ok",false):
 				var summary:=row()
@@ -260,11 +260,11 @@ func show_page(page: String, context: Dictionary) -> void:
 				var money_label:=label(str(gameplay.wallet.money)+" 币",summary);UI_THEME.apply_text_role(money_label,UI_THEME.ROLE_QUANTITY)
 
 				var content_row:=HBoxContainer.new();content_row.add_theme_constant_override("separation",10);body.add_child(content_row)
-				var grid:=GridContainer.new();grid.columns=3;grid.add_theme_constant_override("h_separation",5);grid.add_theme_constant_override("v_separation",5);grid.custom_minimum_size=Vector2(330,190);content_row.add_child(grid)
+				var grid:=GridContainer.new();grid.columns=4;grid.add_theme_constant_override("h_separation",5);grid.add_theme_constant_override("v_separation",5);grid.custom_minimum_size=Vector2(375,145);content_row.add_child(grid)
 				for index in range(gameplay.inventory.slots.size()):
 					_slot_button(grid,index,gameplay.inventory.slots[index],gameplay.items,index==gameplay.inventory.selected_slot_index,false)
 
-				var detail_panel:=PanelContainer.new();detail_panel.custom_minimum_size=Vector2(170,190);detail_panel.add_theme_stylebox_override("panel",UI_THEME.panel_style());content_row.add_child(detail_panel)
+				var detail_panel:=PanelContainer.new();detail_panel.custom_minimum_size=Vector2(155,145);detail_panel.add_theme_stylebox_override("panel",UI_THEME.panel_style());content_row.add_child(detail_panel)
 				var detail:=VBoxContainer.new();detail.add_theme_constant_override("separation",5);detail_panel.add_child(detail)
 				var selected_index:=int(gameplay.inventory.selected_slot_index)
 				var selected: Variant=gameplay.inventory.slots[selected_index]
