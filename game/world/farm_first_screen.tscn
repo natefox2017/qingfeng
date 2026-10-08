@@ -257,6 +257,9 @@ position = Vector2(320, 560)
 [node name="FieldApproach" type="Marker2D" parent="Anchors" unique_id=373282988]
 position = Vector2(640, 480)
 
+[node name="OrchardApproach" type="Marker2D" parent="Anchors"]
+position = Vector2(560, 336)
+
 [node name="BridgeWest" type="Marker2D" parent="Anchors" unique_id=196652536]
 position = Vector2(1392, 432)
 

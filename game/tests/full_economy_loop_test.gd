@@ -45,8 +45,9 @@ func use_plot() -> void:
 	finish_action()
 
 func farm_to_shop() -> bool:
-	app.room.get_player().position=app.room.get_anchor_position("VillagePathArrival")
-	app.room.get_player().facing=&"north"
+	var player: CharacterBody2D = app.room.get_player()
+	player.position=app.room.get_anchor_position("VillagePathInteract") + Vector2.DOWN * 20.0
+	player.facing=&"north"
 	app._unhandled_key_input(key(KEY_E))
 	if not await wait_space("space.village"):
 		return false
@@ -61,8 +62,9 @@ func shop_to_farm() -> bool:
 	app._unhandled_key_input(key(KEY_E))
 	if not await wait_space("space.village"):
 		return false
-	app.room.get_player().position=app.room.get_spawn_position()
-	app.room.get_player().facing=&"north"
+	var player: CharacterBody2D = app.room.get_player()
+	player.position=app.room.get_anchor_position("FarmExitInteract") + Vector2.UP * 20.0
+	player.facing=&"south"
 	app._unhandled_key_input(key(KEY_E))
 	return await wait_space("space.farm")
 

@@ -134,6 +134,9 @@ func run() -> void:
 		await finish()
 		return
 	var old_save_id := String(old_save.save_id)
+	var old_save_path: String = app.store.directory.path_join(old_save_id + ".qfsave")
+	var old_save_bytes_before: PackedByteArray = FileAccess.get_file_as_bytes(old_save_path)
+	check(not old_save_bytes_before.is_empty(), "signed legacy save bytes captured before migration")
 	app.return_to_title()
 	app._on_action("read_save", {"save_id":old_save_id})
 	check(await wait_world(), "real read_save loads old signed layout")
@@ -143,15 +146,18 @@ func run() -> void:
 	check(app.room.get_space_id() == "space.farm", "legacy outdoor room identity preserved")
 	check(app.room.get_player().position.distance_to(app.room.get_spawn_position()) < 0.01, "loaded position uses new authored farm spawn")
 	check(app.gameplay_session.inventory.quantity_of("item.radish_seed") == seed_count and app.gameplay_session.wallet.money == money, "inventory and money survive one-time migration")
-	check(app.gameplay_session.farm.get_plot("plot.farm.003").cell_position == plot_defs[2].cell_position, "loaded farm domain uses current 003 coordinates")
-	check(app.gameplay_session.farm.get_plot("plot.farm.003").state == baseline.gameplay.farm.plots[2].state, "loaded crop state stays intact")
+	check(CODEC.canonical(app.gameplay_session.farm.projection().plots) == CODEC.canonical(prepared.snapshot.gameplay.farm.plots), "all six loaded plots use current cells and preserve full crop state")
+	check(CODEC.canonical(app.gameplay_session.resident_runtime.snapshot()) == CODEC.canonical(prepared.snapshot.gameplay.residents), "all loaded resident positions match safe migrated anchors")
 	var after_old_load: Dictionary = app.store.read_save(old_save_id)
-	check(bool(after_old_load.ok) and after_old_load.envelope.snapshot == legacy, "original signed legacy save remains unchanged")
+	var old_save_bytes_after: PackedByteArray = FileAccess.get_file_as_bytes(old_save_path)
+	check(bool(after_old_load.ok) and CODEC.canonical(after_old_load.envelope.snapshot) == CODEC.canonical(legacy), "signed legacy payload remains semantically unchanged")
+	check(old_save_bytes_after == old_save_bytes_before, "original signed legacy save bytes remain unchanged")
 	var new_save: Dictionary = app.save_progress()
 	check(bool(new_save.get("ok", false)), "fresh save after migration succeeds")
 	if bool(new_save.get("ok", false)):
 		var new_read: Dictionary = app.store.read_save(String(new_save.save_id))
-		check(bool(new_read.ok) and new_read.envelope.snapshot.gameplay.farm.plots[2].cell_position == plot_defs[2].cell_position, "subsequent signed save writes new plot layout")
+		check(bool(new_read.ok) and CODEC.canonical(new_read.envelope.snapshot.gameplay.farm.plots) == CODEC.canonical(prepared.snapshot.gameplay.farm.plots), "subsequent signed save round-trips all six migrated plots")
+		check(bool(new_read.ok) and CODEC.canonical(new_read.envelope.snapshot.gameplay.residents) == CODEC.canonical(prepared.snapshot.gameplay.residents), "subsequent signed save round-trips migrated resident positions")
 	await finish()
 
 func finish() -> void:

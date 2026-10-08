@@ -201,7 +201,7 @@ func layout_contract_valid() -> bool:
 	var camera := get_node_or_null("FootSorted/Player/Camera2D") as Camera2D
 	if camera == null or camera.limit_left != world_bounds.position.x or camera.limit_top != world_bounds.position.y or camera.limit_right != world_bounds.end.x or camera.limit_bottom != world_bounds.end.y:
 		return false
-	for anchor_name: String in ["PlayerSpawn","FieldApproach","BridgeWest","BridgeEast","HouseDoorInteract","HouseDoorArrival","VillagePathInteract"]:
+	for anchor_name: String in ["PlayerSpawn","FieldApproach","OrchardApproach","BridgeWest","BridgeEast","HouseDoorInteract","HouseDoorArrival","VillagePathInteract"]:
 		if get_anchor_position(anchor_name) == Vector2.INF:
 			return false
 	if definitions.size() != $FarmPlots.get_child_count() or definitions.is_empty():

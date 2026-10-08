@@ -175,12 +175,12 @@ position = Vector2(520, 192)
 [node name="ForageSpots" type="Node2D" parent="." unique_id=1049740324]
 
 [node name="WildHerbA" type="Marker2D" parent="ForageSpots" unique_id=1424687822]
-position = Vector2(184, 144)
+position = Vector2(240, 176)
 metadata/spot_id = "forage.village.001"
 metadata/forage_id = "forage.wild_herb"
 
 [node name="WildHerbB" type="Marker2D" parent="ForageSpots" unique_id=481463626]
-position = Vector2(280, 216)
+position = Vector2(304, 264)
 metadata/spot_id = "forage.village.002"
 metadata/forage_id = "forage.wild_herb"
 

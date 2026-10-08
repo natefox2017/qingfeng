@@ -143,6 +143,9 @@ func run() -> void:
 		return
 	app.set_process(false)
 	check(app.room.get_plot_definitions().size() == 6, "six stable gameplay plots")
+	if not await door("HouseDoorInteract", &"north", "space.house") or not await exercise_storage() or not await door("DoorInteract", &"south", "space.farm"):
+		await finish()
+		return
 	for index in range(1,7):
 		if not await reach_plot("plot.farm.%03d" % index):
 			await finish()
@@ -167,7 +170,9 @@ func run() -> void:
 	app._unhandled_key_input(key(KEY_2))
 	use_plot()
 	check(app.gameplay_session.farm.get_plot("plot.farm.004").is_watered, "004 water")
-	if not await door("HouseDoorInteract", &"north", "space.house") or not await exercise_storage() or not await door("DoorInteract", &"south", "space.farm"):
+	var orchard_approach: Vector2 = app.room.get_anchor_position("OrchardApproach")
+	check(orchard_approach.is_finite(), "authored orchard approach exists")
+	if not orchard_approach.is_finite() or not await walk(orchard_approach):
 		await finish()
 		return
 	var bridge_west: Vector2 = app.room.get_anchor_position("BridgeWest")
@@ -261,7 +266,9 @@ func verify_river_probe() -> bool:
 	Input.action_release(action)
 	await physics_frame
 	check(player.position.distance_to(blocked)>4.0 and stopped_by_river, "real input is stopped outside bridge river")
-	return not hit.is_empty() and player.position.distance_to(blocked)>4.0 and stopped_by_river
+	var backed_away := await walk_segment(bank)
+	check(backed_away, "real input backs away from river collision before continuing route")
+	return not hit.is_empty() and player.position.distance_to(blocked)>4.0 and stopped_by_river and backed_away
 
 func use_plot() -> void:
 	app._unhandled_key_input(key(KEY_E))
