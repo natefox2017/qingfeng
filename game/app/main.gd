@@ -18,7 +18,7 @@ const VILLAGE_ROOM := "res://world/village_first_screen.tscn"
 const SHOP_ROOM := "res://world/shop_interior.tscn"
 const DEFAULT_ROOM := LEGACY_ROOM
 const MOVEMENT_ACTIONS := [&"move_left", &"move_right", &"move_up", &"move_down"]
-const GAMEPLAY_PAUSE_OWNERS := [&"pause_menu", &"inventory", &"storage", &"focus"]
+const GAMEPLAY_PAUSE_OWNERS := [&"pause_menu", &"inventory", &"storage", &"trade", &"focus"]
 const QUICK_SLOT_ACTIONS := [&"select_slot_1",&"select_slot_2",&"select_slot_3",&"select_slot_4",&"select_slot_5",&"select_slot_6",&"select_slot_7",&"select_slot_8",&"select_slot_9",&"select_slot_0"]
 
 enum State { TITLE, LOADING, WORLD }
@@ -286,6 +286,7 @@ func return_to_title() -> void:
 	locks.set_locked(&"pause_menu", false)
 	locks.set_locked(&"inventory", false)
 	locks.set_locked(&"storage", false)
+	locks.set_locked(&"trade", false)
 	_clear_movement()
 	_update_interface()
 
@@ -322,16 +323,16 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if event.is_echo():
 		return
 	if event.is_action_pressed("interact"):
-		if state == State.WORLD and gameplay_session != null and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"inventory") and not locks.has_owner(&"storage") and not locks.has_owner(&"focus") and not farm_action.is_busy() and not _transition_pending:
+		if state == State.WORLD and gameplay_session != null and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"inventory") and not locks.has_owner(&"storage") and not locks.has_owner(&"trade") and not locks.has_owner(&"focus") and not farm_action.is_busy() and not _transition_pending:
 			_interact_world()
 		get_viewport().set_input_as_handled()
 		return
 	if event.is_action_pressed("inventory_menu"):
-		if state == State.WORLD and gameplay_session != null and not farm_action.is_busy() and not _transition_pending and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"storage") and not locks.has_owner(&"focus"):
+		if state == State.WORLD and gameplay_session != null and not farm_action.is_busy() and not _transition_pending and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"storage") and not locks.has_owner(&"trade") and not locks.has_owner(&"focus"):
 			set_inventory_menu(not locks.has_owner(&"inventory"))
 			get_viewport().set_input_as_handled()
 		return
-	if state == State.WORLD and gameplay_session != null and not farm_action.is_busy() and not _transition_pending and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"storage") and not locks.has_owner(&"focus"):
+	if state == State.WORLD and gameplay_session != null and not farm_action.is_busy() and not _transition_pending and not locks.has_owner(&"pause_menu") and not locks.has_owner(&"storage") and not locks.has_owner(&"trade") and not locks.has_owner(&"focus"):
 		for index in range(QUICK_SLOT_ACTIONS.size()):
 			if event.is_action_pressed(QUICK_SLOT_ACTIONS[index]):
 				_select_inventory_slot(index)
@@ -347,6 +348,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		_finish_farm_recovery()
 	elif view.file_dialog.visible:
 		view.file_dialog.hide()
+	elif locks.has_owner(&"trade"):
+		set_trade_menu(false)
 	elif locks.has_owner(&"storage"):
 		set_storage_menu(false)
 	elif locks.has_owner(&"inventory"):
@@ -364,20 +367,30 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 
 func set_inventory_menu(enabled: bool) -> void:
-	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured() or (enabled and (farm_action.is_busy() or _transition_pending or locks.has_owner(&"storage"))):
+	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured() or (enabled and (farm_action.is_busy() or _transition_pending or locks.has_owner(&"storage") or locks.has_owner(&"trade"))):
 		return
 	locks.set_locked(&"inventory",enabled)
 	_page = "inventory" if enabled else "title"
 	_update_interface()
 
 func set_storage_menu(enabled: bool) -> void:
-	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured() or (enabled and (farm_action.is_busy() or _transition_pending or locks.has_owner(&"inventory"))):
+	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured() or (enabled and (farm_action.is_busy() or _transition_pending or locks.has_owner(&"inventory") or locks.has_owner(&"trade"))):
 		return
 	if enabled:
 		if not is_instance_valid(room) or not room.has_method("get_space_id") or room.get_space_id() != "space.house":
 			return
 	locks.set_locked(&"storage",enabled)
 	_page = "storage" if enabled else "title"
+	_update_interface()
+
+func set_trade_menu(enabled: bool) -> void:
+	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured() or (enabled and (farm_action.is_busy() or _transition_pending or locks.has_owner(&"inventory") or locks.has_owner(&"storage"))):
+		return
+	if enabled:
+		if not is_instance_valid(room) or not room.has_method("get_space_id") or room.get_space_id() != "space.shop":
+			return
+	locks.set_locked(&"trade",enabled)
+	_page = "trade" if enabled else "title"
 	_update_interface()
 
 func _new_command_id(prefix: String) -> String:
@@ -428,6 +441,44 @@ func _transfer_storage(payload: Dictionary) -> void:
 	last_error = ("已存入箱子。" if source_id == inventory_id else "已从箱子取出。") if result.ok else "箱子转移失败："+String(result.error_code)
 	_update_interface()
 
+func _trade_item(action: String, payload: Dictionary) -> void:
+	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured() or not locks.has_owner(&"trade"):
+		return
+	if action not in ["economy.buy","economy.sell"]:
+		last_error = "交易动作无效。"
+		_update_interface()
+		return
+	var item_id := String(payload.get("item_id",""))
+	var quantity := int(payload.get("quantity",0))
+	if item_id.is_empty() or quantity <= 0:
+		last_error = "交易数量无效。"
+		_update_interface()
+		return
+	var projection: Dictionary = gameplay_session.projection()
+	if not projection.ok:
+		last_error = "交易状态不可用。"
+		_update_interface()
+		return
+	var command := {
+		"protocol_version":1,
+		"command_id":_new_command_id(action),
+		"session_id":str(active_snapshot.get("session_id","")),
+		"actor_id":"actor.player",
+		"action":action,
+		"expected_revision":int(projection.inventory.revision),
+		"payload":{
+			"item_id":item_id,
+			"quantity":quantity,
+			"wallet_revision":int(projection.wallet.revision)
+		}
+	}
+	var result: Dictionary = gameplay_session.execute(command)
+	if result.ok:
+		last_error = "购买完成。" if action == "economy.buy" else "出售完成。"
+	else:
+		last_error = "交易失败："+String(result.error_code)
+	_update_interface()
+
 func _interact_world() -> void:
 	if not is_instance_valid(room):
 		return
@@ -444,6 +495,10 @@ func _interact_world() -> void:
 				"storage":
 					if target.get("interaction_id","") == "storage.house.main":
 						set_storage_menu(true)
+					return
+				"trade":
+					if target.get("interaction_id","") == "trade.shop.counter":
+						set_trade_menu(true)
 					return
 	_begin_farm_action()
 
@@ -710,6 +765,8 @@ func _update_interface() -> void:
 	elif state == State.WORLD:
 		if _page in ["settings","display_confirm"]:
 			page = _page
+		elif locks.has_owner(&"trade"):
+			page = "trade"
 		elif locks.has_owner(&"storage"):
 			page = "storage"
 		elif locks.has_owner(&"inventory"):
@@ -790,7 +847,7 @@ func _on_action(action: String, payload: Dictionary) -> void:
 		return
 	if action in ["confirm_settings","revert_settings"] and _page != "display_confirm":
 		return
-	if action in ["pause","resume","save","save_return","inventory","close_inventory","select_slot","close_storage","transfer_storage"] and state != State.WORLD:
+	if action in ["pause","resume","save","save_return","inventory","close_inventory","select_slot","close_storage","transfer_storage","close_trade","trade_buy","trade_sell"] and state != State.WORLD:
 		return
 	if state == State.LOADING and action not in ["cancel_load","quit"]:
 		return
@@ -912,6 +969,12 @@ func _on_action(action: String, payload: Dictionary) -> void:
 			set_storage_menu(false)
 		"transfer_storage":
 			_transfer_storage(payload)
+		"close_trade":
+			set_trade_menu(false)
+		"trade_buy":
+			_trade_item("economy.buy",payload)
+		"trade_sell":
+			_trade_item("economy.sell",payload)
 		"pause":
 			set_pause_menu(true)
 		"resume":
@@ -944,6 +1007,8 @@ func _close_requested() -> void:
 			locks.set_locked(&"inventory",false)
 		if locks.has_owner(&"storage"):
 			locks.set_locked(&"storage",false)
+		if locks.has_owner(&"trade"):
+			locks.set_locked(&"trade",false)
 		_page = "title"
 		set_pause_menu(true)
 		last_error = "请保存并返回标题后退出，以免丢失未保存的进度。"
