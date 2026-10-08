@@ -305,7 +305,7 @@ def capture_native_phase0(engine: str, reports: Path, destination: Path, timeout
             env[key] = str(home)
         env["GODOT_SILENCE_ROOT_WARNING"] = "1"
         code, output = execute(
-            [engine, "--path", str(game), "--script", "res://tests/page_capture.gd",
+            [engine, "--audio-driver", "Dummy", "--path", str(game), "--script", "res://tests/page_capture.gd",
              "--", str(destination)],
             reports / "native_capture.log", timeout, env,
         )
