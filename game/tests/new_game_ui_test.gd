@@ -34,6 +34,7 @@ func run() -> void:
 	check(view.player_name.has_focus(),"player name receives initial focus")
 	check(view.player_name.accessibility_name=="玩家名字" and view.dog_name.accessibility_name.contains("可留空"),"identity inputs keep accessible names")
 	check(view.buttons.has("create") and view.buttons.has("back"),"new-game page keeps create and cancel actions")
+	check((view.buttons["create"] as Button).text=="确认进入" and (view.buttons["back"] as Button).text=="返回","approved entry actions stay clickable and readable")
 	check((view.buttons["create"] as Button).tooltip_text.contains("创建独立存档"),"create action explains real save semantics")
 	var page_text := ""
 	for child: Node in view.body.find_children("*","Label",true,false):
