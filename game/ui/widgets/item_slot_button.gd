@@ -16,6 +16,7 @@ func _ready() -> void:
 	toggle_mode = true
 	focus_mode = Control.FOCUS_ALL
 	custom_minimum_size = Vector2(40,42)
+	UI_THEME.apply_quick_slot_style(self)
 	_index_label = Label.new()
 	_index_label.position = Vector2(4,1)
 	_index_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
