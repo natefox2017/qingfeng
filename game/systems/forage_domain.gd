@@ -35,6 +35,9 @@ func _init(definitions: Array = [], content: Dictionary = {}) -> void:
 func is_configured() -> bool:
 	return configuration_error.is_empty()
 
+func has_spots() -> bool:
+	return not _definitions.is_empty()
+
 func _valid_definition(value: Variant) -> bool:
 	if not (value is Dictionary) or value.size()!=3:
 		return false
