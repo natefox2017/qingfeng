@@ -90,7 +90,7 @@ func run() -> void:
 	check(target.get("kind","")=="trade" and target.get("interaction_id","")=="trade.shop.counter","counter resolves dedicated trade interaction")
 	open_counter()
 	check(app.locks.has_owner(&"trade") and app.gameplay_session.clock.is_paused(),"E opens trade modal and owns game-clock pause")
-	check(app.view.title.text=="杂货铺柜台" and app.view.subtitle.text.contains("权威钱物事务"),"trade page renders live counter state")
+	check(app.view.title.text=="杂货铺柜台" and app.view.subtitle.text.contains("购买种子与出售收成"),"trade page renders live counter state")
 	var buy_button: Button = find_button_with_prefix(app.view.body,"买 1")
 	check(buy_button!=null and not buy_button.disabled and buy_button.tooltip_text==buy_button.accessibility_name,"open shop exposes accessible buy button")
 

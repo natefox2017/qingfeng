@@ -480,16 +480,18 @@ func set_trade_menu(enabled: bool) -> void:
 func _begin_player_resident_dialogue(target: Dictionary) -> void:
 	if state != State.WORLD or gameplay_session == null or not gameplay_session.is_configured() or locks.has_owner(&"dialogue"):
 		return
-	if not is_instance_valid(room) or not room.has_method("get_space_id") or String(room.get_space_id())!="space.village":
+	if not is_instance_valid(room) or not room.has_method("get_space_id"):
 		return
+	var room_space_id := String(room.get_space_id())
 	var resident_id := String(target.get("resident_id",""))
-	if target.get("interaction_id","")!="dialogue.village.neighbor" or resident_id!="resident.neighbor":
+	var expected_interaction := "dialogue.%s.%s" % [room_space_id.trim_prefix("space."),resident_id.trim_prefix("resident.")]
+	if not resident_id.begins_with("resident.") or String(target.get("interaction_id",""))!=expected_interaction:
 		last_error = "对话目标无效。"
 		_update_interface()
 		return
 	var context: Dictionary = gameplay_session.player_resident_dialogue_context(resident_id)
-	if not context.ok:
-		last_error = "现在还不能交谈："+String(context.error_code)
+	if not context.ok or String(context.get("space_id",""))!=room_space_id:
+		last_error = "现在还不能交谈："+String(context.get("error_code","DIALOGUE_SPACE_INVALID"))
 		_update_interface()
 		return
 	var conversation_id := _new_command_id("conversation.player")

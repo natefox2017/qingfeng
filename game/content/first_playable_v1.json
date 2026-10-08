@@ -250,6 +250,19 @@
           "dialogue_id": "dialogue.neighbor.greeting",
           "text": "今天也来村里转转？田里的事慢慢来，别把一天都赶得太紧。"
         }
+      },
+      "resident.grocer": {
+        "space_id": "space.shop",
+        "first_meeting": {
+          "dialogue_id": "dialogue.grocer.first_meeting",
+          "event_id": "event.resident.grocer.met_player",
+          "event_kind": "resident.met_player",
+          "text": "欢迎光临，我是这里的店主。白天柜台会营业，缺种子就来看看。收成和野菜也能带来卖，农庄的日子要慢慢经营。"
+        },
+        "repeat": {
+          "dialogue_id": "dialogue.grocer.greeting",
+          "text": "今天想种点什么？看看种子够不够，种下以后记得浇水。"
+        }
       }
     }
   }

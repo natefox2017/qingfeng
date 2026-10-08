@@ -75,6 +75,20 @@ func resident_handoff_requests() -> Array:
 func resident_visual_state(resident_id: String = "resident.grocer") -> Dictionary:
 	return _resident_room.visual_state(resident_id) if _resident_room != null else {}
 
+func apply_conversation_projection(value: Variant) -> bool:
+	if not (value is Dictionary) or not value.has("conversations") or not (value.conversations is Array):
+		return false
+	for conversation: Variant in value.conversations:
+		if not (conversation is Dictionary) or String(conversation.get("space_id",""))!=SPACE_ID:
+			continue
+		var participants: Variant = conversation.get("participants",[])
+		if not (participants is Array) or "actor.player" not in participants or "resident.grocer" not in participants:
+			continue
+		if String(conversation.get("state",""))=="participating" and grocer_resident.is_world_active():
+			grocer_resident.clear_schedule_target()
+			grocer_resident.face_toward(player.position)
+	return true
+
 func _resident_position_is_safe(local_position: Vector2) -> bool:
 	var circle := CircleShape2D.new()
 	circle.radius = 4.0
@@ -90,6 +104,12 @@ func resolve_interaction_target() -> Dictionary:
 			"kind":"trade",
 			"interaction_id":"trade.shop.counter"
 		}
+	if _resident_reachable(grocer_resident):
+		return {
+			"kind":"resident_dialogue",
+			"interaction_id":"dialogue.shop.grocer",
+			"resident_id":"resident.grocer"
+		}
 	if _marker_reachable($Anchors/DoorInteract):
 		return {
 			"kind":"door",
@@ -99,6 +119,20 @@ func resolve_interaction_target() -> Dictionary:
 			"arrival_facing":"south"
 		}
 	return {}
+
+func _resident_reachable(resident: CharacterBody2D) -> bool:
+	if resident==null or not resident.has_method("is_world_active") or not resident.is_world_active():
+		return false
+	var direction := _facing_vector(player.facing)
+	if direction.is_zero_approx():
+		return false
+	var offset: Vector2 = resident.global_position-player.global_position
+	var forward := offset.dot(direction)
+	var lateral := absf(offset.dot(Vector2(-direction.y,direction.x)))
+	if forward <= 2.0 or forward > INTERACT_RANGE_PX or lateral > INTERACT_LATERAL_PX:
+		return false
+	var ray := PhysicsRayQueryParameters2D.create(player.global_position,resident.global_position,1)
+	return get_world_2d().direct_space_state.intersect_ray(ray).is_empty()
 
 func _marker_reachable(marker: Marker2D) -> bool:
 	var direction := _facing_vector(player.facing)
