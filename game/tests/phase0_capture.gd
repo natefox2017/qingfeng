@@ -69,7 +69,14 @@ func run() -> void:
 		_fail("first harvest guidance is missing in native world")
 		return
 	# A real input-driven displacement confirms the active room, not a teleport pose.
+	# A native desktop window that never received OS focus keeps re-arming the gameplay
+	# focus lock, which disables player input: on macOS the display server reports the
+	# window as unfocused and main.gd re-locks "focus" after the room becomes active.
+	# Re-assert focus the way a real player's focused window does, then let the real
+	# input path produce the displacement. Nothing here teleports the player.
 	var starting_position: Vector2 = player.position
+	app.set_application_focused(true)
+	await physics_frame
 	Input.action_press("move_right")
 	for step in range(8):
 		await physics_frame
