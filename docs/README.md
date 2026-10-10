@@ -14,8 +14,7 @@
 | 8 | [参考与取舍](references.md) | 实际参考项目和官方能力；为什么采用或不采用 |
 | 9 | [仓库身份](repository.md) | 唯一 remote、Notion、历史边界、凭据隔离 |
 
-[任务链接登记](tasks.json)记录任务身份与依赖，不记录另一套完成状态。
-[素材请求模板](../templates/asset_request.md)、[交接模板](../templates/handoff.md)、[验收记录模板](../templates/validation_report.md)用于每个具体交付，不要求小改动重复写大文档。
+开发任务、Bug、认领、进度、测试结果及临时交接**仅记录在 GitHub Issues/PR 和正式 Todoist Board**，不在 Markdown 维护第二套清单。可复用的长期字段/资产契约仍在对应规范里；旧 `docs/tasks.json` 只因脚手架检查兼容保留，不作为任务真值。
 
 [N05运行基础](runtime_foundation.md)记录已实现的启动、移动及取消/输入生命周期；其余玩法/展示接口仍是开发合同，不是假称已存在的 API。角色身份、精确平衡与最终美术须在对应任务的数据和样板中落定。
 
