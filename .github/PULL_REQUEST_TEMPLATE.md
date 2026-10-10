@@ -6,6 +6,12 @@ Issue / task_id / base_sha：
 官方/开源来源、版本、许可、PixelLab素材/费用授权：
 字段/状态/保存/入口变更：
 
+## Kanban 领取与回写核对
+- [ ] 关联唯一原子 Issue（Task ID / #号）；该卡确实存在于 Projects v2
+- [ ] 开工前从 Ready 看板领取，留下唯一 assignee + 对话标识 + baseline SHA + 文件边界，回读无冲突
+- [ ] 本 PR 与已有分支/PR 不重叠；若 Board 未启用/不可读则标阻断，不冒充已领取
+- [ ] 合并与真实验收后才在 Issue 勾选 TODO 并同步卡片为 Done；未验时保持 Review/Blocked
+
 ## 实际验证
 命令、退出码、原始日志、正常与失败路径：
 原生/导出/真实服务各自证据：
