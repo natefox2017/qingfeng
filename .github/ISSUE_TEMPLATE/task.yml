@@ -6,7 +6,7 @@ body:
     attributes:
       value: |
         ⚠️ 一个可领取 TODO = 一个 GitHub Issue + 一个 Projects v2 Kanban 卡片。
-        创建后先加入 Kanban 的 Inbox，排重并检查前置依赖，只有 Ready 且无人领取才可从看板认领。
+        创建后先加入 Kanban 的 Backlog，排重并检查前置依赖，只有 Ready 且无人领取才可从看板认领。
         领取/完成及回写规范见 AGENTS.md 和 #120；当前看板未完成部署时不得直接开工。
   - type: input
     id: task_id
@@ -42,4 +42,4 @@ body:
   - type: markdown
     attributes:
       value: |
-        领取不是填写此模板：在 Projects v2 的 Ready 卡片操作，改 Claimed + 唯一 assignee，附带当前对话/工作树/commit 的 Issue 领取回执并回读；完工后同时更新 Issue checkbox 和 Board Status。
+        领取不是填写此模板：在 Projects v2 的 Ready 卡片操作，改 In Progress + 唯一 assignee，附带当前对话/工作树/commit 的 Issue 领取回执并回读；完工后同时更新 Issue checkbox 和 Board Status。
