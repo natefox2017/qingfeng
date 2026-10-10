@@ -1,44 +1,83 @@
-name: 缺陷（原子 Kanban 任务）
-description: 一个可复现、可归属和可复验的独立问题；创建后必须进入 GitHub Projects
+name: 独立 Bug 修复
+description: 复现清楚、文件范围明确、可独立验收的缺陷
 title: "[BUG] "
 body:
   - type: markdown
     attributes:
       value: |
-        一个独立缺陷 = 一个 Issue/Kanban 卡；先搜索既有 Issue/PR 防重复，不能仅在聊天或父 checkbox 里记 Bug。
-        认领必须从 Projects v2 Ready 卡开始；具体状态和唯一 owner 规则见 AGENTS.md / #120。
-  - type: input
-    id: parent
+        GitHub Issue 负责完整 TODO，正式 Todoist Board 只负责领取和状态：
+        https://app.todoist.com/app/project/6hj76M7Ghj5pR3xm
+        建立 Issue 后先去重，再对应 1 张 Todoist 卡；未满足 Ready 条件先放 Backlog。
+        AI 只能从 Ready 移至 In Progress 并立即回读才可开工；不依赖 Todoist assignee。
+        Done 仅移动 Section，不点击 Todoist 完成，卡片保留可见。
+        下列十项必须让没有历史聊天的 AI 能独立执行和验收；不适用写“不适用”，不确定写“待核实”。
+  - type: textarea
+    id: background
     attributes:
-      label: 所属需求 / 任务 ID / 父 Issue
-      placeholder: "CH1-M05 / #84 / #106"
+      label: 1. 背景
+      description: 缺陷影响/用户价值、复现原因/影响范围
     validations:
       required: true
   - type: textarea
-    id: reproduction
+    id: objective
     attributes:
-      label: 当前 commit、平台、入口与可重复步骤
+      label: 2. 目标
+      description: 唯一可交付修复目标及成功定义
     validations:
       required: true
   - type: textarea
-    id: expected
+    id: current
     attributes:
-      label: 预期与实际 / 影响
+      label: 3. 当前状态
+      description: 当前 commit、环境、可复现步骤、预期与实际
     validations:
       required: true
   - type: textarea
-    id: dedup
+    id: scope
     attributes:
-      label: 排重、相关 PR/分支和文件所有权
+      label: 4. 修改范围
+      description: 真实文件路径、组件、接口/Schema、禁止修改内容
     validations:
       required: true
   - type: textarea
-    id: evidence
+    id: requirements
     attributes:
-      label: 复验 TODO、脱敏日志/原生画面、Done 条件
-      placeholder: |
-        - [ ] 重现并记录证据
-        - [ ] 修复且复验
-        - [ ] 合并后回写 Issue + Kanban，关联父项
+      label: 5. 具体要求
+      description: 修复行为、正常路径、边界、异常处理和回退
+    validations:
+      required: true
+  - type: textarea
+    id: constraints
+    attributes:
+      label: 6. 技术约束
+      description: 现有架构、版本、兼容性、禁止越权及复用方案
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: 7. 依赖关系
+      description: 父任务、重复 Issue、关联 PR/分支和前置验收
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 8. 验收标准（Checkbox）
+      description: 可验证 - [ ] 条目，含回归/负向场景
+    validations:
+      required: true
+  - type: textarea
+    id: tests
+    attributes:
+      label: 9. 测试要求
+      description: 复现与回归命令、环境、预期、证据路径；NOT RUN 请解释
+    validations:
+      required: true
+  - type: textarea
+    id: delivery
+    attributes:
+      label: 10. 交付要求
+      description: 修复 PR/Commit、复测结论、Issue checkbox 与 Todoist Section 回写
     validations:
       required: true
