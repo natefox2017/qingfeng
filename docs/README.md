@@ -9,12 +9,12 @@
 | 3 | [PixelLab 流水线](pixellab_pipeline.md) | 连接、出图、任务去重、动画、下载、QA、Godot 接入 |
 | 4 | [技术架构](architecture.md) | 目录、模块边界、状态唯一拥有者、存档与 AI |
 | 5 | [数据合同](data_contracts.md) | 每类字段命名、类型、单位、缺省、版本及样例 |
-| 6 | [开发协作](development.md) | Issues、依赖、并行所有权、小 PR 与完成标准 |
+| 6 | [开发协作](development.md) | Linear 唯一任务源/Board 领取、并行所有权、GitHub PR 与完成标准 |
 | 7 | [验收](acceptance.md) | 自动测试、三天路线、多尺寸 UI、导出与证据 |
 | 8 | [参考与取舍](references.md) | 实际参考项目和官方能力；为什么采用或不采用 |
 | 9 | [仓库身份](repository.md) | 唯一 remote、Notion、历史边界、凭据隔离 |
 
-开发任务、Bug、认领、进度、测试结果及临时交接**仅记录在 GitHub Issues/PR 和正式 Todoist Board**，不在 Markdown 维护第二套清单。可复用的长期字段/资产契约仍在对应规范里；旧 `docs/tasks.json` 只因脚手架检查兼容保留，不作为任务真值。
+开发任务、Bug、领取、进度、测试结果与临时交接**仅由 [Linear 晴风谷项目](https://linear.app/gengyun/project/晴风谷-qingfeng-development-747beb5958f6) 管理**，实现证据通过关联 GitHub PR/Commit/CI；Markdown 不维护第二套清单。稳定字段与资产契约仍在唯一长期规范里；旧 `docs/tasks.json` 只因脚手架检查兼容保留，不是有效任务源。
 
 [N05运行基础](runtime_foundation.md)记录已实现的启动、移动及取消/输入生命周期；其余玩法/展示接口仍是开发合同，不是假称已存在的 API。角色身份、精确平衡与最终美术须在对应任务的数据和样板中落定。
 
