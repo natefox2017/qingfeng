@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 contact_links:
   - name: "晴风谷 · 在 Linear 创建需求 / Bug / QA"
-    url: "https://linear.app/gengyun/project/%E6%99%B4%E9%A3%8E%E8%B0%B7-qingfeng-development-747beb5958f6"
+    url: "https://linear.app/gengyun/project/%E6%99%B4%E9%A3%8E%E8%B0%B7-development-747beb5958f6"
     about: "Linear Issues 是唯一任务/TODO 真值，Linear Board 负责领取；此 GitHub 只处理代码、Commit 和 Pull Request。旧 Issue 保留历史溯源。"
