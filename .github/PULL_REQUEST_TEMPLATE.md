@@ -1,6 +1,6 @@
 ## Linear Issue 与领取检查
-- 当前唯一 Linear Issue ID（例如 GEN-45）和链接：
-- 实际状态 / 负责人 / 领取回读证据；无 Ready 时说明管理迁移例外或阻断：
+- 当前唯一 Linear Issue ID（例如 DEV-118）和链接：
+- Todo 资格（无 owner/Blocker/冲突）/ 唯一 assignee / In Progress 回读证据：
 - 关联 Linear 父子依赖、现存 Draft PR、同文件持有人检查：
 - GitHub 仓库、实际默认分支基线 SHA、独立分支与 PR 文件范围：
 
@@ -13,7 +13,7 @@
 未执行则明确 `NOT RUN`，不能用仓库 auto-merge 或 lint 冒充真正验收。
 
 ## GitHub PR → Linear 状态回写
-- [ ] PR 标题、分支或正文包含准确 Linear Issue ID（例如 `GEN-45`）且实际关联可核实。
+- [ ] PR 标题、分支或正文包含准确 Linear Issue ID（例如 `DEV-118`）且实际关联可核实。
 - [ ] PR 创建后实际确认 Linear In Review；自动化未配时手动回写，不在 PR 描述冒充成功。
 - [ ] PR 合并后仅代表代码合入；只有所有必要 Linear Checkbox、测试/审查/人工签收及依赖完成才将 Linear Issue 设 Done。
 - [ ] 旧 GitHub Issue/Todoist 未作为新的任务入口；未重复领取、未覆盖其他 AI 的分支/文件。

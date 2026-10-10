@@ -7,12 +7,12 @@
 ## 当前状态
 `foundation`：**正式新档已进入 `space.farm` 门前菜园**，使用 Godot 4.7.2 可编辑的 16px TileMapLayer、农舍/树木 PNG、玩家四向 idle/walk 像素精灵，并有真实六块田格（新档含一株成熟教程萝卜与一块练习空田）、种植/浇水/采收、村庄与室内门、背包/箱子/交易、日时与 schema7 保存。旧 schema1 碰撞测试档**只从读档列表显式进入**，不会被「继续游戏」当成正式存档。
 
-这些是 **Phase0 原创可玩美术候选**，不是已验收的第一章设计稿或 PixelLab 正式成品。第一章总地图、正式人犬动画、最终 TileSet 美术、正式物品图标及对照权威设计稿的人工审查仍未完成。开源 Noto Sans CJK SC 字体已经按官方固定版本下载、校验和随源码登记；原生 HUD 中文截图已可读，仍需导出包复核。当前 Phase0 已有固定 Godot 4.7.2 的原生冷导入/农庄碰撞/田格/门转场自动回归；**脚本验证与最终视觉验收不可混称**。进度以 [Linear 晴风谷项目](https://linear.app/gengyun/project/晴风谷-qingfeng-development-747beb5958f6) 及总入口 [GEN-42](https://linear.app/gengyun/issue/GEN-42) 为准；入口细节见 [入口合同](docs/entry_pages.md)。
+这些是 **Phase0 原创可玩美术候选**，不是已验收的第一章设计稿或 PixelLab 正式成品。第一章总地图、正式人犬动画、最终 TileSet 美术、正式物品图标及对照权威设计稿的人工审查仍未完成。开源 Noto Sans CJK SC 字体已经按官方固定版本下载、校验和随源码登记；原生 HUD 中文截图已可读，仍需导出包复核。当前 Phase0 已有固定 Godot 4.7.2 的原生冷导入/农庄碰撞/田格/门转场自动回归；**脚本验证与最终视觉验收不可混称**。任务以 [Linear 晴风谷项目](https://linear.app/gengyun/project/晴风谷-development-747beb5958f6) 实时可读取的 Issue 为准；失联历史任务的恢复/去重见 [DEV-110](https://linear.app/gengyun/issue/DEV-110)，入口细节见 [入口合同](docs/entry_pages.md)。
 
 ## 入口
 - [Notion 唯一人类入口](https://app.notion.com/p/3eee1df1f5a78150879fe4bc1c3151db)
 - [完整开发文档](docs/README.md)
-- [开发任务、领取和验收：Linear 晴风谷](https://linear.app/gengyun/project/晴风谷-qingfeng-development-747beb5958f6)（旧 [GitHub #1](https://github.com/natefox2017/qingfeng/issues/1) 仅供历史追溯）
+- [开发任务、领取和验收：Linear 晴风谷](https://linear.app/gengyun/project/晴风谷-development-747beb5958f6)（旧 [GitHub #1](https://github.com/natefox2017/qingfeng/issues/1) 仅供历史追溯）
 - [Agent 开工规则](AGENTS.md)
 - [PixelLab 制作与 Godot 接入](docs/pixellab_pipeline.md)
 
