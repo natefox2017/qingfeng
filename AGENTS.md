@@ -1,27 +1,63 @@
 # Agent 工作约定
 
 ## 唯一来源
-只向 `natefox2017/qingfeng` 提交。Notion 是人类需求与设计入口；仓库只维护稳定需求规格及必要的技术契约；GitHub Issues 是开发执行与进度真值，PR 是实现、验证和回退记录。发现 remote 指向其他仓库时停止写操作；不能依赖重命名重定向。
+只向 `natefox2017/qingfeng` 提交。Notion 是人类需求与设计入口；仓库只维护稳定规格及技术契约；GitHub Issues 是唯一任务/TODO与实施证据来源，Todoist Board 是唯一任务领取与状态入口，PR 是实现、验证和回退记录。发现 remote 指向其他仓库时停止写操作；不能依赖重命名重定向。
 
 本项目是新工程。禁止整仓拉回旧代码、图片、测试、历史提交或旧 ID/存档。用户后续明确修改要求优先；是否改文档遵守下述变更门槛，不因每个 PR 或 Bug 自动同步文档，也不在多个页面追加相互冲突的补丁。
 
 ## 需求文档与 GitHub 执行记录的边界
 1. **需求文档（Notion 及仓库中的产品/玩法/地图/美术/UI 规格）**只记录经用户确认的需求、设计决策、稳定边界和验收目标。**需求没变就不改文档**；普通修 Bug、性能优化、重构、调整实现、CI、测试或状态变化不触发 Notion/Markdown 同步。
-2. **GitHub Issues**记录全部具体开发任务、Bug/复现、排查结论、优化/技术债、阻塞、测试与验收结果、负责人及 checkbox 进度。优先更新已有对应 Issue；独立问题另开 Issue 并关联所属任务。不要在 Notion、README、审计/交接 Markdown 再维护一套执行日志或完成状态。
-3. **GitHub PR**承载代码/素材/配置/测试等实际变更，关联 Issue，写清修改范围、验证命令与证据、未验项和回退。合入并经核验后更新 Issue 状态；仅修改代码/修复缺陷时，不要求同步任何需求文档。
+2. **GitHub Issues**记录全部具体开发任务、Bug/复现、排查结论、优化/技术债、阻塞、测试与验收结果、负责人及 checkbox 进度；任务阶段状态由 Todoist Board 统一管理。优先更新已有对应 Issue；独立问题另开 Issue 并关联所属任务。不要在 Notion、README、审计/交接 Markdown 再维护一套执行日志或完成状态。
+3. **GitHub PR**承载代码/素材/配置/测试等实际变更，关联 Issue/Todoist 卡，写清修改范围、验证命令与证据、未验项和回退。合入并经核验后更新 Issue 状态；仅修改代码/修复缺陷时，不要求同步任何需求文档。
 4. **修改文档的门槛**：只有用户确认需求或设计/验收口径改变，或实际跨模块/外部接口、存档/字段契约的变化使既有规格失真，才在**对应的唯一权威文件**作最小修改，并由 Issue/PR 链接。意见未定时先登记 Issue 待确认，不把 Bug 处理过程写成新需求。
 5. **协作约束例外**：`AGENTS.md` 仅在用户明确调整开发协作规则时修改；Notion/README 作为稳定入口，不随每次提交更新 SHA、进度快照、Bug 处理或测试日报。
 
-## GitHub Projects v2 Kanban：唯一领取与状态回写（2026-10-10 用户确认）
-**单一入口**：GitHub Projects v2 看板；[看板配置与迁移 Issue #120](https://github.com/natefox2017/qingfeng/issues/120) 保留实际 Project URL、字段和验证记录。Notion 是需求入口，父 Issue 是聚合导航；**不能从聊天建议、Notion、README、父 Issue checkbox、普通 Issue 列表、评论或旧 PR 直接开始/认领开发**。无权读取或更新真实 Board 时，记录为「未领取/Blocked」，立即停止该业务任务，不能凭标签或口头声明绕过。配置 #120 属于一次性引导例外。
+## 四层权威和 Todoist 唯一领取入口（2026-10-10）
 
-1. **登记与拆分**：所有确认需求、Bug、代码、ART、DATA、UI、音频、QA、技术债、验收工作先检索 GitHub 现有 Issue/PR/分支和 asset_id/task_id。每个可独立领取/交付/验证的 TODO 都应对应一个**唯一的仓库 Issue + Kanban 卡片**，含 stable Task ID、父需求、具体 checkbox、验收、依赖、文件边界与资产来源。父 #1/#84 和各系统父 Issue 的大 checkbox 仅负责汇总；不能把同一父 Issue 的多项独立工作合领为一张卡，不能建立重复任务。已关闭重复 Issue 不再作为待领任务。
-2. **看板 Status（仅六种，按项目统一规范）**：Backlog（待规划）→ Ready（依赖已满足且无人认领）→ In Progress（已从看板认领，处理中）→ In Review（PR/视觉/QA 待审核）→ Done（已完成且经验证），以及 Blocked（阻断）。**没有 Inbox、Claimed、Review、Cancelled 独立列**；废弃/重复通过 Issue state_reason=not_planned/duplicate 与主 Issue 关联处理。Status 必须是真实 GitHub Projects 字段，Issue open/closed 和评论不是 Status 的替代品。Project 尚未创建、卡片不存在或 API 不可确认时没有「默认可领」状态。
-3. **领取动作（只从 Ready 看板卡发起）**：先刷新 Board 卡片、Issue/父项 checkbox、所有关联 PR/branch/asset，确认未完成且无现任 owner、无冲突写者，依赖已验收；将 Board Status 从 Ready 改为 In Progress，并给**原子 Issue 唯一 assignee**，写认领回执（领取账号、对话/运行实例唯一标识、UTC 时间、main SHA、分支/worktree、Task ID、精确 checkbox、文件集合、依赖及预计验证）。**回读同一 Project 卡（In Progress）、Issue assignee 和认领回执，三者一致才开工**。多 Agent 共用一个 GitHub 登录时，还必须比较不同对话/branch 的领取标识，不能只看 assignee。任何冲突、更新失败或二次认领先停工转 Blocked，请原 owner/协调方处理；不能覆盖前一个人的领取记录。
-4. **冲突并发边界**：Projects Status/Issue assignee 的普通读写不是事务性锁；仅「我已经移动卡片」不足以在并发情况下保证独占。#120 的串行领取/原子锁和对账自动化未真正配置、并发验证前，不得宣称强互斥已经上线；多对话遇到同一项时一律先停工协调。公用场景、存档 schema、入口、manifest 与同一文件写入即使不同 Issue 也要执行文件锁定/错峰。
-5. **进展与关闭是强制回写事务**：每完成一个子步骤，马上在该 Issue 勾选对应 checkbox，附 PR/commit SHA、测试命令和实际结果（含 NOT RUN）、截图/资产 source_hash、剩余阻塞；同步 Board Status。未验收、PR 未合并、素材为 proposed、测试没执行或部分 TODO 未勾时，保持 In Review/Blocked/In Progress，不能先 Done。**全部 Done 条件满足后**将卡片置 Done、Issue 关闭，再按证据更新父 Issue 对应聚合 checkbox；失败须回滚错误勾选、重新打开并还原看板状态，禁止留下「Issue 已完成但看板还在 Doing」或相反的不一致。
-6. **转交/超时/重复**：放弃认领时先写未完成、已有产物/PR/branch、可继续步骤、风险和 owner 释放证明，再由看板退回 Ready；接手者必须重新完整领取。不可凭时间自动抢占。重复项用 canonical Issue 链接关闭为 duplicate，不标业务完成；需求取消用 not_planned。任何会话终止前核对自己的全部已领卡，没有已完成但未回写的 TODO。
-7. **迁移与上线门**：旧父 Issue 的 checkbox 不因采用新 Kanban 而自动完成。分拆既有任务时保留旧证据，已在修的 #117 与 #88 先对照现任负责人、禁止另起工作。Project 和权限/自动化未验收期间，这一协议是强制操作规范，不是「看板已经部署」的证明；以 #120 的未勾项为阻断清单。
+本仓库正式工作系统：
+- **GitHub Issues：唯一任务/TODO/Bug/QA/技术债及执行证据来源。** 每个可独立交付的任务对应独立 Issue，父 Issue 的 checkbox 只索引真实子 Issue；实质验收、依赖和 TODO 完成状态均写回 Issue。
+- **[Todoist 正式 Board](https://app.todoist.com/app/project/6hj76M7Ghj5pR3xm)：唯一任务排队、领取和阶段状态入口。** 对应仓库 `natefox2017/qingfeng`，每个独立 Issue 最多一张未「完成」的可见卡，卡片仅放仓库标识、Issue 编号/链接、PR 链接及必要的状态提示。**GitHub Projects 不是领取入口**；不得绕过 Todoist 通过聊天、Issue 评论/标签、GitHub assignee、分支或父 TODO 认领。
+- **GitHub PR：独立分支代码/素材/配置交付、审核与合并入口**。原则上一个可独立交付的 Issue 配一个 PR；无仓库变更的纯研究/核验可只在 Issue 留可验证结果。
+- **Notion 与 Markdown：只记录已确认的产品需求、设计、架构、字段/接口契约、编码/测试和 AI 协作规范。** 不在 README/Markdown/Notion 建平行任务、Bug、进度或交接状态表；需求或长期契约确实变化才最小修改其唯一权威文件。
+
+### Todoist 六状态与 Done 语义
+正式 Board 开启 Board 视图，**仅有且按顺序是 Backlog、Ready、In Progress、In Review、Blocked、Done 六个 Section**。Backlog 是未澄清/依赖未解决；Ready 是可领且无活跃持有人；In Progress 是领取成功正在处理；In Review 是 PR/成果待验证；Blocked 保存阻塞、恢复条件与既有持有人；Done 是必要验收/合并和 GitHub Issue 完整同步后状态。取消/重复仅通过 GitHub Issue 的 `not_planned`/`duplicate` 等真实关闭原因记录，不另设状态列。**Done 只移动 Section，不点击 Todoist 的「完成任务」操作；卡片 `checked=false` 必须保留可见以便去重与审计。**
+
+### 独立 Issue 的零上下文执行合同
+创建/更新 Issue 前先核对最新默认分支、开放/历史 Issue、PR、分支、代码、资产 ID 和规范，优先复用已存在任务；无任务才创建。每个 Issue 完整填写以下十项（无适用内容写明「不适用」，未经核实写「待核实」）：
+1. **背景**：真实问题和业务/技术原因。
+2. **目标**：唯一可独立交付的预期效果。
+3. **当前状态**：已实现能力、当前仓库/commit/代码和遗留问题。
+4. **修改范围**：现有模块、真实文件路径、页面、接口、数据库/Schema；标明禁止改动的共同文件。
+5. **具体要求**：输入输出、业务流程、交互、边界和失败/取消处理，不使用历史聊天代词。
+6. **技术约束**：遵守项目已有架构/规范、复用项目代码及合法开源方案、兼容和权限要求。
+7. **依赖关系**：父子 Issue、前置任务、关联 PR、需求/技术合同，明确何时解锁。
+8. **验收标准**：逐条真实可失败/可检查的 `- [ ]`；父 Issue 用 checkbox 引用必要子 Issue。
+9. **测试要求**：执行命令、手动场景、预期与失败判定；确实未执行则记 `NOT RUN`。
+10. **交付要求**：分支/PR 或研究证据、Commit、测试日志/截图/审查人、Issue checkbox 与 Todoist 状态回写。
+**发布任务前零上下文自检**：一个完全不了解对话的 AI，能否只凭当前代码与 Issue 完整定位文件、判断依赖、实施、运行测试并客观验收？不满足保持 Backlog 并补全；不允许「按之前讨论」「和上次一样」等缺省要求。
+
+### 拆分、依赖、并行和任务防重
+每个低耦合、可独立验收的小交付建立一个子 Issue + 一张 Todoist 卡，不捆绑无关目标，也不过度拆分不可独立验证的细枝。父 Issue 用 checkbox 指向真实子 Issue，全部必要子项完成前不得关闭；明确前置 Issue 与共享 API、Schema、存档格式、素材 ID 的冻结/签收顺序。独立工作可使用不同对话和隔离 worktree 并行，**同一文件、地图、manifest、公共契约禁止竞争写入**；依赖 ART 的 CODE 仅等待其所需素材，不阻塞无关工作。已完成/重复 Issue 与已合并代码不得重新开发。
+
+### 唯一领取流程（Ready → In Progress）
+1. **实时读取正式 Todoist 看板**，只考虑 Ready 中未被领取的卡片，阅读其 GitHub Issue 的十项内容和 checkbox。
+2. 检查最新 GitHub 默认分支、工作树、所有关联 PR/分支/审查与依赖，确认无持有人、无完成证据、无重叠文件或现存阻塞。关键事实不可核实时保持 Blocked/Backlog，不自认 Ready。
+3. **再次读取同一 Todoist 卡片并确认仍为 Ready**；将该卡移动到 In Progress，**立即回读相同卡片**，核对 project/section、仍未被 Todoist `complete`、同一 Issue 没有第二张卡。
+4. 再查竞争认领、活跃分支及文件权属；在对应 GitHub Issue 记录领取者/对话标识、UTC 时间、基线 SHA、现有或新分支、准确任务/文件/依赖/验证方式。**不强制使用 Todoist 原生 assignee**，其存在与否都不能替代 Section 领取。没有完整回读确认，禁止编辑业务文件。
+5. **并发事实**：Todoist Section 移动与回读不是原子互斥锁；多个 AI 同时读取 Ready 可能竞争。检测到双领、回读不一致或同文件活跃 PR 时立即停工核对、在 Issue 记录并协调唯一执行者；不为了普通认领另造复杂分布式锁。
+6. 中断或交接时记录实际交付、Commit/PR、剩余 TODO 和恢复条件，在 Todoist 移至 Blocked 或经原执行者确认释放回 Ready，回读核实；其他对话不得从 In Progress/In Review/Blocked/Done 直接抢占。
+
+### 实时状态、验收和关闭
+- **Backlog → Ready**：十项 Issue 资料齐全、唯一、边界明确、依赖解决且无人开发；迁移旧任务默认 Backlog，不自动把未验项标 Ready。
+- **In Progress**：每完成一项验收 TODO 立即更新 GitHub Issue checkbox、对应 Commit/PR 与**实际**测试结果；失败或未验保持未勾，同时同步必要的 Todoist 状态。
+- **In Review**：PR 已创建或无需 PR 的研究成果已提交；Todoist 移到 In Review，并回写 Issue 里的 PR 链接、验证范围/未验项。
+- **Blocked**：Todoist 移到 Blocked，Issue 写原因、受影响文件/依赖、已做证据和恢复条件；未经核对不能由其他 AI 接手。
+- **Done**：所有必要 TODO 勾完、PR 已合并、真实测试/人工签收通过、无关键阻塞、GitHub Issue/PR/Todoist 相互一致；将 **Todoist 卡片移动到 Done Section（不点击完成）**，回读卡片仍可见，然后关闭符合验收条件的 GitHub Issue 并更新父子链接；纯研究任务以 Issue 内独立验收证据替代无意义 PR。部分完成不能 Done。
+- 若两个系统状态不一致，保留卡片和 Issue，在 Issue 记恢复路径，必要时 Blocked；不得虚报完成。**GitHub Issue 与 Todoist 最新实时结果**优先于聊天摘要和旧 handoff。
+
+### 迁移引导例外
+仅限首次建立/调整本仓库 Todoist Board 和修改协作规范，复用 [迁移 Issue #120](https://github.com/natefox2017/qingfeng/issues/120) 记录真实操作。先确认没有同类活跃 PR/领取，再执行、留痕和测试；正式 Board 验证后业务任务仍严格遵守 Ready 领取，**引导例外不得外溢到游戏开发**。
 
 ## 开工前的实时核实
 处理任何项目任务，先以**当前工作树和 GitHub 实时状态**为准；旧交接、聊天摘要、历史 SHA 只可用于定位线索，不能直接作为现状依据。
@@ -43,7 +79,7 @@
 3. 无关 ART/代码可并行，依赖图的正式接入等待对应资产；物理测试可用明确夹具，夹具不是最终画面。不要复制第二套库存、时钟或状态中心。
 
 ## 开始一个任务
-1. **先从真实 GitHub Projects v2 Kanban 的 Ready 卡片领取**，按上文协议验证唯一 owner、写 Issue 认领回执并回读；不可直接从 Issue 评论或父 checkbox 认领。
+1. **先从正式 Todoist Board 的 Ready Section 领取**，按上文协议移动到 In Progress 并回读、确认无竞争、在 GitHub Issue 写领取回执；不可绕过 Board 以 Issue 评论/标签/父 checkbox 或 GitHub Projects 替代。
 2. 阅读 [外部依据](docs/references.md)，核对适用的官方工具 schema/版本；选可复用原生能力，不以以前自己堆出的流程作依据。
 3. 先确认任务依赖与文件所有权；发现未冻结共享契约、已有 PR 正在改同一核心文件或 Review Thread 未处理时，先协调并串行，不抢写。
 4. 实现过程中只在本任务边界内修改；需要跨边界时先更新依赖和持有人，不把“顺手修”扩成隐式第二任务。
@@ -60,7 +96,7 @@
 新代码以组合为主；不创建 Candidate/Trial/Current 继承链，不预造空 Manager 或多厂商抽象层。
 
 ## 提交、验证与完成
-默认普通非 Draft PR；一项可回滚能力一个 PR。从最新 main 开分支，不 force push，不覆盖他人工作。PR 填真实入口、命令、结果、来源、未验项与回退。
+默认普通非 Draft PR；一项可回滚能力一个 PR。先确认 Todoist 领取，再从最新默认分支创建独立分支，不 force push，不覆盖他人工作。PR 填真实入口、Issue 与 Todoist 卡、命令、结果、来源、未验项与回退；PR 后同步 In Review，合并并验收后才同步 Done。
 
 仓库的 `repository-policy`、auto-merge 或其他 GitHub 自动化只是合并机制，**不是验收证据**。只有本任务要求的运行验收、人工审查和必要证据齐全后，才允许合并 PR 或关闭 Issue；如果某个自动化会在证据齐全前自动合并，应先阻止或调整该合并路径，而不是让自动化替代验收。
 
