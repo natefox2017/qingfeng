@@ -1,25 +1,24 @@
-## 任务与边界
-Issue / task_id / base_sha：
-本PR交付一个什么能力；文件所有权：
+## 任务与领取来源
+- GitHub 仓库 / Issue / 稳定 Task ID：
+- GitHub Issue URL（唯一任务和 TODO 来源）：
+- [晴风谷正式 Todoist Board](https://app.todoist.com/app/project/6hj76M7Ghj5pR3xm) 中对应卡片 URL 或 task ID：
+- 领取前 Ready、转移 In Progress 和实际回读证据；未能领取写阻断：
+- 最新默认分支 SHA / 本分支 / 影响文件与活跃 PR 去重：
 
 ## 实现与来源
-官方/开源来源、版本、许可、PixelLab素材/费用授权：
-字段/状态/保存/入口变更：
-
-## Kanban 领取与回写核对
-- [ ] 关联唯一原子 Issue（Task ID / #号）；该卡确实存在于 Projects v2
-- [ ] 开工前从 Ready 看板领取，留下唯一 assignee + 对话标识 + baseline SHA + 文件边界，回读无冲突
-- [ ] 本 PR 与已有分支/PR 不重叠；若 Board 未启用/不可读则标阻断，不冒充已领取
-- [ ] 合并与真实验收后才在 Issue 勾选 TODO 并同步卡片为 Done；未验时保持 In Review/Blocked
+唯一交付能力、真实改动文件、对外接口/状态/存档影响：
+使用官方/开源资源、版本和许可；PixelLab 生成与费用授权（若适用）：
 
 ## 实际验证
-命令、退出码、原始日志、正常与失败路径：
-原生/导出/真实服务各自证据：
+执行命令、退出码、原始日志、正常/失败/取消/保存测试：
+Godot 原生截图、导出/真实服务、人工审查的实际证据或 NOT RUN：
 
-## 未验与回退
-未执行或失败的内容：
-回退且不覆盖用户数据的方法：
+## 状态回写与未验事项
+- [ ] 已关联 GitHub Issue，必要验收 TODO 实时回写，列明尚未完成条目。
+- [ ] PR 创建后将 Todoist 卡移入 **In Review** 并回读；若无真实权限/阻塞则在 Issue 中说明，不能冒充成功。
+- [ ] **仅 PR 合并且必要验收通过后**将 Todoist 卡移动到 **Done** Section（不调用 Todoist complete），回读确认可见并 `checked=false`，再关闭 GitHub Issue。
+- [ ] 跨任务文件、分支及当前活跃 PR 无重复修改/竞争领取。
+- [ ] 没有密钥、私人存档及未经许可的资产；未运行测试不冒充通过。
 
-- [ ] 只向natefox2017/qingfeng提交，未导入旧历史/代码/图片
-- [ ] 没有密钥、权限下载URL或私人存档
-- [ ] 结果与证据对应当前head，非Draft；不以文档检查宣称游戏完成
+## 回退与风险
+未执行或失败的内容、恢复条件与不覆盖用户数据的回滚：
