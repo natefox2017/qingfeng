@@ -14,7 +14,7 @@
 | 8 | [参考与取舍](references.md) | 实际参考项目和官方能力；为什么采用或不采用 |
 | 9 | [仓库身份](repository.md) | 唯一 remote、Notion、历史边界、凭据隔离 |
 
-开发任务、Bug、领取、进度、测试结果与临时交接**仅由 [Linear 晴风谷项目](https://linear.app/gengyun/project/晴风谷-qingfeng-development-747beb5958f6) 管理**，实现证据通过关联 GitHub PR/Commit/CI；Markdown 不维护第二套清单。稳定字段与资产契约仍在唯一长期规范里；旧 `docs/tasks.json` 只因脚手架检查兼容保留，不是有效任务源。
+开发任务、Bug、领取、进度、测试结果与临时交接**仅由 [Linear 晴风谷项目](https://linear.app/gengyun/project/晴风谷-development-747beb5958f6) 管理**，实现证据通过关联 GitHub PR/Commit/CI；Markdown 不维护第二套清单。稳定字段与资产契约仍在唯一长期规范里；旧 `docs/tasks.json` 只因脚手架检查兼容保留，不是有效任务源。
 
 [N05运行基础](runtime_foundation.md)记录已实现的启动、移动及取消/输入生命周期；其余玩法/展示接口仍是开发合同，不是假称已存在的 API。角色身份、精确平衡与最终美术须在对应任务的数据和样板中落定。
 
