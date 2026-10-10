@@ -1,8 +1,8 @@
 # 开发流程与 Agent 协作
 
-唯一[总任务 #1](https://github.com/natefox2017/qingfeng/issues/1)。[任务登记](tasks.json)只保存稳定身份/合同引用，不承载领取或开发进度；各 TODO 完成证据在 GitHub Issue，**领取和阶段状态只由 [正式 Todoist Board](https://app.todoist.com/app/project/6hj76M7Ghj5pR3xm) 管理**。六栏目、Ready 领取/回读、Done 保留可见卡片及零上下文 Issue 标准统一以 [AGENTS.md](../AGENTS.md) 为准。
+**唯一任务入口：** [晴风谷 Linear Development](https://linear.app/gengyun/project/晴风谷-qingfeng-development-747beb5958f6)；项目总入口 GEN-42、第一章 GEN-43、管理迁移 GEN-45。任务、Todo、Bug、依赖、QA/验证和状态/领取全部记录在 Linear Issue；GitHub 只保存实际代码、PR/Commit/CI 与历史 GitHub #1/#84/#120 溯源。Notion/Markdown 只维护长期规格，不重复任务表。
 
-**记录边界**：Notion/产品规格只在用户确认的需求、设计或验收目标改变时更新；Bug、修复、重构、优化、阻塞、测试与日常进度全部写进对应 GitHub Issue，代码与验证放关联 PR。需求未变时不改文档、不新建改动总结或平行检查清单。仅稳定跨模块接口/存档合同真实变化时，最小修改对应唯一契约文件。以 [AGENTS.md](../AGENTS.md) 的记录边界为准。
+**当前状态限制：** Team GEN 实时尚缺 Ready 和 Blocked 工作流状态；必须配置并回读前不能从 Todo 代替 Ready 领取。旧任务默认 Backlog，存在竞争/旧 PR 时标 `QFG-Blocked`（非真正 Blocked status），不允许重复开发。详细的六列和零上下文 Issue 规则以 [AGENTS.md](../AGENTS.md) 为准。
 
 ## 从成熟做法到本项目
 [参考](references.md)中的图块编辑/共享场景、游戏输入与慢请求分离，转成三个规则：布局先在引擎确定；素材按可复用组件交付；玩家可操作的纵向切片短周期合入。AI Town是技术参考，不把它说成商业农场成品。
@@ -18,10 +18,10 @@
 - UI：只调用公开命令，并显示领域真实状态；正式皮肤、图标、字体素材按具体依赖解锁，不伪造游戏画面验收。
 - QA：真实 Godot 原生运行、回归、导出和人工签收分别记录，不能把 CI green/包装器输出当作视觉或功能验收。
 
-旧 `docs/tasks.json` **目前仍由 `tools/check_scaffold.py` 作为历史脚手架检查输入读取**，保留以免本次协作规范修改破坏已有检查；它不是有效任务源、领取/状态真值，也不能因此复制或执行历史任务。现行范围、前置依赖、TODO 与实际文件 owner 以最新 **GitHub Issue** 为准；可领取状态只在 [正式 Todoist Board](https://app.todoist.com/app/project/6hj76M7Ghj5pR3xm)。
+旧 `docs/tasks.json` **目前仍由 `tools/check_scaffold.py` 作为历史脚手架检查输入读取**，保留以免本次协作规范修改破坏已有检查；它不是有效任务源、领取/状态真值，也不能因此复制或执行历史任务。现行范围、依赖、TODO、负责人和验收只以**最新 Linear Issue** 为准；可领取状态只在 [Linear Board](https://linear.app/gengyun/project/晴风谷-qingfeng-development-747beb5958f6)。GitHub PR/文件/提交用作可核验实现证据。
 
 ## 每个小步骤
-**Todoist Ready 卡片 → 回读 In Progress → GitHub Issue 记录最新 SHA/分支/文件/依赖** → 阅读对应官方能力与依赖 → 提交最小合同/可失败测试 → 实现并实时勾 GitHub Issue TODO → 正常/失败/取消/保存验证 → 适用原生画面 → 普通 PR，Todoist In Review → 合入且验收 → Todoist Done Section（不得点击完成）、回读、关闭 GitHub Issue。
+**Linear Ready Issue → 分配唯一 assignee、移 In Progress 并回读（未配置 Ready 则阻断）→ Linear Issue 记录 SHA/分支/文件/依赖** → 阅读官方能力和旧代码 → 最小合同/可失败测试 → 开发并实时勾 Linear Checkbox → 正常/失败/取消/存档验证 → 普通 PR 关联 Linear ID → In Review → 合入且必要验收通过 → Linear Done。
 依赖最终图的场景接入等待对应图，领域命令和物理夹具可独立做。pending生成期间处理无冲突的代码/数据，不忙轮询也不重复下单。
 
 ## PR规则
@@ -35,8 +35,8 @@ python3 tools/check_scaffold.py
 python3 -m unittest discover -s tools/tests -v
 ```
 上面的命令仍可按需本地执行；`python3 tools/runtime.py test` 保留为专项/发布回归工具，但不再作为每个 PR 的 GitHub Actions 门。scaffold没有可启动工程；preproduction有新素材但未接正式运行；foundation须有固定引擎版本、project.godot和正式main_scene；playable必须N11完成完整原生与导出验收。
-阶段由 project.json 唯一声明；阶段进展、测试数字和问题处理只更新 GitHub Issue/PR，不例行同步 README/Notion。不能把工具测试数字当新游戏回归。变更交接、Blocked 恢复条件、真实测试和下一步动作只写在对应 GitHub Issue/PR，不再用 Markdown 模板建平行交接记录。
+阶段由 project.json 唯一声明；阶段进展、测试数字、Bug、Blocked 原因、临时交接和下一步动作写入对应 Linear Issue，实际代码/CI 证据放 GitHub PR，不例行同步 README/Notion。不能把工具测试数字当真实游戏回归。
 
 ## 执行入口
 
-真实独立开发任务、父子依赖、PR 与验收证据以 [GitHub Issues](https://github.com/natefox2017/qingfeng/issues)（总入口 [#1](https://github.com/natefox2017/qingfeng/issues/1)、第一章 [#84](https://github.com/natefox2017/qingfeng/issues/84)）为准；AI 只能从 [正式 Todoist Board](https://app.todoist.com/app/project/6hj76M7Ghj5pR3xm) 的 Ready 卡领取。这里不再维护 N01–N11 的平行任务清单。
+[Linear 晴风谷项目](https://linear.app/gengyun/project/晴风谷-qingfeng-development-747beb5958f6) 是唯一任务、领取和验收入口；关联 GitHub PR 时使用 `GEN-<序号>` 的精确 Issue ID。旧 GitHub Issues #1/#84 的 Markdown Checkbox 和 `docs/tasks.json` 仅作历史/检查器兼容输入，**不再用于认领、新增 TODO 或宣称完成**。无任务工作必须先在 Linear 新建独立 Issue，未可零上下文实施前保持 Backlog。
