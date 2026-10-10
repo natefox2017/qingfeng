@@ -1,0 +1,20 @@
+extends SceneTree
+const VIEW = preload("res://ui/pages/menu_view.gd")
+func _initialize(): run.call_deferred()
+func run():
+	root.get_node("AudioManager").shutdown_audio()
+	var view = VIEW.new()
+	root.add_child(view)
+	view.show_page("settings",{"settings":{"master_volume":0.65,"is_fullscreen":false,"is_vsync_enabled":true},"error":""})
+	for size in [Vector2i(1280,720),Vector2i(1920,1080),Vector2i(1366,768)]:
+		root.size=size
+		await process_frame
+		await RenderingServer.frame_post_draw
+		var label = view.body.find_child("VolumeValue",true,false)
+		assert(label.text=="65%" and label.get_line_count()==1)
+		var image=root.get_texture().get_image()
+		image.save_png("/workspace/shared/qingfeng-qa-4cc6c2c/final-native/settings_%dx%d_content_%dx%d.png" % [size.x,size.y,image.get_width(),image.get_height()])
+		print("SETTINGS_NATIVE ",size," lines=",label.get_line_count()," width=",label.size.x)
+	view.queue_free()
+	await process_frame
+	quit(0)

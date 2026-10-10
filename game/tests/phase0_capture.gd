@@ -2,7 +2,7 @@ extends SceneTree
 ## Phase0 actual-renderer capture: new game -> playable farm at 1280 and 1920.
 ## Does not use the legacy collision fixture or claim art approval.
 const MAIN = preload("res://app/main.tscn")
-const FARM_CELL_COUNT := 6144
+const FARM_CELL_COUNT := 7168
 var output_dir := ""
 
 func _initialize() -> void:
@@ -54,7 +54,7 @@ func run() -> void:
 	var player := app.room.get_player() as CharacterBody2D
 	var sprite := player.get_node_or_null("Sprite2D") as Sprite2D
 	if ground == null or ground.tile_set == null or ground.get_used_cells().size() != FARM_CELL_COUNT:
-		_fail("missing native 6144-cell authored TileMapLayer")
+		_fail("missing native 7168-cell authored TileMapLayer")
 		return
 	if sprite == null or sprite.texture == null or sprite.texture.get_size() != Vector2(96, 128):
 		_fail("missing four-direction player atlas")

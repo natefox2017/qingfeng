@@ -1,0 +1,185 @@
+{
+  "date": "2026-10-08",
+  "tool_server": "PixelLab MCP Server 0.2.0; official https://api.pixellab.ai/mcp",
+  "reference_path": "art/approved/refs/world_chapter1_map.png",
+  "reference_sha256": "ba35eef32eb0a49a5e50ad8ec4498148845c8f4065d3695b315c4ea1286bddd7",
+  "user_attachment_path": "/Users/apple/.codex/attachments/4f0908bb-13a2-4e4f-92f3-7ba6d58332d0/image-1.png",
+  "user_attachment_sha256": "ba35eef32eb0a49a5e50ad8ec4498148845c8f4065d3695b315c4ea1286bddd7",
+  "reference_crops_px": {
+    "gate": [
+      920,
+      0,
+      1078,
+      132
+    ],
+    "market": [
+      731,
+      49,
+      856,
+      120
+    ],
+    "townhouse": [
+      782,
+      0,
+      920,
+      85
+    ],
+    "plaza": [
+      772,
+      136,
+      823,
+      160
+    ],
+    "public_props": [
+      620,
+      160,
+      1100,
+      370
+    ]
+  },
+  "input_note": "Crop images are reference only. Initial map-object/pixflux init inputs were resized nearest to requested native canvas; output sprites never rescaled. Final standalone house uses actual mother-crop palette reference. Plaza/furniture exact workbench recipes authored after viewing mother-crop; not extracted scenery sprites.",
+  "requests": [
+    {
+      "tool": "create_map_object",
+      "job_id": "ba9560c8-8df5-448d-b51e-184767ab9eec",
+      "request_hash": "6b4fcb8b14da4103add4bf3a1b46ecec6b1679324230337917824a2b102a614e",
+      "parameters": {
+        "description": "Single wide medieval limestone town entrance arch with two stone piers and square crenellations, cream gray block masonry, red gold banner no symbol or text, empty open transparent central passage, orthographic front three-quarter farming RPG view. Isolated crisp native pixel sprite hard pixel clusters NO illustration NO antialiasing NO scenery. Match architectural proportions and palette in supplied reference.",
+        "view": "low top-down",
+        "outline": "selective outline",
+        "shading": "basic shading",
+        "detail": "medium detail",
+        "inpainting": "{\"type\": \"rectangle\", \"fraction\": 0.95}",
+        "reference_input_path": "art/sources/chapter1/town/gate_submitted_reference.png",
+        "reference_input_sha256": "e806084665f7ac83e494a471889daefe21eb130299e83e1115f0c4f9945a9a91",
+        "reference_role": "background_image"
+      },
+      "cost_generations_reported": null,
+      "cost_note": "map-object response does not expose charge; account delta shared with other tasks is not attributable",
+      "status": "rejected: rounded arch lacks town wall/crenellations, environment pixels",
+      "raw_source_path": "art/sources/chapter1/town/gate_raw.png",
+      "raw_source_sha256": "f553b9ca2dc40a1ca2cb6af09af5eaa46175b7af97e6e47660698ab156c3f26a"
+    },
+    {
+      "tool": "create_map_object",
+      "job_id": "25da47eb-024b-4398-8fc3-c466a23eb75a",
+      "request_hash": "f6d7362d0a15af831e97d4a138dedac43906a3455ee8a7581093c50f1c669dee",
+      "parameters": {
+        "description": "Single blue and white striped canvas market awning with wooden posts and wooden empty counter, warm honey wood. Isolated crisp native pixel sprite orthographic front low top-down cozy farming RPG. Match reference shape and colors. NO text NO scenery NO illustration NO soft shading.",
+        "view": "low top-down",
+        "outline": "selective outline",
+        "shading": "basic shading",
+        "detail": "medium detail",
+        "inpainting": "{\"type\": \"rectangle\", \"fraction\": 0.95}",
+        "reference_input_path": "art/sources/chapter1/town/market_submitted_reference.png",
+        "reference_input_sha256": "b3438efa7a9c042b5065aad45a589dfa451982c28d9f352a905d4a7ba552d508",
+        "reference_role": "background_image"
+      },
+      "cost_generations_reported": null,
+      "cost_note": "map-object response does not expose charge; account delta shared with other tasks is not attributable",
+      "status": "proposed; blue-white standalone source",
+      "raw_source_path": "art/sources/chapter1/town/market_raw.png",
+      "raw_source_sha256": "8449be7193244f2ffa919a3e316d51529fdf0ae753af6fc0cfc02800797f95dc"
+    },
+    {
+      "tool": "create_image_pixflux",
+      "job_id": "29c5d3ba-4650-4dff-ad29-8efdad296a4c",
+      "request_hash": "790ed79339e32773171487bbf54b682613535ad81c6cb7e82c65fdfba9aa7389",
+      "parameters": {
+        "description": "Wide squat limestone medieval town gate, rectangular crenellated upper wall with small plain red gold hanging banner, large rounded open central passage supported by two square stone piers. Match supplied architectural reference, entire isolated building fits in canvas with margin. Transparent inside arch opening and outside sprite, no floor no bushes no scenery. Crisp native pixel art readable stone blocks top-down three quarter cozy farming RPG no smooth shading no illustration.",
+        "width": 64,
+        "height": 64,
+        "no_background": true,
+        "view": "low top-down",
+        "outline": "selective outline",
+        "shading": "basic shading",
+        "detail": "medium detail",
+        "init_image_strength": 100,
+        "reference_input_path": "art/sources/chapter1/town/gate2_submitted_reference.png",
+        "reference_input_sha256": "e806084665f7ac83e494a471889daefe21eb130299e83e1115f0c4f9945a9a91",
+        "reference_role": "init_image_base64"
+      },
+      "cost_generations_reported": 1,
+      "cost_note": "1 generation explicitly returned",
+      "status": "repaired: crop/scenery/sand removed; crenellations completed; pier repaired",
+      "raw_source_path": "art/sources/chapter1/town/gate2_raw.png",
+      "raw_source_sha256": "1ff7863b563ed5a491c536f97465adee884f343cd3350675f0bfe2cd1477f718"
+    },
+    {
+      "tool": "create_image_pixflux",
+      "job_id": "e5f13ccd-dd2c-4da4-8cff-06fc822ce9df",
+      "request_hash": "ff47ca9e91f925996b0e0011aeb0b1d4f4a90d6ba337acfcf8273199c61050ea",
+      "parameters": {
+        "description": "Single cozy cream plaster town house with honey brown timber framing and steep red tile roof, blue glass windows and wooden door, stone front step. Match supplied building reference. Full building isolated on transparent background, orthographic front low top-down native crisp pixel art farming RPG, no text no scenery no antialiasing no illustration.",
+        "width": 96,
+        "height": 96,
+        "no_background": true,
+        "view": "low top-down",
+        "outline": "selective outline",
+        "shading": "basic shading",
+        "detail": "medium detail",
+        "init_image_strength": 100,
+        "reference_input_path": "art/sources/chapter1/town/townhouse_submitted_reference.png",
+        "reference_input_sha256": "bb68bc409b5ba833d7ab903610fc35c4fa8cc88285aa2fd8da03cb2604d46a75",
+        "reference_role": "init_image_base64"
+      },
+      "cost_generations_reported": 1,
+      "cost_note": "1 generation explicitly returned",
+      "status": "rejected: clipped house with market/scenery",
+      "raw_source_path": "art/sources/chapter1/town/townhouse_raw.png",
+      "raw_source_sha256": "3ee57069126c6d2e8b31172565dd363dc3a39e278d05af350cdaa6b2db27514e"
+    },
+    {
+      "tool": "create_image_pixflux",
+      "job_id": "e3c0af48-0f06-4f34-a534-4110bc69fc05",
+      "request_hash": "50a5d5cb7c62463f6bbdb6d034204b7fe00778cd1ffacd7ba36f8e12ff171b8f",
+      "parameters": {
+        "description": "One COMPLETE standalone cream plaster timber-frame small townhouse, steep red tiled gabled roof, brown wooden central door, two blue glass windows, chimney, stone step. Entire roof tip and walls visible with 5px clear margin. Match reference cream walls red roof wood framing palette, front-facing orthographic low top-down farming RPG. Native crisp pixel art, coherent readable hard clusters, NO shops or market stalls NO trees NO scenery NO adjacent houses NO cropped edges NO smooth shading NO text.",
+        "width": 96,
+        "height": 96,
+        "no_background": true,
+        "view": "low top-down",
+        "outline": "selective outline",
+        "shading": "basic shading",
+        "detail": "medium detail",
+        "reference_input_path": "art/sources/chapter1/town/townhouse_final_submitted_reference.png",
+        "reference_input_sha256": "e03c9e65dd98842c366c312946a683cd5c7a80204943a609955239cc9f4c3191",
+        "reference_role": "color_image_base64"
+      },
+      "cost_generations_reported": 1,
+      "cost_note": "1 generation explicitly returned",
+      "status": "proposed after same-source palette cleanup; view match awaiting review",
+      "raw_source_path": "art/sources/chapter1/town/townhouse_final_raw.png",
+      "raw_source_sha256": "90bf08867d8f5beb7876c975bdd77e3bf79f18dd5cb2022ea4f020eaadd91576"
+    }
+  ],
+  "workbench_outputs": {
+    "plaza_draw": "1da6c68e-7c15-4454-b2a5-d5bd91001f36",
+    "props_draw": "966ed56f-d21a-4777-866f-2a0e14c3a5a6",
+    "gate_repair": "48005806-86c3-4bd1-acf8-ef2ccca4c573",
+    "gate_clean": "a70be994-1751-4190-b217-2c7a92e9efd8",
+    "gate_pier": "f9aca3a2-70b1-49d2-9d31-7d668ced0347",
+    "market_orange": "f46eba40-0bed-420a-91c4-eab369d3b093",
+    "house_palette": "fe86a868-d2d4-4345-bad7-0d97e023c501"
+  },
+  "workbench_cost": "Free exact subscriber pixel editing/drawing; no pro or credit purchase",
+  "budget": {
+    "authorized_max_generations": 12,
+    "paid_requests": 5,
+    "explicitly_reported_generations": 3,
+    "unreported_charge_requests": 2,
+    "account_delta_not_used_for_attribution": true
+  },
+  "license_note": "Original project/user-provided reference. PixelLab output subject to https://www.pixellab.ai/termsofservice ; no CC0/exclusive-copyright claim.",
+  "latest_priority_note": "All five paid requests predated coordinator AI-first override. Existing results preserved and repaired per latest instruction; no new paid calls afterwards. Free paving/public-prop recipes were already authored before software-only-repair clarification; retained as proposed review candidates, not engineering placeholders or approved replacements.",
+  "review_status": "proposed",
+  "not_verified": [
+    "human visual acceptance",
+    "final town footprint and placement",
+    "portal/collision/Y-sort in world",
+    "full chapter route",
+    "export"
+  ],
+  "terms_checked_on": "2026-10-08",
+  "terms_last_updated": "2025-11-23"
+}

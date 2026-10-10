@@ -1,0 +1,780 @@
+{
+  "schema_version": 1,
+  "world_tile_px": 16,
+  "asset_review_status": "proposed",
+  "assets": [
+    {
+      "asset_id": "asset.object.chapter1.apple_tree",
+      "runtime_path": "game/assets/chapter1/objects/apple_tree.png",
+      "source_path": "art/sources/chapter1/objects/apple_tree_generated.png",
+      "source_sha256": "e86d2d21ad52a65674c717ab4870cb84231a1d7c85e31c8494e0bb7bf771591a",
+      "sha256": "d71c18cd80abae5025b4ff51e15650ca3f9981538f9cab15061336e4b7377e13",
+      "size_px": [
+        96,
+        128
+      ],
+      "anchor_px": [
+        48,
+        126
+      ],
+      "source_crop_px": [
+        11,
+        14,
+        101,
+        128
+      ],
+      "crop_offset_px": [
+        3,
+        12
+      ],
+      "job_id": "b4d4891c-4057-4e65-8ac7-c60a7a775560",
+      "reference_path": "art/sources/chapter1/objects/reference_apple_tree.png",
+      "reference_sha256": "2e1167b83599bb4ca680daeabac28538e12d7483a37147851e1daa0a288765b9",
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_color_count": 79,
+      "review_status": "proposed",
+      "reviewer": null,
+      "world_scale": 1,
+      "collision_owner": "WORLD; root footprint authored in scene; no collision baked into image",
+      "usage": "environment_only",
+      "license_note": "PixelLab generated under active account; not CC0; input project approved original map",
+      "drive_url": null,
+      "processing": "tight alpha crop, integer centering with 2px bottom margin; no resampling",
+      "layer_split_y_px": 99,
+      "layers": {
+        "root": "game/assets/chapter1/objects/apple_tree_root.png",
+        "crown": "game/assets/chapter1/objects/apple_tree_crown.png"
+      },
+      "layer_note": "Exact disjoint scanline split, recompose at same integer anchor; crown sprite uses world canopy depth, root sprite root YSort. Inspect cutoff before final acceptance."
+    },
+    {
+      "asset_id": "asset.object.chapter1.bush",
+      "runtime_path": "game/assets/chapter1/objects/bush.png",
+      "source_path": "art/sources/chapter1/objects/bush_generated.png",
+      "source_sha256": "1e2635e83286601493ed5c739da84b700945f47864ef4ee4929ffc9317739fee",
+      "sha256": "dbb83abbad89996d57db68d512ce7a23ffb18623aba0f72e4e149c88f2cc6a73",
+      "size_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        62
+      ],
+      "source_crop_px": [
+        11,
+        8,
+        71,
+        67
+      ],
+      "crop_offset_px": [
+        2,
+        3
+      ],
+      "job_id": "dc556a64-350e-45eb-94c6-a45acbbb8946",
+      "reference_path": "art/sources/chapter1/objects/reference_bush.png",
+      "reference_sha256": "70dff8c45ab8f8925634569b2e54e0de608ada0ef0d38fca72d085e4c3054fe7",
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_color_count": 80,
+      "review_status": "proposed",
+      "reviewer": null,
+      "world_scale": 1,
+      "collision_owner": "WORLD; root footprint authored in scene; no collision baked into image",
+      "usage": "environment_only",
+      "license_note": "PixelLab generated under active account; not CC0; input project approved original map",
+      "drive_url": null,
+      "processing": "tight alpha crop, integer centering with 2px bottom margin; no resampling"
+    },
+    {
+      "asset_id": "asset.object.chapter1.cabbage",
+      "runtime_path": "game/assets/chapter1/objects/cabbage.png",
+      "source_path": "art/sources/chapter1/objects/cabbage_generated.png",
+      "source_sha256": "5ff077b10b40f778e6997510d52fe9f22abfeb921cec1f661260551f3ea30547",
+      "sha256": "4a3ca119b1a3dabe948e2e8d995e410e0de582f446836a472476779f18f55a35",
+      "size_px": [
+        48,
+        32
+      ],
+      "anchor_px": [
+        24,
+        30
+      ],
+      "source_crop_px": [
+        7,
+        7,
+        36,
+        32
+      ],
+      "crop_offset_px": [
+        9,
+        5
+      ],
+      "job_id": "23710cbc-0cf7-468f-b8b6-76c7874a5e3c",
+      "reference_path": "art/sources/chapter1/objects/reference_cabbage.png",
+      "reference_sha256": "f1237ceb52e32f567bc7fad176dc5781e6771c19d4e5f789e1be3a1271a76f32",
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_color_count": 59,
+      "review_status": "proposed",
+      "reviewer": null,
+      "world_scale": 1,
+      "collision_owner": "WORLD; root footprint authored in scene; no collision baked into image",
+      "usage": "environment_only",
+      "license_note": "PixelLab generated under active account; not CC0; input project approved original map",
+      "drive_url": null,
+      "processing": "tight alpha crop, integer centering with 2px bottom margin; no resampling"
+    },
+    {
+      "asset_id": "asset.object.chapter1.cherry_tree",
+      "runtime_path": "game/assets/chapter1/objects/cherry_tree.png",
+      "source_path": "art/sources/chapter1/objects/cherry_tree_generated.png",
+      "source_sha256": "65673bc3cb652beac62a9ee6560f23ce47d6c52f6695f578643ef799e5b10c4e",
+      "sha256": "8605cdef0cff034219a9b63eeebb8d95a2d42a3abbc9ded5918652c6052fcbe4",
+      "size_px": [
+        112,
+        112
+      ],
+      "anchor_px": [
+        56,
+        110
+      ],
+      "source_crop_px": [
+        13,
+        13,
+        116,
+        113
+      ],
+      "crop_offset_px": [
+        4,
+        10
+      ],
+      "job_id": "95982f4d-ffa3-4d18-8902-2446ff7a751a",
+      "reference_path": "art/sources/chapter1/objects/reference_cherry_tree.png",
+      "reference_sha256": "e2ab2555e0252fd86a97d144cc2c90acc3561e3ed8bb190e925c8a64780e1c98",
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_color_count": 91,
+      "review_status": "proposed",
+      "reviewer": null,
+      "world_scale": 1,
+      "collision_owner": "WORLD; root footprint authored in scene; no collision baked into image",
+      "usage": "environment_only",
+      "license_note": "PixelLab generated under active account; not CC0; input project approved original map",
+      "drive_url": null,
+      "processing": "tight alpha crop, integer centering with 2px bottom margin; no resampling",
+      "layer_split_y_px": 87,
+      "layers": {
+        "root": "game/assets/chapter1/objects/cherry_tree_root.png",
+        "crown": "game/assets/chapter1/objects/cherry_tree_crown.png"
+      },
+      "layer_note": "Exact disjoint scanline split, recompose at same integer anchor; crown sprite uses world canopy depth, root sprite root YSort. Inspect cutoff before final acceptance."
+    },
+    {
+      "asset_id": "asset.object.chapter1.doghouse",
+      "runtime_path": "game/assets/chapter1/objects/doghouse.png",
+      "source_path": "art/sources/chapter1/objects/doghouse_generated.png",
+      "source_sha256": "77b18514137d6994b06a427d6fbaf4c0ae5d5a1010c52637a7ddb860e0f0e5f9",
+      "sha256": "62a761b14379f85f9b1dd29221e232597bdf792eec35bc4bd345378286cd8d08",
+      "size_px": [
+        64,
+        80
+      ],
+      "anchor_px": [
+        32,
+        78
+      ],
+      "source_crop_px": [
+        7,
+        9,
+        63,
+        73
+      ],
+      "crop_offset_px": [
+        4,
+        14
+      ],
+      "job_id": "c3a69535-c0f3-44a3-bb75-1a658b2f028e",
+      "reference_path": "art/sources/chapter1/objects/reference_doghouse.png",
+      "reference_sha256": "b7334f2dea26c50d87878c94d0996505d4d4ad8b6d3ef9c0859c3fb9b3f28a1c",
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_color_count": 79,
+      "review_status": "proposed",
+      "reviewer": null,
+      "world_scale": 1,
+      "collision_owner": "WORLD; root footprint authored in scene; no collision baked into image",
+      "usage": "environment_only",
+      "license_note": "PixelLab generated under active account; not CC0; input project approved original map",
+      "drive_url": null,
+      "processing": "tight alpha crop, integer centering with 2px bottom margin; no resampling"
+    },
+    {
+      "asset_id": "asset.object.chapter1.fence",
+      "runtime_path": "game/assets/chapter1/objects/fence.png",
+      "source_path": "art/sources/chapter1/objects/fence_generated.png",
+      "source_sha256": "2be1a9115abb6182c16f74e9eaa6719e08c78ede85d66299991d3e31d5d37725",
+      "sha256": "a461b8f7dceaa3be7d76bc8bd4fac560901bba2a96eaadde463e5969ae1e191b",
+      "size_px": [
+        80,
+        48
+      ],
+      "anchor_px": [
+        40,
+        46
+      ],
+      "source_crop_px": [
+        11,
+        7,
+        85,
+        46
+      ],
+      "crop_offset_px": [
+        3,
+        7
+      ],
+      "job_id": "d90050b5-56a3-4ffa-8ef0-be1a5d1f7120",
+      "reference_path": "art/sources/chapter1/objects/reference_fence.png",
+      "reference_sha256": "881892d6e466bb788ebc12e07660b76b24c68d854ad942ceb7c620c263c3619a",
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_color_count": 53,
+      "review_status": "proposed",
+      "reviewer": null,
+      "world_scale": 1,
+      "collision_owner": "WORLD; root footprint authored in scene; no collision baked into image",
+      "usage": "environment_only",
+      "license_note": "PixelLab generated under active account; not CC0; input project approved original map",
+      "drive_url": null,
+      "processing": "tight alpha crop, integer centering with 2px bottom margin; no resampling"
+    },
+    {
+      "asset_id": "asset.object.chapter1.pine_tree",
+      "runtime_path": "game/assets/chapter1/objects/pine_tree.png",
+      "source_path": "art/sources/chapter1/objects/pine_tree_generated.png",
+      "source_sha256": "b7da8ab1796e85ba377b15449d786c1c4770c2ddd0906896355d8c307a0d6492",
+      "sha256": "bd3d24f8c79622f0982087d49765c5ad3ba3580b2aad29ec7321e9e80994ccfb",
+      "size_px": [
+        96,
+        128
+      ],
+      "anchor_px": [
+        48,
+        126
+      ],
+      "source_crop_px": [
+        18,
+        16,
+        96,
+        129
+      ],
+      "crop_offset_px": [
+        9,
+        13
+      ],
+      "job_id": "11a6f658-1e2c-4c5c-baf9-92b37562a008",
+      "reference_path": "art/sources/chapter1/objects/reference_pine_tree.png",
+      "reference_sha256": "9bf563471e4515e7341c9e4958b5d7a7f62f9e26b0eaabf67d40e0c8e017fda7",
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_color_count": 77,
+      "review_status": "proposed",
+      "reviewer": null,
+      "world_scale": 1,
+      "collision_owner": "WORLD; root footprint authored in scene; no collision baked into image",
+      "usage": "environment_only",
+      "license_note": "PixelLab generated under active account; not CC0; input project approved original map",
+      "drive_url": null,
+      "processing": "tight alpha crop, integer centering with 2px bottom margin; no resampling",
+      "layer_split_y_px": 99,
+      "layers": {
+        "root": "game/assets/chapter1/objects/pine_tree_root.png",
+        "crown": "game/assets/chapter1/objects/pine_tree_crown.png"
+      },
+      "layer_note": "Exact disjoint scanline split, recompose at same integer anchor; crown sprite uses world canopy depth, root sprite root YSort. Inspect cutoff before final acceptance."
+    },
+    {
+      "asset_id": "asset.object.chapter1.rock",
+      "runtime_path": "game/assets/chapter1/objects/rock.png",
+      "source_path": "art/sources/chapter1/objects/rock_generated.png",
+      "source_sha256": "879a7a13a8a9406c253644b72f7c3452ca6b5382cf9b2f6c863815f32594829b",
+      "sha256": "07b2d38ad04f801e9288594d7929e1c108758de5e5e2080b0aba928e44348b89",
+      "size_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        62
+      ],
+      "source_crop_px": [
+        15,
+        23,
+        64,
+        74
+      ],
+      "crop_offset_px": [
+        7,
+        11
+      ],
+      "job_id": "e9e6dfd3-a227-4683-8cf6-06d3eb1e344d",
+      "reference_path": "art/sources/chapter1/objects/reference_rock.png",
+      "reference_sha256": "de259daca8bed224561755539499e5e0a387da787c066fd4a474d59b118e2c0d",
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_color_count": 34,
+      "review_status": "proposed",
+      "reviewer": null,
+      "world_scale": 1,
+      "collision_owner": "WORLD; root footprint authored in scene; no collision baked into image",
+      "usage": "environment_only",
+      "license_note": "PixelLab generated under active account; not CC0; input project approved original map",
+      "drive_url": null,
+      "processing": "tight alpha crop, integer centering with 2px bottom margin; no resampling"
+    },
+    {
+      "asset_id": "asset.object.chapter1.scarecrow",
+      "runtime_path": "game/assets/chapter1/objects/scarecrow.png",
+      "source_path": "art/sources/chapter1/objects/scarecrow_generated.png",
+      "source_sha256": "53e8e2d00c07fad3fbee228fc6c791e736a3bd78eaf2f187b83205dcea57d2fd",
+      "sha256": "85bb82dd7899c05ab67115e1c43d67d3a9cccc0e92b24bdf1cb60200fb33f743",
+      "size_px": [
+        48,
+        64
+      ],
+      "anchor_px": [
+        24,
+        62
+      ],
+      "source_crop_px": [
+        7,
+        9,
+        48,
+        65
+      ],
+      "crop_offset_px": [
+        3,
+        6
+      ],
+      "job_id": "08dbe53f-0bf7-4682-b90d-b6d58d0debe9",
+      "reference_path": "art/sources/chapter1/objects/reference_scarecrow.png",
+      "reference_sha256": "4945889b6c4dfc84aa154baa9948c09505bd70ec8e71b6855e3b9ecbc4ea24cf",
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_color_count": 51,
+      "review_status": "proposed",
+      "reviewer": null,
+      "world_scale": 1,
+      "collision_owner": "WORLD; root footprint authored in scene; no collision baked into image",
+      "usage": "environment_only",
+      "license_note": "PixelLab generated under active account; not CC0; input project approved original map",
+      "drive_url": null,
+      "processing": "tight alpha crop, integer centering with 2px bottom margin; no resampling"
+    },
+    {
+      "asset_id": "asset.object.chapter1.tool_bench",
+      "runtime_path": "game/assets/chapter1/objects/tool_bench.png",
+      "source_path": "art/sources/chapter1/objects/tool_bench_generated.png",
+      "source_sha256": "6138bafb8ba6a1314a74cb0827a4fce12e784fccb5778370a40add6ce2c25096",
+      "sha256": "e3aaf1651b4836ef3d211fefcb88ba17394bde437cb5aa3bf2241df36d2547a0",
+      "size_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        78
+      ],
+      "source_crop_px": [
+        12,
+        10,
+        103,
+        83
+      ],
+      "crop_offset_px": [
+        2,
+        5
+      ],
+      "job_id": "96165ccf-15fe-4a90-959b-728734b8fb17",
+      "reference_path": "art/sources/chapter1/objects/reference_tool_bench.png",
+      "reference_sha256": "241bdb8f9b5a95184bee1e7f75f9cd4d90c392ac0499e09a8911e1bb5228f3c2",
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_color_count": 32,
+      "review_status": "proposed",
+      "reviewer": null,
+      "world_scale": 1,
+      "collision_owner": "WORLD; root footprint authored in scene; no collision baked into image",
+      "usage": "environment_only",
+      "license_note": "PixelLab generated under active account; not CC0; input project approved original map",
+      "drive_url": null,
+      "processing": "tight alpha crop, integer centering with 2px bottom margin; no resampling"
+    },
+    {
+      "asset_id": "asset.object.chapter1.well",
+      "runtime_path": "game/assets/chapter1/objects/well.png",
+      "source_path": "art/sources/chapter1/objects/well_generated.png",
+      "source_sha256": "fb97f2c027f4698f83f330dd14dede9d23d38bb45cc2e8f0af2fa0af214ca63d",
+      "sha256": "77f995bdfd205318df1c05977bda2e3fc62f7259d9a4eb4aaf8b2a49c57f2510",
+      "size_px": [
+        80,
+        96
+      ],
+      "anchor_px": [
+        40,
+        94
+      ],
+      "source_crop_px": [
+        14,
+        11,
+        76,
+        101
+      ],
+      "crop_offset_px": [
+        9,
+        4
+      ],
+      "job_id": "f0a4b15c-f2d9-4034-99a7-ef468992c17c",
+      "reference_path": "art/sources/chapter1/objects/reference_well.png",
+      "reference_sha256": "2d953f6a1afba127d9686cb81d52bdc255244191e26ecf510c77819c32906757",
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_color_count": 77,
+      "review_status": "proposed",
+      "reviewer": null,
+      "world_scale": 1,
+      "collision_owner": "WORLD; root footprint authored in scene; no collision baked into image",
+      "usage": "environment_only",
+      "license_note": "PixelLab generated under active account; not CC0; input project approved original map",
+      "drive_url": null,
+      "processing": "tight alpha crop, integer centering with 2px bottom margin; no resampling"
+    },
+    {
+      "asset_id": "asset.object.chapter1.fence_post",
+      "runtime_path": "game/assets/chapter1/objects/fence_post.png",
+      "sha256": "e9d0ddc7bf5f8a674314dd2ad92774ac9fa6b85659ea2d97eff8f4fe625f775d",
+      "size_px": [
+        18,
+        40
+      ],
+      "anchor_px": [
+        9,
+        40
+      ],
+      "source_path": "art/sources/chapter1/objects/fence_generated.png",
+      "job_id": "d90050b5-56a3-4ffa-8ef0-be1a5d1f7120",
+      "review_status": "proposed",
+      "usage": "environment_only",
+      "processing": "exact native crop; rails_v rotated 90 degrees; geometry/light requires WORLD review"
+    },
+    {
+      "asset_id": "asset.object.chapter1.fence_rails_h",
+      "runtime_path": "game/assets/chapter1/objects/fence_rails_h.png",
+      "sha256": "e36249e4cb35d8d730acaa59d1a7d7873941fa4a349d3aa12dd45b5d12f200b3",
+      "size_px": [
+        32,
+        20
+      ],
+      "anchor_px": [
+        16,
+        20
+      ],
+      "source_path": "art/sources/chapter1/objects/fence_generated.png",
+      "job_id": "d90050b5-56a3-4ffa-8ef0-be1a5d1f7120",
+      "review_status": "proposed",
+      "usage": "environment_only",
+      "processing": "exact native crop; rails_v rotated 90 degrees; geometry/light requires WORLD review"
+    },
+    {
+      "asset_id": "asset.object.chapter1.fence_rails_v",
+      "runtime_path": "game/assets/chapter1/objects/fence_rails_v.png",
+      "sha256": "6b4212947ffcc7181b9b4ff11d76886cf4f202da1c7cdaedbdb0e20e5223aa1f",
+      "size_px": [
+        20,
+        32
+      ],
+      "anchor_px": [
+        10,
+        32
+      ],
+      "source_path": "art/sources/chapter1/objects/fence_generated.png",
+      "job_id": "d90050b5-56a3-4ffa-8ef0-be1a5d1f7120",
+      "review_status": "proposed",
+      "usage": "environment_only",
+      "processing": "exact native crop; rails_v rotated 90 degrees; geometry/light requires WORLD review"
+    },
+    {
+      "asset_id": "asset.object.chapter1.farmhouse_blue",
+      "runtime_path": "game/assets/chapter1/objects/farmhouse_blue.png",
+      "source_path": "art/sources/chapter1/objects/farmhouse_blue.png",
+      "source_sha256": "5585e5e397131b1ab3184fe68cbefcce006a7740a91b19fc10a646094dff42f9",
+      "sha256": "5585e5e397131b1ab3184fe68cbefcce006a7740a91b19fc10a646094dff42f9",
+      "size_px": [
+        192,
+        152
+      ],
+      "anchor_px": [
+        96,
+        149
+      ],
+      "original_source_path": "art/sources/chapter1/objects/farmhouse_original.png",
+      "original_source_sha256": "b08cc7e0c6db1de3e33a3d263383f1823d8e260c2c2e61cc8b09c807de17e725",
+      "pixel_tool_id": "e321013e-69b9-49ff-bfe7-838ccd8972a5",
+      "review_status": "proposed",
+      "reviewer": null,
+      "usage": "environment_only",
+      "world_scale": 1,
+      "license_note": "Derived project original/PixelLab source; exact native free pixelart_workbench edits",
+      "drive_url": null,
+      "processing": "LibreSprite 1.3 native putPixel edits: reuse existing well blue roof pixels 1:1 on compound gable/wing planes; native facade trim, sash, planters and chimney. No resampling, noise or generated whole map.",
+      "validation": "192x152, original anchor[96,149], binary alpha, body+roof exact recomposition; original prior source preserved",
+      "layers": {
+        "body": "game/assets/chapter1/objects/farmhouse_blue_body.png",
+        "roof": "game/assets/chapter1/objects/farmhouse_blue_roof.png"
+      },
+      "layer_split_y_px": 104,
+      "editable_source_path": "art/sources/chapter1/objects/farmhouse_pixel_refine.aseprite",
+      "rebuild_script": "art/sources/chapter1/objects/farmhouse_pixel_refine.js",
+      "source_components": [
+        {
+          "path": "art/sources/chapter1/objects/farmhouse_original.png",
+          "sha256": "b08cc7e0c6db1de3e33a3d263383f1823d8e260c2c2e61cc8b09c807de17e725"
+        },
+        {
+          "path": "game/assets/chapter1/objects/well.png",
+          "sha256": "77f995bdfd205318df1c05977bda2e3fc62f7259d9a4eb4aaf8b2a49c57f2510",
+          "source_asset_id": "asset.object.chapter1.well"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.object.chapter1.chicken_coop",
+      "runtime_path": "game/assets/chapter1/objects/chicken_coop.png",
+      "source_path": "art/sources/chapter1/objects/chicken_coop.png",
+      "source_sha256": "f8ea79de0ed13bf3a3bcc179c2f717a2afdd391587d1e2d631b8354a527b3380",
+      "sha256": "ce579eada1c36009887ba512f1c32318d28eb6cdae55b517d62e27f6d2bdc07d",
+      "size_px": [
+        72,
+        88
+      ],
+      "anchor_px": [
+        36,
+        86
+      ],
+      "original_source_path": "art/sources/chapter1/objects/doghouse_generated.png",
+      "original_source_sha256": "77b18514137d6994b06a427d6fbaf4c0ae5d5a1010c52637a7ddb860e0f0e5f9",
+      "pixel_tool_id": "bcc45a5e-46ec-4cf3-a1ed-54bb21def8c0",
+      "review_status": "proposed",
+      "reviewer": null,
+      "usage": "environment_only",
+      "world_scale": 1,
+      "license_note": "Derived project original/PixelLab source; exact native free pixelart_workbench edits",
+      "drive_url": null,
+      "processing": "kennel shell reused; half-door rail and 3 vent slats, exact native brush editing",
+      "layers": {
+        "body": "game/assets/chapter1/objects/chicken_coop_body.png",
+        "roof": "game/assets/chapter1/objects/chicken_coop_roof.png"
+      },
+      "layer_split_y_px": 42
+    },
+    {
+      "asset_id": "asset.object.chapter1.wood_sign",
+      "runtime_path": "game/assets/chapter1/objects/wood_sign.png",
+      "source_path": "art/sources/chapter1/objects/wood_sign.png",
+      "sha256": "5ff11d6e3650cf39eaa23ec7b36b6f8ce0083d5a3ae48e25ea469409a5392ae7",
+      "size_px": [
+        48,
+        64
+      ],
+      "anchor_px": [
+        24,
+        64
+      ],
+      "review_status": "proposed",
+      "reviewer": null,
+      "usage": "environment_only",
+      "processing": "Exact existing tool bench board crop[24,6,72,22] over fence_post at[15,24]; no text or resampling",
+      "source_components": [
+        "game/assets/chapter1/objects/tool_bench.png",
+        "game/assets/chapter1/objects/fence_post.png"
+      ],
+      "license_note": "Derived from own PixelLab task sources"
+    },
+    {
+      "asset_id": "asset.object.chapter1.radish_growing",
+      "runtime_path": "game/assets/chapter1/objects/radish_growing.png",
+      "source_path": "art/sources/chapter1/objects/radish_growing_clean.png",
+      "original_source_path": "art/sources/chapter1/objects/radish_growing.png",
+      "original_source_sha256": "565414aaf81fc956e14442356a719adfa91dc29c83fb681d7f3232d5f6804a24",
+      "source_sha256": "672b387a9f46ab8af9c935878087e51c727222c6f9794155f5ce1f84bde0514a",
+      "sha256": "bd332e98fd1ed153f2cde2e110ddb21ff42867d5a471dfd5ecef03067edfa86e",
+      "size_px": [
+        32,
+        32
+      ],
+      "anchor_px": [
+        16,
+        32
+      ],
+      "crop_status": "growing",
+      "usage": "existing_crop.radish_visual_only",
+      "review_status": "proposed",
+      "reviewer": null,
+      "source_vertical_translation_px": 7,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_color_count": 22,
+      "job_id": "1de8274e-b20c-45cb-9dd2-2c149d2fa604",
+      "pixel_tool_id": "fa2a33d0-0550-4914-b959-c93800406133",
+      "palette_reference_path": "art/sources/chapter1/objects/reference_radish.png",
+      "palette_reference_sha256": "6fe9970f28aa196069d91ddad29631ec7e6be046809bfdea0e8eaa4204d06133",
+      "processing": "Free guarded pixel cleanup removed growing bare roots and reduced both sprites to <=24 existing source colors; integer translation to shared foot anchor only; no resizing",
+      "license_note": "PixelLab ordinary PixFlux generation, project approved original reference palette; no soil, economics or gameplay changes",
+      "drive_url": null
+    },
+    {
+      "asset_id": "asset.object.chapter1.radish_mature",
+      "runtime_path": "game/assets/chapter1/objects/radish_mature.png",
+      "source_path": "art/sources/chapter1/objects/radish_mature_clean.png",
+      "original_source_path": "art/sources/chapter1/objects/radish_mature.png",
+      "original_source_sha256": "bdeabb72712238c7a038ef49ab1d868a76c71bece9cfcb2a6348be50d4b43b20",
+      "source_sha256": "040f0ab24dff894c42e94762975670a5097b8ab1537e7e986c58670f9f8f9bae",
+      "sha256": "ad198e84c54f91a9c37bbfece3da56000dc9132a57f70cb4ad5b15b20749c86f",
+      "size_px": [
+        32,
+        32
+      ],
+      "anchor_px": [
+        16,
+        32
+      ],
+      "crop_status": "mature",
+      "usage": "existing_crop.radish_visual_only",
+      "review_status": "proposed",
+      "reviewer": null,
+      "source_vertical_translation_px": 2,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "opaque_color_count": 24,
+      "job_id": "8ec2c715-1b67-43f4-910f-c4be0df539c1",
+      "pixel_tool_id": "09977592-fc06-4629-9f33-28f6ff3fe9d1",
+      "palette_reference_path": "art/sources/chapter1/objects/reference_radish.png",
+      "palette_reference_sha256": "6fe9970f28aa196069d91ddad29631ec7e6be046809bfdea0e8eaa4204d06133",
+      "processing": "Free guarded pixel cleanup removed growing bare roots and reduced both sprites to <=24 existing source colors; integer translation to shared foot anchor only; no resizing",
+      "license_note": "PixelLab ordinary PixFlux generation, project approved original reference palette; no soil, economics or gameplay changes",
+      "drive_url": null
+    },
+    {
+      "asset_id": "asset.object.chapter1.shrub_ground_shadow",
+      "runtime_path": "game/assets/chapter1/objects/shrub_ground_shadow.png",
+      "source_path": "art/sources/chapter1/objects/shrub_ground_shadow.png",
+      "editable_source_path": "art/sources/chapter1/objects/shrub_ground_shadow.aseprite",
+      "rebuild_script": "art/sources/chapter1/objects/shrub_ground_shadow.js",
+      "source_sha256": "ce33aa555b4fd47368daa6543a12a3b580acb7857c4d2fb5512097c3c8822e6b",
+      "sha256": "ce33aa555b4fd47368daa6543a12a3b580acb7857c4d2fb5512097c3c8822e6b",
+      "size_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        62
+      ],
+      "alpha_values": [
+        0,
+        255
+      ],
+      "review_status": "proposed",
+      "reviewer": null,
+      "world_scale": 1,
+      "license_note": "Project-original native LibreSprite pixel strokes; no new PixelLab call. Existing bush canvas used only for dimensions.",
+      "processing": "Two intentional stepped pencil colors; no noise, filtering, resampling or gradients",
+      "usage": "ground_contact_shadow"
+    },
+    {
+      "asset_id": "asset.object.chapter1.workshop_north_court",
+      "runtime_path": "game/assets/chapter1/objects/workshop_north_court.png",
+      "source_path": "art/sources/chapter1/objects/workshop_north_court.aseprite",
+      "rebuild_script": "art/sources/chapter1/objects/workshop_north_court.js",
+      "sha256": "56707da8055997efd5687292fa1a2cff89d9c51fbdc64143987e1528989f2513",
+      "canvas_px": [
+        192,
+        152
+      ],
+      "anchor_px": [
+        96,
+        149
+      ],
+      "world_scale": 1,
+      "review_status": "proposed",
+      "reviewer": null,
+      "license_note": "Project-original native LibreSprite courtyard strokes plus existing project tool_bench donor at 1:1; no new PixelLab job.",
+      "processing": "Native pixel assembly. North threshold at global (520,216), existing 144x96 solid footprint begins y232. No image resampling."
+    },
+    {
+      "asset_id": "asset.object.chapter1.courtyard_basin",
+      "runtime_path": "game/assets/chapter1/objects/courtyard_basin.png",
+      "source_path": "art/sources/chapter1/objects/courtyard_basin.aseprite",
+      "rebuild_script": "art/sources/chapter1/objects/courtyard_basin.js",
+      "sha256": "b009a6c250a647088e37d11865e628d0083d04056765686aa7ce69f38f5532e3",
+      "canvas_px": [
+        80,
+        96
+      ],
+      "anchor_px": [
+        40,
+        94
+      ],
+      "world_scale": 1,
+      "review_status": "proposed",
+      "reviewer": null,
+      "license_note": "Existing project PixelLab well stone ring/water reused 1:1, roof removed and rim repaired in native LibreSprite; original unchanged, no new job.",
+      "processing": "Native pixel edit, no resampling. Low open basin; same radius-16 footprint."
+    }
+  ],
+  "crop_status_mapping": {
+    "untilled": {
+      "plant_path": null
+    },
+    "tilled": {
+      "plant_path": null
+    },
+    "growing": {
+      "plant_path": "game/assets/chapter1/objects/radish_growing.png"
+    },
+    "mature": {
+      "plant_path": "game/assets/chapter1/objects/radish_mature.png"
+    },
+    "harvest": {
+      "plant_path": null,
+      "note": "Command transitions real PlotState to tilled, not a durable crop state"
+    }
+  }
+}

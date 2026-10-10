@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/chapter1/town/townhouse_red.png" id="house"]
+
+[sub_resource type="RectangleShape2D" id="HouseShape"]
+size = Vector2(68, 34)
+
+[node name="TownHouse" type="Node2D"]
+
+[node name="Footprint" type="StaticBody2D" parent="."]
+position = Vector2(0, -17)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Footprint"]
+shape = SubResource("HouseShape")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+centered = false
+texture = ExtResource("house")
+offset = Vector2(-48, -94)

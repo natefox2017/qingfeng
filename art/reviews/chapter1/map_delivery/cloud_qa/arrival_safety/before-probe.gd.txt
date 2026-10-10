@@ -1,0 +1,17 @@
+extends SceneTree
+func _initialize(): run.call_deferred()
+func run():
+	for path in ["res://world/workshop_interior.tscn","res://world/shop_interior.tscn"]:
+		var scene=load(path).instantiate();root.add_child(scene);await physics_frame
+		var player=scene.get_player();player.set_input_enabled(true);player.position=scene.get_anchor_position("DoorArrival")
+		var resident=scene.get_node("FootSorted/MakerResident") if "workshop" in path else scene.get_node("FootSorted/GrocerResident")
+		resident.set_world_active(true);resident.restore_runtime_position(player.position,&"north")
+		resident.set_schedule_target("probe",Vector2(320,256),"work")
+		for frame in range(121):
+			await physics_frame
+			if frame in [0,1,30,60,120]:
+				var query=PhysicsShapeQueryParameters2D.new();var shape=CircleShape2D.new();shape.radius=4;query.shape=shape;query.transform=Transform2D(0,player.position);query.collision_mask=4
+				var hits=scene.get_world_2d().direct_space_state.intersect_shape(query)
+				print("ARRIVAL_OVERLAP ",path," frame=",frame," player=",player.position," resident=",resident.position," input=",Input.get_vector("move_left","move_right","move_up","move_down")," resident_hits=",hits.size())
+		scene.queue_free();await process_frame
+	quit(0)

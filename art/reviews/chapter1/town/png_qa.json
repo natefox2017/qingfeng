@@ -1,0 +1,107 @@
+{
+  "result": "TOWN_PNG_QA_PASS",
+  "assets": [
+    {
+      "asset_id": "asset.chapter1.town.stone_gate",
+      "size_px": [
+        64,
+        64
+      ],
+      "binary_alpha": true,
+      "hash_match": true,
+      "exact_8x": true,
+      "layer_reconstruction": true
+    },
+    {
+      "asset_id": "asset.chapter1.town.market_blue_white",
+      "size_px": [
+        64,
+        48
+      ],
+      "binary_alpha": true,
+      "hash_match": true,
+      "exact_8x": true,
+      "layer_reconstruction": true
+    },
+    {
+      "asset_id": "asset.chapter1.town.market_orange_white",
+      "size_px": [
+        64,
+        48
+      ],
+      "binary_alpha": true,
+      "hash_match": true,
+      "exact_8x": true,
+      "layer_reconstruction": true
+    },
+    {
+      "asset_id": "asset.chapter1.town.plaza_stone_16",
+      "size_px": [
+        16,
+        16
+      ],
+      "binary_alpha": true,
+      "hash_match": true,
+      "exact_8x": true,
+      "layer_reconstruction": false
+    },
+    {
+      "asset_id": "asset.chapter1.town.stone_wall",
+      "size_px": [
+        32,
+        16
+      ],
+      "binary_alpha": true,
+      "hash_match": true,
+      "exact_8x": true,
+      "layer_reconstruction": false
+    },
+    {
+      "asset_id": "asset.chapter1.town.street_lamp",
+      "size_px": [
+        16,
+        48
+      ],
+      "binary_alpha": true,
+      "hash_match": true,
+      "exact_8x": true,
+      "layer_reconstruction": false
+    },
+    {
+      "asset_id": "asset.chapter1.town.wood_bench",
+      "size_px": [
+        40,
+        32
+      ],
+      "binary_alpha": true,
+      "hash_match": true,
+      "exact_8x": true,
+      "layer_reconstruction": false
+    },
+    {
+      "asset_id": "asset.chapter1.town.blank_sign",
+      "size_px": [
+        40,
+        48
+      ],
+      "binary_alpha": true,
+      "hash_match": true,
+      "exact_8x": true,
+      "layer_reconstruction": false
+    },
+    {
+      "asset_id": "asset.chapter1.town.townhouse_red",
+      "size_px": [
+        96,
+        96
+      ],
+      "binary_alpha": true,
+      "hash_match": true,
+      "exact_8x": true,
+      "layer_reconstruction": true
+    }
+  ],
+  "transparent_arch": true,
+  "plaza_3x3_preview": true,
+  "scope": "File, alpha, metadata hash, nearest preview and layer reconstruction only. No movement/collision or user visual approval."
+}

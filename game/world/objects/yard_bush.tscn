@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/chapter1/objects/bush.png" id="bush"]
+
+[ext_resource type="Texture2D" path="res://assets/chapter1/objects/shrub_ground_shadow.png" id="ground_shadow"]
+
+[sub_resource type="CircleShape2D" id="BushShape"]
+radius = 8.0
+
+[node name="YardBush" type="Node2D"]
+
+[node name="Footprint" type="StaticBody2D" parent="."]
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Footprint"]
+shape = SubResource("BushShape")
+
+[node name="GroundContact" type="Sprite2D" parent="."]
+texture_filter = 1
+centered = false
+texture = ExtResource("ground_shadow")
+offset = Vector2(-32, -62)
+z_index = -1
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+centered = false
+texture = ExtResource("bush")
+offset = Vector2(-32, -62)

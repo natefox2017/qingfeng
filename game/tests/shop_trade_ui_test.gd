@@ -36,8 +36,9 @@ func wait_space(space_id: String) -> bool:
 	return false
 
 func go_to_shop() -> bool:
-	app.room.get_player().position = Vector2(584,208)
-	app.room.get_player().facing = &"east"
+	var player: CharacterBody2D = app.room.get_player()
+	player.position = app.room.get_anchor_position("VillagePathInteract") + Vector2.DOWN * 20.0
+	player.facing = &"north"
 	app._unhandled_key_input(key(KEY_E))
 	if not await wait_space("space.village"):
 		return false

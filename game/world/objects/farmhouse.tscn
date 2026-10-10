@@ -1,0 +1,55 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/chapter1/objects/farmhouse_blue_body.png" id="house_body"]
+[ext_resource type="Texture2D" path="res://assets/chapter1/objects/farmhouse_blue_roof.png" id="house_roof"]
+
+[sub_resource type="RectangleShape2D" id="HouseSideShape"]
+size = Vector2(60, 40)
+
+[sub_resource type="RectangleShape2D" id="HouseDoorThresholdShape"]
+size = Vector2(36, 4)
+
+[node name="Farmhouse" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+centered = false
+texture = ExtResource("house_body")
+offset = Vector2(-96, -149)
+
+[node name="Roof" type="Sprite2D" parent="."]
+texture_filter = 1
+centered = false
+texture = ExtResource("house_roof")
+offset = Vector2(-96, -149)
+z_index = 1
+
+[node name="FootprintLeft" type="StaticBody2D" parent="."]
+position = Vector2(-52, -16)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FootprintLeft"]
+shape = SubResource("HouseSideShape")
+
+[node name="FootprintRight" type="StaticBody2D" parent="."]
+position = Vector2(52, -16)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FootprintRight"]
+shape = SubResource("HouseSideShape")
+
+[node name="DoorThreshold" type="StaticBody2D" parent="."]
+position = Vector2(0, -28)
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorThreshold"]
+shape = SubResource("HouseDoorThresholdShape")
+
+[node name="HouseDoorInteract" type="Marker2D" parent="."]
+position = Vector2(0, -8)
+
+[node name="HouseDoorArrival" type="Marker2D" parent="."]
+position = Vector2(0, 8)

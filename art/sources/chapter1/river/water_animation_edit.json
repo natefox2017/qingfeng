@@ -1,0 +1,62 @@
+{
+  "tool": "pixelart_workbench",
+  "changes": [
+    {
+      "operation": "copy_region",
+      "frames": [
+        1
+      ],
+      "source_frame": 1,
+      "source_layer": "image",
+      "region": [
+        2,
+        0,
+        15,
+        15
+      ],
+      "at": [
+        0,
+        0
+      ],
+      "reason": "Water ripples move two native pixels horizontally in second animation frame, conserving source colors."
+    },
+    {
+      "operation": "copy_region",
+      "frames": [
+        1
+      ],
+      "source_frame": 1,
+      "source_layer": "image",
+      "region": [
+        0,
+        0,
+        1,
+        15
+      ],
+      "at": [
+        14,
+        0
+      ],
+      "reason": "Wrap remaining source columns without interpolation."
+    },
+    {
+      "operation": "copy_region",
+      "frames": [
+        1
+      ],
+      "source_frame": 1,
+      "source_layer": "image",
+      "region": [
+        2,
+        0,
+        2,
+        15
+      ],
+      "at": [
+        15,
+        0
+      ],
+      "reason": "Keep both horizontal tile edges identical after ripple movement."
+    }
+  ]
+}

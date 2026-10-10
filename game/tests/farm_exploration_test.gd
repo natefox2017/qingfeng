@@ -25,35 +25,46 @@ func run() -> void:
 	var camera := player.get_node("Camera2D") as Camera2D
 	var tiles := scene.get_node("TerrainGround") as TileMapLayer
 	var details := scene.get_node("GroundDetails") as TileMapLayer
-	check(tiles.get_used_cells().size()==6144 and tiles.get_used_rect()==Rect2i(0,0,96,64),
-		"editable authored map extends to 1536 by 1024 world pixels")
-	check(camera.limit_right==1536 and camera.limit_bottom==1024 and camera.enabled,
+	check(tiles.get_used_cells().size()==7168 and tiles.get_used_rect()==Rect2i(0,0,112,64),
+		"editable authored map extends to 1792 by 1024 world pixels")
+	check(camera.limit_right==1792 and camera.limit_bottom==1024 and camera.enabled,
 		"camera bounds cover the entire world rather than one screen")
-	check(scene.get_spawn_position()==Vector2(144,176),"legacy save and front door spawn stay fixed")
+	check(scene.get_spawn_position()==Vector2(320,560),"new player spawn is in the farmhouse courtyard")
 	check(scene.layout_contract_valid(),"expanded scene retains authoritative plot and door contract")
-	check(tiles.get_cell_source_id(Vector2i(92,59))==0,"distant map chunks are real editable TileMapLayer cells")
-	check(tiles.get_cell_atlas_coords(Vector2i(30,40)).y==1 and tiles.get_cell_atlas_coords(Vector2i(35,43)).y==1,
-		"southern bridge deck uses the existing plank atlas across the walk lane")
-	check(details.get_cell_atlas_coords(Vector2i(30,40))==Vector2i(7,3)
-		and details.get_cell_atlas_coords(Vector2i(35,43))==Vector2i(7,3),
-		"southern bridge has visible rails at both banks")
+	check(tiles.get_cell_source_id(Vector2i(108,60))==0,"distant map chunks are real editable TileMapLayer cells")
+	var water := scene.get_node("RiverWater") as TileMapLayer
+	check(water.get_used_cells().size()==480 and water.get_cell_source_id(Vector2i(92,40))==0,
+		"east river is an editable native TileMapLayer")
+	check(scene.get_node("FootSorted/RiverBridgeSouth") is Node2D and scene.get_node("FootSorted/SouthEastDock") is Node2D,
+		"bridge and downstream dock are independent editable objects")
+	check(scene.get_anchor_position("BridgeWest")==Vector2(1392,432)
+		and scene.get_anchor_position("BridgeEast")==Vector2(1552,432),
+		"bridge interaction anchors follow the moved crossing")
 
 	player.set_input_enabled(true)
+	# The expanded courtyard keeps the spawn but its authored south gate is
+	# centered at x272. Leave through that visible opening, not through rails.
+	Input.action_press("move_left")
+	for frame in range(30):
+		await physics_frame
+	Input.action_release("move_left")
+	await physics_frame
+	check(absf(player.position.x-272.0)<4.0, "real movement aligns with the authored courtyard gate")
 	Input.action_press("move_down")
-	for frame in range(310):
+	for frame in range(135):
 		await physics_frame
 	Input.action_release("move_down")
 	await physics_frame
-	check(player.position.y>620.0 and player.position.y<710.0,
-		"real movement reaches southern second-bridge approach through multiple screens")
+	check(player.position.y>740.0 and player.position.y<800.0,
+		"real movement reaches the lower bridge approach through multiple screens")
 	var before_bridge := player.position
 	Input.action_press("move_right")
-	for frame in range(460):
+	for frame in range(820):
 		await physics_frame
 	Input.action_release("move_right")
 	await physics_frame
-	check(player.position.x>760.0 and player.position.distance_to(before_bridge)>520,
-		"player physically crosses the railed southern bridge into the eastern meadow")
+	check(player.position.x>1552.0 and player.position.distance_to(before_bridge)>1200,
+		"player physically crosses the railed bridge to the eastern forest bank")
 	check(camera.get_screen_center_position().x>600.0,
 		"camera really tracks beyond old 640px screen boundary")
 	check(player.is_input_enabled and player.velocity.is_zero_approx(),

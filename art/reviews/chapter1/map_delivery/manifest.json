@@ -1,0 +1,24 @@
+{
+  "world_source_commit": "362bfd28438b2891cf91032564206abdeb4c60e2",
+  "renderer": "Godot 4.7.2 native Metal OpenGL Compatibility SubViewport",
+  "captured_by": "WORLD task prior to pause",
+  "accepted": false,
+  "limitations": [
+    "capture cleanup reported two ObjectDB instances and one resource; not gameplay route evidence",
+    "independent full-map QA has not rerun final WORLD commit"
+  ],
+  "images": [
+    {
+      "file": "farm_overview.png",
+      "sha256": "7976ea8b39d8e847e76ee1cc8dbcd19a66d31eefbaa37019da5c93cf72a290af"
+    },
+    {
+      "file": "farm_yard_closeup.png",
+      "sha256": "6537b5bc14a317b0fa9e2aefa64defa9358582fe3a5be40ad3539803d8d3f6f4"
+    },
+    {
+      "file": "village_overview.png",
+      "sha256": "55b7edc09e17cb675a716094a52fed274893abefd889ae01b0af6cf70a94e695"
+    }
+  ]
+}

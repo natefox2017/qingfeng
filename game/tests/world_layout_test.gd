@@ -40,7 +40,7 @@ func run() -> void:
 	var expected_ids := ["plot.farm.001","plot.farm.002","plot.farm.003","plot.farm.004","plot.farm.005","plot.farm.006"]
 	var ids: Array = plots.map(func(plot): return plot.plot_id)
 	check(ids == expected_ids, "plot ids remain deterministic after scene traversal")
-	check(plots[0].cell_position == {"x":17,"y":7} and plots[-1].cell_position == {"x":19,"y":8}, "plot cells derive from scene marker positions")
+	check(plots[0].cell_position == {"x":42,"y":27} and plots[-1].cell_position == {"x":74,"y":39}, "plot cells derive from scene marker positions")
 
 	var spawn: Vector2 = scene.get_spawn_position()
 	check(scene.get_player().position == spawn and not _blocked(spawn), "player spawn is the same editable anchor and is collision safe")
@@ -50,19 +50,23 @@ func run() -> void:
 	for plot: Dictionary in plots:
 		var point: Vector2 = Vector2(plot.cell_position.x,plot.cell_position.y) * float(scene.TILE_SIZE)
 		check(not _blocked(point), plot.plot_id+" is not covered by world collision")
-	check(_blocked(Vector2(136,88)), "house footprint blocks movement")
-	check(_blocked(Vector2(400,192)), "tree root blocks movement")
-	check(_blocked(Vector2(528,96)) and _blocked(Vector2(528,296)), "river segments block movement away from bridge")
-	check(not _blocked(Vector2(528,208)), "bridge lane remains physically passable")
-	var orchard_columns := [Vector2(224,312),Vector2(352,300),Vector2(456,320),
-		Vector2(192,432),Vector2(320,446),Vector2(448,430),
-		Vector2(224,564),Vector2(352,550),Vector2(456,570),
-		Vector2(192,760),Vector2(320,748),Vector2(448,770)]
+	check(_blocked(Vector2(220,464)), "moved farmhouse walls block movement")
+	check(_blocked(Vector2(64,48)), "orchard root has its own physical footprint")
+	check(_blocked(Vector2(1408,512)) and _blocked(Vector2(1536,512)), "river banks block movement outside bridge approaches")
+	check(scene.get_anchor_position("RiverBankProbe") == Vector2(1376,512) and not _blocked(scene.get_anchor_position("RiverBankProbe")), "river safe-bank probe stays on walkable ground")
+	check(scene.get_anchor_position("RiverBlockedProbe") == Vector2(1408,512) and _blocked(scene.get_anchor_position("RiverBlockedProbe")), "river blocked probe stays on solid bank")
+	check(not _blocked(Vector2(1472,432)), "bridge lane remains physically passable")
+	check(not _blocked(Vector2(144,176)), "legacy save spawn remains physically recoverable")
+	var orchard_columns := [Vector2(64,48),Vector2(200,48),Vector2(336,48),Vector2(472,48),
+		Vector2(64,160),Vector2(200,160),Vector2(336,160),Vector2(472,160),
+		Vector2(64,272),Vector2(200,272),Vector2(336,272),Vector2(472,272)]
 	var orchard_matches := true
 	for index in range(1, 13):
-		var root_position: Vector2 = scene.get_node("Solids/OrchardRoot%02d" % index).position
-		var sprite_position: Vector2 = scene.get_node("FootSorted/OrchardOak%02d" % index).position
-		if root_position != orchard_columns[index - 1] or sprite_position != root_position + Vector2(0, 12):
+		var tree := scene.get_node("FootSorted/OrchardOak%02d" % index) as Node2D
+		var root_position: Vector2 = tree.get_node("Footprint").global_position
+		var sprite_position: Vector2 = tree.get_node("Sprite2D").global_position
+		var sprite_offset: Vector2 = tree.get_node("Sprite2D").offset
+		if root_position != orchard_columns[index - 1] or sprite_position != root_position or sprite_offset != Vector2(-48, -126):
 			orchard_matches = false
 	check(orchard_matches, "reusable oak sprites and collision roots form the authored orchard rows")
 
@@ -70,8 +74,9 @@ func run() -> void:
 	check(not scene.get_player().is_input_enabled, "world input can be disabled by app lifecycle")
 	scene.set_input_enabled(true)
 	check(scene.get_player().is_input_enabled, "world input can be re-enabled without replacing player")
-	check(scene.get_anchor_position("HouseDoorArrival") == Vector2(144,160) and not _blocked(Vector2(144,160)), "farm house-door arrival is explicit and collision safe")
-	check(scene.get_anchor_position("HouseDoorInteract") == Vector2(144,144) and not _blocked(Vector2(144,144)), "farm house-door interaction marker remains outside house collision")
+	check(not _blocked(scene.get_anchor_position("HouseDoorArrival")), "farm house-door arrival is explicit and collision safe")
+	check(not _blocked(scene.get_anchor_position("HouseDoorInteract")), "farm house-door interaction marker remains outside house collision")
+	check(scene.get_anchor_position("VillagePathArrival") == Vector2(896,104), "north village route has a separate return arrival anchor")
 
 	scene.queue_free()
 	await process_frame

@@ -1,0 +1,14 @@
+{
+  "view": "low top-down",
+  "outline": "selective outline",
+  "shading": "medium shading",
+  "detail": "medium detail",
+  "seed": 89,
+  "description": "One single straight horizontal wooden bridge railing only with warm ochre slender handrail and 4 vertical short posts, seen low top down. Narrow railing spans left right64px at midheight, transparent around. Separate sprite layer, no deck, stairs, ground, river or scene. Clear1px native pixel clusters,16px grid game density.",
+  "width": 64,
+  "height": 16,
+  "no_background": true,
+  "color_reference": "reference_bridge.png",
+  "reference_sha256": "90003e9c06f066eff66380127eac931b133041791e432b5d674def81dd3661f9",
+  "request_sha256": "11ed58579400b2123f342a7f48c9f3248dd6cf359c9dd48b424f29e8ea938fee"
+}

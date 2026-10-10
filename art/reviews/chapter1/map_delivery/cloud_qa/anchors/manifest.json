@@ -1,0 +1,54 @@
+{
+  "capture_base_commit": "6961ce805c6301935188ee4015e9f361e44799b6",
+  "after_changes": "45 metadata-matched Sprite2D centered=false properties only",
+  "images": [
+    {
+      "path": "art/reviews/chapter1/map_delivery/cloud_qa/anchors/after/space_farm_arrival_1280x720.png",
+      "sha256": "54384c099f42b4c5435a6379959943aaea2f9be19750db99dcacf393c8d5cdb9",
+      "native_renderer": true,
+      "accepted": false
+    },
+    {
+      "path": "art/reviews/chapter1/map_delivery/cloud_qa/anchors/after/space_farm_focus_1920x1080.png",
+      "sha256": "1aa9e0e09a1219207ce763882fed86d62e7bc31ab9a641e9a608bd0f0c61ce20",
+      "native_renderer": true,
+      "accepted": false
+    },
+    {
+      "path": "art/reviews/chapter1/map_delivery/cloud_qa/anchors/after/space_village_arrival_1280x720.png",
+      "sha256": "a1ca9a2d9475cd232b538373a6750696615376a98fcae2d6bf41cafc1ffba199",
+      "native_renderer": true,
+      "accepted": false
+    },
+    {
+      "path": "art/reviews/chapter1/map_delivery/cloud_qa/anchors/after/space_village_focus_1920x1080.png",
+      "sha256": "394ffa01401604834323e820a186c1f63d4c8c372aece47127ace5520f950038",
+      "native_renderer": true,
+      "accepted": false
+    },
+    {
+      "path": "art/reviews/chapter1/map_delivery/cloud_qa/anchors/before/space_farm_arrival_1280x720.png",
+      "sha256": "4c410618de0e8582e4548abfaaad74b7fb9a534dfbadcb6ede165fda48f3eef5",
+      "native_renderer": true,
+      "accepted": false
+    },
+    {
+      "path": "art/reviews/chapter1/map_delivery/cloud_qa/anchors/before/space_farm_focus_1920x1080.png",
+      "sha256": "9ccef0831962774c1f758e5f46084414a790b933c90284ac50fdf45a29a66060",
+      "native_renderer": true,
+      "accepted": false
+    },
+    {
+      "path": "art/reviews/chapter1/map_delivery/cloud_qa/anchors/before/space_village_arrival_1280x720.png",
+      "sha256": "f8d92ee2a1d6474fdb31fa65b24a522af2aa364418aad6c43d62c7f8b5c629c3",
+      "native_renderer": true,
+      "accepted": false
+    },
+    {
+      "path": "art/reviews/chapter1/map_delivery/cloud_qa/anchors/before/space_village_focus_1920x1080.png",
+      "sha256": "1d66242e628145134ce969ca4c8ab01a537e02cb9c1b8f9a716813db07c21881",
+      "native_renderer": true,
+      "accepted": false
+    }
+  ]
+}

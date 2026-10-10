@@ -1,0 +1,14 @@
+{
+  "no_background": false,
+  "view": "low top-down",
+  "outline": "selective outline",
+  "shading": "medium shading",
+  "detail": "medium detail",
+  "seed": 89,
+  "description": "Only a seamless top-down clear deep azure-blue river water surface texture. Tiny cyan horizontal ripples sparse white reflections, coherent 1px pixel clusters. No banks, grass, objects, ducks or shore. Texture fills every pixel including corners; seamless on all sides. Native16px tile density, pixel art not illustration.",
+  "width": 32,
+  "height": 32,
+  "color_reference": "reference_east_river.png",
+  "reference_sha256": "a15984b57c0a21e5334d7375d3a202e15cf71b3633a864f4e92c8c7e7c6c4c1e",
+  "request_sha256": "329b7d30bc9ef09377e77b3e893f7ffdd7d605bbf45960b4833a0762eb000b6a"
+}

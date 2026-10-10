@@ -1,0 +1,19 @@
+extends "res://tests/full_economy_loop_test.gd"
+## Executes the unchanged old economy test, then saves through its old store.
+func finish() -> void:
+	if failures == 0 and is_instance_valid(app) and app.state == app.State.WORLD:
+		app.set_process(false)
+		var result: Dictionary = app.save_progress()
+		check(result.get("ok", false), "historical implementation writes final fixture")
+		if result.get("ok", false):
+			var target := OS.get_cmdline_user_args()[0]
+			var source := ProjectSettings.globalize_path(app.store.directory.path_join(String(result.save_id) + ".qfsave"))
+			check(DirAccess.copy_absolute(source, target) == OK, "copy unchanged old-engine save bytes")
+			print("LEGACY_SAVE_GENERATED source=", source, " target=", target, " sha256=", FileAccess.get_sha256(target))
+	if is_instance_valid(app):
+		app.queue_free()
+		await process_frame
+	root.get_node("AudioManager").shutdown_audio()
+	await process_frame
+	print("LEGACY_SAVE_GENERATION_RESULT checks=%d failures=%d" % [checks, failures])
+	quit(0 if failures == 0 else 1)

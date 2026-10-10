@@ -1,0 +1,50 @@
+{
+  "world_commit": "d8a3358a43313c9438dbb3243861d2cd548c8854",
+  "capture_head": "01f63b98842dc9e94a87424d2bd7d6933adad755",
+  "renderer": "OpenGL 4.1 Metal Compatibility Apple M4 Pro",
+  "images": [
+    {
+      "file": "native/space_farm_1280.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 64858,
+      "sha256": "50dd05a313d2968a4fb73950d36ade1f83ac099ceedec4e35d3f1af1b4e818c9"
+    },
+    {
+      "file": "native/space_farm_1920.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 83361,
+      "sha256": "6a9fe7677d7c9920150d90fef5ecf28f895a09482f86c3e8523cd24db1bdcecc"
+    },
+    {
+      "file": "native/space_farm_640.png",
+      "width": 640,
+      "height": 360,
+      "bytes": 44790,
+      "sha256": "0e63b9104f2e92d0e8f1c802c005cc5b142978f3300557c8acfac7e76439ce2a"
+    },
+    {
+      "file": "native/space_village_1280.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 39165,
+      "sha256": "0fda4a71c4ffa9b0fe447836973a6b11aa8c4b5f69ef51c901d0e23aa8c07fbd"
+    },
+    {
+      "file": "native/space_village_1920.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 58773,
+      "sha256": "694383e460dfb861bf86aac37c04c97f06aa77392a1e23e4cf6c20ef3ef3c99d"
+    },
+    {
+      "file": "native/space_village_640.png",
+      "width": 640,
+      "height": 360,
+      "bytes": 34651,
+      "sha256": "174dd42b4a2a3e1a255741a64be7fe87664874ae5bdfce5cc057ac37b929bc0c"
+    }
+  ],
+  "capture_script_changes": "AudioManager.shutdown_audio before/after capture; awaited cleanup; no WORLD change"
+}

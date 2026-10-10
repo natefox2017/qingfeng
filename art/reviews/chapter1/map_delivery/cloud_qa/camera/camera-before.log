@@ -1,0 +1,4 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+CAMERA_PROBE visible=[P: (0.0, 0.0), S: (640.0, 360.0)] content=(640, 360) final=[X: (2.0, 0.0), Y: (0.0, 2.0), O: (43.0, 24.0)] canvas=[X: (1.0, 0.0), Y: (0.0, 1.0), O: (-576.0, 120.0)] center=(896.0, 60.0)
+CAMERA_PROBE corners=(576.0, -120.0) / (1216.0, 240.0)

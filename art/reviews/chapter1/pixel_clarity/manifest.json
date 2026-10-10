@@ -1,0 +1,131 @@
+{
+  "captured_utc": "2026-10-09",
+  "engine": "Godot 4.7.2 stable official ed1daf0bf001b61586d9930840f2f1394092c079",
+  "logical_client_sizes_px": [
+    [
+      1280,
+      720
+    ],
+    [
+      1920,
+      1080
+    ],
+    [
+      1366,
+      768
+    ]
+  ],
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 3137,
+      "sha256": "9913e60c4984728e56c6f48f7ebbd311274075869ad664542046dd25c5b2e770"
+    },
+    {
+      "path": "comparison/a-canvas-items-fractional-1280x720-walk-runtime.json",
+      "bytes": 42100,
+      "sha256": "ae391845506104476344c45d0ffffdf84d0ce07ba3f892637fc567ea4c983958"
+    },
+    {
+      "path": "comparison/a-canvas-items-fractional-1366x768-title.png",
+      "bytes": 1805925,
+      "sha256": "b80932e249ee2237667b0ae64b02e12a92959ae7f3052f0cc96580df4282229f",
+      "image_px": [
+        1590,
+        1056
+      ]
+    },
+    {
+      "path": "comparison/b-viewport-integer-1366x768-title.png",
+      "bytes": 770757,
+      "sha256": "61dc1b445b2c324bf84fe96539931b7e713a7f518c75123ec51257bf0b9bd3fe",
+      "image_px": [
+        1590,
+        1056
+      ]
+    },
+    {
+      "path": "comparison/c-canvas-items-integer-1366x768-title.png",
+      "bytes": 1645380,
+      "sha256": "77cb8f5ecb9327c2825b35f9b8b0541077c5c5df384e4e689b750d4592f2755e",
+      "image_px": [
+        1590,
+        1056
+      ]
+    },
+    {
+      "path": "final/1280x720-runtime.json",
+      "bytes": 14551,
+      "sha256": "c29ee8f21b8df8adb077dcecc30ee19d703c81931ddba78c05efae86568dbcbf"
+    },
+    {
+      "path": "final/1280x720-title.png",
+      "bytes": 1621896,
+      "sha256": "aeb3df76a312f76aaa60dcde9e5208681576fd4de511f5db0fbdced3f4fa40ac",
+      "image_px": [
+        1504,
+        1008
+      ]
+    },
+    {
+      "path": "final/1280x720-world.png",
+      "bytes": 433168,
+      "sha256": "c002b45761197a19b9ee29dc830d236f02365743660caf3c983eb983208e1574",
+      "image_px": [
+        1504,
+        1008
+      ]
+    },
+    {
+      "path": "final/1366x768-scroll-runtime.json",
+      "bytes": 21155,
+      "sha256": "3016b49692209f2b8555004c010927125127be61b9fce6f420efff5cf402ddd9"
+    },
+    {
+      "path": "final/1366x768-title.png",
+      "bytes": 1645380,
+      "sha256": "77cb8f5ecb9327c2825b35f9b8b0541077c5c5df384e4e689b750d4592f2755e",
+      "image_px": [
+        1590,
+        1056
+      ]
+    },
+    {
+      "path": "final/1366x768-walk-runtime.json",
+      "bytes": 42090,
+      "sha256": "e96facc703de10c1788d4b50ca9d5cd97cf6815ebb3b52ba60dc1d3a222d5e4a"
+    },
+    {
+      "path": "final/1366x768-world-scroll.png",
+      "bytes": 372868,
+      "sha256": "45bbd94961e35fff062169205e9d8b241882a8d0125d2e3b669acf7a9a98cae6",
+      "image_px": [
+        1590,
+        1056
+      ]
+    },
+    {
+      "path": "final/1920x1080-runtime.json",
+      "bytes": 14552,
+      "sha256": "a75d0fc4e201ef9da0f98afedf18036576ddd1e0e69da3fc7c0b42338919f033"
+    },
+    {
+      "path": "final/1920x1080-title.png",
+      "bytes": 2771762,
+      "sha256": "778775fd17b6f893833feefc7b9547da23f1bc60a10573a533ede6c9b933c936",
+      "image_px": [
+        2144,
+        1368
+      ]
+    },
+    {
+      "path": "final/1920x1080-world.png",
+      "bytes": 606561,
+      "sha256": "8a3e82c3d70e4ba3a74101db9234f2af0b269d582be0c8f2dbf7c42ccafa8fcb",
+      "image_px": [
+        2144,
+        1368
+      ]
+    }
+  ]
+}

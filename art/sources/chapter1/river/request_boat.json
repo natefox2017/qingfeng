@@ -1,0 +1,14 @@
+{
+  "view": "low top-down",
+  "outline": "selective outline",
+  "shading": "medium shading",
+  "detail": "medium detail",
+  "seed": 89,
+  "description": "One tiny upright north south empty wooden rowing boat warm chestnut brown, seen topdown,32x32 native pixel sprite for16px world grid. Oval pointed bow, dark inner hull and two pale wooden bench seats. Transparent canvas around standalone boat. No water, grass, bank, scene, oars or characters. Original cozy spring farming pixelgame.",
+  "width": 32,
+  "height": 32,
+  "no_background": true,
+  "color_reference": "reference_boat.png",
+  "reference_sha256": "60d317cb0938f1e54c79629110308949734e7bba51a48858b4628248a1f59f9f",
+  "request_sha256": "08ef02b9d073f153fedf01947c28c987e3e92c8a1e7963d505b4a86aff7016c1"
+}

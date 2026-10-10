@@ -1,0 +1,90 @@
+{
+  "chicken_small": {
+    "request": {
+      "description": "Small white farm hen, red comb, orange beak and tiny orange feet, round white body pale gray wing, calm idle facing right southeast, same white hen identity as farm reference. Low top-down farm RPG, simple crisp native pixel clusters, no shadow or scenery.",
+      "width": 24,
+      "height": 24,
+      "no_background": true,
+      "direction": "south-east",
+      "view": "low top-down",
+      "outline": "selective outline",
+      "detail": "low detail",
+      "seed": 9203
+    },
+    "submission": {
+      "content": [
+        {
+          "type": "text",
+          "text": "id: d9602a9e-09c7-4a09-b97c-9b3397e32415\njob_id: d9602a9e-09c7-4a09-b97c-9b3397e32415\nmodel: pixen\ndescription: Small white farm hen, red comb, orange beak and tiny orange feet, round white body pale gray wing, calm idle facing right southeast, same white hen identity as farm reference. Low top-down farm RPG, simple crisp native pixel clusters, no shadow or scenery.\nsize: 24x24px\ntransparent: True\nasset_id: 0ab37b62-2b7b-54f5-8a48-39a961f2e94d\nasset_status: pending (saved when generation completes)\nseed: 9203\ncost: 1 generation\nstatus: processing (~10-40s)\n\nhint: get_image(job_id=\"d9602a9e-09c7-4a09-b97c-9b3397e32415\")"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "duck_small": {
+    "request": {
+      "description": "Small white farm duck floating idle, orange beak facing right southeast, short rounded white body, pale gray wing, short neck, single animal, farm RPG low top-down crisp pixel art, no water or shadow or scenery.",
+      "width": 24,
+      "height": 24,
+      "no_background": true,
+      "direction": "south-east",
+      "view": "low top-down",
+      "outline": "selective outline",
+      "detail": "low detail",
+      "seed": 9204
+    },
+    "submission": {
+      "content": [
+        {
+          "type": "text",
+          "text": "id: bc445da5-1016-412b-9d1b-9da029128b6e\njob_id: bc445da5-1016-412b-9d1b-9da029128b6e\nmodel: pixen\ndescription: Small white farm duck floating idle, orange beak facing right southeast, short rounded white body, pale gray wing, short neck, single animal, farm RPG low top-down crisp pixel art, no water or shadow or scenery.\nsize: 24x24px\ntransparent: True\nasset_id: 5b114374-3932-5a87-bc73-96a1aa54e277\nasset_status: pending (saved when generation completes)\nseed: 9204\ncost: 1 generation\nstatus: processing (~10-40s)\n\nhint: get_image(job_id=\"bc445da5-1016-412b-9d1b-9da029128b6e\")"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "dog_final": {
+    "request": {
+      "description": "Small orange and white corgi farm dog standing on all four short legs, long horizontal orange back, white belly paws muzzle, upright triangular ears and curled tail. SHORT LOW BODY with total silhouette 26px wide and 20px high, facing right southeast. Tiny low top-down farm RPG idle sprite, no collar, heart, shadow, ground, text, or other animal.",
+      "width": 32,
+      "height": 32,
+      "no_background": true,
+      "direction": "south-east",
+      "view": "low top-down",
+      "outline": "selective outline",
+      "detail": "low detail",
+      "seed": 9205
+    },
+    "submission": {
+      "content": [
+        {
+          "type": "text",
+          "text": "id: 3a5e6ede-924f-4d26-9695-5943dc13bd14\njob_id: 3a5e6ede-924f-4d26-9695-5943dc13bd14\nmodel: pixen\ndescription: Small orange and white corgi farm dog standing on all four short legs, long horizontal orange back, white belly paws muzzle, upright triangular ears and curled tail. SHORT LOW BODY with total silhouette 26px wide and 20px high, facing right southeast. Tiny low top-down farm RPG idle sprite, no collar, heart, shadow, ground, text, or other animal.\nsize: 32x32px\ntransparent: True\nasset_id: f4b994c4-4135-5b0b-8ff5-7d04b61e854a\nasset_status: pending (saved when generation completes)\nseed: 9205\ncost: 1 generation\nstatus: processing (~10-40s)\n\nhint: get_image(job_id=\"3a5e6ede-924f-4d26-9695-5943dc13bd14\")"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "butterfly_final": {
+    "request": {
+      "description": "One tiny pale yellow butterfly with warm orange wing edges, brown body and two antennae, four open wings viewed from above, native pixel art 16x16, resting still, no trail, flower, shadow or background.",
+      "width": 16,
+      "height": 16,
+      "no_background": true,
+      "direction": "south",
+      "view": "high top-down",
+      "outline": "selective outline",
+      "detail": "low detail",
+      "seed": 9206
+    },
+    "submission": {
+      "content": [
+        {
+          "type": "text",
+          "text": "id: 970a45dc-516c-4457-801c-4a02b4c912bf\njob_id: 970a45dc-516c-4457-801c-4a02b4c912bf\nmodel: pixen\ndescription: One tiny pale yellow butterfly with warm orange wing edges, brown body and two antennae, four open wings viewed from above, native pixel art 16x16, resting still, no trail, flower, shadow or background.\nsize: 16x16px\ntransparent: True\nasset_id: 5f4df00d-428f-57c3-84f1-9b1ae20b7785\nasset_status: pending (saved when generation completes)\nseed: 9206\ncost: 1 generation\nstatus: processing (~10-40s)\n\nhint: get_image(job_id=\"970a45dc-516c-4457-801c-4a02b4c912bf\")"
+        }
+      ],
+      "isError": false
+    }
+  }
+}

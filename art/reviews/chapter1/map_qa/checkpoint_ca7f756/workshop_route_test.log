@@ -1,0 +1,21 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+CHECK_FAIL workshop_route farm route reaches village
+CHECK_FAIL workshop_route village workshop door resolves stable target
+CHECK_FAIL workshop_route village door enters workshop after target validation
+CHECK_FAIL workshop_route workshop arrival preserves one gameplay session and target-owned anchor
+CHECK_FAIL workshop_route workshop owns stable future workbench/service anchors
+CHECK_FAIL workshop_route workshop save records current space in schema seven
+CHECK_FAIL workshop_route schema-seven save restarts directly inside workshop
+CHECK_FAIL workshop_route workshop door returns to village
+CHECK_FAIL workshop_route workshop exit uses village-owned safe arrival
+WORKSHOP_ROUTE_PASS checks=14 failures=9
+WARNING: 1370 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 1466 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 63 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+ERROR: 252 RID allocations of type 'P11GodotBody2D' were leaked at exit.
+ERROR: 23 RID allocations of type 'P12GodotShape2D' were leaked at exit.
+ERROR: 33 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.

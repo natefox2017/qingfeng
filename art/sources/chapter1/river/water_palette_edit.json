@@ -1,0 +1,55 @@
+{
+  "tool": "pixelart_workbench",
+  "changes": [
+    {
+      "operation": "map_colors",
+      "frames": [
+        1
+      ],
+      "region": [
+        0,
+        0,
+        31,
+        15
+      ],
+      "colors": {
+        "#70bff3ff": "#337bbcff",
+        "#417ecfff": "#2877baff",
+        "#297dc9ff": "#2877baff",
+        "#337bbcff": "#2877baff",
+        "#2679c8ff": "#2877baff",
+        "#79b8ecff": "#337bbcff",
+        "#5eb8eeff": "#337bbcff",
+        "#2877baff": "#2877baff",
+        "#3576b3ff": "#2877baff",
+        "#2f76acff": "#2877baff",
+        "#2776baff": "#2877baff",
+        "#58afeaff": "#2877baff",
+        "#296fb5ff": "#2877baff",
+        "#62aee7ff": "#2877baff",
+        "#256eafff": "#2877baff",
+        "#49acf0ff": "#2877baff",
+        "#57aae4ff": "#2877baff",
+        "#49a6eaff": "#2877baff",
+        "#27659cff": "#2877baff",
+        "#27649aff": "#2877baff",
+        "#226296ff": "#2877baff",
+        "#b1e1f6ff": "#62aee7ff",
+        "#256194ff": "#2877baff",
+        "#1f5f90ff": "#2877baff",
+        "#1e5f8eff": "#2877baff",
+        "#1f5e8bff": "#2877baff",
+        "#3f9cf0ff": "#2877baff",
+        "#215c8aff": "#2877baff",
+        "#155c92ff": "#2877baff",
+        "#9adaf9ff": "#62aee7ff",
+        "#23588dff": "#2877baff",
+        "#3e94e6ff": "#2877baff",
+        "#8bcaf6ff": "#337bbcff",
+        "#3381cdff": "#2877baff",
+        "#87c0f4ff": "#337bbcff"
+      },
+      "reason": "Native sample revealed dense striped water. Collapse minor ramp shades to calm approved blue; retain sparse cyan reflection clusters in both frames. Shapes and boundaries stay fixed."
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/chapter1/objects/rock.png" id="rock"]
+
+[sub_resource type="CircleShape2D" id="RockShape"]
+radius = 10.0
+
+[node name="FieldRock" type="Node2D"]
+
+[node name="Footprint" type="StaticBody2D" parent="."]
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Footprint"]
+shape = SubResource("RockShape")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+centered = false
+texture = ExtResource("rock")
+offset = Vector2(-32, -62)

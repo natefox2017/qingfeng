@@ -45,8 +45,9 @@ func use_plot() -> void:
 	finish_action()
 
 func farm_to_shop() -> bool:
-	app.room.get_player().position=Vector2(584,208)
-	app.room.get_player().facing=&"east"
+	var player: CharacterBody2D = app.room.get_player()
+	player.position=app.room.get_anchor_position("VillagePathInteract") + Vector2.DOWN * 20.0
+	player.facing=&"north"
 	app._unhandled_key_input(key(KEY_E))
 	if not await wait_space("space.village"):
 		return false
@@ -61,13 +62,14 @@ func shop_to_farm() -> bool:
 	app._unhandled_key_input(key(KEY_E))
 	if not await wait_space("space.village"):
 		return false
-	app.room.get_player().position=Vector2(48,180)
-	app.room.get_player().facing=&"west"
+	var player: CharacterBody2D = app.room.get_player()
+	player.position=app.room.get_anchor_position("FarmExitInteract") + Vector2.UP * 20.0
+	player.facing=&"south"
 	app._unhandled_key_input(key(KEY_E))
 	return await wait_space("space.farm")
 
 func enter_house() -> bool:
-	app.room.get_player().position=Vector2(144,160)
+	app.room.get_player().position=app.room.get_anchor_position("HouseDoorArrival")
 	app.room.get_player().facing=&"north"
 	app._unhandled_key_input(key(KEY_E))
 	return await wait_space("space.house")
@@ -128,7 +130,7 @@ func run() -> void:
 	check(await shop_to_farm(),"day one returns from shop to farm")
 
 	# Till, plant, water through the real E/contact path.
-	app.room.get_player().position=Vector2(272,144)
+	app.room.get_player().position=app.room.get_node("FarmPlots/Plot004").position + Vector2(0,16)
 	app.room.get_player().facing=&"north"
 	use_plot()
 	check(app.gameplay_session.farm.get_plot("plot.farm.004").state=="tilled","day one tills player plot")
@@ -153,7 +155,7 @@ func run() -> void:
 
 	# Day 2: return, water, sleep again.
 	check(await return_farm(),"day two returns to farm")
-	app.room.get_player().position=Vector2(272,144)
+	app.room.get_player().position=app.room.get_node("FarmPlots/Plot004").position + Vector2(0,16)
 	app.room.get_player().facing=&"north"
 	app._unhandled_key_input(key(KEY_2))
 	use_plot()
@@ -164,7 +166,7 @@ func run() -> void:
 
 	# Day 3: harvest, sell produce, buy replacement seed.
 	check(await return_farm(),"day three returns to farm")
-	app.room.get_player().position=Vector2(272,144)
+	app.room.get_player().position=app.room.get_node("FarmPlots/Plot004").position + Vector2(0,16)
 	app.room.get_player().facing=&"north"
 	var radish_before: int = app.gameplay_session.inventory.quantity_of("item.radish")
 	use_plot()
@@ -184,7 +186,7 @@ func run() -> void:
 	check(await shop_to_farm(),"day three returns to farm for replanting")
 
 	# Replant purchased seed and water to prove the loop can continue.
-	app.room.get_player().position=Vector2(272,144)
+	app.room.get_player().position=app.room.get_node("FarmPlots/Plot004").position + Vector2(0,16)
 	app.room.get_player().facing=&"north"
 	app._unhandled_key_input(key(KEY_3))
 	use_plot()

@@ -4,6 +4,10 @@ const UI_THEME = preload("res://ui/theme/ui_theme.gd")
 var glyph := "play"
 
 func _draw() -> void:
+	# Text-labelled buttons already carry their meaning. Drawing a centered glyph
+	# underneath the text makes Chinese labels unreadable at every window size.
+	if not text.is_empty():
+		return
 	var center := size * 0.5
 	var color := UI_THEME.COLOR_ICON if not disabled else UI_THEME.COLOR_ICON_DISABLED
 	var points: Array[Vector2] = []

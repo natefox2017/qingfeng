@@ -1,0 +1,5 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+OBJECT_ANCHOR_MEMBERSHIP_FAIL res://world/farm_first_screen.tscn#Farmhouse/Sprite2D
+OBJECT_ANCHOR_MEMBERSHIP_FAIL res://world/objects/farmhouse.tscn#Sprite2D
+OBJECT_ANCHOR_RESULT checks=280 failures=2

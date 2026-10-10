@@ -39,6 +39,17 @@ func run() -> void:
 	for child: Node in view.body.find_children("*","Label",true,false):
 		text += (child as Label).text+"\n"
 	check(text.contains("村庄第一屏") and text.contains("第3天") and text.contains("12:30") and text.contains("260 币"),"pause summary projects current area time and wallet")
+	for size: Vector2i in [Vector2i(1280,720),Vector2i(1920,1080),Vector2i(1366,768)]:
+		root.size = size
+		await process_frame
+		await process_frame
+		var found := false
+		for child: Node in view.body.find_children("*","Label",true,false):
+			var value := child as Label
+			if value.text == "260 币":
+				found = true
+				check(value.autowrap_mode == TextServer.AUTOWRAP_OFF and value.get_line_count() == 1 and value.size.x >= value.get_combined_minimum_size().x, "currency stays one readable line at " + str(size))
+		check(found, "wallet label is present at " + str(size))
 	check(view.buttons.has("resume") and view.buttons.has("save") and view.buttons.has("settings") and view.buttons.has("save_return"),"pause page exposes the four first-playable actions")
 	check((view.buttons["resume"] as Button).has_focus(),"pause opens with focus on continue")
 	check(not (view.buttons["save"] as Button).disabled and not (view.buttons["save_return"] as Button).disabled,"save actions are enabled only when a session can save")

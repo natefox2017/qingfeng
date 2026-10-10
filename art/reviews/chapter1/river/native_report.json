@@ -1,0 +1,39 @@
+{
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "display": "macos",
+  "renderer": "OpenGL4.1 Metal Compatibility AppleM4Pro",
+  "cold_import_exit_code": 0,
+  "native_capture_save_error": 0,
+  "size_px": [
+    960,
+    576
+  ],
+  "tilemap_cells": 240,
+  "unique_runtime_assets_rendered": 12,
+  "runtime_files_imported": 14,
+  "animation_frames_distinct": true,
+  "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\nOpenGL API 4.1 Metal - 91.7 - Compatibility - Using Device: Apple - Apple M4 Pro\n\nRIVER_NATIVE_ANIMATION_DISTINCT: true samples=1\nRIVER_NATIVE_CAPTURE: 0 (960, 576) tiles=240 rendered_unique_assets=12 runtime_pngs=14\n",
+  "prior_failed_fixed_time_sample": {
+    "result": "two snapshots identical at0.17s; did not prove animation advancement",
+    "stdout": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\nOpenGL API 4.1 Metal - 91.7 - Compatibility - Using Device: Apple - Apple M4 Pro\n\nRIVER_NATIVE_ANIMATION_DISTINCT: false\nRIVER_NATIVE_CAPTURE: 0 (960, 576) tiles=240 rendered_unique_assets=12 runtime_pngs=14\n"
+  },
+  "captures": [
+    {
+      "path": "art/reviews/chapter1/river/native_sample.png",
+      "sha256": "60f137e197a88791a3b811955defa3dd4086d9c5c34570edbbaac71b71b17be9"
+    },
+    {
+      "path": "art/reviews/chapter1/river/native_animation_second.png",
+      "sha256": "2ac9bf1d10cc490cafea5d6e9a3695be00c020e8252e54ddb031de749281f97b"
+    }
+  ],
+  "not_verified": [
+    "formal map collisions",
+    "water blocked",
+    "bridge walkable",
+    "performance",
+    "full chapter",
+    "export",
+    "human acceptance"
+  ]
+}

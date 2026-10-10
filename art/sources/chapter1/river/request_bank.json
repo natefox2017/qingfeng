@@ -1,0 +1,14 @@
+{
+  "view": "low top-down",
+  "outline": "selective outline",
+  "shading": "medium shading",
+  "detail": "medium detail",
+  "seed": 89,
+  "description": "One vertical straight west bank edge for blue river: LEFT HALF bright spring green grass top over grey slate rock cliff face, RIGHT HALF transparent empty space to overlay on water. Bank runs fully from top to bottom edge, continuous grey rock wall with teal moss, topdown16px world pixel grid. No objects or scene, no blue water painted. Seamless north south repeat.",
+  "width": 32,
+  "height": 32,
+  "no_background": true,
+  "color_reference": "reference_east_river.png",
+  "reference_sha256": "a15984b57c0a21e5334d7375d3a202e15cf71b3633a864f4e92c8c7e7c6c4c1e",
+  "request_sha256": "a322a7cfe354160b781431be607fbc7f8a625786cc1b0805440193d8c28c7abe"
+}

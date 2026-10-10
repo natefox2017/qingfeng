@@ -1,0 +1,9 @@
+COMMAND=['/workspace/scratch/2bd695cff14d/godot472/Godot_v4.7.2-stable_linux.x86_64', '--headless', '--audio-driver', 'Dummy', '--path', '/tmp/qingfeng-test-0qr73xc1/game', '--script', 'res://tests/farm_exploration_test.gd']
+EXIT_CODE=1
+ELAPSED_SECONDS=15.177
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+CHECK_FAIL farm_exploration real movement reaches the lower bridge approach through multiple screens
+CHECK_FAIL farm_exploration player physically crosses the railed bridge to the eastern forest bank
+CHECK_FAIL farm_exploration camera really tracks beyond old 640px screen boundary
+FARM_EXPLORATION_PASS checks=12 failures=3

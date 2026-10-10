@@ -85,8 +85,8 @@ func run() -> void:
 	app.set_process(false)
 	check(app.gameplay_session.resident_schedule.is_configured() and app.gameplay_session.resident_schedule.has_world_anchors(),"GameplaySession owns validated WORLD-backed resident schedule")
 
-	app.room.get_player().position=Vector2(584,208)
-	app.room.get_player().facing=&"east"
+	app.room.get_player().position=app.room.get_anchor_position("VillagePathInteract") + Vector2.DOWN * 20.0
+	app.room.get_player().facing=&"north"
 	app._unhandled_key_input(key(KEY_E))
 	check(await wait_space("space.village"),"player reaches village through normal route")
 	if app.room.get_space_id()!="space.village":

@@ -36,7 +36,7 @@ func wait_space(space_id: String) -> bool:
 	return false
 
 func enter_house() -> bool:
-	app.room.get_player().position = Vector2(144,160)
+	app.room.get_player().position = app.room.get_anchor_position("HouseDoorArrival")
 	app.room.get_player().facing = &"north"
 	app._unhandled_key_input(key(KEY_E))
 	return await wait_space("space.house")

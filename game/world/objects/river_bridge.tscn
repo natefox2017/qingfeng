@@ -1,0 +1,271 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/chapter1/river/bridge_deck.png" id="1_5nl2m"]
+[ext_resource type="Texture2D" path="res://assets/chapter1/river/bridge_rail.png" id="2_qb870"]
+[ext_resource type="Texture2D" path="res://assets/chapter1/river/bridge_post.png" id="3_hlb0j"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h6o5b"]
+atlas = ExtResource("1_5nl2m")
+region = Rect2(0, 4, 32, 9)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2w8hx"]
+size = Vector2(160, 4)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_u4l00"]
+size = Vector2(160, 4)
+
+[node name="RiverBridge" type="Node2D" unique_id=1744906733]
+
+[node name="Deck_-80_0" type="Sprite2D" parent="." unique_id=2116535247]
+texture_filter = 1
+position = Vector2(-80, -32)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_-80_1" type="Sprite2D" parent="." unique_id=1154681077]
+texture_filter = 1
+position = Vector2(-80, -23)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_-80_2" type="Sprite2D" parent="." unique_id=122081905]
+texture_filter = 1
+position = Vector2(-80, -14)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_-80_3" type="Sprite2D" parent="." unique_id=1728676793]
+texture_filter = 1
+position = Vector2(-80, -5)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_-80_4" type="Sprite2D" parent="." unique_id=587135889]
+texture_filter = 1
+position = Vector2(-80, 4)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_-80_5" type="Sprite2D" parent="." unique_id=1852419831]
+texture_filter = 1
+position = Vector2(-80, 13)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_-80_6" type="Sprite2D" parent="." unique_id=1969714005]
+texture_filter = 1
+position = Vector2(-80, 22)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_-48_0" type="Sprite2D" parent="." unique_id=2035822438]
+texture_filter = 1
+position = Vector2(-48, -32)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_-48_1" type="Sprite2D" parent="." unique_id=1183990968]
+texture_filter = 1
+position = Vector2(-48, -23)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_-48_2" type="Sprite2D" parent="." unique_id=638336038]
+texture_filter = 1
+position = Vector2(-48, -14)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_-48_3" type="Sprite2D" parent="." unique_id=951607315]
+texture_filter = 1
+position = Vector2(-48, -5)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_-48_4" type="Sprite2D" parent="." unique_id=1109718284]
+texture_filter = 1
+position = Vector2(-48, 4)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_-48_5" type="Sprite2D" parent="." unique_id=2114300856]
+texture_filter = 1
+position = Vector2(-48, 13)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_-48_6" type="Sprite2D" parent="." unique_id=278873751]
+texture_filter = 1
+position = Vector2(-48, 22)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_-16_0" type="Sprite2D" parent="." unique_id=327007427]
+texture_filter = 1
+position = Vector2(-16, -32)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_-16_1" type="Sprite2D" parent="." unique_id=1291818094]
+texture_filter = 1
+position = Vector2(-16, -23)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_-16_2" type="Sprite2D" parent="." unique_id=1216396660]
+texture_filter = 1
+position = Vector2(-16, -14)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_-16_3" type="Sprite2D" parent="." unique_id=288700171]
+texture_filter = 1
+position = Vector2(-16, -5)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_-16_4" type="Sprite2D" parent="." unique_id=1457298757]
+texture_filter = 1
+position = Vector2(-16, 4)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_-16_5" type="Sprite2D" parent="." unique_id=718907239]
+texture_filter = 1
+position = Vector2(-16, 13)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_-16_6" type="Sprite2D" parent="." unique_id=1592466024]
+texture_filter = 1
+position = Vector2(-16, 22)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_16_0" type="Sprite2D" parent="." unique_id=564785526]
+texture_filter = 1
+position = Vector2(16, -32)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_16_1" type="Sprite2D" parent="." unique_id=420778808]
+texture_filter = 1
+position = Vector2(16, -23)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_16_2" type="Sprite2D" parent="." unique_id=76884861]
+texture_filter = 1
+position = Vector2(16, -14)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_16_3" type="Sprite2D" parent="." unique_id=326864244]
+texture_filter = 1
+position = Vector2(16, -5)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_16_4" type="Sprite2D" parent="." unique_id=1810314347]
+texture_filter = 1
+position = Vector2(16, 4)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_16_5" type="Sprite2D" parent="." unique_id=518555426]
+texture_filter = 1
+position = Vector2(16, 13)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_16_6" type="Sprite2D" parent="." unique_id=1984276339]
+texture_filter = 1
+position = Vector2(16, 22)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_48_0" type="Sprite2D" parent="." unique_id=986110349]
+texture_filter = 1
+position = Vector2(48, -32)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_48_1" type="Sprite2D" parent="." unique_id=976394177]
+texture_filter = 1
+position = Vector2(48, -23)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_48_2" type="Sprite2D" parent="." unique_id=1357438564]
+texture_filter = 1
+position = Vector2(48, -14)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_48_3" type="Sprite2D" parent="." unique_id=66020747]
+texture_filter = 1
+position = Vector2(48, -5)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_48_4" type="Sprite2D" parent="." unique_id=1777602729]
+texture_filter = 1
+position = Vector2(48, 4)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_48_5" type="Sprite2D" parent="." unique_id=668414001]
+texture_filter = 1
+position = Vector2(48, 13)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="Deck_48_6" type="Sprite2D" parent="." unique_id=1902881747]
+texture_filter = 1
+position = Vector2(48, 22)
+texture = SubResource("AtlasTexture_h6o5b")
+centered = false
+
+[node name="RailNorth" type="StaticBody2D" parent="." unique_id=695174175]
+position = Vector2(0, -33)
+collision_mask = 2
+
+[node name="@CollisionShape2D@2" type="CollisionShape2D" parent="RailNorth" unique_id=1775992669]
+shape = SubResource("RectangleShape2D_2w8hx")
+
+[node name="Visual" type="Sprite2D" parent="RailNorth" unique_id=1545787520]
+texture_filter = 1
+position = Vector2(0, -8)
+texture = ExtResource("2_qb870")
+
+[node name="RailSouth" type="StaticBody2D" parent="." unique_id=231356856]
+position = Vector2(0, 33)
+collision_mask = 2
+
+[node name="@CollisionShape2D@3" type="CollisionShape2D" parent="RailSouth" unique_id=1027018639]
+shape = SubResource("RectangleShape2D_u4l00")
+
+[node name="Visual" type="Sprite2D" parent="RailSouth" unique_id=1521698277]
+texture_filter = 1
+position = Vector2(0, -8)
+texture = ExtResource("2_qb870")
+
+[node name="BridgePost" type="Sprite2D" parent="." unique_id=522313993]
+texture_filter = 1
+position = Vector2(-72, -30)
+texture = ExtResource("3_hlb0j")
+
+[node name="@Sprite2D@4" type="Sprite2D" parent="." unique_id=236606980]
+texture_filter = 1
+position = Vector2(-72, 28)
+texture = ExtResource("3_hlb0j")
+
+[node name="@Sprite2D@5" type="Sprite2D" parent="." unique_id=932320355]
+texture_filter = 1
+position = Vector2(72, -30)
+texture = ExtResource("3_hlb0j")
+
+[node name="@Sprite2D@6" type="Sprite2D" parent="." unique_id=1792708181]
+texture_filter = 1
+position = Vector2(72, 28)
+texture = ExtResource("3_hlb0j")

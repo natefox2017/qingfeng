@@ -1,0 +1,36 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+CHECK_FAIL full_economy_loop day one reaches shop through farm-village route
+CHECK_FAIL full_economy_loop day one opens real trade modal
+CHECK_FAIL full_economy_loop day one buys one seed through economy command
+CHECK_FAIL full_economy_loop day one returns from shop to farm
+CHECK_FAIL full_economy_loop day one tills player plot
+CHECK_FAIL full_economy_loop day one plants and consumes one seed
+CHECK_FAIL full_economy_loop day one waters crop
+CHECK_FAIL full_economy_loop day one enters house
+CHECK_FAIL full_economy_loop day one opens real chest modal
+CHECK_FAIL full_economy_loop remaining seeds move atomically into chest
+CHECK_FAIL full_economy_loop bed settles watered crop into day two
+CHECK_FAIL full_economy_loop day two waters growing crop
+CHECK_FAIL full_economy_loop second sleep reaches day-three maturity
+CHECK_FAIL full_economy_loop day three harvest yields produce and keeps tilled soil
+CHECK_FAIL full_economy_loop day three reaches shop through live route
+CHECK_FAIL full_economy_loop day three sells harvested crop at configured price
+CHECK_FAIL full_economy_loop day three buys replacement seed without touching chest reserve
+CHECK_FAIL full_economy_loop day three returns to farm for replanting
+CHECK_FAIL full_economy_loop day three replants purchased seed into existing tilled soil
+CHECK_FAIL full_economy_loop replacement crop is watered for the next cycle
+CHECK_FAIL full_economy_loop chest reserve remains untouched through sell and replant
+CHECK_FAIL full_economy_loop three-day buy/sell/rebuy loop leaves deterministic configured money
+CHECK_FAIL full_economy_loop restart preserves day and economy result
+CHECK_FAIL full_economy_loop restart preserves chest reserve and replanted watered crop
+FULL_ECONOMY_LOOP_PASS checks=35 failures=24
+WARNING: 2005 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 2101 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 63 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+ERROR: 360 RID allocations of type 'P11GodotBody2D' were leaked at exit.
+ERROR: 23 RID allocations of type 'P12GodotShape2D' were leaked at exit.
+ERROR: 33 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.

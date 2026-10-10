@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/chapter1/animals/dog_idle.png" id="dog"]
+
+[node name="YardDog" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+centered = false
+texture = ExtResource("dog")
+offset = Vector2(-16, -29)

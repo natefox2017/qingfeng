@@ -1,0 +1,14 @@
+{
+  "no_background": true,
+  "view": "low top-down",
+  "outline": "selective outline",
+  "shading": "medium shading",
+  "detail": "medium detail",
+  "seed": 89,
+  "description": "One straight horizontal modular bridge DECK ONLY, 64 pixels wide 16 pixels deep. Warm golden brown wooden vertical narrow planks joining left to right, clean straight north and south edges. Orthographic topdown, exactly rectangular full64x16 deck without end caps. No rails, posts, water, ground, buildings or scene. Native pixelart one-pixel clusters, 16px world grid. Repeating bridge length component.",
+  "width": 64,
+  "height": 16,
+  "color_reference": "reference_bridge.png",
+  "reference_sha256": "90003e9c06f066eff66380127eac931b133041791e432b5d674def81dd3661f9",
+  "request_sha256": "72d695044d4acc17eb3b0bd6c05b3a4b692614d87772fe9c1b85364b21425164"
+}

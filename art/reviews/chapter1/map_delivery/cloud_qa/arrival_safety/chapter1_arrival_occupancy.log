@@ -1,0 +1,54 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ARRIVAL_CHECK true reserve res://world/workshop_interior.tscn day-working
+ARRIVAL_CHECK true player retains exact door anchor
+ARRIVAL_CHECK true no active resident overlap
+ARRIVAL_POS day-working player=(320.0, 320.0) resident=(320.056, 258.0175)
+ARRIVAL_CHECK true zero input cannot carry player day-working
+ARRIVAL_CHECK true no residual direction
+ARRIVAL_CHECK true physical return marker remains reachable
+ARRIVAL_CHECK true reserve res://world/workshop_interior.tscn night-leaving
+ARRIVAL_CHECK true player retains exact door anchor
+ARRIVAL_CHECK true no active resident overlap
+ARRIVAL_POS night-leaving player=(320.0, 320.0) resident=(321.3336, 336.0)
+ARRIVAL_CHECK true zero input cannot carry player night-leaving
+ARRIVAL_CHECK true no residual direction
+ARRIVAL_CHECK true physical return marker remains reachable
+ARRIVAL_CHECK true reserve res://world/workshop_interior.tscn absent
+ARRIVAL_CHECK true player retains exact door anchor
+ARRIVAL_CHECK true no active resident overlap
+ARRIVAL_POS absent player=(320.0, 320.0) resident=(320.0, 320.0)
+ARRIVAL_CHECK true zero input cannot carry player absent
+ARRIVAL_CHECK true no residual direction
+ARRIVAL_CHECK true physical return marker remains reachable
+ARRIVAL_CHECK true reserve res://world/shop_interior.tscn day-working
+ARRIVAL_CHECK true player retains exact door anchor
+ARRIVAL_CHECK true no active resident overlap
+ARRIVAL_POS day-working player=(320.0, 320.0) resident=(320.056, 258.0175)
+ARRIVAL_CHECK true zero input cannot carry player day-working
+ARRIVAL_CHECK true no residual direction
+ARRIVAL_CHECK true physical return marker remains reachable
+ARRIVAL_CHECK true reserve res://world/shop_interior.tscn night-leaving
+ARRIVAL_CHECK true player retains exact door anchor
+ARRIVAL_CHECK true no active resident overlap
+ARRIVAL_POS night-leaving player=(320.0, 320.0) resident=(321.3336, 336.0)
+ARRIVAL_CHECK true zero input cannot carry player night-leaving
+ARRIVAL_CHECK true no residual direction
+ARRIVAL_CHECK true physical return marker remains reachable
+ARRIVAL_CHECK true reserve res://world/shop_interior.tscn absent
+ARRIVAL_CHECK true player retains exact door anchor
+ARRIVAL_CHECK true no active resident overlap
+ARRIVAL_POS absent player=(320.0, 320.0) resident=(320.0, 320.0)
+ARRIVAL_CHECK true zero input cannot carry player absent
+ARRIVAL_CHECK true no residual direction
+ARRIVAL_CHECK true physical return marker remains reachable
+ARRIVAL_CHECK true all legal candidate spaces occupied: conservative rejection
+ARRIVAL_CHECK true rejected overlap is not forced through a wall/neighbor
+ARRIVAL_CHECK true second safe candidate is usable
+ARRIVAL_CHECK true occupied first candidate is skipped
+ARRIVAL_CHECK true non-overlapping neighbors remain unmoved
+ARRIVAL_CHECK true repeated reservation does not move non-overlapping NPC
+ARRIVAL_CHECK true thin-wall fixture endpoint itself is clear
+ARRIVAL_CHECK true cannot relocate through a wall to a clear endpoint
+ARRIVAL_CHECK true rejected wall crossing preserves resident
+ARRIVAL_OCCUPANCY_RESULT checks=45 failures=0

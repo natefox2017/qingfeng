@@ -1,0 +1,12 @@
+{
+  "description": "One standalone vertical riverbank cliff rock wall module,32x64pixel canvas. Narrow continuous grey slate boulders tower NORTH-SOUTH from top to bottom, thin moss and spring green grass lip along WEST left edge. Transparent around independent thinbank object. No water or landscape scene. Continuous repeat along north south16px world grid. Crisp native pixelart stone faces in bluegrey and cream highlights. Preserve approved reference rock colors and texture.",
+  "view": "low top-down",
+  "outline": "selective outline",
+  "shading": "medium shading",
+  "detail": "medium detail",
+  "inpainting": "{\"type\": \"rectangle\", \"fraction\": 0.95}",
+  "reference": "reference_bank_local.png",
+  "reference_sha256": "39dc96afede854ad925251a02da6b8ef57bef43d86b9d57a98e6d1f64b805674",
+  "request_sha256": "14790da3b36ee9b30dcbe7edcdacb8ef6c211d1eff611d8a56b45ee57bc86ec2",
+  "cost_confirmed": "search_help official says create_map_object costs1 generation"
+}

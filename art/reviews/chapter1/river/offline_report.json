@@ -1,0 +1,186 @@
+{
+  "assets_checked": 14,
+  "water_edge_pairs": 64,
+  "water_frames_distinct": true,
+  "ordinary_generations": 10,
+  "assets": [
+    {
+      "asset_id": "asset.ch1.river.water_tile",
+      "size_px": [
+        16,
+        16
+      ],
+      "colors": 3,
+      "alpha_values": [
+        255
+      ],
+      "sha256": "3d6676d7de88d2dda771b3c62a6a47a1f32627e3408bdc7dcb25148fc18c339d"
+    },
+    {
+      "asset_id": "asset.ch1.river.bridge_deck",
+      "size_px": [
+        32,
+        16
+      ],
+      "colors": 73,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "sha256": "a151fcb77862b324512e1725877b8f1bf37f6dd636665e4b1565fecf23898aa8"
+    },
+    {
+      "asset_id": "asset.ch1.river.bridge_rail",
+      "size_px": [
+        32,
+        16
+      ],
+      "colors": 28,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "sha256": "7ce22dba258ee30d5db7c4e19af750619f6e58d32c3bdf99491eb5722bbb2c0f"
+    },
+    {
+      "asset_id": "asset.ch1.river.bridge_post",
+      "size_px": [
+        16,
+        16
+      ],
+      "colors": 48,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "sha256": "79e64c08db7ef6c55cd27e4b2f58ff14ace75d1e99dff7c2b098f7f906f4625f"
+    },
+    {
+      "asset_id": "asset.ch1.river.water_animation",
+      "size_px": [
+        32,
+        16
+      ],
+      "colors": 3,
+      "alpha_values": [
+        255
+      ],
+      "sha256": "87dc560789aafdb38fbdc2b33f5fcfd20fb742b01ef4fd598ffbde3b663d5e42"
+    },
+    {
+      "asset_id": "asset.ch1.river.bank_north",
+      "size_px": [
+        32,
+        32
+      ],
+      "colors": 236,
+      "alpha_values": [
+        255
+      ],
+      "sha256": "e07ddca78bfc179854f550af641f26ebf13c5db883743551207d075dc1c26591"
+    },
+    {
+      "asset_id": "asset.ch1.river.waterfall_mouth",
+      "size_px": [
+        16,
+        16
+      ],
+      "colors": 32,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "sha256": "4402fd282e043c756b11937c31203a9c4e7994366e995f69e6f3ac1ae942bb5b"
+    },
+    {
+      "asset_id": "asset.ch1.river.waterfall_middle",
+      "size_px": [
+        16,
+        32
+      ],
+      "colors": 33,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "sha256": "fb96cb33f42d4272a00ff0a0ed3a4c758ce48329c8096687d9cd3d016a29824d"
+    },
+    {
+      "asset_id": "asset.ch1.river.waterfall_splash",
+      "size_px": [
+        16,
+        16
+      ],
+      "colors": 30,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "sha256": "d398590e7f3497f26f60ce4597c0afd9d3419ff4789aa6336713f34981b3b318"
+    },
+    {
+      "asset_id": "asset.ch1.river.dock_deck",
+      "size_px": [
+        16,
+        16
+      ],
+      "colors": 83,
+      "alpha_values": [
+        255
+      ],
+      "sha256": "3c228695e825042e9b42b59bf8e53f4a28e2b7f4dac435cb91ddae2a9d6d714a"
+    },
+    {
+      "asset_id": "asset.ch1.river.boat",
+      "size_px": [
+        32,
+        32
+      ],
+      "colors": 48,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "sha256": "7886ced3fea20151f8a4801dc5c061378eabda48352d1b03b5014f2c501c06fa"
+    },
+    {
+      "asset_id": "asset.ch1.river.reeds",
+      "size_px": [
+        32,
+        32
+      ],
+      "colors": 132,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "sha256": "94f6cea4e306aee09292a7bab53961e63c9fe0a440a191187eb2b7a9bf5618f5"
+    },
+    {
+      "asset_id": "asset.ch1.river.bank_cliff",
+      "size_px": [
+        32,
+        32
+      ],
+      "colors": 16,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "sha256": "a0835a2412329dc2e7cede5476485a2c39791b10e31a2aa05cc3c9e988b113f4"
+    },
+    {
+      "asset_id": "asset.ch1.river.bank_cliff_cap",
+      "size_px": [
+        32,
+        16
+      ],
+      "colors": 26,
+      "alpha_values": [
+        0,
+        255
+      ],
+      "sha256": "2e4063f0e7a2bf1ebc8b7addcf3f06e3953c7990763a8dad0035d5fbb034dbf7"
+    }
+  ]
+}

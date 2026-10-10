@@ -1,0 +1,578 @@
+{
+  "schema_version": 1,
+  "review_status": "proposed",
+  "source_path": "game/assets/chapter1/terrain/grass_dirt_atlas_16.png",
+  "source_sha256": "c95926e8b0e07162b1961c8be81e5901c76ae6d2449a58219fd8bb3f6609eb68",
+  "size_px": [
+    64,
+    80
+  ],
+  "tile_size_px": [
+    16,
+    16
+  ],
+  "margin_px": [
+    0,
+    0
+  ],
+  "separation_px": [
+    0,
+    0
+  ],
+  "terrain_set": 0,
+  "terrain_mode": "match_sides",
+  "terrain_names": {
+    "0": "grass",
+    "1": "dirt_path"
+  },
+  "mask_bits": {
+    "north": 1,
+    "east": 2,
+    "south": 4,
+    "west": 8
+  },
+  "corners": "not used in this sides-only narrow-path sample",
+  "regions": [
+    {
+      "region_id": "grass_base",
+      "asset_id": "asset.terrain.chapter1.grass",
+      "rect_px": [
+        0,
+        0,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "terrain": 0,
+      "mask": null,
+      "peering_sides": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "source_png": "art/sources/chapter1/terrain/grass_base_16.png",
+      "source_sha256": "913dc85d901e6fd100ce935c6c9f5d448c25678db7fb47e9c6c9163ea1169471"
+    },
+    {
+      "region_id": "grass_light",
+      "asset_id": "asset.terrain.chapter1.grass",
+      "rect_px": [
+        16,
+        0,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "terrain": 0,
+      "mask": null,
+      "peering_sides": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "source_png": "art/sources/chapter1/terrain/grass_light_16.png",
+      "source_sha256": "62a5e98417bd07ac6b29468e17f8ac58a3ddb8b5c1fe2dacc857cdd08f8dbf3f"
+    },
+    {
+      "region_id": "grass_dark",
+      "asset_id": "asset.terrain.chapter1.grass",
+      "rect_px": [
+        32,
+        0,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "terrain": 0,
+      "mask": null,
+      "peering_sides": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "source_png": "art/sources/chapter1/terrain/grass_dark_16.png",
+      "source_sha256": "22f5f3ce07c9037442aeb59c57fe593ee2176507503d174ba1968f5a86b87b92"
+    },
+    {
+      "region_id": "dirt_mask_00",
+      "asset_id": "asset.terrain.chapter1.dirt_path",
+      "rect_px": [
+        48,
+        0,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "terrain": 1,
+      "mask": 0,
+      "peering_sides": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "source_png": "art/sources/chapter1/terrain/dirt_mask_00_16.png",
+      "source_sha256": "70e862b2ccb4a83642c5120069488ecf524e70d106d6bd3a3cbae5485351b49d"
+    },
+    {
+      "region_id": "dirt_mask_01",
+      "asset_id": "asset.terrain.chapter1.dirt_path",
+      "rect_px": [
+        0,
+        16,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "terrain": 1,
+      "mask": 1,
+      "peering_sides": {
+        "top": 1,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "source_png": "art/sources/chapter1/terrain/dirt_mask_01_16.png",
+      "source_sha256": "3a1d960e836154cac015613658065c9bd26ba84eb2163c6146cd53cfc6d8ba29"
+    },
+    {
+      "region_id": "dirt_mask_02",
+      "asset_id": "asset.terrain.chapter1.dirt_path",
+      "rect_px": [
+        16,
+        16,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "terrain": 1,
+      "mask": 2,
+      "peering_sides": {
+        "top": 0,
+        "right": 1,
+        "bottom": 0,
+        "left": 0
+      },
+      "source_png": "art/sources/chapter1/terrain/dirt_mask_02_16.png",
+      "source_sha256": "ebbcf275f142dc8b85c63a553ba3d097c606d1d7f4852e9f5ab6e235ce7e29bf"
+    },
+    {
+      "region_id": "dirt_mask_03",
+      "asset_id": "asset.terrain.chapter1.dirt_path",
+      "rect_px": [
+        32,
+        16,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "terrain": 1,
+      "mask": 3,
+      "peering_sides": {
+        "top": 1,
+        "right": 1,
+        "bottom": 0,
+        "left": 0
+      },
+      "source_png": "art/sources/chapter1/terrain/dirt_mask_03_16.png",
+      "source_sha256": "3dd898ee8da0431105d428611cd21fa13909e48b52ba13cad31e8c82a8665697"
+    },
+    {
+      "region_id": "dirt_mask_04",
+      "asset_id": "asset.terrain.chapter1.dirt_path",
+      "rect_px": [
+        48,
+        16,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "terrain": 1,
+      "mask": 4,
+      "peering_sides": {
+        "top": 0,
+        "right": 0,
+        "bottom": 1,
+        "left": 0
+      },
+      "source_png": "art/sources/chapter1/terrain/dirt_mask_04_16.png",
+      "source_sha256": "582ae515ffa0e42d10f324ba328e51b60a7c155260509a5fb7526c15660c235e"
+    },
+    {
+      "region_id": "dirt_mask_05",
+      "asset_id": "asset.terrain.chapter1.dirt_path",
+      "rect_px": [
+        0,
+        32,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "terrain": 1,
+      "mask": 5,
+      "peering_sides": {
+        "top": 1,
+        "right": 0,
+        "bottom": 1,
+        "left": 0
+      },
+      "source_png": "art/sources/chapter1/terrain/dirt_mask_05_16.png",
+      "source_sha256": "3ff0294882d6bc38700a6022c1d272d56ffd26754d385cd687d8009387c3efb4"
+    },
+    {
+      "region_id": "dirt_mask_06",
+      "asset_id": "asset.terrain.chapter1.dirt_path",
+      "rect_px": [
+        16,
+        32,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "terrain": 1,
+      "mask": 6,
+      "peering_sides": {
+        "top": 0,
+        "right": 1,
+        "bottom": 1,
+        "left": 0
+      },
+      "source_png": "art/sources/chapter1/terrain/dirt_mask_06_16.png",
+      "source_sha256": "2511fcb0e0776be11e69b8222296c76f6bd5b9c44b76e4f3b81242bfc453c499"
+    },
+    {
+      "region_id": "dirt_mask_07",
+      "asset_id": "asset.terrain.chapter1.dirt_path",
+      "rect_px": [
+        32,
+        32,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "terrain": 1,
+      "mask": 7,
+      "peering_sides": {
+        "top": 1,
+        "right": 1,
+        "bottom": 1,
+        "left": 0
+      },
+      "source_png": "art/sources/chapter1/terrain/dirt_mask_07_16.png",
+      "source_sha256": "8f93bffb11d4f48119b3bf6267611da94e381700e4ddfb667936d1bee0566211"
+    },
+    {
+      "region_id": "dirt_mask_08",
+      "asset_id": "asset.terrain.chapter1.dirt_path",
+      "rect_px": [
+        48,
+        32,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "terrain": 1,
+      "mask": 8,
+      "peering_sides": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 1
+      },
+      "source_png": "art/sources/chapter1/terrain/dirt_mask_08_16.png",
+      "source_sha256": "6fbe73ce470a22f6e049e38d60e27764593643a85734cafca2fc6652d8dee09a"
+    },
+    {
+      "region_id": "dirt_mask_09",
+      "asset_id": "asset.terrain.chapter1.dirt_path",
+      "rect_px": [
+        0,
+        48,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "terrain": 1,
+      "mask": 9,
+      "peering_sides": {
+        "top": 1,
+        "right": 0,
+        "bottom": 0,
+        "left": 1
+      },
+      "source_png": "art/sources/chapter1/terrain/dirt_mask_09_16.png",
+      "source_sha256": "1493fc448d70ed466001c3cb86ebef38af27e17ae2ba59553d20c2b5187c6903"
+    },
+    {
+      "region_id": "dirt_mask_10",
+      "asset_id": "asset.terrain.chapter1.dirt_path",
+      "rect_px": [
+        16,
+        48,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "terrain": 1,
+      "mask": 10,
+      "peering_sides": {
+        "top": 0,
+        "right": 1,
+        "bottom": 0,
+        "left": 1
+      },
+      "source_png": "art/sources/chapter1/terrain/dirt_mask_10_16.png",
+      "source_sha256": "188810514f111ae397a444dc6c8aa4d01b2f6846533d91c4e9a3f2ff6e07ab3d"
+    },
+    {
+      "region_id": "dirt_mask_11",
+      "asset_id": "asset.terrain.chapter1.dirt_path",
+      "rect_px": [
+        32,
+        48,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "terrain": 1,
+      "mask": 11,
+      "peering_sides": {
+        "top": 1,
+        "right": 1,
+        "bottom": 0,
+        "left": 1
+      },
+      "source_png": "art/sources/chapter1/terrain/dirt_mask_11_16.png",
+      "source_sha256": "9c1d4d353a25ac688b3fb14cbfe1fe0693488c8aa9d7cbb189db011628c42f71"
+    },
+    {
+      "region_id": "dirt_mask_12",
+      "asset_id": "asset.terrain.chapter1.dirt_path",
+      "rect_px": [
+        48,
+        48,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "terrain": 1,
+      "mask": 12,
+      "peering_sides": {
+        "top": 0,
+        "right": 0,
+        "bottom": 1,
+        "left": 1
+      },
+      "source_png": "art/sources/chapter1/terrain/dirt_mask_12_16.png",
+      "source_sha256": "3eea9b27e997d7aee5f4a7ade0e529259d261f93cbe46abb31f02685956a08fa"
+    },
+    {
+      "region_id": "dirt_mask_13",
+      "asset_id": "asset.terrain.chapter1.dirt_path",
+      "rect_px": [
+        0,
+        64,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "terrain": 1,
+      "mask": 13,
+      "peering_sides": {
+        "top": 1,
+        "right": 0,
+        "bottom": 1,
+        "left": 1
+      },
+      "source_png": "art/sources/chapter1/terrain/dirt_mask_13_16.png",
+      "source_sha256": "f9d33a085ca5d1be93c5b9793724ef5e6503ebb7098f70824617a58948133d28"
+    },
+    {
+      "region_id": "dirt_mask_14",
+      "asset_id": "asset.terrain.chapter1.dirt_path",
+      "rect_px": [
+        16,
+        64,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "terrain": 1,
+      "mask": 14,
+      "peering_sides": {
+        "top": 0,
+        "right": 1,
+        "bottom": 1,
+        "left": 1
+      },
+      "source_png": "art/sources/chapter1/terrain/dirt_mask_14_16.png",
+      "source_sha256": "c7f029440b6fbdff26ec4ef60eab6b0336f21ca9bbebfa7dd022183ecf13de9e"
+    },
+    {
+      "region_id": "dirt_mask_15",
+      "asset_id": "asset.terrain.chapter1.dirt_path",
+      "rect_px": [
+        32,
+        64,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "terrain": 1,
+      "mask": 15,
+      "peering_sides": {
+        "top": 1,
+        "right": 1,
+        "bottom": 1,
+        "left": 1
+      },
+      "source_png": "art/sources/chapter1/terrain/dirt_mask_15_16.png",
+      "source_sha256": "8e2ffefa6df0aa16903dfc7f77aa2473d76a36d3f5a770ea9d8798d479634551"
+    }
+  ],
+  "animations": [],
+  "source_png": "art/sources/chapter1/terrain/grass_dirt_atlas_16.png",
+  "editable_source": "art/sources/chapter1/terrain/grass_dirt_atlas_16.pxo",
+  "world_layout": "isolated QA sample only; not chapter1 map coordinates",
+  "collision": "none; art-only walkable ground",
+  "provenance": {
+    "tool": "PixelLab create_image_pixflux + Pixelorama native pixel repair",
+    "source_repo": "natefox2017/qingfeng",
+    "reused_source": "game/assets/phase0/farm_terrain_16.png",
+    "reused_rect_px": [
+      [
+        0,
+        0,
+        16,
+        16
+      ],
+      [
+        64,
+        0,
+        16,
+        16
+      ]
+    ],
+    "changes": "Native32 grass/dirt generated with actual approved-map crop forced palette. Grass reduced179->6 colors; dirt57->5 warm colors; exact16px crops, native border repair, existing19-region NESW path geometry retained. No downscaling. Final native grass contrast compressed; shared border blade pixels replace uniform frame after seeing strong grid in real render. Sparse native redraw: actual approved-map sampled3 grass/3 dirt colors,84% grass base coverage; 4px paired leaf clusters, sparse small chips; no generated large spots retained.",
+    "visual_reference": "art/approved/refs/world_chapter1_map.png",
+    "reference_sha256": "ba35eef32eb0a49a5e50ad8ec4498148845c8f4065d3695b315c4ea1286bddd7",
+    "rights": "Project-original phase0 source and approved project reference; see art/PHASE0_SOURCE.md and art/approved/ART_RIGHTS.md",
+    "generator_output": "First grass job rejected (dirt square); second grass and dirt raw preserved and cleaned in native editor",
+    "reused_source_sha256": "2f09ea3a17d45ba054eac2b444acd3d2a353a5bbb174d2606549f2d4ff0f10ee",
+    "reference_crop_rect_px": [
+      470,
+      340,
+      165,
+      190
+    ],
+    "requests_path": "art/sources/chapter1/terrain/pixellab_requests.json",
+    "grass_source_crop_rects_px": [
+      [
+        0,
+        0,
+        16,
+        16
+      ],
+      [
+        16,
+        0,
+        16,
+        16
+      ],
+      [
+        0,
+        16,
+        16,
+        16
+      ]
+    ],
+    "dirt_source_crop_rect_px": [
+      8,
+      8,
+      16,
+      16
+    ]
+  },
+  "remaining": "User visual review pending; proposed resources may be used for playable development per latest user instruction. Wide roads/stone paths/corners mode not covered.",
+  "palette_size": 7,
+  "standalone_surfaces": [
+    {
+      "asset_id": "asset.terrain.chapter1.dirt_path",
+      "region_id": "dirt_full",
+      "source_png": "art/sources/chapter1/terrain/dirt_base_16.png",
+      "runtime_path": "game/assets/chapter1/terrain/dirt_base_16.png",
+      "rect_px": [
+        0,
+        0,
+        16,
+        16
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "source_sha256": "24d107b957d108da63a687ea3b3190d94745382dd30b4ba71ba654d8152ec210",
+      "role": "full cell surface for multi-cell wide paths, no corners peering implied"
+    }
+  ]
+}

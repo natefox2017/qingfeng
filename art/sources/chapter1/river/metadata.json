@@ -1,0 +1,1056 @@
+{
+  "schema_version": 1,
+  "baseline": "a871fdb2f18eea1f9208dcb6c478823677966460",
+  "tile_size_px": 16,
+  "assets": [
+    {
+      "asset_id": "asset.ch1.river.water_tile",
+      "runtime_path": "game/assets/chapter1/river/water_tile.png",
+      "source_path": "art/sources/chapter1/river/water_tile.png",
+      "size_px": [
+        16,
+        16
+      ],
+      "atlas_rect": [
+        0,
+        0,
+        16,
+        16
+      ],
+      "source_crop": {
+        "path": "art/sources/chapter1/river/water_raw.png",
+        "rect": [
+          8,
+          8,
+          16,
+          16
+        ],
+        "source_sha256": "d68257a0601366095054dc04dc9cbcd15ff8be2070333157571a8821744533e7"
+      },
+      "anchor_px": [
+        0,
+        0
+      ],
+      "connections": {
+        "north": "water",
+        "east": "water",
+        "south": "water",
+        "west": "water"
+      },
+      "footprint_note": "non_walkable",
+      "filter": "nearest",
+      "sha256": "3d6676d7de88d2dda771b3c62a6a47a1f32627e3408bdc7dcb25148fc18c339d",
+      "review_status": "proposed",
+      "atlas_tiles_16": [
+        {
+          "rect": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "grid_position": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.ch1.river.bridge_deck",
+      "runtime_path": "game/assets/chapter1/river/bridge_deck.png",
+      "source_path": "art/sources/chapter1/river/bridge_deck.png",
+      "size_px": [
+        32,
+        16
+      ],
+      "atlas_rect": [
+        0,
+        0,
+        32,
+        16
+      ],
+      "source_crop": {
+        "path": "art/sources/chapter1/river/bridge_deck_raw.png",
+        "rect": [
+          16,
+          0,
+          32,
+          16
+        ],
+        "source_sha256": "8ff445293f24ed94d3d511f60f9569b31e72b8281e464007bb6dd8fc6a3089ae"
+      },
+      "anchor_px": [
+        0,
+        8
+      ],
+      "connections": {
+        "east": "deck",
+        "west": "deck"
+      },
+      "footprint_note": "proposed rect[0,3,32,10] walkable only when WORLD aligns landings",
+      "filter": "nearest",
+      "sha256": "a151fcb77862b324512e1725877b8f1bf37f6dd636665e4b1565fecf23898aa8",
+      "review_status": "proposed",
+      "atlas_tiles_16": [
+        {
+          "rect": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "grid_position": [
+            0,
+            0
+          ]
+        },
+        {
+          "rect": [
+            16,
+            0,
+            16,
+            16
+          ],
+          "grid_position": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.ch1.river.bridge_rail",
+      "runtime_path": "game/assets/chapter1/river/bridge_rail.png",
+      "source_path": "art/sources/chapter1/river/bridge_rail.png",
+      "size_px": [
+        32,
+        16
+      ],
+      "atlas_rect": [
+        0,
+        0,
+        32,
+        16
+      ],
+      "source_crop": {
+        "path": "art/sources/chapter1/river/bridge_rail_raw.png",
+        "rect": [
+          16,
+          4,
+          32,
+          2
+        ],
+        "source_sha256": "5999acc05708c82d42795ea186c5be16ec7fde19726ad854bd1f459addf68303"
+      },
+      "anchor_px": [
+        0,
+        8
+      ],
+      "connections": {
+        "east": "rail",
+        "west": "rail"
+      },
+      "footprint_note": "independent proposed thin blocking strip y7..9",
+      "filter": "nearest",
+      "sha256": "7ce22dba258ee30d5db7c4e19af750619f6e58d32c3bdf99491eb5722bbb2c0f",
+      "review_status": "proposed",
+      "atlas_tiles_16": [
+        {
+          "rect": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "grid_position": [
+            0,
+            0
+          ]
+        },
+        {
+          "rect": [
+            16,
+            0,
+            16,
+            16
+          ],
+          "grid_position": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.ch1.river.bridge_post",
+      "runtime_path": "game/assets/chapter1/river/bridge_post.png",
+      "source_path": "art/sources/chapter1/river/bridge_post.png",
+      "size_px": [
+        16,
+        16
+      ],
+      "atlas_rect": [
+        0,
+        0,
+        16,
+        16
+      ],
+      "source_crop": {
+        "path": "art/sources/chapter1/river/bridge_rail_raw.png",
+        "rect": [
+          5,
+          1,
+          4,
+          12
+        ],
+        "source_sha256": "5999acc05708c82d42795ea186c5be16ec7fde19726ad854bd1f459addf68303"
+      },
+      "anchor_px": [
+        8,
+        14
+      ],
+      "connections": {},
+      "footprint_note": "decorative support, collision WORLD-owned",
+      "filter": "nearest",
+      "sha256": "79e64c08db7ef6c55cd27e4b2f58ff14ace75d1e99dff7c2b098f7f906f4625f",
+      "review_status": "proposed",
+      "atlas_tiles_16": [
+        {
+          "rect": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "grid_position": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.ch1.river.water_animation",
+      "runtime_path": "game/assets/chapter1/river/water_animation.png",
+      "source_path": "art/sources/chapter1/river/water_animation.png",
+      "size_px": [
+        32,
+        16
+      ],
+      "atlas_rect": [
+        0,
+        0,
+        32,
+        16
+      ],
+      "source_crop": {
+        "path": "art/sources/chapter1/river/water_tile.png",
+        "rect": [
+          0,
+          0,
+          16,
+          16
+        ],
+        "source_sha256": "3d6676d7de88d2dda771b3c62a6a47a1f32627e3408bdc7dcb25148fc18c339d"
+      },
+      "anchor_px": [
+        0,
+        0
+      ],
+      "connections": {
+        "all": "water"
+      },
+      "footprint_note": "two16x16frames; second moves ripples2px exact wrap;150ms each",
+      "filter": "nearest",
+      "sha256": "87dc560789aafdb38fbdc2b33f5fcfd20fb742b01ef4fd598ffbde3b663d5e42",
+      "review_status": "proposed",
+      "frames": [
+        {
+          "rect": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "duration_ms": 150
+        },
+        {
+          "rect": [
+            16,
+            0,
+            16,
+            16
+          ],
+          "duration_ms": 150
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.ch1.river.bank_north",
+      "runtime_path": "game/assets/chapter1/river/bank_north.png",
+      "source_path": "art/sources/chapter1/river/bank_north.png",
+      "size_px": [
+        32,
+        32
+      ],
+      "atlas_rect": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "source_crop": {
+        "path": "art/sources/chapter1/river/bank_raw.png",
+        "rect": [
+          0,
+          0,
+          32,
+          32
+        ],
+        "source_sha256": "9901cd494eedcb199a6008f2bc9492f58c72bf7a08ce51d2a55d03090b445320"
+      },
+      "anchor_px": [
+        0,
+        8
+      ],
+      "connections": {
+        "east": "bank_north",
+        "west": "bank_north"
+      },
+      "footprint_note": "opaque grass-rock-water northbank strip, not transparent sidebank",
+      "filter": "nearest",
+      "sha256": "e07ddca78bfc179854f550af641f26ebf13c5db883743551207d075dc1c26591",
+      "review_status": "proposed",
+      "atlas_tiles_16": [
+        {
+          "rect": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "grid_position": [
+            0,
+            0
+          ]
+        },
+        {
+          "rect": [
+            16,
+            0,
+            16,
+            16
+          ],
+          "grid_position": [
+            1,
+            0
+          ]
+        },
+        {
+          "rect": [
+            0,
+            16,
+            16,
+            16
+          ],
+          "grid_position": [
+            0,
+            1
+          ]
+        },
+        {
+          "rect": [
+            16,
+            16,
+            16,
+            16
+          ],
+          "grid_position": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.ch1.river.waterfall_mouth",
+      "runtime_path": "game/assets/chapter1/river/waterfall_mouth.png",
+      "source_path": "art/sources/chapter1/river/waterfall_mouth.png",
+      "size_px": [
+        16,
+        16
+      ],
+      "atlas_rect": [
+        0,
+        0,
+        16,
+        16
+      ],
+      "source_crop": {
+        "path": "art/sources/chapter1/river/waterfall_raw.png",
+        "rect": [
+          0,
+          0,
+          16,
+          16
+        ],
+        "source_sha256": "a14f87d7fa231c59463661dbb09f884f748832b236f75719e50504134117cb6c"
+      },
+      "anchor_px": [
+        8,
+        16
+      ],
+      "connections": {
+        "south": "waterfall_middle"
+      },
+      "footprint_note": "visual only, mouth silhouette native",
+      "filter": "nearest",
+      "sha256": "4402fd282e043c756b11937c31203a9c4e7994366e995f69e6f3ac1ae942bb5b",
+      "review_status": "proposed",
+      "atlas_tiles_16": [
+        {
+          "rect": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "grid_position": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.ch1.river.waterfall_middle",
+      "runtime_path": "game/assets/chapter1/river/waterfall_middle.png",
+      "source_path": "art/sources/chapter1/river/waterfall_middle.png",
+      "size_px": [
+        16,
+        32
+      ],
+      "atlas_rect": [
+        0,
+        0,
+        16,
+        32
+      ],
+      "source_crop": {
+        "path": "art/sources/chapter1/river/waterfall_raw.png",
+        "rect": [
+          0,
+          16,
+          16,
+          32
+        ],
+        "source_sha256": "a14f87d7fa231c59463661dbb09f884f748832b236f75719e50504134117cb6c"
+      },
+      "anchor_px": [
+        8,
+        0
+      ],
+      "connections": {
+        "north": "waterfall",
+        "south": "waterfall"
+      },
+      "footprint_note": "transparent stream only, native4px narrow stream in16pxcanvas",
+      "filter": "nearest",
+      "sha256": "fb96cb33f42d4272a00ff0a0ed3a4c758ce48329c8096687d9cd3d016a29824d",
+      "review_status": "proposed",
+      "atlas_tiles_16": [
+        {
+          "rect": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "grid_position": [
+            0,
+            0
+          ]
+        },
+        {
+          "rect": [
+            0,
+            16,
+            16,
+            16
+          ],
+          "grid_position": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.ch1.river.waterfall_splash",
+      "runtime_path": "game/assets/chapter1/river/waterfall_splash.png",
+      "source_path": "art/sources/chapter1/river/waterfall_splash.png",
+      "size_px": [
+        16,
+        16
+      ],
+      "atlas_rect": [
+        0,
+        0,
+        16,
+        16
+      ],
+      "source_crop": {
+        "path": "art/sources/chapter1/river/waterfall_raw.png",
+        "rect": [
+          0,
+          48,
+          16,
+          16
+        ],
+        "source_sha256": "a14f87d7fa231c59463661dbb09f884f748832b236f75719e50504134117cb6c"
+      },
+      "anchor_px": [
+        8,
+        0
+      ],
+      "connections": {
+        "north": "waterfall_middle"
+      },
+      "footprint_note": "visual only, splash termination",
+      "filter": "nearest",
+      "sha256": "d398590e7f3497f26f60ce4597c0afd9d3419ff4789aa6336713f34981b3b318",
+      "review_status": "proposed",
+      "atlas_tiles_16": [
+        {
+          "rect": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "grid_position": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.ch1.river.dock_deck",
+      "runtime_path": "game/assets/chapter1/river/dock_deck.png",
+      "source_path": "art/sources/chapter1/river/dock_deck.png",
+      "size_px": [
+        16,
+        16
+      ],
+      "atlas_rect": [
+        0,
+        0,
+        16,
+        16
+      ],
+      "source_crop": {
+        "path": "art/sources/chapter1/river/dock_deck_raw.png",
+        "rect": [
+          8,
+          8,
+          16,
+          16
+        ],
+        "source_sha256": "bcdfd580dbb781cb3480d1ecc94249e8ee30356aacb9d228718678bc88af3695"
+      },
+      "anchor_px": [
+        0,
+        0
+      ],
+      "connections": {
+        "all": "dock_deck"
+      },
+      "footprint_note": "square16px plank texture extends pier;WORLDowns walkablecollision",
+      "filter": "nearest",
+      "sha256": "3c228695e825042e9b42b59bf8e53f4a28e2b7f4dac435cb91ddae2a9d6d714a",
+      "review_status": "proposed",
+      "atlas_tiles_16": [
+        {
+          "rect": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "grid_position": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.ch1.river.boat",
+      "runtime_path": "game/assets/chapter1/river/boat.png",
+      "source_path": "art/sources/chapter1/river/boat.png",
+      "size_px": [
+        32,
+        32
+      ],
+      "atlas_rect": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "source_crop": {
+        "path": "art/sources/chapter1/river/boat_raw.png",
+        "rect": [
+          0,
+          0,
+          32,
+          32
+        ],
+        "source_sha256": "5ff4d1497e4bc1d6f704fa03c1c38317675e19ac2163e74ab4b6b856c0ae78f2"
+      },
+      "anchor_px": [
+        16,
+        28
+      ],
+      "connections": {},
+      "footprint_note": "decorative, actualmodel NE-SW orientation; not northsouth claimed in prompt",
+      "filter": "nearest",
+      "sha256": "7886ced3fea20151f8a4801dc5c061378eabda48352d1b03b5014f2c501c06fa",
+      "review_status": "proposed"
+    },
+    {
+      "asset_id": "asset.ch1.river.reeds",
+      "runtime_path": "game/assets/chapter1/river/reeds.png",
+      "source_path": "art/sources/chapter1/river/reeds.png",
+      "size_px": [
+        32,
+        32
+      ],
+      "atlas_rect": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "source_crop": {
+        "path": "art/sources/chapter1/river/reeds_raw.png",
+        "rect": [
+          0,
+          0,
+          32,
+          32
+        ],
+        "source_sha256": "f17f0600c7825df1a5cdc434a82dab5bd6dc0f9846d17bc650301154f4fa14c6"
+      },
+      "anchor_px": [
+        16,
+        29
+      ],
+      "connections": {},
+      "footprint_note": "visualonly, root atcanvasbottom",
+      "filter": "nearest",
+      "sha256": "94f6cea4e306aee09292a7bab53961e63c9fe0a440a191187eb2b7a9bf5618f5",
+      "review_status": "proposed"
+    },
+    {
+      "asset_id": "asset.ch1.river.bank_cliff",
+      "runtime_path": "game/assets/chapter1/river/bank_cliff.png",
+      "source_path": "art/sources/chapter1/river/bank_cliff.png",
+      "size_px": [
+        32,
+        32
+      ],
+      "atlas_rect": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "source_crop": {
+        "path": "art/sources/chapter1/river/bank_object_raw.png",
+        "rect": [
+          0,
+          16,
+          32,
+          32
+        ],
+        "source_sha256": "fb3718ecb05b72c37575512df9f1cb7add310f86080e2deb250c3a5ee341f2e9"
+      },
+      "anchor_px": [
+        16,
+        32
+      ],
+      "connections": {
+        "north": "cliff",
+        "south": "cliff"
+      },
+      "footprint_note": "opaque rockface centre24px, transparent side margins; grass edge owned by terrain group",
+      "filter": "nearest",
+      "sha256": "a0835a2412329dc2e7cede5476485a2c39791b10e31a2aa05cc3c9e988b113f4",
+      "review_status": "proposed",
+      "atlas_tiles_16": [
+        {
+          "rect": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "grid_position": [
+            0,
+            0
+          ]
+        },
+        {
+          "rect": [
+            16,
+            0,
+            16,
+            16
+          ],
+          "grid_position": [
+            1,
+            0
+          ]
+        },
+        {
+          "rect": [
+            0,
+            16,
+            16,
+            16
+          ],
+          "grid_position": [
+            0,
+            1
+          ]
+        },
+        {
+          "rect": [
+            16,
+            16,
+            16,
+            16
+          ],
+          "grid_position": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "asset.ch1.river.bank_cliff_cap",
+      "runtime_path": "game/assets/chapter1/river/bank_cliff_cap.png",
+      "source_path": "art/sources/chapter1/river/bank_cliff_cap.png",
+      "size_px": [
+        32,
+        16
+      ],
+      "atlas_rect": [
+        0,
+        0,
+        32,
+        16
+      ],
+      "source_crop": {
+        "path": "art/sources/chapter1/river/bank_object_raw.png",
+        "rect": [
+          0,
+          0,
+          32,
+          16
+        ],
+        "source_sha256": "fb3718ecb05b72c37575512df9f1cb7add310f86080e2deb250c3a5ee341f2e9"
+      },
+      "anchor_px": [
+        16,
+        16
+      ],
+      "connections": {
+        "south": "cliff"
+      },
+      "footprint_note": "grass moss lip atop cliff",
+      "filter": "nearest",
+      "sha256": "2e4063f0e7a2bf1ebc8b7addcf3f06e3953c7990763a8dad0035d5fbb034dbf7",
+      "review_status": "proposed",
+      "atlas_tiles_16": [
+        {
+          "rect": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "grid_position": [
+            0,
+            0
+          ]
+        },
+        {
+          "rect": [
+            16,
+            0,
+            16,
+            16
+          ],
+          "grid_position": [
+            1,
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "jobs": [
+    {
+      "asset": "bank",
+      "job_id": "77f08731-c909-47ef-bcb7-c26e6d3b64ba",
+      "tool": "create_image_pixflux",
+      "cost_generations": 1,
+      "status": "downloaded",
+      "output_sha256": "9901cd494eedcb199a6008f2bc9492f58c72bf7a08ce51d2a55d03090b445320"
+    },
+    {
+      "asset": "bank_object",
+      "job_id": "43d78dbb-a1b4-428e-9900-375d0efcb7ef",
+      "tool": "create_map_object",
+      "cost_generations": 1,
+      "status": "downloaded",
+      "output_sha256": "fb3718ecb05b72c37575512df9f1cb7add310f86080e2deb250c3a5ee341f2e9"
+    },
+    {
+      "asset": "bank_west",
+      "job_id": "8b390308-6304-4358-85e8-819679cc5d8b",
+      "tool": "create_image_pixflux",
+      "cost_generations": 1,
+      "status": "downloaded",
+      "output_sha256": "e2465eeae805e00e22292e8417c1033bfe0b0693f3cd960ac0db5be2a267923a"
+    },
+    {
+      "asset": "boat",
+      "job_id": "7b87a7ed-14f4-44b2-99cc-43ce3847fe50",
+      "tool": "create_image_pixflux",
+      "cost_generations": 1,
+      "status": "downloaded",
+      "output_sha256": "5ff4d1497e4bc1d6f704fa03c1c38317675e19ac2163e74ab4b6b856c0ae78f2"
+    },
+    {
+      "asset": "bridge_deck",
+      "job_id": "e6abbed8-434f-4bbb-b27f-d7aec9575a85",
+      "tool": "create_image_pixflux",
+      "cost_generations": 1,
+      "status": "downloaded",
+      "output_sha256": "8ff445293f24ed94d3d511f60f9569b31e72b8281e464007bb6dd8fc6a3089ae"
+    },
+    {
+      "asset": "bridge_rail",
+      "job_id": "5e47fcaf-e020-45b8-9abb-97bbcff370b6",
+      "tool": "create_image_pixflux",
+      "cost_generations": 1,
+      "status": "downloaded",
+      "output_sha256": "5999acc05708c82d42795ea186c5be16ec7fde19726ad854bd1f459addf68303"
+    },
+    {
+      "asset": "dock_deck",
+      "job_id": "b9e0b44a-0b08-4111-a9ef-1c9dbb0795ff",
+      "tool": "create_image_pixflux",
+      "cost_generations": 1,
+      "status": "downloaded",
+      "output_sha256": "bcdfd580dbb781cb3480d1ecc94249e8ee30356aacb9d228718678bc88af3695"
+    },
+    {
+      "asset": "reeds",
+      "job_id": "253c31be-6a92-4074-b74c-c95cd5f1996e",
+      "tool": "create_image_pixflux",
+      "cost_generations": 1,
+      "status": "downloaded",
+      "output_sha256": "f17f0600c7825df1a5cdc434a82dab5bd6dc0f9846d17bc650301154f4fa14c6"
+    },
+    {
+      "asset": "water",
+      "job_id": "9659c89b-e3f3-410f-9d0e-3308ae5228b6",
+      "tool": "create_image_pixflux",
+      "cost_generations": 1,
+      "status": "downloaded",
+      "output_sha256": "d68257a0601366095054dc04dc9cbcd15ff8be2070333157571a8821744533e7"
+    },
+    {
+      "asset": "waterfall",
+      "job_id": "a2584702-4635-472b-9d70-1acb2cd1d465",
+      "tool": "create_image_pixflux",
+      "cost_generations": 1,
+      "status": "downloaded",
+      "output_sha256": "a14f87d7fa231c59463661dbb09f884f748832b236f75719e50504134117cb6c"
+    }
+  ],
+  "generation_budget": 12,
+  "water_edit": {
+    "tool": "pixelart_workbench",
+    "operations": [
+      {
+        "operation": "copy_region",
+        "frames": [
+          1
+        ],
+        "source_frame": 1,
+        "source_layer": "image",
+        "region": [
+          0,
+          0,
+          0,
+          15
+        ],
+        "at": [
+          15,
+          0
+        ],
+        "reason": "Inspected left/right boundary differs. Copy one-pixel first column to last for repeat continuity."
+      },
+      {
+        "operation": "copy_region",
+        "frames": [
+          1
+        ],
+        "source_frame": 1,
+        "source_layer": "image",
+        "region": [
+          0,
+          0,
+          15,
+          0
+        ],
+        "at": [
+          0,
+          15
+        ],
+        "reason": "Inspected top/bottom boundary differs. Copy first row to last, preserve interior water art."
+      },
+      {
+        "operation": "copy_region",
+        "frames": [
+          1
+        ],
+        "source_frame": 1,
+        "source_layer": "image",
+        "region": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "at": [
+          15,
+          15
+        ],
+        "reason": "Restore shared opposite corner after row and column snapshot copies so all four boundaries agree."
+      }
+    ],
+    "output_image_id": "b84e5d9f-2ad7-40c4-93cb-03ff85da54d6"
+  },
+  "rights": "Approved user-provided map is a style/color reference. PixelLab generated original component art; not CC0. No legacy project or third-party game assets used.",
+  "missing": [
+    "bank full inner/outer corner terrain peering set",
+    "water shallow/deep matching set",
+    "true bridge landing/endcap transition",
+    "dock cap and unique dock post (bridge_post may be reused)",
+    "lily pad",
+    "native formal water collision/bridge walkthrough",
+    "reviewer acceptance",
+    "human animation loop/visual acceptance"
+  ],
+  "generations_submitted": 10,
+  "rejected_attempts": [
+    {
+      "asset": "bank_west",
+      "tool": "create_image_pixflux",
+      "reason": "32x32 opaque diagonal river scene, violates verticaltransparent module; raw retained only source review, no runtime"
+    },
+    {
+      "asset": "bank_west_ai",
+      "tool": "image_gen",
+      "output_size_px": [
+        1254,
+        1254
+      ],
+      "reason": "not native32 grid; no downscaling; .tmp archive excluded runtime",
+      "sha256": "3a946a5d825d348009146e0dadfda5406b7cc6b7db922656449d843919a8e6a5"
+    }
+  ],
+  "references": [
+    {
+      "path": "art/sources/chapter1/river/reference_bank_local.png",
+      "sha256": "39dc96afede854ad925251a02da6b8ef57bef43d86b9d57a98e6d1f64b805674"
+    },
+    {
+      "path": "art/sources/chapter1/river/reference_east_river.png",
+      "sha256": "a15984b57c0a21e5334d7375d3a202e15cf71b3633a864f4e92c8c7e7c6c4c1e"
+    },
+    {
+      "path": "art/sources/chapter1/river/reference_bridge.png",
+      "sha256": "90003e9c06f066eff66380127eac931b133041791e432b5d674def81dd3661f9"
+    },
+    {
+      "path": "art/sources/chapter1/river/reference_dock.png",
+      "sha256": "d261d3287ecb6059db3137d34f9369659f222a7f888db46d7bc5583ded09a79a"
+    },
+    {
+      "path": "art/sources/chapter1/river/reference_waterfall.png",
+      "sha256": "8d7d5a4c90075863344287d98f8bcbb0b33b4ecdca45741c80e84fea4560838d"
+    },
+    {
+      "path": "art/sources/chapter1/river/reference_boat.png",
+      "sha256": "60d317cb0938f1e54c79629110308949734e7bba51a48858b4628248a1f59f9f"
+    }
+  ],
+  "reference_map": {
+    "path": "art/approved/refs/world_chapter1_map.png",
+    "sha256": "ba35eef32eb0a49a5e50ad8ec4498148845c8f4065d3695b315c4ea1286bddd7",
+    "crop_rects": {
+      "east_river": [
+        1230,
+        160,
+        250,
+        170
+      ],
+      "bridge": [
+        1235,
+        342,
+        257,
+        107
+      ],
+      "dock": [
+        1320,
+        581,
+        131,
+        98
+      ],
+      "waterfall": [
+        1310,
+        0,
+        130,
+        165
+      ],
+      "boat": [
+        1450,
+        640,
+        53,
+        73
+      ],
+      "bank_local": [
+        1238,
+        198,
+        32,
+        64
+      ]
+    }
+  },
+  "water_animation_edit_image_id": "fa1b2edb-e1f6-4419-bdca-4e668df12c44",
+  "water_palette_edit_image_id": "27d50e53-8f5a-432c-9296-e3f1a6cda336",
+  "water_palette_edit": "water_palette_edit.json",
+  "review_status": "proposed",
+  "native_rendered_assets": 12,
+  "asset_file_qa_count": 14
+}

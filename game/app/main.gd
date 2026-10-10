@@ -6,6 +6,7 @@ extends Control
 const REQUEST = preload("res://app/scene_request.gd")
 const LOCKS = preload("res://app/input_locks.gd")
 const CODEC = preload("res://persistence/session_codec.gd")
+const MAP_LAYOUT_MIGRATION = preload("res://app/chapter1_map_migration.gd")
 const STORE = preload("res://persistence/session_store.gd")
 const SETTINGS = preload("res://persistence/settings_store.gd")
 const GAMEPLAY = preload("res://app/gameplay_session.gd")
@@ -162,7 +163,25 @@ func _activate_room(scene: PackedScene, requested_generation: int) -> void:
 			return_to_title()
 			return
 		if _entry_snapshot.has("gameplay"):
-			if _entry_snapshot.space_id != room.get_space_id() or not next_gameplay.restore(_entry_snapshot.gameplay):
+			if _entry_snapshot.space_id != room.get_space_id():
+				last_error = "存档区域与目标世界不一致，未恢复任何状态。"
+				return_to_title()
+				return
+			# Only the exact pre-PR117 six-plot fingerprint may migrate. The old
+			# signed save stays on disk; all changes are to an in-memory copy.
+			var migration: Dictionary = MAP_LAYOUT_MIGRATION.migrate(
+				_entry_snapshot, plot_definitions, resident_anchor_definitions, room.get_spawn_position()
+			)
+			if not bool(migration.ok):
+				last_error = "旧地图存档迁移失败：" + String(migration.get("reason", "UNKNOWN"))
+				return_to_title()
+				return
+			if bool(migration.migrated) and not CODEC.validate_snapshot(migration.snapshot):
+				last_error = "旧地图存档迁移数据无效，原档未修改。"
+				return_to_title()
+				return
+			_entry_snapshot = migration.snapshot
+			if not next_gameplay.restore(_entry_snapshot.gameplay):
 				last_error = "完整玩法存档与当前世界布局不兼容，未恢复任何状态。"
 				return_to_title()
 				return
@@ -217,6 +236,14 @@ func _activate_room(scene: PackedScene, requested_generation: int) -> void:
 		last_error = "居民运行状态无法恢复到当前世界，未进入游戏。"
 		return_to_title()
 		return
+	if not _reserve_player_arrival(room,position):
+		last_error = "入口附近没有居民可让出的安全位置，未进入世界。"
+		return_to_title()
+		return
+	await get_tree().physics_frame
+	if requested_generation != generation or state != State.LOADING or not is_instance_valid(room):
+		return
+	_capture_room_resident_runtime(room)
 	_refresh_farm_world()
 	room.get_player().position = position
 	room.get_player().facing = StringName(active_snapshot.facing)
@@ -832,6 +859,14 @@ func _begin_door_transition(target: Dictionary) -> void:
 		_fail_transition(candidate,"目标区域无法恢复居民运行状态，仍留在原位置。")
 		return
 
+	if not _reserve_player_arrival(candidate,arrival):
+		_fail_transition(candidate,"目标入口被居民占用，仍留在原位置。")
+		return
+	await get_tree().physics_frame
+	if token != _transition_generation or not _transition_pending or state != State.WORLD or not is_instance_valid(candidate):
+		return
+	_capture_room_resident_runtime(candidate)
+
 	gameplay_session.release_resident_conversations_for_space(String(room.get_space_id()))
 	_resident_conversation_end_game_minute = -1
 	var old_room := room
@@ -970,6 +1005,61 @@ func _capture_room_resident_runtime(candidate: Node2D) -> bool:
 		return false
 	for row: Variant in rows:
 		if not gameplay_session.update_resident_runtime(row):
+			return false
+	return true
+
+func _reserve_player_arrival(candidate: Node2D, arrival: Vector2) -> bool:
+	# Both actor bodies have radius 4. Coincident CharacterBody2Ds can recover
+	# in the same direction every frame and carry an idle player across a room.
+	# Keep the authored player door/save point; only yield an overlapping NPC.
+	if gameplay_session != null and gameplay_session.is_configured() and candidate.has_method("apply_resident_projection"):
+		var projection: Dictionary = gameplay_session.projection()
+		candidate.apply_resident_projection(projection.residents,projection.resident_runtime)
+	var residents: Array[CharacterBody2D] = []
+	for node: Node in candidate.find_children("*","CharacterBody2D",true,false):
+		if node.has_method("is_world_active") and node.is_world_active():
+			residents.append(node)
+	for actor: CharacterBody2D in residents:
+		if actor.position.distance_to(arrival) >= 8.1:
+			continue
+		if _position_is_blocked_in(candidate,actor.position):
+			return false
+		var found := false
+		var target: Dictionary = actor.projection().target_position_px
+		var vertical := -16.0 if float(target.y) < arrival.y else 16.0
+		# Yield toward the NPC's route, so its first axis-aligned waypoint does
+		# not immediately lead back through the player's occupied arrival.
+		for offset: Vector2 in [Vector2(16,vertical),Vector2(-16,vertical),Vector2(0,vertical)]:
+			var point := arrival + offset
+			var bounds := Rect2(candidate.get_world_bounds()) if candidate.has_method("get_world_bounds") else Rect2(0,0,640,360)
+			if not bounds.grow(-4.0).has_point(point):
+				continue
+			var doorway := false
+			for marker: Node in candidate.find_children("*Interact","Marker2D",true,false):
+				if candidate.to_local(marker.global_position).distance_to(point) < 8.1:
+					doorway = true
+			if doorway:
+				continue
+			if _position_is_blocked_in(candidate,point):
+				continue
+			var sweep := PhysicsShapeQueryParameters2D.new()
+			var actor_shape := actor.get_node("CollisionShape2D") as CollisionShape2D
+			sweep.shape = actor_shape.shape
+			sweep.collision_mask = 1
+			sweep.transform = actor_shape.global_transform
+			sweep.motion = point - actor.position
+			if candidate.get_world_2d().direct_space_state.cast_motion(sweep)[0] < 1.0:
+				continue
+			var occupied := false
+			for other: CharacterBody2D in residents:
+				if other != actor and other.position.distance_to(point) < 8.1:
+					occupied = true
+			if occupied:
+				continue
+			actor.restore_runtime_position(point,actor.facing)
+			found = true
+			break
+		if not found:
 			return false
 	return true
 

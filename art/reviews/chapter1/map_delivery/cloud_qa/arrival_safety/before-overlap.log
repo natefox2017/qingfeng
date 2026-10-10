@@ -1,0 +1,12 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ARRIVAL_OVERLAP res://world/workshop_interior.tscn frame=0 player=(320.0, 312.9707) resident=(320.0, 312.9707) input=(0.0, 0.0) resident_hits=1
+ARRIVAL_OVERLAP res://world/workshop_interior.tscn frame=1 player=(320.0, 305.9413) resident=(320.0, 305.9413) input=(0.0, 0.0) resident_hits=1
+ARRIVAL_OVERLAP res://world/workshop_interior.tscn frame=30 player=(320.0, 248.6601) resident=(320.0, 256.7361) input=(0.0, 0.0) resident_hits=0
+ARRIVAL_OVERLAP res://world/workshop_interior.tscn frame=60 player=(320.0, 248.6601) resident=(320.0, 256.7361) input=(0.0, 0.0) resident_hits=0
+ARRIVAL_OVERLAP res://world/workshop_interior.tscn frame=120 player=(320.0, 248.6601) resident=(320.0, 256.7361) input=(0.0, 0.0) resident_hits=0
+ARRIVAL_OVERLAP res://world/shop_interior.tscn frame=0 player=(320.0, 312.9707) resident=(320.0, 312.9707) input=(0.0, 0.0) resident_hits=1
+ARRIVAL_OVERLAP res://world/shop_interior.tscn frame=1 player=(320.0, 305.9413) resident=(320.0, 305.9413) input=(0.0, 0.0) resident_hits=1
+ARRIVAL_OVERLAP res://world/shop_interior.tscn frame=30 player=(320.0, 248.6601) resident=(320.0, 256.7361) input=(0.0, 0.0) resident_hits=0
+ARRIVAL_OVERLAP res://world/shop_interior.tscn frame=60 player=(320.0, 248.6601) resident=(320.0, 256.7361) input=(0.0, 0.0) resident_hits=0
+ARRIVAL_OVERLAP res://world/shop_interior.tscn frame=120 player=(320.0, 248.6601) resident=(320.0, 256.7361) input=(0.0, 0.0) resident_hits=0

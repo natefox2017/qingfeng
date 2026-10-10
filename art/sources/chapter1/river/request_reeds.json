@@ -1,0 +1,14 @@
+{
+  "view": "low top-down",
+  "outline": "selective outline",
+  "shading": "medium shading",
+  "detail": "medium detail",
+  "seed": 89,
+  "description": "One small tuft of tall green waterside reeds with two ochre cattail heads,16px grid nativepixel density,32x32 canvas. Several slender leaves fan out from one root at bottom center, leafy cyan grass shades with warm yellow highlights. Standalone transparent sprite, no rocks, water, soil, landscape or scene.",
+  "width": 32,
+  "height": 32,
+  "no_background": true,
+  "color_reference": "reference_east_river.png",
+  "reference_sha256": "a15984b57c0a21e5334d7375d3a202e15cf71b3633a864f4e92c8c7e7c6c4c1e",
+  "request_sha256": "b9c25cee432d27a04bcfa1f8ae9140498a86ec4a821eadcd80d92f4eec30a00d"
+}

@@ -1,0 +1,275 @@
+{
+  "job": {
+    "canvas": [
+      16,
+      16
+    ],
+    "frame_count": 1,
+    "views": [
+      {
+        "id": "south",
+        "offset": [
+          0,
+          0
+        ]
+      }
+    ],
+    "source_bookends_exact": false
+  },
+  "scene": {
+    "palette": {
+      "mortar": "#9b9178",
+      "dark": "#b8ab8c",
+      "stone": "#cfbf9f",
+      "light": "#dfcfaa",
+      "glint": "#eaddb9"
+    },
+    "layers": [
+      {
+        "id": "base",
+        "name": "Body - paving"
+      }
+    ],
+    "views": {
+      "south": {
+        "nodes": {
+          "paving": {
+            "layer": "base",
+            "at": [
+              0,
+              0
+            ],
+            "draw": [
+              {
+                "op": "rect",
+                "box": [
+                  0,
+                  0,
+                  15,
+                  15
+                ],
+                "color": "mortar"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  -4,
+                  0,
+                  3,
+                  6
+                ],
+                "color": "stone"
+              },
+              {
+                "op": "path",
+                "points": [
+                  [
+                    -4,
+                    0
+                  ],
+                  [
+                    3,
+                    0
+                  ]
+                ],
+                "color": "light"
+              },
+              {
+                "op": "path",
+                "points": [
+                  [
+                    -4,
+                    6
+                  ],
+                  [
+                    3,
+                    6
+                  ]
+                ],
+                "color": "dark"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  5,
+                  0,
+                  12,
+                  6
+                ],
+                "color": "stone"
+              },
+              {
+                "op": "path",
+                "points": [
+                  [
+                    5,
+                    0
+                  ],
+                  [
+                    12,
+                    0
+                  ]
+                ],
+                "color": "light"
+              },
+              {
+                "op": "path",
+                "points": [
+                  [
+                    5,
+                    6
+                  ],
+                  [
+                    12,
+                    6
+                  ]
+                ],
+                "color": "dark"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  14,
+                  0,
+                  21,
+                  6
+                ],
+                "color": "stone"
+              },
+              {
+                "op": "path",
+                "points": [
+                  [
+                    14,
+                    0
+                  ],
+                  [
+                    21,
+                    0
+                  ]
+                ],
+                "color": "light"
+              },
+              {
+                "op": "path",
+                "points": [
+                  [
+                    14,
+                    6
+                  ],
+                  [
+                    21,
+                    6
+                  ]
+                ],
+                "color": "dark"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  0,
+                  8,
+                  7,
+                  14
+                ],
+                "color": "stone"
+              },
+              {
+                "op": "path",
+                "points": [
+                  [
+                    0,
+                    8
+                  ],
+                  [
+                    7,
+                    8
+                  ]
+                ],
+                "color": "light"
+              },
+              {
+                "op": "path",
+                "points": [
+                  [
+                    0,
+                    14
+                  ],
+                  [
+                    7,
+                    14
+                  ]
+                ],
+                "color": "dark"
+              },
+              {
+                "op": "rect",
+                "box": [
+                  9,
+                  8,
+                  16,
+                  14
+                ],
+                "color": "stone"
+              },
+              {
+                "op": "path",
+                "points": [
+                  [
+                    9,
+                    8
+                  ],
+                  [
+                    16,
+                    8
+                  ]
+                ],
+                "color": "light"
+              },
+              {
+                "op": "path",
+                "points": [
+                  [
+                    9,
+                    14
+                  ],
+                  [
+                    16,
+                    14
+                  ]
+                ],
+                "color": "dark"
+              },
+              {
+                "op": "pixels",
+                "pixels": [
+                  [
+                    2,
+                    3,
+                    "glint"
+                  ],
+                  [
+                    3,
+                    3,
+                    "glint"
+                  ],
+                  [
+                    10,
+                    11,
+                    "light"
+                  ],
+                  [
+                    11,
+                    11,
+                    "light"
+                  ]
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "reference_crop_path": "art/sources/chapter1/town/plaza_reference_crop.png"
+}

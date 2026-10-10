@@ -56,8 +56,8 @@ func run() -> void:
 		return
 	var session_identity: RefCounted = app.gameplay_session
 
-	app.room.get_player().position = Vector2(584,208)
-	app.room.get_player().facing = &"east"
+	app.room.get_player().position = app.room.get_anchor_position("VillagePathInteract") + Vector2(0,24)
+	app.room.get_player().facing = &"north"
 	var farm_target: Dictionary = app.room.resolve_interaction_target()
 	check(farm_target.get("target_space_id","")=="space.village","farm bridge exit resolves village route")
 	app._unhandled_key_input(key(KEY_E))
@@ -66,7 +66,7 @@ func run() -> void:
 	if not arrived_village:
 		print("VILLAGE_ROUTE_DIAG state=%s error=%s pending=%s" % [app.state, app.last_error, app._transition_pending])
 	check(arrived_village,"farm route commits into village")
-	check(app.gameplay_session==session_identity and app.room.get_player().position==Vector2(48,180) and app.room.get_player().facing==&"east","village arrival preserves gameplay session and target-owned anchor")
+	check(app.gameplay_session==session_identity and app.room.get_player().position==app.room.get_spawn_position() and app.room.get_player().facing==&"east","village arrival preserves gameplay session and target-owned anchor")
 	check(app.room.layout_contract_valid(),"village editable route contract validates")
 
 	app.room.get_player().position = Vector2(400,168)
@@ -101,11 +101,11 @@ func run() -> void:
 	check(await wait_space("space.village"),"shop door returns to village")
 	check(app.room.get_player().position==Vector2(400,168) and app.room.get_player().facing==&"south","shop exit uses village-owned safe arrival")
 
-	app.room.get_player().position = Vector2(48,180)
-	app.room.get_player().facing = &"west"
+	app.room.get_player().position = app.room.get_spawn_position()
+	app.room.get_player().facing = &"north"
 	app._unhandled_key_input(key(KEY_E))
 	check(await wait_space("space.farm"),"village west route returns to farm")
-	check(app.room.get_player().position==Vector2(592,208) and app.room.get_player().facing==&"west","farm bridge arrival is safe and target-owned")
+	check(app.room.get_player().position==app.room.get_anchor_position("VillagePathArrival") and app.room.get_player().facing==&"south","farm bridge arrival is safe and target-owned")
 
 	finish()
 

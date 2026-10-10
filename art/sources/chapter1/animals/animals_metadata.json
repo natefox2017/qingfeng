@@ -1,0 +1,173 @@
+{
+  "baseline": "a871fdb2f18eea1f9208dcb6c478823677966460",
+  "scope": "map_static_idle_only",
+  "identity_note": "Existing orange-white dog and white hen/duck species; no gameplay identity changes. Butterfly is ambient static candidate.",
+  "assets": [
+    {
+      "name": "dog",
+      "source": "dog_idle_short_original.png",
+      "source_sha256": "d528c6ae41d79c611878aff351263b3162dc7eec4dca84fdf90afd886bf1521e",
+      "runtime": "game/assets/chapter1/animals/dog_idle.png",
+      "runtime_sha256": "13cad29254e2672eb8c517c6146172ff2bca15c46695e3608d697f931efd66b4",
+      "canvas_px": [
+        32,
+        32
+      ],
+      "content_rect_px": [
+        2,
+        2,
+        30,
+        30
+      ],
+      "source_offset_px": [
+        0,
+        0
+      ],
+      "anchor_px": [
+        16,
+        29
+      ],
+      "pose": "idle",
+      "frame_count": 1,
+      "actual_facing": "east",
+      "scale": 1,
+      "review_status": "proposed",
+      "future_animation": "not_implemented"
+    },
+    {
+      "name": "chicken",
+      "source": "chicken_idle_24_original.png",
+      "source_sha256": "f4f71ff9dcdce76a91b3f6a1b015a3591f28830eedb5f8f630d8b40098cf23b6",
+      "runtime": "game/assets/chapter1/animals/chicken_idle.png",
+      "runtime_sha256": "749b625d4e1bfc7b0cc02ccc7dfb7395d19cfab7788387a774241b94f048ee49",
+      "canvas_px": [
+        24,
+        24
+      ],
+      "content_rect_px": [
+        2,
+        2,
+        21,
+        22
+      ],
+      "source_offset_px": [
+        0,
+        0
+      ],
+      "anchor_px": [
+        12,
+        21
+      ],
+      "pose": "idle",
+      "frame_count": 1,
+      "actual_facing": "east",
+      "scale": 1,
+      "review_status": "proposed",
+      "future_animation": "not_implemented"
+    },
+    {
+      "name": "duck",
+      "source": "duck_idle_floating.png",
+      "source_sha256": "8eefeae29403cf1509a0880038e1f6cc1cbc88fe1da1b7911aae2cd48d1eb8a0",
+      "runtime": "game/assets/chapter1/animals/duck_idle.png",
+      "runtime_sha256": "ccb3e3891915f9da3573efc6ae243955d235c29901b60538276ea1656c72dc38",
+      "canvas_px": [
+        32,
+        32
+      ],
+      "content_rect_px": [
+        9,
+        12,
+        25,
+        23
+      ],
+      "source_offset_px": [
+        4,
+        7
+      ],
+      "anchor_px": [
+        16,
+        22
+      ],
+      "pose": "idle",
+      "frame_count": 1,
+      "actual_facing": "east",
+      "scale": 1,
+      "review_status": "proposed",
+      "future_animation": "not_implemented"
+    },
+    {
+      "name": "butterfly",
+      "source": "butterfly_idle_original.png",
+      "source_sha256": "e4de4e391e8953a157b91445a919f4821f716b1c165b2742d65506214af3d180",
+      "runtime": "game/assets/chapter1/animals/butterfly_idle.png",
+      "runtime_sha256": "fb64fa0387f6e8b658cd13cb08f2d219329f2aea69395018c876941ae070246e",
+      "canvas_px": [
+        16,
+        16
+      ],
+      "content_rect_px": [
+        1,
+        2,
+        15,
+        13
+      ],
+      "source_offset_px": [
+        0,
+        0
+      ],
+      "anchor_px": [
+        8,
+        8
+      ],
+      "pose": "idle",
+      "frame_count": 1,
+      "actual_facing": "top",
+      "scale": 1,
+      "review_status": "proposed",
+      "future_animation": "not_implemented"
+    }
+  ],
+  "terms_url": "https://www.pixellab.ai/termsofservice",
+  "terms_last_updated": "2025-11-23",
+  "generation_cost": 6,
+  "budget_max_generations": 8,
+  "accepted": false,
+  "reference_inputs": [
+    {
+      "path": "art/sources/chapter1/animals/reference_dog.png",
+      "rect_px": [
+        210,
+        520,
+        265,
+        564
+      ],
+      "source": "art/approved/refs/world_chapter1_map.png",
+      "sha256": "1de7b8ec8ad3e24198d944229adde6cf951b59f9d536784c5e52d385e06519e5"
+    },
+    {
+      "path": "art/sources/chapter1/animals/reference_chicken.png",
+      "rect_px": [
+        91,
+        571,
+        143,
+        619
+      ],
+      "source": "art/approved/refs/world_chapter1_map.png",
+      "sha256": "2768025153a41e77c79405c6237e4eb50bda021701b3b015e99999ee4c8cdda7"
+    },
+    {
+      "path": "art/sources/chapter1/animals/reference_duck.png",
+      "rect_px": [
+        1325,
+        477,
+        1367,
+        513
+      ],
+      "source": "art/approved/refs/world_chapter1_map.png",
+      "sha256": "5ec45ae476c666ed8f0e512f0c0a0c16312419ac60b9efe2a1f33ed63fc56332"
+    }
+  ],
+  "reference_sha256": "ba35eef32eb0a49a5e50ad8ec4498148845c8f4065d3695b315c4ea1286bddd7",
+  "attachment_sha256": "ba35eef32eb0a49a5e50ad8ec4498148845c8f4065d3695b315c4ea1286bddd7"
+}

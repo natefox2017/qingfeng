@@ -1,0 +1,14 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+CHECK_FAIL world plot.farm.004 is not covered by world collision
+CHECK_FAIL world plot.farm.005 is not covered by world collision
+WORLD_PASS checks=33 failures=2
+WARNING: 635 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 731 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 63 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+ERROR: 108 RID allocations of type 'P11GodotBody2D' were leaked at exit.
+ERROR: 23 RID allocations of type 'P12GodotShape2D' were leaked at exit.
+ERROR: 33 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
