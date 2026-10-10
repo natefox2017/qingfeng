@@ -1,28 +1,31 @@
-name: Auto merge
+name: PR policy checks
 on:
   pull_request:
     branches: [main]
     types: [opened, synchronize, reopened, ready_for_review]
 
+# GitHub Free cannot enforce rulesets on this private repository. Do not
+# call enablePullRequestAutoMerge during an unfinished required check:
+# it repeatedly fails with "Pull request is in unstable status", and auto
+# merge without enforced QA would be unsafe. Human review and an actual
+# successful validation run remain required before manually merging.
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
+
+concurrency:
+  group: pr-policy-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
-  # Keep this exact job name because the active main ruleset requires the
-  # repository-policy status context. The job intentionally runs no CI.
+  # Keep the historical check-context name for compatible future protection.
+  # This now runs real repository/unit checks instead of a GraphQL mutation.
   repository-policy:
-    if: ${{ github.event.pull_request.draft == false }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 1
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
     steps:
-      - name: Enable native auto-merge
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-        run: |
-          PR_ID="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" --jq .node_id)"
-          ENABLED="$(gh api graphql             -f query='query($id: ID!) { node(id: $id) { ... on PullRequest { autoMergeRequest { enabledAt } } } }'             -f id="$PR_ID"             --jq '.data.node.autoMergeRequest.enabledAt // ""')"
-          if [ -z "$ENABLED" ]; then
-            gh api graphql               -f query='mutation($id: ID!) { enablePullRequestAutoMerge(input: {pullRequestId: $id, mergeMethod: SQUASH}) { pullRequest { number } } }'               -f id="$PR_ID" >/dev/null
-          fi
+      - name: Check out pull request
+        uses: actions/checkout@v4
+      - name: Validate repository contracts
+        run: python3 tools/check_scaffold.py
+      - name: Execute Python regression tests
+        run: python3 -m unittest discover -s tools/tests -v
