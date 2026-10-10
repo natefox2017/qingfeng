@@ -1,24 +1,23 @@
-## 任务与领取来源
-- GitHub 仓库 / Issue / 稳定 Task ID：
-- GitHub Issue URL（唯一任务和 TODO 来源）：
-- [晴风谷正式 Todoist Board](https://app.todoist.com/app/project/6hj76M7Ghj5pR3xm) 中对应卡片 URL 或 task ID：
-- 领取前 Ready、转移 In Progress 和实际回读证据；未能领取写阻断：
-- 最新默认分支 SHA / 本分支 / 影响文件与活跃 PR 去重：
+## Linear Issue 与领取检查
+- 当前唯一 Linear Issue ID（例如 GEN-45）和链接：
+- 实际状态 / 负责人 / 领取回读证据；无 Ready 时说明管理迁移例外或阻断：
+- 关联 Linear 父子依赖、现存 Draft PR、同文件持有人检查：
+- GitHub 仓库、实际默认分支基线 SHA、独立分支与 PR 文件范围：
 
-## 实现与来源
-唯一交付能力、真实改动文件、对外接口/状态/存档影响：
-使用官方/开源资源、版本和许可；PixelLab 生成与费用授权（若适用）：
+## 修改内容、来源与技术约束
+唯一交付目标、真实改动路径、API/字段/存档兼容边界：
+外部开源/PixelLab 素材来源、版本、许可及费用授权（若适用）：
 
-## 实际验证
-执行命令、退出码、原始日志、正常/失败/取消/保存测试：
-Godot 原生截图、导出/真实服务、人工审查的实际证据或 NOT RUN：
+## 测试与人工验收
+命令、退出码、原始日志、正常/失败/取消/存档测试；原生游戏/视觉、导出、真实服务结果：
+未执行则明确 `NOT RUN`，不能用仓库 auto-merge 或 lint 冒充真正验收。
 
-## 状态回写与未验事项
-- [ ] 已关联 GitHub Issue，必要验收 TODO 实时回写，列明尚未完成条目。
-- [ ] PR 创建后将 Todoist 卡移入 **In Review** 并回读；若无真实权限/阻塞则在 Issue 中说明，不能冒充成功。
-- [ ] **仅 PR 合并且必要验收通过后**将 Todoist 卡移动到 **Done** Section（不调用 Todoist complete），回读确认可见并 `checked=false`，再关闭 GitHub Issue。
-- [ ] 跨任务文件、分支及当前活跃 PR 无重复修改/竞争领取。
-- [ ] 没有密钥、私人存档及未经许可的资产；未运行测试不冒充通过。
+## GitHub PR → Linear 状态回写
+- [ ] PR 标题、分支或正文包含准确 Linear Issue ID（例如 `GEN-45`）且实际关联可核实。
+- [ ] PR 创建后实际确认 Linear In Review；自动化未配时手动回写，不在 PR 描述冒充成功。
+- [ ] PR 合并后仅代表代码合入；只有所有必要 Linear Checkbox、测试/审查/人工签收及依赖完成才将 Linear Issue 设 Done。
+- [ ] 旧 GitHub Issue/Todoist 未作为新的任务入口；未重复领取、未覆盖其他 AI 的分支/文件。
+- [ ] 未泄漏密钥、私人存档或未经许可资产；当前仓库 Public 时遵守公开数据安全边界。
 
-## 回退与风险
-未执行或失败的内容、恢复条件与不覆盖用户数据的回滚：
+## 未验事项、阻断与回退
+未完成内容、下一步恢复条件、不会覆盖用户数据的回退：
