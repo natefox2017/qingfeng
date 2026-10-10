@@ -1,28 +1,45 @@
-name: 开发任务
-description: 一个有依赖、文件边界和验收条件的交付
-title: "[TASK] "
+name: 原子 TODO（Kanban 卡）
+description: 所有可领取的代码、ART、UI、音频、数据、QA 和验证任务
+title: "[TODO][CH1] "
 body:
+  - type: markdown
+    attributes:
+      value: |
+        ⚠️ 一个可领取 TODO = 一个 GitHub Issue + 一个 Projects v2 Kanban 卡片。
+        创建后先加入 Kanban 的 Inbox，排重并检查前置依赖，只有 Ready 且无人领取才可从看板认领。
+        领取/完成及回写规范见 AGENTS.md 和 #120；当前看板未完成部署时不得直接开工。
+  - type: input
+    id: task_id
+    attributes:
+      label: 唯一 Task ID / 对应需求
+      description: 例如 CH1-A03-01；已有父 Issue checkbox 的原始 ID 不能丢
+      placeholder: "CH1-A03-01 | parent #84 A03"
+    validations:
+      required: true
   - type: textarea
     id: outcome
     attributes:
-      label: 玩家目标与最小交付
+      label: 唯一目标与原子 TODO
+      description: 独立交付的一项功能/素材/验证，勿把整个阶段混为一张卡
+      placeholder: |
+        - [ ] 本 Issue 的唯一可验证交付
     validations:
       required: true
   - type: textarea
-    id: ownership
+    id: dedup
     attributes:
-      label: 基线SHA、依赖、认领人与文件集合
+      label: 排重 / 依赖 / 并行文件边界
+      description: 必须核对父 Issue、同 ID 的 Issue/PR/分支/资产 hash，写明 BLOCKED BY 与允许修改的具体文件
     validations:
       required: true
   - type: textarea
-    id: steps
+    id: done
     attributes:
-      label: 实施checkbox、来源与数据/素材合同
+      label: Done 条件与复验方式
+      description: 正常、失败、原生/人工验收；不执行的测试明确 NOT RUN
     validations:
       required: true
-  - type: textarea
-    id: acceptance
+  - type: markdown
     attributes:
-      label: 正常/失败/保存验收、原生证据与未验项
-    validations:
-      required: true
+      value: |
+        领取不是填写此模板：在 Projects v2 的 Ready 卡片操作，改 Claimed + 唯一 assignee，附带当前对话/工作树/commit 的 Issue 领取回执并回读；完工后同时更新 Issue checkbox 和 Board Status。

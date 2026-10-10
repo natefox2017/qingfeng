@@ -1,22 +1,44 @@
-name: 缺陷
-description: 能复现并验证的功能或画面问题
+name: 缺陷（原子 Kanban 任务）
+description: 一个可复现、可归属和可复验的独立问题；创建后必须进入 GitHub Projects
 title: "[BUG] "
 body:
+  - type: markdown
+    attributes:
+      value: |
+        一个独立缺陷 = 一个 Issue/Kanban 卡；先搜索既有 Issue/PR 防重复，不能仅在聊天或父 checkbox 里记 Bug。
+        认领必须从 Projects v2 Ready 卡开始；具体状态和唯一 owner 规则见 AGENTS.md / #120。
+  - type: input
+    id: parent
+    attributes:
+      label: 所属需求 / 任务 ID / 父 Issue
+      placeholder: "CH1-M05 / #84 / #106"
+    validations:
+      required: true
   - type: textarea
     id: reproduction
     attributes:
-      label: 当前commit、平台、入口、复现步骤
+      label: 当前 commit、平台、入口与可重复步骤
     validations:
       required: true
   - type: textarea
     id: expected
     attributes:
-      label: 预期与实际
+      label: 预期与实际 / 影响
+    validations:
+      required: true
+  - type: textarea
+    id: dedup
+    attributes:
+      label: 排重、相关 PR/分支和文件所有权
     validations:
       required: true
   - type: textarea
     id: evidence
     attributes:
-      label: 脱敏日志、原生画面、影响和回归条件
+      label: 复验 TODO、脱敏日志/原生画面、Done 条件
+      placeholder: |
+        - [ ] 重现并记录证据
+        - [ ] 修复且复验
+        - [ ] 合并后回写 Issue + Kanban，关联父项
     validations:
       required: true
