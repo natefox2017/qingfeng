@@ -1,0 +1,4 @@
+DEV-108 Linear/GitHub pull-request event integration probe.
+This fixture is used only on a temporary test branch to verify draft-to-review and closed-unmerged event handling.
+It must NOT be merged into main or used as runtime content.
+Project: natefox2017/qingfeng. Issue: DEV-108.
