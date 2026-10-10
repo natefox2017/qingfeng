@@ -6,9 +6,49 @@
     "width": 16,
     "height": 16
   },
-  "view_hint": "low top-down",
+  "view_hint": "top-down three-quarter; proposed until same-camera review",
   "reference_asset_ids": [],
-  "palette_asset_id": "asset.terrain.phase0",
-  "character_content_height_px": 30,
-  "notes": "第一屏创作候选：16px地形、24×32四向主角与暖色农舍，来自本仓库原创手绘PNG；尚无用户设计图对照和Godot原生截图，review_status仍是proposed，不能冒充PixelLab accepted。"
+  "palette_asset_id": null,
+  "character_content_height_px": null,
+  "notes": "技术尺寸及现有 Space/Door/Spawn/Plot 兼容接口已冻结；具体工程几何唯一归 WORLD Godot 场景。palette、人物高度和最终视觉比例继续 proposed/TBD；按最新用户授权，可采用 proposed 素材开发接图、选整数工程尺寸与脚锚，不等待人工签收启动。工程使用不代表 accepted，现有存档 schema/Space 不变。",
+  "item_action_size_px": {
+    "width": 24,
+    "height": 24
+  },
+  "hud_icon_size_px": {
+    "width": 16,
+    "height": 16
+  },
+  "logical_viewport_size_px": {
+    "width": 640,
+    "height": 360
+  },
+  "contract_owner": "issue.87",
+  "contract_consumers": [
+    "issue.88",
+    "issue.89",
+    "issue.90",
+    "issue.91",
+    "issue.92",
+    "issue.93",
+    "issue.94",
+    "issue.95",
+    "issue.96",
+    "issue.97",
+    "issue.104",
+    "issue.106",
+    "issue.107",
+    "issue.109",
+    "issue.111"
+  ],
+  "candidate_palette_asset_ids": [
+    "asset.terrain.phase0",
+    "asset.terrain.chapter1.grass",
+    "asset.terrain.chapter1.dirt_path"
+  ],
+  "reference_source_ids": [
+    "world_chapter1_map"
+  ],
+  "engineering_contract_status": "frozen_for_world_development",
+  "proposed_runtime_use_allowed": true
 }
