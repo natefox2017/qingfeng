@@ -2,6 +2,8 @@
 
 唯一[总任务 #1](https://github.com/natefox2017/qingfeng/issues/1)。[任务登记](tasks.json)只保存身份、链接和依赖；完成状态在 Issue，不在文档复制第二份。
 
+**记录边界**：Notion/产品规格只在用户确认的需求、设计或验收目标改变时更新；Bug、修复、重构、优化、阻塞、测试与日常进度全部写进对应 GitHub Issue，代码与验证放关联 PR。需求未变时不改文档、不新建改动总结或平行检查清单。仅稳定跨模块接口/存档合同真实变化时，最小修改对应唯一契约文件。以 [AGENTS.md](../AGENTS.md) 的记录边界为准。
+
 ## 从成熟做法到本项目
 [参考](references.md)中的图块编辑/共享场景、游戏输入与慢请求分离，转成三个规则：布局先在引擎确定；素材按可复用组件交付；玩家可操作的纵向切片短周期合入。AI Town是技术参考，不把它说成商业农场成品。
 先一屏比例/工具动作样板，先种植—背包—休息—存档闭环，最后扩大村庄与居民内容。不要重建整个游戏后才第一次试走。
@@ -38,7 +40,7 @@ python3 tools/check_scaffold.py
 python3 -m unittest discover -s tools/tests -v
 ```
 上面的命令仍可按需本地执行；`python3 tools/runtime.py test` 保留为专项/发布回归工具，但不再作为每个 PR 的 GitHub Actions 门。scaffold没有可启动工程；preproduction有新素材但未接正式运行；foundation须有固定引擎版本、project.godot和正式main_scene；playable必须N11完成完整原生与导出验收。
-阶段由project.json唯一声明，README/Notion同步。不能把本次工具测试数字当新游戏回归。变更交接用[handoff](../templates/handoff.md)，不另造多套总册。
+阶段由 project.json 唯一声明；阶段进展、测试数字和问题处理只更新 GitHub Issue/PR，不例行同步 README/Notion。不能把工具测试数字当新游戏回归。变更交接优先写在对应 Issue/PR；仅确有离线交接需要时使用 [handoff](../templates/handoff.md)，不另造多套总册。
 
 ## 实际任务链接
 - [N01 / #2：PixelLab连接与风格样板](https://github.com/natefox2017/qingfeng/issues/2)
