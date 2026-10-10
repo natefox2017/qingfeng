@@ -1,6 +1,6 @@
 # 开发流程与 Agent 协作
 
-唯一[总任务 #1](https://github.com/natefox2017/qingfeng/issues/1)。[任务登记](tasks.json)只保存身份、链接和依赖；完成状态在 Issue，不在文档复制第二份。
+唯一[总任务 #1](https://github.com/natefox2017/qingfeng/issues/1)。[任务登记](tasks.json)只保存稳定身份/合同引用，不承载领取或开发进度；各 TODO 完成证据在 GitHub Issue，**领取和阶段状态只由 [正式 Todoist Board](https://app.todoist.com/app/project/6hj76M7Ghj5pR3xm) 管理**。六栏目、Ready 领取/回读、Done 保留可见卡片及零上下文 Issue 标准统一以 [AGENTS.md](../AGENTS.md) 为准。
 
 **记录边界**：Notion/产品规格只在用户确认的需求、设计或验收目标改变时更新；Bug、修复、重构、优化、阻塞、测试与日常进度全部写进对应 GitHub Issue，代码与验证放关联 PR。需求未变时不改文档、不新建改动总结或平行检查清单。仅稳定跨模块接口/存档合同真实变化时，最小修改对应唯一契约文件。以 [AGENTS.md](../AGENTS.md) 的记录边界为准。
 
@@ -26,7 +26,7 @@
 N04拥有公共schema/时钟/保存；N05拥有app入口/同地图；N11协调公共CI。其他agent先请求接口，不能并行修改同一文件或复制状态。资产请求由N01/N02/N03处理，位置变化由N05处理，不互相推诿到“重画整图”。
 
 ## 每个小步骤
-认领最新SHA/分支/文件 → 阅读对应官方能力与依赖 → 提交最小合同/可失败测试 → 实现 → 正常/失败/取消/保存验证 → 适用原生画面 → 普通PR → 合入复核 → 勾该checkbox。
+**Todoist Ready 卡片 → 回读 In Progress → GitHub Issue 记录最新 SHA/分支/文件/依赖** → 阅读对应官方能力与依赖 → 提交最小合同/可失败测试 → 实现并实时勾 GitHub Issue TODO → 正常/失败/取消/保存验证 → 适用原生画面 → 普通 PR，Todoist In Review → 合入且验收 → Todoist Done Section（不得点击完成）、回读、关闭 GitHub Issue。
 依赖最终图的场景接入等待对应图，领域命令和物理夹具可独立做。pending生成期间处理无冲突的代码/数据，不忙轮询也不重复下单。
 
 ## PR规则
