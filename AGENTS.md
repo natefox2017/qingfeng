@@ -48,7 +48,7 @@
 - **Backlog → Todo**：十项描述、可失败的验收标准、依赖与文件边界已核实，代码/PR/素材去重完毕；任务尚无 active assignee / Blocker。仅移 Todo 不代表自动允许开发。
 - **Todo → In Progress**：在 Linear Board 设置唯一 assignee、记录执行标识/基线 SHA/准确文件边界，移动 In Progress 后立即回读；每完成一项 Todo 都需更新 Linear Checkbox，关联真实 Commit/PR，记录运行验证或 `NOT RUN`。
 - **In Progress → In Review**：创建 GitHub PR 后关联当前 Linear Issue ID（例如分支 `dev-118-native-workflow`、PR 标题 `docs: ... (DEV-118)`、正文 `Refs DEV-118`），验证实际链接。**GitHub 集成事件自动化尚未独立核验时手工移动 In Review 并回读**；PR 合并不能无条件 Done。
-- **PR 合并后仍可留 In Review 待验收**：仅当必要代码、PR 已合并、相关测试、人工审查和所有 Linear Checkbox 全部通过、阻塞清零，才标 Done；仓库当前 `repository-policy` / auto-merge 只是合并机制，不是游戏验证。不得设置无条件「PR 合并→Done」导致假验收。
+- **PR 合并后仍可留 In Review 待验收**：仅当必要代码、PR 已合并、相关测试、人工审查和所有 Linear Checkbox 全部通过、阻塞清零，才标 Done；仓库当前 `repository-policy` 只提供结构/回归基础检查，不等于 Godot 原生和游戏视觉验收。不得设置无条件「PR 合并→Done」导致假验收。
 - **阻断/中断（无 Blocked 状态）**：在 Linear Issue 记录原因、受影响文件、保留的 assignee / branch / PR、实际测试与恢复条件；按需使用 `QFG-Blocked` 标签和 `blockedBy`，保持原未完成状态，不自动改为 Todo 或分配其他 AI；冲突需协调唯一 owner。
 - **同步不一致**：保留现有 Issue 和 PR/分支，记录准确状态与恢复方法；绝不能凭历史聊天或旧 GitHub Issue 把 Linear 任务标 Done。任务状态只以**当前 Linear 真值 + GitHub 代码/PR 事实**为准。
 
@@ -95,7 +95,7 @@
 ## 提交、验证与完成
 默认普通非 Draft PR；一项可回滚能力一个 PR。先确认 Linear Todo 领取和 In Progress 回读，再从最新默认分支创建独立分支；不 force push、不覆盖别人的工作。PR 必须关联 Linear Issue ID、当前 SHA、实际命令/验证、未验项和回退；PR 创建后同步 In Review，合并并完成验收后才能 Done。
 
-仓库的 `repository-policy`、auto-merge 或其他 GitHub 自动化只是合并机制，**不是验收证据**。只有本任务要求的运行验收、人工审查和必要证据齐全后，才允许合并 PR 或关闭 Issue；如果某个自动化会在证据齐全前自动合并，应先阻止或调整该合并路径，而不是让自动化替代验收。
+仓库的 `repository-policy` 当前执行 `python3 tools/check_scaffold.py` 与 `python3 -m unittest discover -s tools/tests -v`，可作为仓库合同/Python 回归证据，**但不等于 Godot 4.7.2 原生运行或人工审图**。真实验收、相关 CI 和审查齐全后才允许合并 PR 或关闭 Issue。当前私有仓库的强制保护规则不可验证，不使用未经审核的自动合并；应先核对实际检查/Review，再人工正常合并，并将 Linear 状态和必要验收同步回读。
 
 需要验证时在开发切片内按风险运行最小相关检查，发布/N11 再执行完整冷导入、原生试玩与导出验收。静态检查、类型检查、lint、脚本语法、只输出 PASS 的包装器，以及“CI skipped / 未运行”都不能冒充运行验收。失败测试不能删断言凑绿灯。
 原生画面、headless、导出包、真实 Provider 各自记录证据；传送截图不证明通路，录制 FPS 不证明实时性能。涉及生产环境时优先使用隔离环境；未经用户明确授权不得部署生产、修改生产数据、执行不可逆迁移或扩大生产权限。
