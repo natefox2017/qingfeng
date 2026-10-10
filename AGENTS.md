@@ -2,7 +2,7 @@
 
 ## 唯一仓库与四层职责
 
-**唯一代码仓库：** `natefox2017/qingfeng`，以实时默认分支为准；本仓库是独立新工程，不迁入旧代码、图片、存档、Git 历史或旧 ID。远端指向其他仓库时停止写入。当前 GitHub 仓库实际为 **public**，不得当作私有仓库公开密钥、玩家存档或未授权素材；若需改私有必须先核实真实权限和结果。
+**唯一代码仓库：** `natefox2017/qingfeng`，以 GitHub 实时默认分支和可见性为准；本仓库是独立新工程，不迁入旧代码、图片、存档、Git 历史或旧 ID。远端指向其他仓库时停止写入。**可见性可能变化：2026-10-10 最新 `get_repo` 已读回 `private`，但此 AI 未执行该权限修改**。不得根据历史 Public/Private 记录推断当前访问范围；始终禁止提交密钥、私人玩家存档、无授权素材，并检查协作者及 CI 实际权限。
 
 **唯一任务管理项目：** [晴风谷 Linear Development](https://linear.app/gengyun/project/晴风谷-qingfeng-development-747beb5958f6)，Linear Team `GEN`。四层职责不可交叉：
 1. **Linear Issues** 是当前唯一需求、独立 TODO、Bug、QA、技术债、研究、依赖、进度与验收证据真值。每个可独立交付任务有一个 Linear Issue，包含真实 Checkbox、父子依赖、验收和交付证据。
